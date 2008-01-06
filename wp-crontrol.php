@@ -2,9 +2,9 @@
 /*
  * Plugin Name: WP-Crontrol
  * Plugin URI: http://www.scompt.com/projects/wp-crontrol
- * Description: Zensor enforces a two-step publishing workflow in WordPress.
+ * Description: WP-Crontrol lets you take control over what's happening in the WP-Cron system.
  * Author: Edward Dale
- * Version: 0.7
+ * Version: 0.1
  * Author URI: http://www.scompt.com
  */
 
