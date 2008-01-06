@@ -14,24 +14,62 @@ class Crontrol {
             add_action('init', array(&$this, 'init'));
             add_action('init', array(&$this, 'handle_posts'));
         	add_action('admin_menu', array(&$this, 'admin_menu'));
-        	add_action('activate_wp-crontrol/crontrol.php', array(&$this, 'activate'));
+        	add_action('activate_wp-crontrol.php', array(&$this, 'activate'));
         	
         	add_filter('cron_schedules', array(&$this, 'cron_schedules'));
+        	add_action('wp_ajax_delete-sched', array(&$this, 'handle_ajax'));
+        	add_action('wp_ajax_delete-cron', array(&$this, 'handle_ajax'));
         } 
     }
     
     function init() {
     	load_plugin_textdomain('crontrol', PLUGINDIR.'/wp-crontrol/gettext');
     }
+    function scripts() {
+        wp_enqueue_script( 'listman');
+    }
+
+    function handle_ajax() {
+        switch( $_POST['action'] ) {
+            case 'delete-sched':
+                $to_delete = $_POST['id'];
+                $this->delete_schedule($to_delete);
+                exit('1');
+                break;
+            case 'delete-cron':
+                break;
+        }
+    }
     
     function handle_posts() {
         if( isset($_POST['new_cron']) ) {
             wp_schedule_event(time(), $_POST['schedule'], $_POST['hookname']);
+
         } else if( isset($_POST['new_schedule']) ) {
-            $old_scheds = get_option('crontrol_schedules');
-            $old_scheds[$_POST['internal_name']] = array('interval'=>$_POST['interval'], 'display'=>$_POST['display_name']);
-            update_option('crontrol_schedules', $old_scheds);
+            check_admin_referer("new-sched");
+            $name = $_POST['internal_name'];
+            $interval = $_POST['interval'];
+            $display = $_POST['display_name'];
+            $this->add_schedule($name, $interval, $display);
+            wp_redirect('options-general.php?page=crontrol_admin_options_page');
+
+        } else if( isset($_GET['action']) && $_GET['action']=='delete-sched') {
+            $id = $_GET['id'];
+            check_admin_referer("delete-sched_$id");
+            $this->delete_schedule($id);
+            wp_redirect('options-general.php?page=crontrol_admin_options_page');
         }
+    }
+    
+    function add_schedule($name, $interval, $display) {
+        $old_scheds = get_option('crontrol_schedules');
+        $old_scheds[$_POST['internal_name']] = array('interval'=>$_POST['interval'], 'display'=>$_POST['display_name']);
+        update_option('crontrol_schedules', $old_scheds);
+    }
+    function delete_schedule($name) {
+        $scheds = get_option('crontrol_schedules');
+        unset($scheds[$name]);
+        update_option('crontrol_schedules', $scheds);
     }
     
     function activate() {
@@ -41,7 +79,9 @@ class Crontrol {
     
     function admin_menu() {
         // Add a Zensor menu underneath the options and management page
-	    add_options_page('Crontrol', 'Crontrol', 'manage_options', 'crontrol_admin_options_page', array(&$this, 'admin_options_page') );
+	    $page = add_options_page('Crontrol', 'Crontrol', 'manage_options', 'crontrol_admin_options_page', array(&$this, 'admin_options_page') );
+	    add_action("admin_print_scripts-$page", array(&$this, 'scripts') );
+		
 	    $page = add_management_page('Crontrol', "Crontrol", '1', 'crontrol_admin_manage_page', array(&$this, 'admin_manage_page') );
 
 		// Add some scripts and stylesheets to the admin section
@@ -64,7 +104,8 @@ class Crontrol {
         <div class="wrap">
         <h2>Cron Schedules (<a href="#new">add new</a>)</h2>
         <p></p>
-        <table class="widefat">
+            <div id="ajax-response"></div>
+        <table class="widefat" id="the-list">
         <thead>
             <tr>
                 <th>Name</th>
@@ -77,15 +118,13 @@ class Crontrol {
         <?php
         $class = "";
         foreach( $schedules as $name=>$data ) {
-            echo "<tr class=\"$class\">";
+            echo "<tr id=\"sched-$name\" class=\"$class\">";
             echo "<td>$name</td>";
             echo "<td>{$data['interval']} (".$this->time_since(time(), time()+$data['interval']).")</td>";
             echo "<td>{$data['display']}</td>";
-            echo "<td>";
             if( in_array($name, $custom_keys) ) {
-                echo "x";
+    			echo "<td><a href='" . wp_nonce_url( "options-general.php?page=crontrol_admin_options_page&amp;action=delete-sched&amp;id=$name", 'delete-sched_' . $name ) . "' onclick=\"return deleteSomething( 'sched', '$name', '" . js_escape(sprintf( __("You are about to delete the schedule '%s'.\n'OK' to delete, 'Cancel' to stop." ), $name)) . "' );\" class='delete'>".__( 'Delete' )."</a></td>";
             }
-            echo "</td>";
             echo "</tr>";
             $class = empty($class)?"alternate":"";
         }
@@ -98,7 +137,7 @@ class Crontrol {
             <a name="new" id="new"></a>
             <h2>Add new cron schedule</h2>
         
-            <form method="post">
+            <form method="post" action="options-general.php?page=crontrol_admin_options_page">
                 <table width="100%" cellspacing="2" cellpadding="5" class="editform">
             		<tbody>
             		<tr>
@@ -114,7 +153,8 @@ class Crontrol {
             			<td width="67%"><input type="text" size="40" value="" id="display_name" name="display_name"/></td>
             		</tr>
             	</tbody></table>
-                <p class="submit"><input type="submit" value="Add Cron Schedule &raquo;" name="new_schedule"/></p>
+                <p class="submit"><input id="schedadd-submit" type="submit" value="Add Cron Schedule &raquo;" name="new_schedule"/></p>
+                <?php wp_nonce_field('new-sched') ?>
             </form>
         </div>
         <?php
