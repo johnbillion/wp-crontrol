@@ -14,7 +14,12 @@ class Crontrol {
             add_action('init', array(&$this, 'init'));
             add_action('init', array(&$this, 'handle_posts'));
         	add_action('admin_menu', array(&$this, 'admin_menu'));
-        	add_action('activate_wp-crontrol.php', array(&$this, 'activate'));
+
+            $dir_name='';
+            if (preg_match("/wp-crontrol$/", dirname(__FILE__))) {
+                $dir_name = 'wp-crontrol/';
+            }
+        	add_action("activate_{$dir_name}wp-crontrol.php", array(&$this, 'activate'));
         	
         	add_filter('cron_schedules', array(&$this, 'cron_schedules'));
         	add_action('wp_ajax_delete-sched', array(&$this, 'handle_ajax'));
@@ -25,6 +30,7 @@ class Crontrol {
     function init() {
     	load_plugin_textdomain('crontrol', PLUGINDIR.'/wp-crontrol/gettext');
     }
+    
     function scripts() {
         wp_enqueue_script( 'listman');
     }
@@ -32,20 +38,24 @@ class Crontrol {
     function handle_ajax() {
         switch( $_POST['action'] ) {
             case 'delete-sched':
+                if( !current_user_can('manage_options') ) die('-1');
                 $to_delete = $_POST['id'];
                 $this->delete_schedule($to_delete);
                 exit('1');
                 break;
             case 'delete-cron':
+                if( !current_user_can('manage_options') ) die('-1');
                 break;
         }
     }
     
     function handle_posts() {
         if( isset($_POST['new_cron']) ) {
+            if( !current_user_can('manage_options') ) die('You are not allowed to add new cron events.');
             wp_schedule_event(time(), $_POST['schedule'], $_POST['hookname']);
 
         } else if( isset($_POST['new_schedule']) ) {
+            if( !current_user_can('manage_options') ) die('You are not allowed to add new cron schedules.');
             check_admin_referer("new-sched");
             $name = $_POST['internal_name'];
             $interval = $_POST['interval'];
@@ -54,6 +64,7 @@ class Crontrol {
             wp_redirect('options-general.php?page=crontrol_admin_options_page');
 
         } else if( isset($_GET['action']) && $_GET['action']=='delete-sched') {
+            if( !current_user_can('manage_options') ) die('You are not allowed to delete cron schedules.');
             $id = $_GET['id'];
             check_admin_referer("delete-sched_$id");
             $this->delete_schedule($id);
@@ -82,11 +93,7 @@ class Crontrol {
 	    $page = add_options_page('Crontrol', 'Crontrol', 'manage_options', 'crontrol_admin_options_page', array(&$this, 'admin_options_page') );
 	    add_action("admin_print_scripts-$page", array(&$this, 'scripts') );
 		
-	    $page = add_management_page('Crontrol', "Crontrol", '1', 'crontrol_admin_manage_page', array(&$this, 'admin_manage_page') );
-
-		// Add some scripts and stylesheets to the admin section
-        // add_action("admin_print_scripts-$page", array(&$this, 'scripts') );
-        // add_action("admin_head", array(&$this, 'styles') );
+	    $page = add_management_page('Crontrol', "Crontrol", 'manage_options', 'crontrol_admin_manage_page', array(&$this, 'admin_manage_page') );
     }
     
     function cron_schedules($scheds) {
