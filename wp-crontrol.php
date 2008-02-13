@@ -4,22 +4,53 @@
  * Plugin URI: http://www.scompt.com/projects/wp-crontrol
  * Description: WP-Crontrol lets you take control over what's happening in the WP-Cron system.
  * Author: Edward Dale
- * Version: 0.1
+ * Version: 0.2
  * Author URI: http://www.scompt.com
  */
 
+ /**
+  * WP-Crontrol lets you take control over what's happening in the WP-Cron system.
+  *
+  * LICENSE
+  * This file is part of WP-Crontrol.
+  *
+  * WP-Crontrol is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU General Public License
+  * as published by the Free Software Foundation; either version 2
+  * of the License, or (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, write to the Free Software
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+  *
+  * @package    WP-Crontrol
+  * @author     Edward Dale <scompt@scompt.com>
+  * @copyright  Copyright 2007 Edward Dale
+  * @license    http://www.gnu.org/licenses/gpl.txt GPL 2.0
+  * @version    $Id$
+  * @link       http://www.scompt.com/projects/wp-crontrol
+  * @since      0.2
+  */
 class Crontrol {
+    
+    /**
+     * Hook onto all of the actions and filters needed by the plugin.
+     */
     function Crontrol() {
         if( function_exists('add_action') ) {
             add_action('init', array(&$this, 'init'));
             add_action('init', array(&$this, 'handle_posts'));
         	add_action('admin_menu', array(&$this, 'admin_menu'));
 
-            $dir_name='';
-            if (preg_match("/wp-crontrol$/", dirname(__FILE__))) {
-                $dir_name = 'wp-crontrol/';
-            }
-        	add_action("activate_{$dir_name}wp-crontrol.php", array(&$this, 'activate'));
+            // Make sure the activation works from subdirectories as well as
+            // directly in the plugin directory.
+            $activate_action = str_replace(ABSPATH.PLUGINDIR.'/', 'activate_', __FILE__);
+        	add_action($activate_action, array(&$this, 'activate'));
         	
         	add_filter('cron_schedules', array(&$this, 'cron_schedules'));
         	add_action('wp_ajax_delete-sched', array(&$this, 'handle_ajax'));
@@ -27,14 +58,25 @@ class Crontrol {
         } 
     }
     
+    /**
+     * Run using the 'init' action.
+     */
     function init() {
     	load_plugin_textdomain('crontrol', PLUGINDIR.'/wp-crontrol/gettext');
     }
     
+    /**
+     * Run using the 'admin_print_scripts' action.  Added in the 'admin_menu'
+     * hook.
+     */
     function scripts() {
         wp_enqueue_script( 'listman');
     }
 
+    /**
+     * Handles any ajax requests made by the plugin.  Run using 
+     * the 'wp_ajax_*' actions.
+     */
     function handle_ajax() {
         switch( $_POST['action'] ) {
             case 'delete-sched':
@@ -49,6 +91,9 @@ class Crontrol {
         }
     }
     
+    /**
+     * Handles any POSTs made by the plugin.  Run using the 'init' action.
+     */
     function handle_posts() {
         if( isset($_POST['new_cron']) ) {
             if( !current_user_can('manage_options') ) die('You are not allowed to add new cron events.');
@@ -72,35 +117,68 @@ class Crontrol {
         }
     }
     
+    /**
+     * Adds a new custom cron schedule.
+     *
+     * @param string $name     The internal name of the schedule
+     * @param int    $interval The interval between executions of the new schedule
+     * @param string $display  The display name of the schedule
+     */
     function add_schedule($name, $interval, $display) {
         $old_scheds = get_option('crontrol_schedules');
-        $old_scheds[$_POST['internal_name']] = array('interval'=>$_POST['interval'], 'display'=>$_POST['display_name']);
+        $old_scheds[$name] = array('interval'=>$interval, 'display'=>$display);
         update_option('crontrol_schedules', $old_scheds);
     }
+    
+    /**
+     * Deletes a custom cron schedule.
+     *
+     * @param string $name The internal_name of the schedule to delete.
+     */
     function delete_schedule($name) {
         $scheds = get_option('crontrol_schedules');
         unset($scheds[$name]);
         update_option('crontrol_schedules', $scheds);
     }
     
+    /**
+     * Sets up the plugin environment upon first activation.
+     * 
+     * Run using the 'activate_' action.
+     */
     function activate() {
         $extra_scheds = array('twicedaily'=>array('interval'=>43200, 'display'=>'Twice Daily'));
         add_option('crontrol_schedules', $extra_scheds);
     }
     
+    /**
+     * Adds options & management pages to the admin menu.
+     *
+     * Run using the 'admin_menu' action.
+     */
     function admin_menu() {
-        // Add a Zensor menu underneath the options and management page
 	    $page = add_options_page('Crontrol', 'Crontrol', 'manage_options', 'crontrol_admin_options_page', array(&$this, 'admin_options_page') );
 	    add_action("admin_print_scripts-$page", array(&$this, 'scripts') );
 		
 	    $page = add_management_page('Crontrol', "Crontrol", 'manage_options', 'crontrol_admin_manage_page', array(&$this, 'admin_manage_page') );
     }
     
+    /**
+     * Gives WordPress the plugin's set of cron schedules.
+     *
+     * Called by the 'cron_schedules' filter.
+     *
+	 * @param array $scheds The current cron schedules.  Usually an empty array.
+	 * @return array The existing cron schedules along with the plugin's schedules.
+     */
     function cron_schedules($scheds) {
         $new_scheds = get_option('crontrol_schedules');
-        return $new_scheds;
+        return array_merge($new_scheds, $scheds);
     }
     
+    /**
+     * Displays the options page for the plugin.
+     */
     function admin_options_page() {
         $schedules = wp_get_schedules();
         $custom_schedules = get_option('crontrol_schedules');
@@ -167,6 +245,9 @@ class Crontrol {
         <?php
     }
     
+    /**
+     * Displays the manage page for the plugin.
+     */
     function admin_manage_page() {
         $crons = _get_cron_array();
         $schedules = wp_get_schedules();
@@ -232,11 +313,15 @@ class Crontrol {
     }
     
     /**
-     * From: http://binarybonsai.com/code/timesince.txt
+     * Pretty-prints the difference in two times.
+     *
+     * @param time $older_date
+     * @param time $newer_date
+     * @return string The pretty time_since value
+     * @link http://binarybonsai.com/code/timesince.txt
      */
-    function time_since($older_date, $newer_date)
-    	{
-    	// array of time period chunks
+    function time_since($older_date, $newer_date) { 
+        // array of time period chunks
     	$chunks = array(
     	array(60 * 60 * 24 * 365 , 'year'),
     	array(60 * 60 * 24 * 30 , 'month'),
@@ -288,9 +373,9 @@ class Crontrol {
     		}
 
     	return $output;
-    	}
-    
+	}
 }
 
+// Get this show on the road
 new Crontrol();
 ?>
