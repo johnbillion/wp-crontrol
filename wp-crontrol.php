@@ -37,7 +37,7 @@
   * @since      0.2
   */
 class Crontrol {
-    
+    // TODO: internaionalization
     /**
      * Hook onto all of the actions and filters needed by the plugin.
      */
@@ -62,7 +62,7 @@ class Crontrol {
      * Run using the 'init' action.
      */
     function init() {
-    	load_plugin_textdomain('crontrol', PLUGINDIR.'/wp-crontrol/gettext');
+    	load_plugin_textdomain('crontrol', str_replace(ABSPATH, '', dirname(__FILE__)));
     }
     
     /**
@@ -87,6 +87,9 @@ class Crontrol {
                 break;
             case 'delete-cron':
                 if( !current_user_can('manage_options') ) die('-1');
+                $to_delete = $_POST['id'];
+                $this->delete_cron($to_delete);
+                exit('1');
                 break;
         }
     }
@@ -97,7 +100,12 @@ class Crontrol {
     function handle_posts() {
         if( isset($_POST['new_cron']) ) {
             if( !current_user_can('manage_options') ) die('You are not allowed to add new cron events.');
-            wp_schedule_event(time(), $_POST['schedule'], $_POST['hookname']);
+            check_admin_referer("new-cron");
+            $next_run = $_POST['nextrun'];
+            $schedule = $_POST['schedule'];
+            $hookname = $_POST['hookname'];
+            $this->add_cron($next_run, $schedule, $hookname);
+            wp_redirect('edit.php?page=crontrol_admin_manage_page');
 
         } else if( isset($_POST['new_schedule']) ) {
             if( !current_user_can('manage_options') ) die('You are not allowed to add new cron schedules.');
@@ -114,7 +122,39 @@ class Crontrol {
             check_admin_referer("delete-sched_$id");
             $this->delete_schedule($id);
             wp_redirect('options-general.php?page=crontrol_admin_options_page');
+
+        } else if( isset($_GET['action']) && $_GET['action']=='delete-cron') {
+            if( !current_user_can('manage_options') ) die('You are not allowed to delete cron events.');
+            $id = $_GET['id'];
+            check_admin_referer("delete-cron_$id");
+            $this->delete_cron($id);
+            wp_redirect('edit.php?page=crontrol_admin_manage_page');
+
+        } else if( isset($_GET['action']) && $_GET['action']=='run-cron') {
+            if( !current_user_can('manage_options') ) die('You are not allowed to run cron events.');
+            $id = $_GET['id'];
+            check_admin_referer("run-cron_$id");
+            $this->run_cron($id);
+            wp_redirect('edit.php?page=crontrol_admin_manage_page');
         }
+    }
+    
+    function run_cron($hookname) {
+        $sched = wp_get_schedule($hookname);
+        wp_clear_scheduled_hook($hookname);
+        $this->add_cron('now', $sched, $hookname);
+    }
+    
+    function add_cron($next_run, $schedule, $hookname) {
+        $next_run = strtotime($next_run);
+        if( $next_run===FALSE || $next_run==-1 ) $next_run=time();
+        if( !wp_schedule_event( $next_run, $schedule, $hookname ) ) {
+            $error=True;
+        }
+    }
+    
+    function delete_cron($to_delete) {
+        wp_clear_scheduled_hook($to_delete);
     }
     
     /**
@@ -161,6 +201,7 @@ class Crontrol {
 	    add_action("admin_print_scripts-$page", array(&$this, 'scripts') );
 		
 	    $page = add_management_page('Crontrol', "Crontrol", 'manage_options', 'crontrol_admin_manage_page', array(&$this, 'admin_manage_page') );
+	    add_action("admin_print_scripts-$page", array(&$this, 'scripts') );
     }
     
     /**
@@ -180,6 +221,9 @@ class Crontrol {
      * Displays the options page for the plugin.
      */
     function admin_options_page() {
+        // TODO: display a message that says why a user can only delete certain schedules
+        // TODO: explain why one would want to add a cron schedule
+        // TODO: all deletion of non-crontrol schedules
         $schedules = wp_get_schedules();
         $custom_schedules = get_option('crontrol_schedules');
         $custom_keys = array_keys($custom_schedules);
@@ -189,7 +233,7 @@ class Crontrol {
         <div class="wrap">
         <h2>Cron Schedules (<a href="#new">add new</a>)</h2>
         <p></p>
-            <div id="ajax-response"></div>
+        <div id="ajax-response"></div>
         <table class="widefat" id="the-list">
         <thead>
             <tr>
@@ -249,6 +293,11 @@ class Crontrol {
      * Displays the manage page for the plugin.
      */
     function admin_manage_page() {
+        // DONE: Allow user to specify next execution time, parse using date() or something
+        // DONE: explain the next steps
+        // TODO: Allow editing of hooks
+        // TODO: do now button
+        // TODO: Allow one-offs
         $crons = _get_cron_array();
         $schedules = wp_get_schedules();
 
@@ -256,13 +305,14 @@ class Crontrol {
         <div class="wrap">
         <h2>WP-Cron Entries (<a href="#new">add new</a>)</h2>
         <p></p>
-        <table class="widefat">
+            <div id="ajax-response"></div>
+        <table class="widefat" id="the-list">
         <thead>
             <tr>
                 <th>Hook Name</th>
                 <th>Next Run</th>
                 <th>Recurrence</th>
-                <th>Actions</th>
+                <th colspan="3">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -271,11 +321,14 @@ class Crontrol {
         foreach( $crons as $time=>$cron ) {
             foreach( $cron as $hook=>$data) {
                 $data = array_shift($data);
-                echo "<tr class=\"$class\">";
+
+                echo "<tr id=\"cron-$hook\" class=\"$class\">";
                 echo "<td>$hook</td>";
                 echo "<td>".strftime("%D %T", $time)." (".$this->time_since(time(), $time).")</td>";
                 echo "<td>{$data['interval']} (".$this->time_since(time(), time()+$data['interval']).")</td>";
-                echo "<td></td>";
+                echo "<td><a class='view' href='edit.php?page=crontrol_admin_manage_page&amp;action=edit-cron&amp;id=$hook'>Edit</a></td>";
+                echo "<td><a class='view' href='".wp_nonce_url("edit.php?page=crontrol_admin_manage_page&amp;action=run-cron&amp;id=$hook", 'run-cron_' . $hook)."'>Do Now</a></td>";
+                echo "<td><a class='delete' href='".wp_nonce_url("edit.php?page=crontrol_admin_manage_page&amp;action=delete-cron&amp;id=$hook", 'delete-cron_' . $hook)."' onclick=\"return deleteSomething( 'cron', '$hook', '" . js_escape(sprintf( __("You are about to delete the cron entry '%s'.\n'OK' to delete, 'Cancel' to stop." ), $hook)) . "' );\">Delete</a></td>";
                 echo "</tr>";
                 $class = empty($class)?"alternate":"";
             }
@@ -287,13 +340,17 @@ class Crontrol {
         <div class="wrap narrow">
             <a name="new" id="new"></a>
             <h2>Add new cron entry</h2>
+            <p>Cron entries trigger actions in your code.  After adding a new cron entry here, you will need to add a corresponding action hook somewhere in code, perhaps the <code>functions.php</code> file in your theme.</p>
             <form method="post">
+                <?php wp_nonce_field('new-cron') ?>
                 <table width="100%" cellspacing="2" cellpadding="5" class="editform">
             		<tbody><tr>
             			<th width="33%" valign="top" scope="row"><label for="hookname">Hook name:</label></th>
             			<td width="67%"><input type="text" size="40" value="" id="hookname" name="hookname"/></td>
-            		</tr>
-            		<tr>
+            		</tr><tr>
+            			<th width="33%" valign="top" scope="row"><label for="nextrun">Next run:</label></th>
+            			<td width="67%"><input type="text" size="40" value="now" id="nextrun" name="nextrun"/></td>
+            		</tr><tr>
             			<th valign="top" scope="row"><label for="schedule">Entry schedule:</label></th>
             			<td>
                         <select class="postform" name="schedule">
@@ -308,7 +365,7 @@ class Crontrol {
             	</tbody></table>
                 <p class="submit"><input type="submit" value="Add Cron Entry &raquo;" name="new_cron"/></p>
             </form>
-  </div>
+        </div>
         <?php
     }
     
