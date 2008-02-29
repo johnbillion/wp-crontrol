@@ -135,7 +135,7 @@ class Crontrol {
             $id = $_GET['id'];
             check_admin_referer("run-cron_$id");
             $this->run_cron($id);
-            wp_redirect('edit.php?page=crontrol_admin_manage_page');
+            wp_redirect('edit.php?page=crontrol_admin_manage_page&crontrol_message=1&crontrol_name='.$id);
         }
     }
     
@@ -143,6 +143,7 @@ class Crontrol {
         $sched = wp_get_schedule($hookname);
         wp_clear_scheduled_hook($hookname);
         $this->add_cron('now', $sched, $hookname);
+        
     }
     
     function add_cron($next_run, $schedule, $hookname) {
@@ -221,9 +222,6 @@ class Crontrol {
      * Displays the options page for the plugin.
      */
     function admin_options_page() {
-        // TODO: display a message that says why a user can only delete certain schedules
-        // TODO: explain why one would want to add a cron schedule
-        // TODO: all deletion of non-crontrol schedules
         $schedules = wp_get_schedules();
         $custom_schedules = get_option('crontrol_schedules');
         $custom_keys = array_keys($custom_schedules);
@@ -231,8 +229,8 @@ class Crontrol {
         
         ?>
         <div class="wrap">
-        <h2>Cron Schedules (<a href="#new">add new</a>)</h2>
-        <p></p>
+        <h2>Cron Schedules</h2>
+        <p>Cron schedules are the time intervals that are available to WordPress and plugin developers to schedule events.  You can only delete cron schedules that you have created with WP-Crontrol.</p>
         <div id="ajax-response"></div>
         <table class="widefat" id="the-list">
         <thead>
@@ -263,9 +261,8 @@ class Crontrol {
         </table>
         </div>
         <div class="wrap narrow">
-            <a name="new" id="new"></a>
             <h2>Add new cron schedule</h2>
-        
+            <p>Adding a new cron schedule will allow you to schedule events that re-occur at the given interval.</p>
             <form method="post" action="options-general.php?page=crontrol_admin_options_page">
                 <table width="100%" cellspacing="2" cellpadding="5" class="editform">
             		<tbody>
@@ -293,17 +290,29 @@ class Crontrol {
      * Displays the manage page for the plugin.
      */
     function admin_manage_page() {
+        if( isset($_GET['crontrol_message']) ) {
+            switch( $_GET['crontrol_message'] ) {
+                case '1':
+                    $msg = sprintf("Executed the cron entry <b>%s</b>", $_GET['crontrol_name']);
+                    break;
+            }
+            if( $msg ) {
+                echo '<div id="message" class="updated fade"><p>';
+    			echo $msg;
+    			echo '</p></div>';
+            }
+        }
         // DONE: Allow user to specify next execution time, parse using date() or something
         // DONE: explain the next steps
+        // DONE: do now button
         // TODO: Allow editing of hooks
-        // TODO: do now button
         // TODO: Allow one-offs
         $crons = _get_cron_array();
         $schedules = wp_get_schedules();
 
         ?>
         <div class="wrap">
-        <h2>WP-Cron Entries (<a href="#new">add new</a>)</h2>
+        <h2>WP-Cron Entries</h2>
         <p></p>
             <div id="ajax-response"></div>
         <table class="widefat" id="the-list">
@@ -327,7 +336,7 @@ class Crontrol {
                 echo "<td>".strftime("%D %T", $time)." (".$this->time_since(time(), $time).")</td>";
                 echo "<td>{$data['interval']} (".$this->time_since(time(), time()+$data['interval']).")</td>";
                 echo "<td><a class='view' href='edit.php?page=crontrol_admin_manage_page&amp;action=edit-cron&amp;id=$hook'>Edit</a></td>";
-                echo "<td><a class='view' href='".wp_nonce_url("edit.php?page=crontrol_admin_manage_page&amp;action=run-cron&amp;id=$hook", 'run-cron_' . $hook)."'>Do Now</a></td>";
+                echo "<td><a class='view' href='".wp_nonce_url("edit.php?page=crontrol_admin_manage_page&amp;action=run-cron&amp;id=$hook", 'run-cron_' . $hook)."' onclick=\"return confirm('". js_escape(sprintf(__("You are about to execute a cron entry.\nPress 'OK' to continue or 'Cancel' to stop.")))."');\">Do Now</a></td>";
                 echo "<td><a class='delete' href='".wp_nonce_url("edit.php?page=crontrol_admin_manage_page&amp;action=delete-cron&amp;id=$hook", 'delete-cron_' . $hook)."' onclick=\"return deleteSomething( 'cron', '$hook', '" . js_escape(sprintf( __("You are about to delete the cron entry '%s'.\n'OK' to delete, 'Cancel' to stop." ), $hook)) . "' );\">Delete</a></td>";
                 echo "</tr>";
                 $class = empty($class)?"alternate":"";
@@ -338,7 +347,6 @@ class Crontrol {
         </table>
         </div>
         <div class="wrap narrow">
-            <a name="new" id="new"></a>
             <h2>Add new cron entry</h2>
             <p>Cron entries trigger actions in your code.  After adding a new cron entry here, you will need to add a corresponding action hook somewhere in code, perhaps the <code>functions.php</code> file in your theme.</p>
             <form method="post">
