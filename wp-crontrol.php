@@ -4,7 +4,7 @@
  * Plugin URI: http://www.scompt.com/projects/wp-crontrol
  * Description: WP-Crontrol lets you take control over what's happening in the WP-Cron system.
  * Author: Edward Dale
- * Version: 0.2
+ * Version: 0.3
  * Author URI: http://www.scompt.com
  */
 
