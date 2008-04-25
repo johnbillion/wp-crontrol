@@ -31,7 +31,9 @@ Email [me](mailto:scompt@scompt.com).
 
 == Future Plans ==
 
-* Make better
+* Ability to delete cron entries
+* Ability to add PHP code to be executed for the hook name
+
 
 == Version History ==
 
