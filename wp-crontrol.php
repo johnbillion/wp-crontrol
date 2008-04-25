@@ -238,6 +238,7 @@ class Crontrol {
         $extra_scheds = array('twicedaily'=>array('interval'=>43200, 'display'=>__('Twice Daily', 'crontrol')));
         add_option('crontrol_schedules', $extra_scheds);
 
+        // if there's never been a cron entry, _get_cron_array will return FALSE
         if( _get_cron_array() === FALSE ) {
         	_set_cron_array(array());
         }
@@ -317,6 +318,8 @@ class Crontrol {
                 echo "<td>{$data['display']}</td>";
                 if( in_array($name, $custom_keys) ) {
         			echo "<td><a href='" . wp_nonce_url( "options-general.php?page=crontrol_admin_options_page&amp;action=delete-sched&amp;id=$name", 'delete-sched_' . $name ) . "' onclick=\"return deleteSomething( 'sched', '$name', '" . js_escape(sprintf( __("You are about to delete the schedule '%s'.\n'OK' to delete, 'Cancel' to stop.", 'crontrol' ), $name)) . "' );\" class='delete'>".__( 'Delete' )."</a></td>";
+                } else {
+                    echo "<td>&nbsp;</td>\n";
                 }
                 echo "</tr>";
                 $class = empty($class)?"alternate":"";
@@ -330,7 +333,7 @@ class Crontrol {
             <h2><?php _e('Add new cron schedule', 'crontrol'); ?></h2>
             <p><?php _e('Adding a new cron schedule will allow you to schedule events that re-occur at the given interval.', 'crontrol'); ?></p>
             <form method="post" action="options-general.php?page=crontrol_admin_options_page">
-                <table width="100%" cellspacing="2" cellpadding="5" class="editform">
+                <table width="100%" cellspacing="2" cellpadding="5" class="editform form-table">
             		<tbody>
             		<tr>
             			<th width="33%" valign="top" scope="row"><label for="internal_name"><?php _e('Internal name', 'crontrol'); ?>:</label></th>
@@ -452,7 +455,7 @@ class Crontrol {
             <p><?php _e('Cron entries trigger actions in your code.  After adding a new cron entry here, you will need to add a corresponding action hook somewhere in code, perhaps the <code>functions.php</code> file in your theme.', 'crontrol'); ?></p>
             <form method="post">
                 <?php wp_nonce_field('new-cron') ?>
-                <table width="100%" cellspacing="2" cellpadding="5" class="editform">
+                <table width="100%" cellspacing="2" cellpadding="5" class="editform form-table">
             		<tbody><tr>
             			<th width="33%" valign="top" scope="row"><label for="hookname"><?php _e('Hook name', 'crontrol'); ?>:</label></th>
             			<td width="67%"><input type="text" size="40" value="" id="hookname" name="hookname"/></td>
