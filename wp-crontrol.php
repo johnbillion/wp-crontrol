@@ -237,6 +237,10 @@ class Crontrol {
     function activate() {
         $extra_scheds = array('twicedaily'=>array('interval'=>43200, 'display'=>__('Twice Daily', 'crontrol')));
         add_option('crontrol_schedules', $extra_scheds);
+
+        if( _get_cron_array() === FALSE ) {
+        	_set_cron_array(array());
+        }
     }
     
     /**
@@ -300,19 +304,24 @@ class Crontrol {
         </thead>
         <tbody>
         <?php
-        $class = "";
-        foreach( $schedules as $name=>$data ) {
-            echo "<tr id=\"sched-$name\" class=\"$class\">";
-            echo "<td>$name</td>";
-            echo "<td>{$data['interval']} (".$this->interval($data['interval']).")</td>";
-            echo "<td>{$data['display']}</td>";
-            if( in_array($name, $custom_keys) ) {
-    			echo "<td><a href='" . wp_nonce_url( "options-general.php?page=crontrol_admin_options_page&amp;action=delete-sched&amp;id=$name", 'delete-sched_' . $name ) . "' onclick=\"return deleteSomething( 'sched', '$name', '" . js_escape(sprintf( __("You are about to delete the schedule '%s'.\n'OK' to delete, 'Cancel' to stop.", 'crontrol' ), $name)) . "' );\" class='delete'>".__( 'Delete' )."</a></td>";
+        if( empty($schedules) ) {
+            ?>
+            <tr colspan="4"><td><?php _e('You currently have no cron schedules.  Add one below!', 'crontrol') ?></td></tr>
+            <?php
+        } else {
+            $class = "";
+            foreach( $schedules as $name=>$data ) {
+                echo "<tr id=\"sched-$name\" class=\"$class\">";
+                echo "<td>$name</td>";
+                echo "<td>{$data['interval']} (".$this->interval($data['interval']).")</td>";
+                echo "<td>{$data['display']}</td>";
+                if( in_array($name, $custom_keys) ) {
+        			echo "<td><a href='" . wp_nonce_url( "options-general.php?page=crontrol_admin_options_page&amp;action=delete-sched&amp;id=$name", 'delete-sched_' . $name ) . "' onclick=\"return deleteSomething( 'sched', '$name', '" . js_escape(sprintf( __("You are about to delete the schedule '%s'.\n'OK' to delete, 'Cancel' to stop.", 'crontrol' ), $name)) . "' );\" class='delete'>".__( 'Delete' )."</a></td>";
+                }
+                echo "</tr>";
+                $class = empty($class)?"alternate":"";
             }
-            echo "</tr>";
-            $class = empty($class)?"alternate":"";
-        }
-        
+        }        
         ?>
         </tbody>
         </table>
@@ -376,25 +385,31 @@ class Crontrol {
         </thead>
         <tbody>
         <?php
-        $class = "";
-        foreach( $crons as $time=>$cron ) {
-            foreach( $cron as $hook=>$data) {
-                $data = array_shift($data);
-                if( $doing_edit && $doing_edit==$hook ) {
-                    $doing_edit = array('hookname'=>$hook,
-                                        'nextrun'=>$time,
-                                        'schedule'=>$data['schedule']);
-                }
+        if( empty($crons) ) {
+            ?>
+            <tr colspan="6"><td><?php _e('You currently have no cron entries.  Add one below!', 'crontrol') ?></td></tr>
+            <?php
+        } else {
+            $class = "";
+            foreach( $crons as $time=>$cron ) {
+                foreach( $cron as $hook=>$data) {
+                    $data = array_shift($data);
+                    if( $doing_edit && $doing_edit==$hook ) {
+                        $doing_edit = array('hookname'=>$hook,
+                                            'nextrun'=>$time,
+                                            'schedule'=>$data['schedule']);
+                    }
 
-                echo "<tr id=\"cron-$hook\" class=\"$class\">";
-                echo "<td>$hook</td>";
-                echo "<td>".strftime("%D %T", $time)." (".$this->time_since(time(), $time).")</td>";
-                echo "<td>{$data['interval']} (".$this->interval($data['interval']).")</td>";
-                echo "<td><a class='view' href='edit.php?page=crontrol_admin_manage_page&amp;action=edit-cron&amp;id=$hook'>Edit</a></td>";
-                echo "<td><a class='view' href='".wp_nonce_url("edit.php?page=crontrol_admin_manage_page&amp;action=run-cron&amp;id=$hook", 'run-cron_' . $hook)."' onclick=\"return confirm('". js_escape(sprintf(__("You are about to execute a cron entry.\nPress 'OK' to continue or 'Cancel' to stop.", 'crontrol')))."');\">Do Now</a></td>";
-                echo "<td><a class='delete' href='".wp_nonce_url("edit.php?page=crontrol_admin_manage_page&amp;action=delete-cron&amp;id=$hook", 'delete-cron_' . $hook)."' onclick=\"return deleteSomething( 'cron', '$hook', '" . js_escape(sprintf( __("You are about to delete the cron entry '%s'.\n'OK' to delete, 'Cancel' to stop.", 'crontrol'), $hook)) . "' );\">Delete</a></td>";
-                echo "</tr>";
-                $class = empty($class)?"alternate":"";
+                    echo "<tr id=\"cron-$hook\" class=\"$class\">";
+                    echo "<td>$hook</td>";
+                    echo "<td>".strftime("%D %T", $time)." (".$this->time_since(time(), $time).")</td>";
+                    echo "<td>{$data['interval']} (".$this->interval($data['interval']).")</td>";
+                    echo "<td><a class='view' href='edit.php?page=crontrol_admin_manage_page&amp;action=edit-cron&amp;id=$hook'>Edit</a></td>";
+                    echo "<td><a class='view' href='".wp_nonce_url("edit.php?page=crontrol_admin_manage_page&amp;action=run-cron&amp;id=$hook", 'run-cron_' . $hook)."' onclick=\"return confirm('". js_escape(sprintf(__("You are about to execute a cron entry.\nPress 'OK' to continue or 'Cancel' to stop.", 'crontrol')))."');\">Do Now</a></td>";
+                    echo "<td><a class='delete' href='".wp_nonce_url("edit.php?page=crontrol_admin_manage_page&amp;action=delete-cron&amp;id=$hook", 'delete-cron_' . $hook)."' onclick=\"return deleteSomething( 'cron', '$hook', '" . js_escape(sprintf( __("You are about to delete the cron entry '%s'.\n'OK' to delete, 'Cancel' to stop.", 'crontrol'), $hook)) . "' );\">Delete</a></td>";
+                    echo "</tr>";
+                    $class = empty($class)?"alternate":"";
+                }
             }
         }
         ?>
