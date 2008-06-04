@@ -78,7 +78,6 @@ class Crontrol {
      * Handles any POSTs made by the plugin.  Run using the 'init' action.
      */
     function handle_posts() {
-        var_dump('asdf');
         if( isset($_POST['new_cron']) ) {
             if( !current_user_can('manage_options') ) die(__('You are not allowed to add new cron events.', 'crontrol'));
             check_admin_referer("new-cron");
