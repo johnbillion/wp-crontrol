@@ -4,7 +4,7 @@
  * Plugin URI: http://www.scompt.com/projects/wp-crontrol
  * Description: WP-Crontrol lets you take control over what's happening in the WP-Cron system.
  * Author: Edward Dale
- * Version: 1.0-beta1
+ * Version: 1.0-beta3
  * Author URI: http://www.scompt.com
  */
 
@@ -419,7 +419,7 @@ class Crontrol {
             $other_fields .= '<input name="original_hookname" type="hidden" value="'. $existing['hookname'] .'" />';
             $other_fields .= '<input name="original_sig" type="hidden" value="'. $existing['sig'] .'" />';
             $other_fields .= '<input name="original_next_run" type="hidden" value="'. $existing['next_run'] .'" />';
-            $existing['args'] = $is_php ? $existing['args']['code'] : htmlentities($this->json->encode($existing['args']));
+            $existing['args'] = $is_php ? htmlentities($existing['args']['code']) : htmlentities($this->json->encode($existing['args']));
             $existing['next_run'] = strftime("%D %T", $existing['next_run']);
             $action = $is_php ? 'edit_php_cron' : 'edit_cron';
             $button = $is_php ? __('Modify PHP Cron Entry', 'crontrol') : __('Modify Cron Entry', 'crontrol');
