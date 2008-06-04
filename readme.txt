@@ -3,7 +3,7 @@ Contributors: scompt
 Donate link: http://scompt.com/projects/wp-crontrol
 Tags: admin, cron, plugin, control
 Requires at least: 2.1
-Tested up to: 2.5
+Tested up to: 2.5.1
 Stable tag: 0.3
 
 WP-Crontrol lets you take control over what's happening in the WP-Cron system.
@@ -25,7 +25,11 @@ WP-Crontrol lets you take control over what's happening in the WP-Cron system.
 
 Cron schedules are used by WordPress and WordPress plugins to allow you to schedule commands to be executed at regular intervals.  Intervals must be provided by the WordPress core or a plugin in order to be used.  An example of a plugin that uses these schedules is [WordPress Database Backup](http://www.ilfilosofo.com/blog/wp-db-backup/).  Out of the box, only daily and hourly backups are supported.  In order to do a weekly backup, a weekly cron schedule must be entered into WP-Crontrol first and then the backup plugin can take advantage of it as an interval.
 
-= How do I create a new cron entry? =
+= How do I create a new PHP cron entry? =
+
+In the Manage->Crontrol admin panel, click on the "add new PHP entry" link underneath the cron entry table.  In the form that appears, enter the schedule and next run time in the boxes.  Next run is the next time that the hook will execute.  This can be entered in using [GNU Date Input Formats](http://www.gnu.org/software/tar/manual/html_node/tar_113.html), but often *now* is good enough.  The entry schedule is how often your hook will be executed.  If you don't see a good interval, then add one in the Options->Crontrol admin panel.  In the "Hook code" area, enter the PHP code that should be run when your cron entry is executed.  You don't need to provide the PHP opening tag (`<?php`).
+
+= How do I create a new regular cron entry? =
 
 There are two steps to getting a functioning cron entry that executes regularly.  The first step is telling WordPress about the hook.  This is the part that WP-Crontrol was created to provide.  The second step is calling your function when your hook is executed.  You've got to do that on your own, but I'll explain how below.
 
@@ -47,7 +51,7 @@ The next step is to write your function.  Here's a simple example:
 
 = Do I really need the entire `wp-crontrol` directory? =
 
-Nope!  The only file that you really need is `wp-crontrol.php`.  Toss this file in your `wp-content/plugins` directory and you're good to go.
+Maybe... The most important file is `wp-crontrol.php`.  If your server is running PHP4, you'll need `JSON.php` also.  If you're on PHP5, then you can get rid of the whole directory and just use `wp-crontrol.php`.
 
 = How do I ask a frequently asked question? =
 
@@ -57,13 +61,6 @@ Email [me](mailto:scompt@scompt.com).
 
 1. New cron entries can be added, modified, and deleted.  In addition, they can be executed on-demand.
 1. New cron schedules can be added to WordPress, giving plugin developers more options when scheduling commands.
-
-== Future Plans ==
-
-= Coming up in Version 0.4! =
-
-* Ability to add PHP code to be executed for the hook name
-* German localization
 
 == Version History ==
 
@@ -85,3 +82,9 @@ Email [me](mailto:scompt@scompt.com).
 * More text, status messages, etc.
 * Allow a user to enter a schedule entry in a human manner
 * Looks better on WordPress 2.5
+
+= Version 1.0 =
+
+* Input of PHP code for cron entries
+* Non-repeating cron entries
+* Handles cron entries with arguments
