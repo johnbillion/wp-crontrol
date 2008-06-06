@@ -2,7 +2,7 @@
 /*
  * Plugin Name: WP-Crontrol
  * Plugin URI: http://www.scompt.com/projects/wp-crontrol
- * Description: WP-Crontrol lets you take control over what's happening in the WP-Cron system.
+ * Description: WP-Crontrol lets you take control over what's happening in the WP-Cron system.  See my series on <a target="_blank" href="http://scompt.com/archives/series/taking-control-of-wp-cron-using-wp-crontrol">Taking control of WP-Cron using WP-Crontrol</a> for usage ideas.
  * Author: Edward Dale
  * Version: 1.0
  * Author URI: http://www.scompt.com
