@@ -2,9 +2,9 @@
 Contributors: scompt
 Donate link: http://scompt.com/projects/wp-crontrol
 Tags: admin, cron, plugin, control
-Requires at least: 2.1
+Requires at least: 2.2
 Tested up to: 2.5.1
-Stable tag: 0.3
+Stable tag: 1.0
 
 WP-Crontrol lets you take control over what's happening in the WP-Cron system.
 

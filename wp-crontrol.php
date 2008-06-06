@@ -4,7 +4,7 @@
  * Plugin URI: http://www.scompt.com/projects/wp-crontrol
  * Description: WP-Crontrol lets you take control over what's happening in the WP-Cron system.
  * Author: Edward Dale
- * Version: 1.0-beta3
+ * Version: 1.0
  * Author URI: http://www.scompt.com
  */
 
@@ -613,6 +613,7 @@ class Crontrol {
 	}
 }
 
+// PHP4 doesn't have json_encode built-in.
 if( !function_exists('json_encode' ) ) {
     if( !class_exists('Services_JSON') ) 
         require_once('JSON.php');
@@ -639,6 +640,14 @@ if( !function_exists('json_encode' ) ) {
         }
     }
 }
+
+// WordPress <2.5 doesn't have this function, so we provide it if needed
+if( !function_exists(__ngettext_noop) ) {
+    function __ngettext_noop($single, $plural, $number=1, $domain = 'default') {
+        return array($single, $plural);
+    }    
+}
+
 // Get this show on the road
 new Crontrol();
 ?>
