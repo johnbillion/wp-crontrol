@@ -355,7 +355,7 @@ class Crontrol {
                 <table width="100%" cellspacing="2" cellpadding="5" class="editform form-table">
             		<tbody>
             		<tr>
-            			<th width="33%" valign="top" scope="row"><label for="internal_name"><?php _e('Internal name', 'crontrol'); ?>:</label></th>
+            			<th width="33%" valign="top" scope="row"><label for="internal_name"><?php _e('Internal Name', 'crontrol'); ?>:</label></th>
             			<td width="67%"><input type="text" size="40" value="" id="internal_name" name="internal_name"/></td>
             		</tr>
             		<tr>
@@ -363,7 +363,7 @@ class Crontrol {
             			<td width="67%"><input type="text" size="40" value="" id="interval" name="interval"/></td>
             		</tr>
             		<tr>
-            			<th width="33%" valign="top" scope="row"><label for="display_name"><?php _e('Display name', 'crontrol'); ?>:</label></th>
+            			<th width="33%" valign="top" scope="row"><label for="display_name"><?php _e('Display Name', 'crontrol'); ?>:</label></th>
             			<td width="67%"><input type="text" size="40" value="" id="display_name" name="display_name"/></td>
             		</tr>
             	</tbody></table>
@@ -439,12 +439,12 @@ class Crontrol {
                 <table width="100%" cellspacing="2" cellpadding="5" class="editform form-table"><tbody>
                     <?php if( $is_php ): ?>
             		    <tr>
-                			<th width="33%" valign="top" scope="row"><label for="hookcode"><?php _e('Hook code', 'crontrol'); ?>:</label></th>
+                			<th width="33%" valign="top" scope="row"><label for="hookcode"><?php _e('Hook Code', 'crontrol'); ?>:</label></th>
                 			<td width="67%"><textarea style="width:95%" name="hookcode"><?php echo $existing['args'] ?></textarea></td>
                 		</tr>
             		<?php else: ?>
                 		<tr>
-                			<th width="33%" valign="top" scope="row"><label for="hookname"><?php _e('Hook name', 'crontrol'); ?>:</label></th>
+                			<th width="33%" valign="top" scope="row"><label for="hookname"><?php _e('Hook Name', 'crontrol'); ?>:</label></th>
                 			<td width="67%"><input type="text" size="40" id="hookname" name="hookname" value="<?php echo $existing['hookname'] ?>"/></td>
                 		</tr>
                 		<tr>
@@ -453,10 +453,10 @@ class Crontrol {
                 		</tr>
             		<?php endif; ?>
             		<tr>
-            			<th width="33%" valign="top" scope="row"><label for="next_run"><?php _e('Next run', 'crontrol'); ?>:</label><br /><span style="font-size:xx-small"><?php _e('e.g., "now", "tomorrow", "+2 days", or "06/04/08 15:27:09"', 'crontrol') ?></th>
+            			<th width="33%" valign="top" scope="row"><label for="next_run"><?php _e('Next Run', 'crontrol'); ?>:</label><br /><span style="font-size:xx-small"><?php _e('e.g., "now", "tomorrow", "+2 days", or "06/04/08 15:27:09"', 'crontrol') ?></th>
             			<td width="67%"><input type="text" size="40" id="next_run" name="next_run" value="<?php echo $existing['next_run'] ?>"/></td>
             		</tr><tr>
-            			<th valign="top" scope="row"><label for="schedule"><?php _e('Entry schedule', 'crontrol'); ?>:</label></th>
+            			<th valign="top" scope="row"><label for="schedule"><?php _e('Entry Schedule', 'crontrol'); ?>:</label></th>
             			<td>
                 			<?php $this->schedules_dropdown($existing['schedule']) ?>
             	  		</td>
@@ -497,7 +497,7 @@ class Crontrol {
                 <th><?php _e('Hook Name', 'crontrol'); ?></th>
                 <th><?php _e('Arguments', 'crontrol'); ?></th>
                 <th><?php _e('Next Run', 'crontrol'); ?></th>
-                <th><?php _e('Recurrence', 'crontrol'); ?></th>
+                <th><?php _e('Interval', 'crontrol'); ?></th>
                 <th colspan="3"><?php _e('Actions', 'crontrol'); ?></th>
             </tr>
         </thead>
@@ -525,9 +525,9 @@ class Crontrol {
                         echo "<td>".($hook==CRONTROL_CRON_JOB ? __('<i>PHP Code</i>', 'crontrol') : $this->json->encode($data['args']))."</td>";
                         echo "<td>".strftime("%D %T", $time)." (".$this->time_since(time(), $time).")</td>";
                         echo "<td>".($data['schedule'] ? $data['interval'].' ('.$this->interval($data['interval']).')' : __('Non-repeating', 'crontrol'))."</td>";
-                        echo "<td><a class='view' href='edit.php?page=crontrol_admin_manage_page&amp;action=edit-cron&amp;id=$hook&amp;sig=$sig&amp;next_run=$time#crontrol_form'>Edit</a></td>";
-                        echo "<td><a class='view' href='".wp_nonce_url("edit.php?page=crontrol_admin_manage_page&amp;action=run-cron&amp;id=$hook&amp;sig=$sig", "run-cron_$hook_$sig")."'>Do Now</a></td>";
-                        echo "<td><a class='delete' href='".wp_nonce_url("edit.php?page=crontrol_admin_manage_page&amp;action=delete-cron&amp;id=$hook&amp;sig=$sig&amp;next_run=$time", "delete-cron_$hook_$sig_$time")."'>Delete</a></td>";
+                        echo "<td><a class='view' href='edit.php?page=crontrol_admin_manage_page&amp;action=edit-cron&amp;id=$hook&amp;sig=$sig&amp;next_run=$time#crontrol_form'>".__('Edit', 'crontrol')."</a></td>";
+                        echo "<td><a class='view' href='".wp_nonce_url("edit.php?page=crontrol_admin_manage_page&amp;action=run-cron&amp;id=$hook&amp;sig=$sig", "run-cron_$hook_$sig")."'>".__('Do Now', 'crontrol')."</a></td>";
+                        echo "<td><a class='delete' href='".wp_nonce_url("edit.php?page=crontrol_admin_manage_page&amp;action=delete-cron&amp;id=$hook&amp;sig=$sig&amp;next_run=$time", "delete-cron_$hook_$sig_$time")."'>".__('Delete', 'crontrol')."</a></td>";
                         echo "</tr>";
                         $class = empty($class)?"alternate":"";
                     }
