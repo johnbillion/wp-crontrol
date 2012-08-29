@@ -1,10 +1,10 @@
 === WP-Crontrol ===
-Contributors: scompt
+Contributors: scompt, johnbillion
 Donate link: http://scompt.com/projects/wp-crontrol
 Tags: admin, cron, plugin, control
-Requires at least: 2.2
-Tested up to: 2.5.1
-Stable tag: 1.0
+Requires at least: 3.0
+Tested up to: 3.4
+Stable tag: 1.1
 
 WP-Crontrol lets you take control over what's happening in the WP-Cron system.
 
@@ -16,8 +16,8 @@ WP-Crontrol lets you take control over what's happening in the WP-Cron system.  
 
 1. Upload the `wp-crontrol` directory to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Goto the Options->Crontrol panel to add some new cron schedules.
-1. Goto the Manage->Crontrol panel to see what cron entries are scheduled and to add some new ones.
+1. Go to the Settings -> Crontrol panel to add some new cron schedules.
+1. Go to the Tools -> Crontrol panel to see what cron entries are scheduled and to add some new ones.
 
 == Frequently Asked Questions ==
 
@@ -27,7 +27,7 @@ Cron schedules are used by WordPress and WordPress plugins to allow you to sched
 
 = How do I create a new PHP cron entry? =
 
-In the Manage->Crontrol admin panel, click on the "add new PHP entry" link underneath the cron entry table.  In the form that appears, enter the schedule and next run time in the boxes.  Next run is the next time that the hook will execute.  This can be entered in using [GNU Date Input Formats](http://www.gnu.org/software/tar/manual/html_node/tar_113.html), but often *now* is good enough.  The entry schedule is how often your hook will be executed.  If you don't see a good interval, then add one in the Options->Crontrol admin panel.  In the "Hook code" area, enter the PHP code that should be run when your cron entry is executed.  You don't need to provide the PHP opening tag (`<?php`).
+In the Tools -> Crontrol admin panel, click on the "add new PHP entry" link underneath the cron entry table.  In the form that appears, enter the schedule and next run time in the boxes.  Next run is the next time that the hook will execute.  This can be entered in using [GNU Date Input Formats](http://www.gnu.org/software/tar/manual/html_node/tar_113.html), but often *now* is good enough.  The entry schedule is how often your hook will be executed.  If you don't see a good interval, then add one in the Settings -> Crontrol admin panel.  In the "Hook code" area, enter the PHP code that should be run when your cron entry is executed.  You don't need to provide the PHP opening tag (`<?php`).
 
 = How do I create a new regular cron entry? =
 
@@ -35,7 +35,7 @@ There are two steps to getting a functioning cron entry that executes regularly.
 
 *Step One: Adding the hook*
 
-In the Manage->Crontrol admin panel, enter the details of the hook.  You're best off having a hookname that conforms to normal PHP variable naming conventions.  This could save you trouble later.  Other than that, the hookname can be whatever you want it to be.  Next run is the next time that the hook will execute.  This can be entered in using [GNU Date Input Formats](http://www.gnu.org/software/tar/manual/html_node/tar_113.html), but often *now* is good enough.  The entry schedule is how often your hook will be executed.  If you don't see a good interval, then add one in the Options->Crontrol admin panel.
+In the Tools -> Crontrol admin panel, enter the details of the hook.  You're best off having a hookname that conforms to normal PHP variable naming conventions.  This could save you trouble later.  Other than that, the hookname can be whatever you want it to be.  Next run is the next time that the hook will execute.  This can be entered in using [GNU Date Input Formats](http://www.gnu.org/software/tar/manual/html_node/tar_113.html), but often *now* is good enough.  The entry schedule is how often your hook will be executed.  If you don't see a good interval, then add one in the Settings -> Crontrol admin panel.
 
 *Step Two: Writing the function*
 
@@ -62,29 +62,36 @@ Email [me](mailto:scompt@scompt.com).
 1. New cron entries can be added, modified, and deleted.  In addition, they can be executed on-demand.
 1. New cron schedules can be added to WordPress, giving plugin developers more options when scheduling commands.
 
-== Version History ==
+== Upgrade Notice ==
 
-= Version 0.1 =
+= 1.1 =
+* Bug fixes for running cron jobs and adding cron schedules
 
-* Super basic, look at what's in WP-Cron functionality.
+== Changelog ==
 
-= Version 0.2 =
+= 1.1 =
+* Bug fixes for running cron jobs and adding cron schedules
+* Added a cron spawn test to check for errors when spawning cron
+* Various small tweaks
+* WordPress 3.4 compatibility
 
-* Fully documented the code.
-* Fixed the bug that the activate action wouldn't be run if the plugin wasn't in a subdirectory.
-* Now will play nicely in case any other plugins specify additional cron schedules.
-* Minor cosmetic fixes.
+= 1.0 =
+* Input of PHP code for cron entries
+* Non-repeating cron entries
+* Handles cron entries with arguments
 
-= Version 0.3 =
-
+= 0.3 =
 * Internationalization
 * Editing/deleting/execution of cron entries
 * More text, status messages, etc.
 * Allow a user to enter a schedule entry in a human manner
 * Looks better on WordPress 2.5
 
-= Version 1.0 =
+= 0.2 =
+* Fully documented the code.
+* Fixed the bug that the activate action wouldn't be run if the plugin wasn't in a subdirectory.
+* Now will play nicely in case any other plugins specify additional cron schedules.
+* Minor cosmetic fixes.
 
-* Input of PHP code for cron entries
-* Non-repeating cron entries
-* Handles cron entries with arguments
+= 0.1 =
+* Super basic, look at what's in WP-Cron functionality.
