@@ -2,7 +2,7 @@
 /*
  * Plugin Name: WP-Crontrol
  * Plugin URI: http://www.scompt.com/projects/wp-crontrol
- * Description: WP-Crontrol lets you take control over what's happening in the WP-Cron system.  See my series on <a target="_blank" href="http://scompt.com/archives/series/taking-control-of-wp-cron-using-wp-crontrol">Taking control of WP-Cron using WP-Crontrol</a> for usage ideas.
+ * Description: WP-Crontrol lets you view and control what's happening in the WP-Cron system.
  * Author: <a href="http://www.scompt.com/">Edward Dale</a> & <a href="http://lud.icro.us/">John Blackbourn</a>
  * Version: 1.1
  * Text Domain: crontrol
@@ -321,7 +321,7 @@ class Crontrol {
                 <th><?php _e('Name', 'crontrol'); ?></th>
                 <th><?php _e('Interval', 'crontrol'); ?></th>
                 <th><?php _e('Display Name', 'crontrol'); ?></th>
-                <th><?php _e('Actions', 'crontrol'); ?></th>
+                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -554,7 +554,7 @@ class Crontrol {
                 <th><?php _e('Arguments', 'crontrol'); ?></th>
                 <th><?php _e('Next Run', 'crontrol'); ?></th>
                 <th><?php _e('Recurrence', 'crontrol'); ?></th>
-                <th colspan="3"><?php _e('Actions', 'crontrol'); ?></th>
+                <th colspan="3">&nbsp;</th>
             </tr>
         </thead>
         <tbody>

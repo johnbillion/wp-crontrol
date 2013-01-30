@@ -1,23 +1,39 @@
 === WP-Crontrol ===
 Contributors: scompt, johnbillion
-Donate link: http://scompt.com/projects/wp-crontrol
 Tags: admin, cron, plugin, control
 Requires at least: 3.0
-Tested up to: 3.4
+Tested up to: 3.5
 Stable tag: 1.1
 
-WP-Crontrol lets you take control over what's happening in the WP-Cron system.
+WP-Crontrol lets you view and control what's happening in the WP-Cron system.
 
 == Description ==
 
-WP-Crontrol lets you take control over what's happening in the WP-Cron system.  See my series on [Taking control of WP-Cron using WP-Crontrol](http://scompt.com/archives/series/taking-control-of-wp-cron-using-wp-crontrol) for usage ideas.
+WP-Crontrol lets you view and control what's happening in the WP-Cron system. From the admin screen you can:
+
+ * View all cron entries along with their arguments, recurrence and when they are next due.
+ * Edit, delete, and immediately run any cron entries.
+ * Add new cron entries.
+
+The admin screen will show you a warning message if your cron system doesn't appear to be working (for example if your server can't connect to itself to fire scheduled cron entries).
+
+From the settings screen you can also add, edit and remove cron schedues.
 
 == Installation ==
 
-1. Upload the `wp-crontrol` directory to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Go to the Settings -> Crontrol panel to add some new cron schedules.
-1. Go to the Tools -> Crontrol panel to see what cron entries are scheduled and to add some new ones.
+You can install this plugin directly from your WordPress dashboard:
+
+ 1. Go to the *Plugins* menu and click *Add New*.
+ 2. Search for *WP-Crontrol*.
+ 3. Click *Install Now* next to the *WP-Crontrol* plugin.
+ 4. Activate the plugin.
+
+Alternatively, see the guide to [Manually Installing Plugins](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
+
+= Usage =
+
+1. Go to the Settings -> Crontrol menu to add some new cron schedules.
+2. Go to the Tools -> Crontrol menu to see what cron entries are scheduled and to add some new ones.
 
 == Frequently Asked Questions ==
 
