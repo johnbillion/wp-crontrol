@@ -1,21 +1,21 @@
 <?php
 /*
- * Plugin Name: WP-Crontrol
- * Plugin URI: http://www.scompt.com/projects/wp-crontrol
- * Description: WP-Crontrol lets you view and control what's happening in the WP-Cron system.
- * Author: <a href="http://www.scompt.com/">Edward Dale</a> & <a href="http://lud.icro.us/">John Blackbourn</a>
- * Version: 1.1
+ * Plugin Name: WP Crontrol
+ * Plugin URI:  http://wordpress.org/plugins/wp-crontrol/
+ * Description: WP Crontrol lets you view and control what's happening in the WP-Cron system.
+ * Author:      <a href="http://www.scompt.com/">Edward Dale</a> & <a href="http://lud.icro.us/">John Blackbourn</a>
+ * Version:     1.2
  * Text Domain: crontrol
  * Domain Path: /gettext/
  */
 
  /**
-  * WP-Crontrol lets you take control over what's happening in the WP-Cron system.
+  * WP Crontrol lets you take control over what's happening in the WP-Cron system.
   *
   * LICENSE
-  * This file is part of WP-Crontrol.
+  * This file is part of WP Crontrol.
   *
-  * WP-Crontrol is free software; you can redistribute it and/or
+  * WP Crontrol is free software; you can redistribute it and/or
   * modify it under the terms of the GNU General Public License
   * as published by the Free Software Foundation; either version 2
   * of the License, or (at your option) any later version.
@@ -29,55 +29,58 @@
   * along with this program; if not, write to the Free Software
   * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   *
-  * @package    WP-Crontrol
+  * @package    WP Crontrol
   * @author     Edward Dale <scompt@scompt.com> & John Blackbourn <john@johnblackbourn.com>
   * @copyright  Copyright 2012 Edward Dale & John Blackbourn
   * @license    http://www.gnu.org/licenses/gpl.txt GPL 2.0
-  * @link       http://www.scompt.com/projects/wp-crontrol
+  * @link       http://wordpress.org/plugins/wp-crontrol/
   * @since      0.2
   */
+
+defined( 'ABSPATH' ) or die();
+
 class Crontrol {
     var $json;
 
     /**
      * Hook onto all of the actions and filters needed by the plugin.
      */
-    function Crontrol() {
+    protected function __construct() {
         define( 'CRONTROL_CRON_JOB', 'crontrol_cron_job');
         $this->json = new Crontrol_JSON();
         if( function_exists('add_action') ) {
-            add_action('init', array(&$this, 'init'));
-            add_action('init', array(&$this, 'handle_posts'));
-        	add_action('admin_menu', array(&$this, 'admin_menu'));
+            add_action('init', array(&$this, 'action_init'));
+            add_action('init', array(&$this, 'action_handle_posts'));
+        	add_action('admin_menu', array(&$this, 'action_admin_menu'));
 
             // Make sure the activation works from subdirectories as well as
             // directly in the plugin directory.
             $activate_action = str_replace(ABSPATH.PLUGINDIR.'/', 'activate_', __FILE__);
-        	add_action($activate_action, array(&$this, 'activate'));
+        	add_action($activate_action, array(&$this, 'action_activate'));
 
-        	add_filter('cron_schedules', array(&$this, 'cron_schedules'));
-            add_action(CRONTROL_CRON_JOB, array(&$this, 'php_cron_entry'));
+        	add_filter('cron_schedules', array(&$this, 'filter_cron_schedules'));
+            add_action(CRONTROL_CRON_JOB, array(&$this, 'action_php_cron_entry'));
         }
     }
 
     /**
      * Evaluates the provided code using eval.
      */
-    function php_cron_entry($code) {
+    function action_php_cron_entry($code) {
         eval($code);
     }
 
     /**
      * Run using the 'init' action.
      */
-    function init() {
+    function action_init() {
     	load_plugin_textdomain( 'crontrol', false, dirname( plugin_basename( __FILE__ ) ) . '/gettext' );
     }
 
     /**
      * Handles any POSTs made by the plugin.  Run using the 'init' action.
      */
-    function handle_posts() {
+    function action_handle_posts() {
         if( isset($_POST['new_cron']) ) {
             if( !current_user_can('manage_options') ) die(__('You are not allowed to add new cron events.', 'crontrol'));
             check_admin_referer("new-cron");
@@ -258,7 +261,7 @@ class Crontrol {
      *
      * Run using the 'activate_' action.
      */
-    function activate() {
+    function action_activate() {
         $extra_scheds = array('twicedaily'=>array('interval'=>43200, 'display'=>__('Twice Daily', 'crontrol')));
         add_option('crontrol_schedules', $extra_scheds);
 
@@ -273,7 +276,7 @@ class Crontrol {
      *
      * Run using the 'admin_menu' action.
      */
-    function admin_menu() {
+    function action_admin_menu() {
 	    $page = add_options_page('Crontrol', 'Crontrol', 'manage_options', 'crontrol_admin_options_page', array(&$this, 'admin_options_page') );
 	    $page = add_management_page('Crontrol', "Crontrol", 'manage_options', 'crontrol_admin_manage_page', array(&$this, 'admin_manage_page') );
     }
@@ -286,7 +289,7 @@ class Crontrol {
 	 * @param array $scheds The current cron schedules.  Usually an empty array.
 	 * @return array The existing cron schedules along with the plugin's schedules.
      */
-    function cron_schedules($scheds) {
+    function filter_cron_schedules($scheds) {
         $new_scheds = get_option('crontrol_schedules',array());
         return array_merge($new_scheds, $scheds);
     }
@@ -313,7 +316,7 @@ class Crontrol {
         <div class="wrap">
 		<?php screen_icon(); ?>
         <h2><?php _e("Cron Schedules", "crontrol"); ?></h2>
-        <p><?php _e('Cron schedules are the time intervals that are available to WordPress and plugin developers to schedule events.  You can only delete cron schedules that you have created with WP-Crontrol.', 'crontrol'); ?></p>
+        <p><?php _e('Cron schedules are the time intervals that are available to WordPress and plugin developers to schedule events.  You can only delete cron schedules that you have created with WP Crontrol.', 'crontrol'); ?></p>
         <div id="ajax-response"></div>
         <table class="widefat">
         <thead>
@@ -407,14 +410,14 @@ class Crontrol {
      * Gets the status of WP-Cron functionality on the site by performing a test spawn. Cached for one hour when all is well.
      *
      */
-	function test_cron_spawn() {
+	function test_cron_spawn( $cache = true ) {
 
 		if ( defined('ALTERNATE_WP_CRON') && ALTERNATE_WP_CRON )
 			return true;
 
 		$cached_status = get_transient( 'wp-cron-test-ok' );
 
-		if ( $cached_status )
+		if ( $cache and $cached_status )
 			return true;
 
 		$doing_wp_cron = sprintf( '%.22F', microtime( true ) );
@@ -522,6 +525,40 @@ class Crontrol {
         <?php
     }
 
+    function get_cron_events() {
+
+    	$crons  = _get_cron_array();
+    	$events = array();
+
+		if ( empty( $crons ) ) {
+			return new WP_Error(
+				'no_events',
+				__( 'You currently have no cron entries.', 'crontrol' )
+			);
+		}
+
+		foreach( $crons as $time=>$cron ) {
+			foreach( $cron as $hook=>$dings) {
+				foreach( $dings as $sig=>$data ) {
+
+					# This is a prime candidate for a Crontrol_Event class but I'm not bothering currently.
+					$events["$hook-$sig"] = (object) array(
+						'hook'     => $hook,
+						'time'     => $time,
+						'sig'      => $sig,
+						'args'     => $data['args'],
+						'schedule' => $data['schedule'],
+						'interval' => $data['interval'],
+					);
+
+				}
+			}
+		}
+
+		return $events;
+
+    }
+
     /**
      * Displays the manage page for the plugin.
      */
@@ -538,8 +575,7 @@ class Crontrol {
 
             echo "<div id=\"message\" class=\"updated fade\"><p>$msg</p></div>";
         }
-        $crons = _get_cron_array();
-        $schedules = $this->get_schedules();
+        $events = $this->get_cron_events();
         $doing_edit = (isset( $_GET['action']) && $_GET['action']=='edit-cron') ? $_GET['id'] : false ;
         $this->show_cron_status();
         ?>
@@ -559,35 +595,35 @@ class Crontrol {
         </thead>
         <tbody>
         <?php
-        if( empty($crons) ) {
+        if( is_wp_error($events) ) {
             ?>
-            <tr><td colspan="7"><?php _e('You currently have no cron entries.  Add one below!', 'crontrol') ?></td></tr>
+            <tr><td colspan="7"><?php echo $events->get_error_message(); ?></td></tr>
             <?php
         } else {
             $class = "";
-            foreach( $crons as $time=>$cron ) {
-                foreach( $cron as $hook=>$dings) {
-                    foreach( $dings as $sig=>$data ) {
-                        if( $doing_edit && $doing_edit==$hook && $time == $_GET['next_run'] && $sig==$_GET['sig'] ) {
-                            $doing_edit = array('hookname'=>$hook,
-                                                'next_run'=>$time,
-                                                'schedule'=>($data['schedule'] ? $data['schedule'] : '_oneoff'),
-                                                'sig'=>$sig,
-                                                'args'=>$data['args']);
-                        }
+            foreach( $events as $id=>$event ) {
 
-                        echo "<tr id=\"cron-$hook-$sig\" class=\"$class\">";
-                        echo "<td>".($hook==CRONTROL_CRON_JOB ? __('<i>PHP Cron</i>', 'crontrol') : $hook)."</td>";
-                        echo "<td>".($hook==CRONTROL_CRON_JOB ? __('<i>PHP Code</i>', 'crontrol') : $this->json->encode($data['args']))."</td>";
-                        echo "<td>".strftime("%Y/%m/%d %H:%M:%S", $time)." (".$this->time_since(time(), $time).")</td>";
-                        echo "<td>".($data['schedule'] ? $data['interval'].' ('.$this->interval($data['interval']).')' : __('Non-repeating', 'crontrol'))."</td>";
-                        echo "<td><a class='view' href='tools.php?page=crontrol_admin_manage_page&amp;action=edit-cron&amp;id=$hook&amp;sig=$sig&amp;next_run=$time#crontrol_form'>Edit</a></td>";
-                        echo "<td><a class='view' href='".wp_nonce_url("tools.php?page=crontrol_admin_manage_page&amp;action=run-cron&amp;id=$hook&amp;sig=$sig", "run-cron_{$hook}_{$sig}")."'>Run Now</a></td>";
-                        echo "<td><a class='delete' href='".wp_nonce_url("tools.php?page=crontrol_admin_manage_page&amp;action=delete-cron&amp;id=$hook&amp;sig=$sig&amp;next_run=$time", "delete-cron_{$hook}_{$sig}_{$time}")."'>Delete</a></td>";
-                        echo "</tr>";
-                        $class = empty($class)?"alternate":"";
-                    }
-                }
+				if ( $doing_edit && $doing_edit == $event->hook && $event->time == $_GET['next_run'] && $event->sig == $_GET['sig'] ) {
+					$doing_edit = array(
+						'hookname' => $event->hook,
+						'next_run' => $event->time,
+						'schedule' => ( $event->schedule ? $event->schedule : '_oneoff' ),
+						'sig'      => $event->sig,
+						'args'     => $event->args
+					);
+				}
+
+                echo "<tr id=\"cron-{$id}\" class=\"{$class}\">";
+                echo "<td>".($event->hook==CRONTROL_CRON_JOB ? __('<i>PHP Cron</i>', 'crontrol') : $event->hook)."</td>";
+                echo "<td>".($event->hook==CRONTROL_CRON_JOB ? __('<i>PHP Code</i>', 'crontrol') : $this->json->encode($event->args))."</td>";
+                echo "<td>".strftime("%Y/%m/%d %H:%M:%S", $event->time)." (".$this->time_since(time(), $event->time).")</td>";
+                echo "<td>".($event->schedule ? $event->interval.' ('.$this->interval($event->interval).')' : __('Non-repeating', 'crontrol'))."</td>";
+                echo "<td><a class='view' href='tools.php?page=crontrol_admin_manage_page&amp;action=edit-cron&amp;id={$event->hook}&amp;sig={$event->sig}&amp;next_run={$event->time}#crontrol_form'>Edit</a></td>";
+                echo "<td><a class='view' href='".wp_nonce_url("tools.php?page=crontrol_admin_manage_page&amp;action=run-cron&amp;id={$event->hook}&amp;sig={$event->sig}", "run-cron_{$event->hook}_{$event->sig}")."'>Run Now</a></td>";
+                echo "<td><a class='delete' href='".wp_nonce_url("tools.php?page=crontrol_admin_manage_page&amp;action=delete-cron&amp;id={$event->hook}&amp;sig={$event->sig}&amp;next_run={$event->time}", "delete-cron_{$event->hook}_{$event->sig}_{$event->time}")."'>Delete</a></td>";
+                echo "</tr>";
+                $class = empty($class)?"alternate":"";
+
             }
         }
         ?>
@@ -667,36 +703,31 @@ class Crontrol {
 
     	return $output;
 	}
+
+	public function init() {
+
+		static $instance = null;
+
+		if ( !$instance )
+			$instance = new Crontrol;
+
+		return $instance;
+
+	}
+
 }
 
-// PHP4 doesn't have json_encode built-in.
-if( !function_exists('json_encode' ) ) {
-    if( !class_exists('Services_JSON') )
-        require_once('JSON.php');
-
-    class Crontrol_JSON {
-        var $json;
-        function Crontrol_JSON() {
-            $this->json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
-        }
-        function encode($in) {
-            return $this->json->encode($in);
-        }
-        function decode($in) {
-            return $this->json->decode($in);
-        }
+class Crontrol_JSON {
+    function encode($in) {
+        return json_encode($in);
     }
-} else {
-    class Crontrol_JSON {
-        function encode($in) {
-            return json_encode($in);
-        }
-        function decode($in) {
-            return json_decode($in, true);
-        }
+    function decode($in) {
+        return json_decode($in, true);
     }
 }
+
+if ( defined( 'WP_CLI' ) and WP_CLI and is_readable( $wp_cli = dirname( __FILE__ ) . '/class-wp-cli.php' ) )
+	include_once $wp_cli;
 
 // Get this show on the road
-new Crontrol();
-?>
+Crontrol::init();

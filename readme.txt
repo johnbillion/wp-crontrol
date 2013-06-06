@@ -1,15 +1,15 @@
-=== WP-Crontrol ===
+=== WP Crontrol ===
 Contributors: scompt, johnbillion
-Tags: admin, cron, plugin, control
+Tags: admin, cron, plugin, control, wp-cron, crontrol, wp-cli
 Requires at least: 3.0
-Tested up to: 3.5
-Stable tag: 1.1
+Tested up to: 3.6
+Stable tag: 1.2
 
-WP-Crontrol lets you view and control what's happening in the WP-Cron system.
+WP Crontrol lets you view and control what's happening in the WP-Cron system.
 
 == Description ==
 
-WP-Crontrol lets you view and control what's happening in the WP-Cron system. From the admin screen you can:
+WP Crontrol lets you view and control what's happening in the WP-Cron system. From the admin screen you can:
 
  * View all cron entries along with their arguments, recurrence and when they are next due.
  * Edit, delete, and immediately run any cron entries.
@@ -19,13 +19,15 @@ The admin screen will show you a warning message if your cron system doesn't app
 
 From the settings screen you can also add, edit and remove cron schedues.
 
+Now supports [wp-cli](http://wp-cli.org/)!
+
 == Installation ==
 
 You can install this plugin directly from your WordPress dashboard:
 
  1. Go to the *Plugins* menu and click *Add New*.
- 2. Search for *WP-Crontrol*.
- 3. Click *Install Now* next to the *WP-Crontrol* plugin.
+ 2. Search for *WP Crontrol*.
+ 3. Click *Install Now* next to the *WP Crontrol* plugin.
  4. Activate the plugin.
 
 Alternatively, see the guide to [Manually Installing Plugins](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
@@ -39,7 +41,7 @@ Alternatively, see the guide to [Manually Installing Plugins](http://codex.wordp
 
 = What's the use of adding new cron schedules? =
 
-Cron schedules are used by WordPress and WordPress plugins to allow you to schedule commands to be executed at regular intervals.  Intervals must be provided by the WordPress core or a plugin in order to be used.  An example of a plugin that uses these schedules is [WordPress Database Backup](http://www.ilfilosofo.com/blog/wp-db-backup/).  Out of the box, only daily and hourly backups are supported.  In order to do a weekly backup, a weekly cron schedule must be entered into WP-Crontrol first and then the backup plugin can take advantage of it as an interval.
+Cron schedules are used by WordPress and WordPress plugins to allow you to schedule commands to be executed at regular intervals.  Intervals must be provided by the WordPress core or a plugin in order to be used.  An example of a plugin that uses these schedules is [WordPress Database Backup](http://www.ilfilosofo.com/blog/wp-db-backup/).  Out of the box, only daily and hourly backups are supported.  In order to do a weekly backup, a weekly cron schedule must be entered into WP Crontrol first and then the backup plugin can take advantage of it as an interval.
 
 = How do I create a new PHP cron entry? =
 
@@ -47,7 +49,7 @@ In the Tools -> Crontrol admin panel, click on the "add new PHP entry" link unde
 
 = How do I create a new regular cron entry? =
 
-There are two steps to getting a functioning cron entry that executes regularly.  The first step is telling WordPress about the hook.  This is the part that WP-Crontrol was created to provide.  The second step is calling your function when your hook is executed.  You've got to do that on your own, but I'll explain how below.
+There are two steps to getting a functioning cron entry that executes regularly.  The first step is telling WordPress about the hook.  This is the part that WP Crontrol was created to provide.  The second step is calling your function when your hook is executed.  You've got to do that on your own, but I'll explain how below.
 
 *Step One: Adding the hook*
 
@@ -62,16 +64,20 @@ This part takes place in PHP code (for example, in the `functions.php` file from
 The next step is to write your function.  Here's a simple example:
 
 `function my_function() {
-        wp_mail('scompt@scompt.com', 'WP-Crontrol', 'WP-Crontrol rocks!');
+        wp_mail('hello@example.com', 'WP Crontrol', 'WP Crontrol rocks!');
 }`
 
 = Do I really need the entire `wp-crontrol` directory? =
 
-Maybe... The most important file is `wp-crontrol.php`.  If your server is running PHP4, you'll need `JSON.php` also.  If you're on PHP5, then you can get rid of the whole directory and just use `wp-crontrol.php`.
+No, you can get rid of the whole directory and just use `wp-crontrol.php` if you wish. If you want to use wp-cli then you'll need to include `class-wp-cli.php` too.
 
-= How do I ask a frequently asked question? =
+= Which wp-cli commands are available? =
 
-Email [me](mailto:scompt@scompt.com).
+ * `wp crontrol list` Lists the scheduled events on your site.
+ * `wp crontrol test` Performs a WP-Cron spawning test to make sure WP-Cron can function as expected.
+ * `wp crontrol list-schedules` Lists the available WP-Cron schedules on your site.
+
+Note that wp-cli support was only recently added. This will be improved over time. Feedback welcome!
 
 == Screenshots ==
 
@@ -80,10 +86,14 @@ Email [me](mailto:scompt@scompt.com).
 
 == Upgrade Notice ==
 
-= 1.1 =
-* Bug fixes for running cron jobs and adding cron schedules
+= 1.2 =
+* Added support for [wp-cli](http://wp-cli.org/)
 
 == Changelog ==
+
+= 1.2 =
+* Added support for [wp-cli](http://wp-cli.org/)
+* Removed some PHP4 code that's no longer relevant
 
 = 1.1 =
 * Bug fixes for running cron jobs and adding cron schedules
@@ -111,3 +121,4 @@ Email [me](mailto:scompt@scompt.com).
 
 = 0.1 =
 * Super basic, look at what's in WP-Cron functionality.
+
