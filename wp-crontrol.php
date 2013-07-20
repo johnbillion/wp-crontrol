@@ -4,7 +4,7 @@
  * Plugin URI:  http://wordpress.org/plugins/wp-crontrol/
  * Description: WP Crontrol lets you view and control what's happening in the WP-Cron system.
  * Author:      <a href="http://www.scompt.com/">Edward Dale</a> & <a href="http://lud.icro.us/">John Blackbourn</a>
- * Version:     1.2
+ * Version:     1.2.1
  * Text Domain: crontrol
  * Domain Path: /gettext/
  */
@@ -31,7 +31,7 @@
   *
   * @package    WP Crontrol
   * @author     Edward Dale <scompt@scompt.com> & John Blackbourn <john@johnblackbourn.com>
-  * @copyright  Copyright 2012 Edward Dale & John Blackbourn
+  * @copyright  Copyright 2013 Edward Dale & John Blackbourn
   * @license    http://www.gnu.org/licenses/gpl.txt GPL 2.0
   * @link       http://wordpress.org/plugins/wp-crontrol/
   * @since      0.2
@@ -40,27 +40,22 @@
 defined( 'ABSPATH' ) or die();
 
 class Crontrol {
-    var $json;
 
     /**
      * Hook onto all of the actions and filters needed by the plugin.
      */
     protected function __construct() {
-        define( 'CRONTROL_CRON_JOB', 'crontrol_cron_job');
-        $this->json = new Crontrol_JSON();
-        if( function_exists('add_action') ) {
-            add_action('init', array(&$this, 'action_init'));
-            add_action('init', array(&$this, 'action_handle_posts'));
-        	add_action('admin_menu', array(&$this, 'action_admin_menu'));
+        add_action('init', array(&$this, 'action_init'));
+        add_action('init', array(&$this, 'action_handle_posts'));
+    	add_action('admin_menu', array(&$this, 'action_admin_menu'));
 
-            // Make sure the activation works from subdirectories as well as
-            // directly in the plugin directory.
-            $activate_action = str_replace(ABSPATH.PLUGINDIR.'/', 'activate_', __FILE__);
-        	add_action($activate_action, array(&$this, 'action_activate'));
+        // Make sure the activation works from subdirectories as well as
+        // directly in the plugin directory.
+        $activate_action = str_replace(ABSPATH.PLUGINDIR.'/', 'activate_', __FILE__);
+    	add_action($activate_action, array(&$this, 'action_activate'));
 
-        	add_filter('cron_schedules', array(&$this, 'filter_cron_schedules'));
-            add_action(CRONTROL_CRON_JOB, array(&$this, 'action_php_cron_entry'));
-        }
+    	add_filter('cron_schedules', array(&$this, 'filter_cron_schedules'));
+        add_action('crontrol_cron_job', array(&$this, 'action_php_cron_entry'));
     }
 
     /**
@@ -85,7 +80,7 @@ class Crontrol {
             if( !current_user_can('manage_options') ) die(__('You are not allowed to add new cron events.', 'crontrol'));
             check_admin_referer("new-cron");
             extract($_POST, EXTR_PREFIX_ALL, 'in');
-            $in_args = $this->json->decode(stripslashes($in_args));
+            $in_args = json_decode(stripslashes($in_args),true);
             $this->add_cron($in_next_run, $in_schedule, $in_hookname, $in_args);
             wp_redirect("tools.php?page=crontrol_admin_manage_page&crontrol_message=5&crontrol_name={$in_hookname}");
 
@@ -94,8 +89,7 @@ class Crontrol {
             check_admin_referer("new-cron");
             extract($_POST, EXTR_PREFIX_ALL, 'in');
             $args = array('code'=>stripslashes($in_hookcode));
-            $hookname = CRONTROL_CRON_JOB;
-            $this->add_cron($in_next_run, $in_schedule, $hookname, $args);
+            $this->add_cron($in_next_run, $in_schedule, 'crontrol_cron_job', $args);
             wp_redirect("tools.php?page=crontrol_admin_manage_page&crontrol_message=5&crontrol_name={$in_hookname}");
 
         } else if( isset($_POST['edit_cron']) ) {
@@ -103,7 +97,7 @@ class Crontrol {
 
             extract($_POST, EXTR_PREFIX_ALL, 'in');
             check_admin_referer("edit-cron_{$in_original_hookname}_{$in_original_sig}_{$in_original_next_run}");
-            $in_args = $this->json->decode(stripslashes($in_args));
+            $in_args = json_decode(stripslashes($in_args),true);
             $i=$this->delete_cron($in_original_hookname, $in_original_sig, $in_original_next_run);
             $i=$this->add_cron($in_next_run, $in_schedule, $in_hookname, $in_args);
             wp_redirect("tools.php?page=crontrol_admin_manage_page&crontrol_message=4&crontrol_name={$in_hookname}");
@@ -114,10 +108,9 @@ class Crontrol {
             extract($_POST, EXTR_PREFIX_ALL, 'in');
             check_admin_referer("edit-cron_{$in_original_hookname}_{$in_original_sig}_{$in_original_next_run}");
             $args['code'] = stripslashes($in_hookcode);
-            $hookname = CRONTROL_CRON_JOB;
             $args = array('code'=>stripslashes($in_hookcode));
             $i=$this->delete_cron($in_original_hookname, $in_original_sig, $in_original_next_run);
-            $i=$this->add_cron($in_next_run, $in_schedule, $hookname, $args);
+            $i=$this->add_cron($in_next_run, $in_schedule, 'crontrol_cron_job', $args);
             wp_redirect("tools.php?page=crontrol_admin_manage_page&crontrol_message=4&crontrol_name={$in_hookname}");
 
         } else if( isset($_POST['new_schedule']) ) {
@@ -277,7 +270,7 @@ class Crontrol {
      * Run using the 'admin_menu' action.
      */
     function action_admin_menu() {
-	    $page = add_options_page('Crontrol', 'Crontrol', 'manage_options', 'crontrol_admin_options_page', array(&$this, 'admin_options_page') );
+	    $page = add_options_page('Cron Schedules', 'Cron Schedules', 'manage_options', 'crontrol_admin_options_page', array(&$this, 'admin_options_page') );
 	    $page = add_management_page('Crontrol', "Crontrol", 'manage_options', 'crontrol_admin_manage_page', array(&$this, 'admin_manage_page') );
     }
 
@@ -421,13 +414,20 @@ class Crontrol {
 			return true;
 
 		$doing_wp_cron = sprintf( '%.22F', microtime( true ) );
-		$cron_url = site_url( 'wp-cron.php?doing_wp_cron=' . $doing_wp_cron );
 
-		$result = wp_remote_post( $cron_url, array(
-			'timeout'   => 3,
-			'blocking'  => true,
-			'sslverify' => apply_filters( 'https_local_ssl_verify', true )
+		$cron_request = apply_filters( 'cron_request', array(
+			'url'  => site_url( 'wp-cron.php?doing_wp_cron=' . $doing_wp_cron ),
+			'key'  => $doing_wp_cron,
+			'args' => array(
+				'timeout'   => 3,
+				'blocking'  => true,
+				'sslverify' => apply_filters( 'https_local_ssl_verify', true )
+			)
 		) );
+
+		$cron_request['args']['blocking'] = true;
+
+		$result = wp_remote_post( $cron_request['url'], $cron_request['args'] );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -475,7 +475,7 @@ class Crontrol {
             $other_fields .= '<input name="original_hookname" type="hidden" value="'. $existing['hookname'] .'" />';
             $other_fields .= '<input name="original_sig" type="hidden" value="'. $existing['sig'] .'" />';
             $other_fields .= '<input name="original_next_run" type="hidden" value="'. $existing['next_run'] .'" />';
-            $existing['args'] = $is_php ? htmlentities($existing['args']['code']) : htmlentities($this->json->encode($existing['args']));
+            $existing['args'] = $is_php ? $existing['args']['code'] : json_encode($existing['args']);
             $existing['next_run'] = strftime("%D %T", $existing['next_run']);
             $action = $is_php ? 'edit_php_cron' : 'edit_cron';
             $button = $is_php ? __('Modify PHP Cron Entry', 'crontrol') : __('Modify Cron Entry', 'crontrol');
@@ -497,21 +497,21 @@ class Crontrol {
                     <?php if( $is_php ): ?>
             		    <tr>
                 			<th width="33%" valign="top" scope="row"><label for="hookcode"><?php _e('Hook code', 'crontrol'); ?>:</label></th>
-                			<td width="67%"><textarea style="width:95%" name="hookcode"><?php echo $existing['args'] ?></textarea></td>
+                			<td width="67%"><textarea style="width:95%" name="hookcode"><?php echo esc_textarea( $existing['args'] ); ?></textarea></td>
                 		</tr>
             		<?php else: ?>
                 		<tr>
                 			<th width="33%" valign="top" scope="row"><label for="hookname"><?php _e('Hook name', 'crontrol'); ?>:</label></th>
-                			<td width="67%"><input type="text" size="40" id="hookname" name="hookname" value="<?php echo $existing['hookname'] ?>"/></td>
+                			<td width="67%"><input type="text" size="40" id="hookname" name="hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>"/></td>
                 		</tr>
                 		<tr>
                 			<th width="33%" valign="top" scope="row"><label for="args"><?php _e('Arguments', 'crontrol'); ?>:</label><br /><span style="font-size:xx-small"><?php _e('e.g., [], [25], ["asdf"], or ["i","want",25,"cakes"]', 'crontrol') ?></span></th>
-                			<td width="67%"><input type="text" size="40" id="args" name="args" value="<?php echo $existing['args'] ?>"/></td>
+                			<td width="67%"><input type="text" size="40" id="args" name="args" value="<?php echo esc_textarea( $existing['args'] ); ?>"/></td>
                 		</tr>
             		<?php endif; ?>
             		<tr>
             			<th width="33%" valign="top" scope="row"><label for="next_run"><?php _e('Next run', 'crontrol'); ?>:</label><br /><span style="font-size:xx-small"><?php _e('e.g., "now", "tomorrow", "+2 days", or "06/04/08 15:27:09"', 'crontrol') ?></th>
-            			<td width="67%"><input type="text" size="40" id="next_run" name="next_run" value="<?php echo $existing['next_run'] ?>"/></td>
+            			<td width="67%"><input type="text" size="40" id="next_run" name="next_run" value="<?php echo esc_attr( $existing['next_run'] ); ?>"/></td>
             		</tr><tr>
             			<th valign="top" scope="row"><label for="schedule"><?php _e('Entry schedule', 'crontrol'); ?>:</label></th>
             			<td>
@@ -548,7 +548,7 @@ class Crontrol {
 						'sig'      => $sig,
 						'args'     => $data['args'],
 						'schedule' => $data['schedule'],
-						'interval' => $data['interval'],
+						'interval' => isset( $data['interval'] ) ? $data['interval'] : null,
 					);
 
 				}
@@ -577,6 +577,7 @@ class Crontrol {
         }
         $events = $this->get_cron_events();
         $doing_edit = (isset( $_GET['action']) && $_GET['action']=='edit-cron') ? $_GET['id'] : false ;
+        $time_format = 'Y/m/d H:i:s';
         $this->show_cron_status();
         ?>
         <div class="wrap">
@@ -614,10 +615,10 @@ class Crontrol {
 				}
 
                 echo "<tr id=\"cron-{$id}\" class=\"{$class}\">";
-                echo "<td>".($event->hook==CRONTROL_CRON_JOB ? __('<i>PHP Cron</i>', 'crontrol') : $event->hook)."</td>";
-                echo "<td>".($event->hook==CRONTROL_CRON_JOB ? __('<i>PHP Code</i>', 'crontrol') : $this->json->encode($event->args))."</td>";
-                echo "<td>".strftime("%Y/%m/%d %H:%M:%S", $event->time)." (".$this->time_since(time(), $event->time).")</td>";
-                echo "<td>".($event->schedule ? $event->interval.' ('.$this->interval($event->interval).')' : __('Non-repeating', 'crontrol'))."</td>";
+                echo "<td>".($event->hook=='crontrol_cron_job' ? __('<i>PHP Cron</i>', 'crontrol') : $event->hook)."</td>";
+                echo "<td>".($event->hook=='crontrol_cron_job' ? __('<i>PHP Code</i>', 'crontrol') : json_encode($event->args))."</td>";
+                echo "<td>".get_date_from_gmt(date('Y-m-d H:i:s',$event->time),$time_format)." (".$this->time_since(time(), $event->time).")</td>";
+                echo "<td>".($event->schedule ? $this->interval($event->interval) : __('Non-repeating', 'crontrol'))."</td>";
                 echo "<td><a class='view' href='tools.php?page=crontrol_admin_manage_page&amp;action=edit-cron&amp;id={$event->hook}&amp;sig={$event->sig}&amp;next_run={$event->time}#crontrol_form'>Edit</a></td>";
                 echo "<td><a class='view' href='".wp_nonce_url("tools.php?page=crontrol_admin_manage_page&amp;action=run-cron&amp;id={$event->hook}&amp;sig={$event->sig}", "run-cron_{$event->hook}_{$event->sig}")."'>Run Now</a></td>";
                 echo "<td><a class='delete' href='".wp_nonce_url("tools.php?page=crontrol_admin_manage_page&amp;action=delete-cron&amp;id={$event->hook}&amp;sig={$event->sig}&amp;next_run={$event->time}", "delete-cron_{$event->hook}_{$event->sig}_{$event->time}")."'>Delete</a></td>";
@@ -629,10 +630,14 @@ class Crontrol {
         ?>
         </tbody>
         </table>
+
+        <p class="description"><?php printf(__('UTC time is <code>%s</code>', 'crontrol'), date_i18n($time_format, false, true)); ?></p>
+        <p class="description"><?php printf(__('Local time is <code>%s</code>', 'crontrol'), date_i18n($time_format)); ?></p>
+
         </div>
         <?php
         if( is_array( $doing_edit ) ) {
-            $this->show_cron_form($doing_edit['hookname']==CRONTROL_CRON_JOB, $doing_edit);
+            $this->show_cron_form($doing_edit['hookname']=='crontrol_cron_job', $doing_edit);
         } else {
             $this->show_cron_form((isset($_GET['action']) and $_GET['action']=='new-php-cron'), false);
         }
@@ -704,7 +709,7 @@ class Crontrol {
     	return $output;
 	}
 
-	public function init() {
+	public static function init() {
 
 		static $instance = null;
 
@@ -715,15 +720,6 @@ class Crontrol {
 
 	}
 
-}
-
-class Crontrol_JSON {
-    function encode($in) {
-        return json_encode($in);
-    }
-    function decode($in) {
-        return json_decode($in, true);
-    }
 }
 
 if ( defined( 'WP_CLI' ) and WP_CLI and is_readable( $wp_cli = dirname( __FILE__ ) . '/class-wp-cli.php' ) )

@@ -3,7 +3,7 @@ Contributors: scompt, johnbillion
 Tags: admin, cron, plugin, control, wp-cron, crontrol, wp-cli
 Requires at least: 3.0
 Tested up to: 3.6
-Stable tag: 1.2
+Stable tag: 1.2.1
 
 WP Crontrol lets you view and control what's happening in the WP-Cron system.
 
@@ -34,8 +34,8 @@ Alternatively, see the guide to [Manually Installing Plugins](http://codex.wordp
 
 = Usage =
 
-1. Go to the Settings -> Crontrol menu to add some new cron schedules.
-2. Go to the Tools -> Crontrol menu to see what cron entries are scheduled and to add some new ones.
+1. Go to the Tools -> Crontrol menu to see what cron entries are scheduled and to add some new ones.
+2. Go to the Settings -> Cron Schedules menu to add new cron schedules.
 
 == Frequently Asked Questions ==
 
@@ -86,10 +86,15 @@ Note that wp-cli support was only recently added. This will be improved over tim
 
 == Upgrade Notice ==
 
-= 1.2 =
-* Added support for [wp-cli](http://wp-cli.org/)
+= 1.2.1 =
+* Correctly display the local time when listing cron entries
 
 == Changelog ==
+
+= 1.2.1 =
+* Correctly display the local time when listing cron entries
+* Remove a PHP notice
+* Pass the WP-Cron spawn check through the same filter as the actual spawner.
 
 = 1.2 =
 * Added support for [wp-cli](http://wp-cli.org/)

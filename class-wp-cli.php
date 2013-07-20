@@ -33,7 +33,7 @@ class Crontrol_Command extends WP_CLI_Command {
 			die();
         }
 
-        $events = array_map( array( $this, '_map_event' ), $events );
+        $events = array_map( 'self::_map_event', $events );
 
         $fields = array(
         	'hook',
@@ -56,7 +56,7 @@ class Crontrol_Command extends WP_CLI_Command {
 
 		$schedules = $this->crontrol->get_schedules();
 
-        $schedules = array_map( array( $this, '_map_schedule' ), $schedules );
+        $schedules = array_map( 'self::_map_schedule', $schedules );
 
         $fields = array(
         	'display',
@@ -79,17 +79,17 @@ class Crontrol_Command extends WP_CLI_Command {
         if ( is_wp_error( $status ) )
 			WP_CLI::error( $status );
 		else
-			WP_CLI::success( __( 'WP-Cron working as expected.', 'control' ) );
+			WP_CLI::success( __( 'WP-Cron is working as expected.', 'crontrol' ) );
 
 	}
 
-	protected function _map_event( $event ) {
-		$event->next_run = strftime("%Y/%m/%d %H:%M:%S", $event->time) . " (".$this->crontrol->time_since(time(), $event->time).")";
-		$event->recurrence = ($event->schedule ? $event->interval.' ('.$this->crontrol->interval($event->interval).')' : __('Non-repeating', 'crontrol'));
+	protected static function _map_event( $event ) {
+		$event->next_run = get_date_from_gmt(date('Y-m-d H:i:s',$event->time),$time_format) . " (".$this->crontrol->time_since(time(), $event->time).")";
+		$event->recurrence = ($event->schedule ? $this->crontrol->interval($event->interval) : __('Non-repeating', 'crontrol'));
 		return $event;
 	}
 
-	protected function _map_schedule( $schedule ) {
+	protected static function _map_schedule( $schedule ) {
 		return (object) $schedule;
 	}
 
