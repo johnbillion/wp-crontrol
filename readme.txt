@@ -17,9 +17,9 @@ WP Crontrol lets you view and control what's happening in the WP-Cron system. Fr
 
 The admin screen will show you a warning message if your cron system doesn't appear to be working (for example if your server can't connect to itself to fire scheduled cron events).
 
-From the settings screen you can also add, edit and remove cron schedues.
+From the settings screen you can also add, edit and remove cron schedules.
 
-Now supports [WP-CLI](http://wp-cli.org/)!
+WP Crontrol includes commands for [WP-CLI](http://wp-cli.org/). See the FAQ or type `wp help crontrol` for more details.
 
 == Installation ==
 
@@ -74,10 +74,10 @@ No, you can get rid of the whole directory and just use `wp-crontrol.php` if you
 = Which WP-CLI commands are available? =
 
  * `wp crontrol list-events` Lists the scheduled events on your site.
- * `wp crontrol list-schedules` Lists the available WP-Cron schedules on your site.
- * `wp crontrol test` Performs a WP-Cron spawning test to make sure WP-Cron can function as expected.
  * `wp crontrol run-event <hook>` Runs the next scheduled WP-Cron event for the given hook
  * `wp crontrol delete-event <hook>` Deletes the next scheduled WP-Cron event for the given hook
+ * `wp crontrol list-schedules` Lists the available WP-Cron schedules on your site.
+ * `wp crontrol test` Performs a WP-Cron spawning test to make sure WP-Cron can function as expected.
 
 Note that WP-CLI support is a work in progress and will be improved over time. Feedback welcome!
 
@@ -89,12 +89,12 @@ Note that WP-CLI support is a work in progress and will be improved over time. F
 == Upgrade Notice ==
 
 = 1.2.2 =
-* Added `crontrol run-event` and `crontrol delete-event` WP-CLI commands
+* Added `wp crontrol run-event` and `wp crontrol delete-event` WP-CLI commands
 
 == Changelog ==
 
 = 1.2.2 =
-* Added `crontrol run-event` and `crontrol delete-event` WP-CLI commands
+* Added `wp crontrol run-event` and `wp crontrol delete-event` WP-CLI commands
 * Clarify language regarding hooks/entries/events
 
 = 1.2.1 =
