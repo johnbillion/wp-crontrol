@@ -49,10 +49,7 @@ class Crontrol {
         add_action('init', array($this, 'action_handle_posts'));
     	add_action('admin_menu', array($this, 'action_admin_menu'));
 
-        // Make sure the activation works from subdirectories as well as
-        // directly in the plugin directory.
-        $activate_action = str_replace(ABSPATH.PLUGINDIR.'/', 'activate_', __FILE__);
-    	add_action($activate_action, array($this, 'action_activate'));
+        register_activation_hook( __FILE__, array($this, 'action_activate') );
 
     	add_filter('cron_schedules', array($this, 'filter_cron_schedules'));
         add_action('crontrol_cron_job', array($this, 'action_php_cron_event'));
