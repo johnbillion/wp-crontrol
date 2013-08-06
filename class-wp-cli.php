@@ -21,8 +21,14 @@ class Crontrol_Command extends WP_CLI_Command {
 	 *
 	 * @alias list
 	 * @subcommand list-events
+	 * @synopsis [--format=<format>]
 	 */
-	public function list_events() {
+	public function list_events( $args, $assoc_args ) {
+
+		$defaults = array(
+			'format' => 'table',
+		);
+		$values = wp_parse_args( $assoc_args, $defaults );
 
 		$events = $this->crontrol->get_cron_events();
 
@@ -39,7 +45,7 @@ class Crontrol_Command extends WP_CLI_Command {
         	'recurrence'
         );
 
-    	\WP_CLI\Utils\format_items( 'table', $events, $fields );
+    	\WP_CLI\Utils\format_items( $values['format'], $events, $fields );
 
 	}
 
@@ -111,8 +117,14 @@ class Crontrol_Command extends WP_CLI_Command {
 	 * @since 1.2
 	 *
 	 * @subcommand list-schedules
+	 * @synopsis [--format=<format>]
 	 */
-	public function list_schedules() {
+	public function list_schedules( $args, $assoc_args ) {
+
+		$defaults = array(
+			'format' => 'table',
+		);
+		$values = wp_parse_args( $assoc_args, $defaults );
 
 		$schedules = $this->crontrol->get_schedules();
         $schedules = array_map( array( $this, '_map_schedule' ), $schedules, array_keys( $schedules ) );
@@ -123,7 +135,7 @@ class Crontrol_Command extends WP_CLI_Command {
         	'interval'
         );
 
-    	\WP_CLI\Utils\format_items( 'table', $schedules, $fields );
+    	\WP_CLI\Utils\format_items( $values['format'], $schedules, $fields );
 
 	}
 
