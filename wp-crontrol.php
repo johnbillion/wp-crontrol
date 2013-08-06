@@ -4,7 +4,7 @@
  * Plugin URI:  http://wordpress.org/plugins/wp-crontrol/
  * Description: WP Crontrol lets you view and control what's happening in the WP-Cron system.
  * Author:      <a href="http://www.scompt.com/">Edward Dale</a> & <a href="http://lud.icro.us/">John Blackbourn</a>
- * Version:     1.2.2
+ * Version:     1.2.3-beta
  * Text Domain: crontrol
  * Domain Path: /gettext/
  */
@@ -45,17 +45,17 @@ class Crontrol {
      * Hook onto all of the actions and filters needed by the plugin.
      */
     protected function __construct() {
-        add_action('init', array(&$this, 'action_init'));
-        add_action('init', array(&$this, 'action_handle_posts'));
-    	add_action('admin_menu', array(&$this, 'action_admin_menu'));
+        add_action('init', array($this, 'action_init'));
+        add_action('init', array($this, 'action_handle_posts'));
+    	add_action('admin_menu', array($this, 'action_admin_menu'));
 
         // Make sure the activation works from subdirectories as well as
         // directly in the plugin directory.
         $activate_action = str_replace(ABSPATH.PLUGINDIR.'/', 'activate_', __FILE__);
-    	add_action($activate_action, array(&$this, 'action_activate'));
+    	add_action($activate_action, array($this, 'action_activate'));
 
-    	add_filter('cron_schedules', array(&$this, 'filter_cron_schedules'));
-        add_action('crontrol_cron_job', array(&$this, 'action_php_cron_event'));
+    	add_filter('cron_schedules', array($this, 'filter_cron_schedules'));
+        add_action('crontrol_cron_job', array($this, 'action_php_cron_event'));
     }
 
     /**
@@ -270,8 +270,8 @@ class Crontrol {
      * Run using the 'admin_menu' action.
      */
     function action_admin_menu() {
-	    $page = add_options_page('Cron Schedules', 'Cron Schedules', 'manage_options', 'crontrol_admin_options_page', array(&$this, 'admin_options_page') );
-	    $page = add_management_page('Crontrol', "Crontrol", 'manage_options', 'crontrol_admin_manage_page', array(&$this, 'admin_manage_page') );
+	    $page = add_options_page('Cron Schedules', 'Cron Schedules', 'manage_options', 'crontrol_admin_options_page', array($this, 'admin_options_page') );
+	    $page = add_management_page('Crontrol', "Crontrol", 'manage_options', 'crontrol_admin_manage_page', array($this, 'admin_manage_page') );
     }
 
     /**
