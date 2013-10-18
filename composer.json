@@ -3,6 +3,7 @@
 	"description": "WP Crontrol lets you view and control what's happening in the WP-Cron system.",
 	"homepage"   : "https://github.com/johnbillion/wp-crontrol/",
 	"license"    : "GPL-2.0+",
+	"type"       : "wordpress-plugin",
 	"authors"    : [
 		{
 			"name"    : "John Blackbourn",
@@ -12,5 +13,8 @@
 			"name"    : "Edward Dale",
 			"homepage": "http://scompt.com/"
 		}
-	]
+	],
+        "require": {
+                "composer/installers": "~1.0"
+        }
 }
