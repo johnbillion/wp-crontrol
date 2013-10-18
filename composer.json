@@ -1,0 +1,12 @@
+{
+	"name"       : "johnbillion/wp-crontrol",
+	"description": "WP Crontrol lets you view and control what's happening in the WP-Cron system.",
+	"homepage"   : "https://github.com/johnbillion/wp-crontrol/",
+    "license"    : "GPL-2.0+",
+	"authors"    : [
+		{
+			"name"    : "John Blackbourn",
+			"homepage": "https://johnblackbourn.com/"
+		}
+	]
+}
