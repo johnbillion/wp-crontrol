@@ -296,8 +296,8 @@ class Crontrol {
             $messages = array( '2' => __("Successfully deleted the cron schedule <b>%s</b>", 'crontrol'),
                                '3' => __("Successfully added the cron schedule <b>%s</b>", 'crontrol'),
                                '7' => __("Cron schedule not added because there was a problem parsing <b>%s</b>", 'crontrol'));
-            $hook = $_GET['crontrol_name'];
-            $msg = sprintf($messages[$_GET['crontrol_message']], $hook);
+            $hook = stripslashes( $_GET['crontrol_name'] );
+            $msg = sprintf($messages[$_GET['crontrol_message']], esc_html( $hook ) );
 
             echo "<div id=\"message\" class=\"updated fade\"><p>$msg</p></div>";
         }
@@ -569,8 +569,8 @@ class Crontrol {
                                '6' => __('Successfully deleted the cron event <b>%s</b>', 'crontrol'),
                                '7' => __('Failed to the delete the cron event <b>%s</b>', 'crontrol'),
                                '8' => __('Failed to the execute the cron event <b>%s</b>', 'crontrol'));
-            $hook = $_GET['crontrol_name'];
-            $msg = sprintf($messages[$_GET['crontrol_message']], $hook);
+            $hook = stripslashes( $_GET['crontrol_name'] );
+            $msg = sprintf($messages[$_GET['crontrol_message']], esc_html( $hook ) );
 
             echo "<div id=\"message\" class=\"updated fade\"><p>$msg</p></div>";
         }
