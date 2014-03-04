@@ -576,7 +576,7 @@ class Crontrol {
         }
         $events = $this->get_cron_events();
         $doing_edit = (isset( $_GET['action']) && $_GET['action']=='edit-cron') ? $_GET['id'] : false ;
-        $time_format = 'Y/m/d H:i:s';
+        $time_format = 'Y-m-d H:i:s';
 
         $tzstring = get_option( 'timezone_string' );
         $current_offset = get_option( 'gmt_offset' );
@@ -626,9 +626,11 @@ class Crontrol {
 					);
 				}
 
+				$args = empty( $event->args ) ? '<em>' . __( 'None', 'crontrol' ) . '</em>' : json_encode( $event->args );
+
                 echo "<tr id=\"cron-{$id}\" class=\"{$class}\">";
                 echo "<td>".($event->hook=='crontrol_cron_job' ? __('<i>PHP Cron</i>', 'crontrol') : $event->hook)."</td>";
-                echo "<td>".($event->hook=='crontrol_cron_job' ? __('<i>PHP Code</i>', 'crontrol') : json_encode($event->args))."</td>";
+                echo "<td>".($event->hook=='crontrol_cron_job' ? __('<i>PHP Code</i>', 'crontrol') : $args )."</td>";
                 echo "<td>".get_date_from_gmt(date('Y-m-d H:i:s',$event->time),$time_format)." (".$this->time_since(time(), $event->time).")</td>";
                 echo "<td>".($event->schedule ? $this->interval($event->interval) : __('Non-repeating', 'crontrol'))."</td>";
                 echo "<td><a class='view' href='tools.php?page=crontrol_admin_manage_page&amp;action=edit-cron&amp;id={$event->hook}&amp;sig={$event->sig}&amp;next_run={$event->time}#crontrol_form'>Edit</a></td>";
