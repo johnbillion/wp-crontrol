@@ -633,9 +633,9 @@ class Crontrol {
                 echo "<td>".($event->hook=='crontrol_cron_job' ? __('<i>PHP Code</i>', 'crontrol') : $args )."</td>";
                 echo "<td>".get_date_from_gmt(date('Y-m-d H:i:s',$event->time),$time_format)." (".$this->time_since(time(), $event->time).")</td>";
                 echo "<td>".($event->schedule ? $this->interval($event->interval) : __('Non-repeating', 'crontrol'))."</td>";
-                echo "<td><a class='view' href='tools.php?page=crontrol_admin_manage_page&amp;action=edit-cron&amp;id={$event->hook}&amp;sig={$event->sig}&amp;next_run={$event->time}#crontrol_form'>Edit</a></td>";
-                echo "<td><a class='view' href='".wp_nonce_url("tools.php?page=crontrol_admin_manage_page&amp;action=run-cron&amp;id={$event->hook}&amp;sig={$event->sig}", "run-cron_{$event->hook}_{$event->sig}")."'>Run Now</a></td>";
-                echo "<td><a class='delete' href='".wp_nonce_url("tools.php?page=crontrol_admin_manage_page&amp;action=delete-cron&amp;id={$event->hook}&amp;sig={$event->sig}&amp;next_run={$event->time}", "delete-cron_{$event->hook}_{$event->sig}_{$event->time}")."'>Delete</a></td>";
+                echo "<td><a class='view' href='tools.php?page=crontrol_admin_manage_page&amp;action=edit-cron&amp;id={$event->hook}&amp;sig={$event->sig}&amp;next_run={$event->time}#crontrol_form'>" . __( 'Edit', 'crontrol' ) . "</a></td>";
+                echo "<td><a class='view' href='".wp_nonce_url("tools.php?page=crontrol_admin_manage_page&amp;action=run-cron&amp;id={$event->hook}&amp;sig={$event->sig}", "run-cron_{$event->hook}_{$event->sig}")."'>" . __( 'Run Now', 'crontrol' ) . "</a></td>";
+                echo "<td><a class='delete' href='".wp_nonce_url("tools.php?page=crontrol_admin_manage_page&amp;action=delete-cron&amp;id={$event->hook}&amp;sig={$event->sig}&amp;next_run={$event->time}", "delete-cron_{$event->hook}_{$event->sig}_{$event->time}")."'>" . __( 'Delete', 'crontrol' ) . "</a></td>";
                 echo "</tr>";
                 $class = empty($class)?"alternate":"";
 
