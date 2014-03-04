@@ -2,8 +2,8 @@
 Contributors: scompt, johnbillion
 Tags: admin, cron, plugin, control, wp-cron, crontrol, wp-cli
 Requires at least: 3.0
-Tested up to: 3.6
-Stable tag: 1.2.2
+Tested up to: 3.9
+Stable tag: 1.2.3
 
 WP Crontrol lets you view and control what's happening in the WP-Cron system.
 
@@ -92,6 +92,10 @@ Note that WP-CLI support is a work in progress and will be improved over time. F
 * Added `wp crontrol run-event` and `wp crontrol delete-event` WP-CLI commands
 
 == Changelog ==
+
+= 1.2.3 =
+* Tweaks to i18n and date and args formatting
+* Properly escape the `crontrol_message` query var (props Julio Potier)
 
 = 1.2.2 =
 * Added `wp crontrol run-event` and `wp crontrol delete-event` WP-CLI commands
