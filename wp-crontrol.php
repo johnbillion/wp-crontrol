@@ -750,8 +750,5 @@ class Crontrol {
 
 }
 
-if ( defined( 'WP_CLI' ) and WP_CLI and is_readable( $wp_cli = dirname( __FILE__ ) . '/class-wp-cli.php' ) )
-	include_once $wp_cli;
-
 // Get this show on the road
 Crontrol::init();
