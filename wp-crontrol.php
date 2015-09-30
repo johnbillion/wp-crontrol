@@ -548,7 +548,7 @@ class Crontrol {
 				foreach( $dings as $sig=>$data ) {
 
 					# This is a prime candidate for a Crontrol_Event class but I'm not bothering currently.
-					$events["$hook-$sig"] = (object) array(
+					$events["$hook-$sig-$time"] = (object) array(
 						'hook'     => $hook,
 						'time'     => $time,
 						'sig'      => $sig,
