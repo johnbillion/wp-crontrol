@@ -529,6 +529,11 @@ class Crontrol {
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
+        } else if ( wp_remote_retrieve_response_code( $result ) >= 300 ) {
+            return new WP_Error( 'unexpected_http_response_code', sprintf(
+            	__( 'Unexpected HTTP response code: %s', 'wp-crontrol' ),
+            	intval( wp_remote_retrieve_response_code( $result ) )
+            ) );
 		} else {
 			set_transient( 'wp-cron-test-ok', 1, 3600 );
 			return true;
