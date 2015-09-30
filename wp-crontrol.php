@@ -565,15 +565,25 @@ class Crontrol {
      * @param mixed $existing An array of existing values for the cron event, or NULL
      */
     function show_cron_form($is_php, $existing) {
+		$new_tabs = array(
+			'cron'     => __('Add Cron Event', 'wp-crontrol'),
+			'php-cron' => __('Add PHP Cron Event', 'wp-crontrol'),
+		);
+		$modify_tabs = array(
+			'cron'     => __('Modify Cron Event', 'wp-crontrol'),
+			'php-cron' => __('Modify PHP Cron Event', 'wp-crontrol'),
+		);
+		$new_links = array(
+			'cron'     => admin_url( 'tools.php?page=crontrol_admin_manage_page&action=new-cron' ) . '#crontrol_form',
+			'php-cron' => admin_url( 'tools.php?page=crontrol_admin_manage_page&action=new-php-cron' ) . '#crontrol_form',
+		);
         if( $is_php ) {
             $helper_text = esc_html__( 'Cron events trigger actions in your code. Using the form below, you can enter the schedule of the action, as well as the PHP code for the action itself.', 'wp-crontrol' );
-            $link = ' (<a href="tools.php?page=crontrol_admin_manage_page#crontrol_form">'. esc_html__('Add new event', 'wp-crontrol') .'</a>)';
         } else {
             $helper_text = sprintf(
             	esc_html__( 'Cron events trigger actions in your code. A cron event added using the form below needs a corresponding action hook somewhere in code, perhaps the %1$s file in your theme.', 'wp-crontrol' ),
         		'<code>functions.php</code>'
         	);
-            $link = ' (<a href="tools.php?page=crontrol_admin_manage_page&amp;action=new-php-cron#crontrol_form">'. esc_html__('Add new PHP event', 'wp-crontrol') .'</a>)';
         }
         if( is_array($existing) ) {
             $other_fields  = wp_nonce_field( "edit-cron_{$existing['hookname']}_{$existing['sig']}_{$existing['next_run']}", '_wpnonce', true, false );
@@ -589,19 +599,28 @@ class Crontrol {
             $existing['args'] = $is_php ? $existing['args']['code'] : json_encode($existing['args']);
             $existing['next_run'] = date('Y-m-d H:i:s', $existing['next_run']);
             $action = $is_php ? 'edit_php_cron' : 'edit_cron';
-            $button = $is_php ? __('Modify PHP Cron Event', 'wp-crontrol') : __('Modify Cron Event', 'wp-crontrol');
-            $link = false;
+            $button = $is_php ? $modify_tabs['php-cron'] : $modify_tabs['cron'];
+            $show_edit_tab = true;
         } else {
             $other_fields  = wp_nonce_field( "new-cron", "_wpnonce", true, false );
             $existing = array('hookname'=>'','hookcode'=>'','args'=>'','next_run'=>'now','schedule'=>false);
             $action = $is_php ? 'new_php_cron' : 'new_cron';
-            $button = $is_php ? __('Add PHP Cron Event', 'wp-crontrol') : __('Add Cron Event', 'wp-crontrol');
+            $button = $is_php ? $new_tabs['php-cron'] : $new_tabs['cron'];
+            $show_edit_tab = false;
         }
         ?>
         <div id="crontrol_form" class="wrap narrow">
-            <h2><?php echo esc_html( $button ); if($link) echo '<span style="font-size:xx-small">'.$link.'</span>'; ?></h2>
+            <h2 class="nav-tab-wrapper">
+            	<a href="<?php echo esc_url( $new_links['cron'] ); ?>" class="nav-tab<?php if ( ! $show_edit_tab && ! $is_php ) echo ' nav-tab-active'; ?>"><?php echo esc_html( $new_tabs['cron'] ); ?></a>
+            	<?php if ( current_user_can( 'edit_files' ) ) { ?>
+	            	<a href="<?php echo esc_url( $new_links['php-cron'] ); ?>" class="nav-tab<?php if ( ! $show_edit_tab && $is_php ) echo ' nav-tab-active'; ?>"><?php echo esc_html( $new_tabs['php-cron'] ); ?></a>
+	            <?php } ?>
+            	<?php if ( $show_edit_tab ) { ?>
+            		<span class="nav-tab nav-tab-active"><?php echo esc_html( $button ); ?></span>
+            	<?php } ?>
+            </h2>
             <p><?php echo $helper_text ?></p>
-            <form method="post">
+            <form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ); ?>">
                 <?php echo $other_fields ?>
                 <table width="100%" cellspacing="2" cellpadding="5" class="editform form-table"><tbody>
                     <?php if( $is_php ): ?>
