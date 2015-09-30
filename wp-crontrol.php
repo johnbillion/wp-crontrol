@@ -496,6 +496,7 @@ class Crontrol {
      *
      */
 	function test_cron_spawn( $cache = true ) {
+        global $wp_version;
 
         if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
             return new WP_Error( 'disable_wp_cron', __( 'The DISABLE_WP_CRON constant is set to true. WP-Cron spawning is disabled.', 'wp-crontrol' ) );
@@ -509,6 +510,7 @@ class Crontrol {
 		if ( $cache and $cached_status )
 			return true;
 
+        $sslverify     = version_compare( $wp_version, 4.0, '<' );
 		$doing_wp_cron = sprintf( '%.22F', microtime( true ) );
 
 		$cron_request = apply_filters( 'cron_request', array(
@@ -517,7 +519,7 @@ class Crontrol {
 			'args' => array(
 				'timeout'   => 3,
 				'blocking'  => true,
-				'sslverify' => apply_filters( 'https_local_ssl_verify', true )
+                'sslverify' => apply_filters( 'https_local_ssl_verify', $sslverify )
 			)
 		) );
 
