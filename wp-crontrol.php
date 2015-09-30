@@ -74,7 +74,7 @@ class Crontrol {
      */
     function action_handle_posts() {
         if( isset($_POST['new_cron']) ) {
-            if( !current_user_can('manage_options') ) die(esc_html__('You are not allowed to add new cron events.', 'wp-crontrol'));
+            if( !current_user_can('manage_options') ) wp_die(esc_html__('You are not allowed to add new cron events.', 'wp-crontrol'));
             check_admin_referer("new-cron");
             extract(wp_unslash($_POST), EXTR_PREFIX_ALL, 'in');
             $in_args = json_decode($in_args,true);
@@ -88,7 +88,7 @@ class Crontrol {
             exit;
 
         } else if( isset($_POST['new_php_cron']) ) {
-            if( !current_user_can('manage_options') ) die(esc_html__('You are not allowed to add new cron events.', 'wp-crontrol'));
+            if( !current_user_can('edit_files') ) wp_die(esc_html__('You are not allowed to add new PHP cron events.', 'wp-crontrol'));
             check_admin_referer("new-cron");
             extract(wp_unslash($_POST), EXTR_PREFIX_ALL, 'in');
             $args = array('code'=>$in_hookcode);
@@ -102,7 +102,7 @@ class Crontrol {
             exit;
 
         } else if( isset($_POST['edit_cron']) ) {
-            if( !current_user_can('manage_options') ) die(esc_html__('You are not allowed to edit cron events.', 'wp-crontrol'));
+            if( !current_user_can('manage_options') ) wp_die(esc_html__('You are not allowed to edit cron events.', 'wp-crontrol'));
 
             extract(wp_unslash($_POST), EXTR_PREFIX_ALL, 'in');
             check_admin_referer("edit-cron_{$in_original_hookname}_{$in_original_sig}_{$in_original_next_run}");
@@ -118,7 +118,7 @@ class Crontrol {
             exit;
 
         } else if( isset($_POST['edit_php_cron']) ) {
-            if( !current_user_can('manage_options') ) die(esc_html__('You are not allowed to edit cron events.', 'wp-crontrol'));
+            if( !current_user_can('manage_options') ) wp_die(esc_html__('You are not allowed to edit cron events.', 'wp-crontrol'));
 
             extract(wp_unslash($_POST), EXTR_PREFIX_ALL, 'in');
             check_admin_referer("edit-cron_{$in_original_hookname}_{$in_original_sig}_{$in_original_next_run}");
@@ -135,7 +135,7 @@ class Crontrol {
             exit;
 
         } else if( isset($_POST['new_schedule']) ) {
-            if( !current_user_can('manage_options') ) die(esc_html__('You are not allowed to add new cron schedules.', 'wp-crontrol'));
+            if( !current_user_can('manage_options') ) wp_die(esc_html__('You are not allowed to add new cron schedules.', 'wp-crontrol'));
             check_admin_referer("new-sched");
             $name = wp_unslash( $_POST['internal_name'] );
             $interval = wp_unslash( $_POST['interval'] );
@@ -176,7 +176,7 @@ class Crontrol {
             exit;
 
         } else if( isset($_GET['action']) && $_GET['action']=='delete-sched') {
-            if( !current_user_can('manage_options') ) die(esc_html__('You are not allowed to delete cron schedules.', 'wp-crontrol'));
+            if( !current_user_can('manage_options') ) wp_die(esc_html__('You are not allowed to delete cron schedules.', 'wp-crontrol'));
             $id = wp_unslash( $_GET['id'] );
             check_admin_referer("delete-sched_{$id}");
             $this->delete_schedule($id);
@@ -189,7 +189,7 @@ class Crontrol {
             exit;
 
         } else if( isset($_GET['action']) && $_GET['action']=='delete-cron') {
-            if( !current_user_can('manage_options') ) die(esc_html__('You are not allowed to delete cron events.', 'wp-crontrol'));
+            if( !current_user_can('manage_options') ) wp_die(esc_html__('You are not allowed to delete cron events.', 'wp-crontrol'));
             $id = wp_unslash( $_GET['id'] );
             $sig = wp_unslash( $_GET['sig'] );
             $next_run = $_GET['next_run'];
@@ -214,7 +214,7 @@ class Crontrol {
             };
 
         } else if( isset($_GET['action']) && $_GET['action']=='run-cron') {
-            if( !current_user_can('manage_options') ) die(esc_html__('You are not allowed to run cron events.', 'wp-crontrol'));
+            if( !current_user_can('manage_options') ) wp_die(esc_html__('You are not allowed to run cron events.', 'wp-crontrol'));
             $id = wp_unslash( $_GET['id'] );
             $sig = wp_unslash( $_GET['sig'] );
             check_admin_referer("run-cron_{$id}_{$sig}");
