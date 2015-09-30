@@ -323,8 +323,7 @@ class Crontrol {
      * Run using the 'activate_' action.
      */
     function action_activate() {
-        $extra_scheds = array('twicedaily'=>array('interval'=>43200, 'display'=>__('Twice Daily', 'wp-crontrol')));
-        add_option('crontrol_schedules', $extra_scheds);
+        add_option('crontrol_schedules', array());
 
         // if there's never been a cron event, _get_cron_array will return FALSE
         if( _get_cron_array() === FALSE ) {
