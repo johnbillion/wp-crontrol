@@ -497,6 +497,10 @@ class Crontrol {
      */
 	function test_cron_spawn( $cache = true ) {
 
+        if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
+            return new WP_Error( 'disable_wp_cron', __( 'The DISABLE_WP_CRON constant is set to true. WP-Cron spawning is disabled.', 'wp-crontrol' ) );
+        }
+
 		if ( defined('ALTERNATE_WP_CRON') && ALTERNATE_WP_CRON )
 			return true;
 
