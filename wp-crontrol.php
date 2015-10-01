@@ -379,7 +379,7 @@ class Crontrol {
         <h1><?php esc_html_e('WP-Cron Schedules', 'wp-crontrol'); ?></h1>
         <p><?php esc_html_e('WP-Cron schedules are the time intervals that are available for scheduling events. You can only delete custom schedules.', 'wp-crontrol'); ?></p>
         <div id="ajax-response"></div>
-        <table class="widefat">
+        <table class="widefat striped">
         <thead>
             <tr>
                 <th scope="col"><?php esc_html_e('Name', 'wp-crontrol'); ?></th>
@@ -395,11 +395,9 @@ class Crontrol {
             <tr colspan="4"><td><?php esc_html_e('You currently have no schedules. Add one below.', 'wp-crontrol') ?></td></tr>
             <?php
         } else {
-            $class = '';
             foreach( $schedules as $name=>$data ) {
-                printf( '<tr id="sched-%s" class="%s">',
-                    esc_attr( $name ),
-                    esc_attr( $class )
+                printf( '<tr id="sched-%s">',
+                    esc_attr( $name )
                 );
                 printf( '<td>%s</td>',
                     esc_html( $name )
@@ -426,7 +424,6 @@ class Crontrol {
                     echo '<td>&nbsp;</td>';
                 }
                 echo '</tr>';
-                $class = empty($class)?"alternate":"";
             }
         }
         ?>
@@ -727,7 +724,7 @@ class Crontrol {
         <div class="wrap">
         <h1><?php esc_html_e('WP-Cron Events', 'wp-crontrol'); ?></h1>
         <p></p>
-        <table class="widefat">
+        <table class="widefat striped">
         <thead>
             <tr>
                 <th><?php esc_html_e('Hook Name', 'wp-crontrol'); ?></th>
@@ -744,7 +741,6 @@ class Crontrol {
             <tr><td colspan="7"><?php echo esc_html( $events->get_error_message() ); ?></td></tr>
             <?php
         } else {
-            $class = "";
             foreach( $events as $id=>$event ) {
 
 				if ( $doing_edit && $doing_edit == $event->hook && $event->time == $_GET['next_run'] && $event->sig == $_GET['sig'] ) {
@@ -767,7 +763,7 @@ class Crontrol {
 					}
 				}
 
-                echo '<tr id="cron-' . esc_attr( $id ) . '" class="' . esc_attr( $class ) . '">';
+                echo '<tr id="cron-' . esc_attr( $id ) . '" class="">';
                 echo "<td>".($event->hook=='crontrol_cron_job' ? '<em>' . esc_html__( 'PHP Cron', 'wp-crontrol' ) . '</em>' : esc_html( $event->hook ) )."</td>";
                 echo "<td>".($event->hook=='crontrol_cron_job' ? '<em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em>' : esc_html( $args ) )."</td>";
                 echo "<td>".get_date_from_gmt(date('Y-m-d H:i:s',$event->time),$time_format)." (".$this->time_since(time(), $event->time).")</td>";
@@ -806,7 +802,6 @@ class Crontrol {
                 echo "<td><a class='delete' href='".esc_url( $link )."'>" . esc_html__( 'Delete', 'wp-crontrol' ) . "</a></td>";
 
                 echo "</tr>";
-                $class = empty($class)?"alternate":"";
 
             }
         }
