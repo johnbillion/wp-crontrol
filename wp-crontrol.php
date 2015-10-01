@@ -45,9 +45,13 @@ class Crontrol {
      * Hook onto all of the actions and filters needed by the plugin.
      */
     protected function __construct() {
+
+    	$plugin_file = plugin_basename( __FILE__ );
+
         add_action('init', array($this, 'action_init'));
         add_action('init', array($this, 'action_handle_posts'));
     	add_action('admin_menu', array($this, 'action_admin_menu'));
+		add_filter( "plugin_action_links_{$plugin_file}", array( $this, 'plugin_action_links' ), 10, 4 );
 
         register_activation_hook( __FILE__, array($this, 'action_activate') );
 
@@ -339,6 +343,20 @@ class Crontrol {
     function action_admin_menu() {
         add_options_page( esc_html__( 'Cron Schedules', 'wp-crontrol' ), esc_html__( 'Cron Schedules', 'wp-crontrol' ), 'manage_options', 'crontrol_admin_options_page', array( $this, 'admin_options_page' ) );
         add_management_page( esc_html__( 'Cron Events', 'wp-crontrol' ), esc_html__( 'Cron Events', 'wp-crontrol' ), 'manage_options', 'crontrol_admin_manage_page', array( $this, 'admin_manage_page' ) );
+    }
+
+    function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
+    	$actions['crontrol-events'] = sprintf(
+    		'<a href="%s">%s</a>',
+    		admin_url( 'tools.php?page=crontrol_admin_manage_page' ),
+    		esc_html__( 'Cron Events', 'wp-crontrol' )
+    	);
+    	$actions['crontrol-schedules'] = sprintf(
+    		'<a href="%s">%s</a>',
+    		admin_url( 'options-general.php?page=crontrol_admin_options_page' ),
+    		esc_html__( 'Cron Schedules', 'wp-crontrol' )
+    	);
+    	return $actions;
     }
 
     /**
