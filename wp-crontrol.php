@@ -376,7 +376,7 @@ class Crontrol {
 
         ?>
         <div class="wrap">
-        <h2><?php esc_html_e('WP-Cron Schedules', 'wp-crontrol'); ?></h2>
+        <h1><?php esc_html_e('WP-Cron Schedules', 'wp-crontrol'); ?></h1>
         <p><?php esc_html_e('WP-Cron schedules are the time intervals that are available for scheduling events. You can only delete custom schedules.', 'wp-crontrol'); ?></p>
         <div id="ajax-response"></div>
         <table class="widefat">
@@ -434,7 +434,7 @@ class Crontrol {
         </table>
         </div>
         <div class="wrap narrow">
-            <h2><?php esc_html_e('Add new cron schedule', 'wp-crontrol'); ?></h2>
+            <h2 class="title"><?php esc_html_e('Add new cron schedule', 'wp-crontrol'); ?></h2>
             <p><?php esc_html_e('Adding a new cron schedule will allow you to schedule events that re-occur at the given interval.', 'wp-crontrol'); ?></p>
             <form method="post" action="options-general.php?page=crontrol_admin_options_page">
                 <table width="100%" cellspacing="2" cellpadding="5" class="editform form-table">
@@ -725,7 +725,7 @@ class Crontrol {
 
         ?>
         <div class="wrap">
-        <h2><?php esc_html_e('WP-Cron Events', 'wp-crontrol'); ?></h2>
+        <h1><?php esc_html_e('WP-Cron Events', 'wp-crontrol'); ?></h1>
         <p></p>
         <table class="widefat">
         <thead>
