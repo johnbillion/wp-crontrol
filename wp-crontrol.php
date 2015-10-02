@@ -719,7 +719,7 @@ class Crontrol {
 			'5' => __( 'Successfully created the cron event %s', 'wp-crontrol' ),
 			'6' => __( 'Successfully deleted the cron event %s', 'wp-crontrol' ),
 			'7' => __( 'Failed to the delete the cron event %s', 'wp-crontrol' ),
-			'8' => __( 'Failed to the execute the cron event %s', 'wp-crontrol ')
+			'8' => __( 'Failed to the execute the cron event %s', 'wp-crontrol' ),
 		);
         if ( isset( $_GET['crontrol_name'] ) && isset( $_GET['crontrol_message'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
             $hook = wp_unslash( $_GET['crontrol_name'] );
