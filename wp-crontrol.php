@@ -6,7 +6,8 @@
  * Author:      <a href="http://www.scompt.com/">Edward Dale</a> & <a href="https://johnblackbourn.com/">John Blackbourn</a>
  * Version:     1.2.3
  * Text Domain: wp-crontrol
- * Domain Path: /gettext/
+ * Domain Path: /languages/
+ * License:     GPL v2 or later
  */
 
  /**
