@@ -410,7 +410,7 @@ class Crontrol {
 			$hook = wp_unslash( $_GET['crontrol_name'] );
 			$msg  = sprintf( esc_html( $messages[ $_GET['crontrol_message'] ] ), '<strong>' . esc_html( $hook ) . '</strong>' );
 
-			printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg );
+			printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg ); // WPCS:: XSS ok.
 		}
 
 		?>
@@ -660,9 +660,9 @@ class Crontrol {
 					<span class="nav-tab nav-tab-active"><?php echo esc_html( $button ); ?></span>
 				<?php } ?>
 			</h2>
-			<p><?php echo $helper_text; ?></p>
+			<p><?php echo $helper_text; // WPCS:: XSS ok. ?></p>
 			<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ); ?>">
-				<?php echo $other_fields; ?>
+				<?php echo $other_fields; // WPCS:: XSS ok. ?>
 				<table class="form-table"><tbody>
 					<?php if ( $is_php ) : ?>
 						<tr>
@@ -751,7 +751,7 @@ class Crontrol {
 			$hook = wp_unslash( $_GET['crontrol_name'] );
 			$msg = sprintf( esc_html( $messages[ $_GET['crontrol_message'] ] ), '<strong>' . esc_html( $hook ) . '</strong>' );
 
-			printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg );
+			printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg ); // WPCS:: XSS ok.
 		}
 		$events = $this->get_cron_events();
 		$doing_edit = ( isset( $_GET['action'] ) && 'edit-cron' == $_GET['action'] ) ? wp_unslash( $_GET['id'] ) : false ;
@@ -816,10 +816,31 @@ class Crontrol {
 				}
 
 				echo '<tr id="cron-' . esc_attr( $id ) . '" class="">';
-				echo '<td>' . ( 'crontrol_cron_job' == $event->hook ? '<em>' . esc_html__( 'PHP Cron', 'wp-crontrol' ) . '</em>' : esc_html( $event->hook ) ) . '</td>';
-				echo '<td>' . ( 'crontrol_cron_job' == $event->hook ? '<em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em>' : esc_html( $args ) ) . '</td>';
-				echo '<td>' . get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), $time_format ) . ' (' . $this->time_since( time(), $event->time ) . ')</td>';
-				echo '<td>' . ( $event->schedule ? $this->interval( $event->interval ) : esc_html__( 'Non-repeating', 'wp-crontrol' ) ) . '</td>';
+
+				if ( 'crontrol_cron_job' == $event->hook ) {
+					echo '<td><em>' . esc_html__( 'PHP Cron', 'wp-crontrol' ) . '</em></td>';
+					echo '<td><em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em></td>';
+				} else {
+					echo '<td>' . esc_html( $event->hook ) . '</td>';
+					echo '<td>' . esc_html( $args ) . '</td>';
+				}
+
+				echo '<td>';
+				printf( '%s (%s)',
+					esc_html( get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), $time_format ) ),
+					esc_html( $this->time_since( time(), $event->time ) )
+				);
+				echo '</td>';
+
+				if ( $event->schedule ) {
+					echo '<td>';
+					echo esc_html( $this->interval( $event->interval ) );
+					echo '</td>';
+				} else {
+					echo '<td>';
+					esc_html_e( 'Non-repeating', 'wp-crontrol' );
+					echo '</td>';
+				}
 
 				$link = array(
 					'page'     => 'crontrol_admin_manage_page',
@@ -864,8 +885,8 @@ class Crontrol {
 		<div class="tablenav">
 			<p class="description">
 				<?php printf( esc_html__( 'Local timezone is %s', 'wp-crontrol' ), '<code>' . esc_html( $tz ) . '</code>' ); ?>
-				<span id="utc-time"><?php printf( esc_html__( 'UTC time is %s', 'wp-crontrol' ), '<code>' . date_i18n( $time_format, false, true ) . '</code>' ); ?></span>
-				<span id="local-time"><?php printf( esc_html__( 'Local time is %s', 'wp-crontrol' ), '<code>' . date_i18n( $time_format ) . '</code>' ); ?></span>
+				<span id="utc-time"><?php printf( esc_html__( 'UTC time is %s', 'wp-crontrol' ), '<code>' . esc_html( date_i18n( $time_format, false, true ) ) . '</code>' ); ?></span>
+				<span id="local-time"><?php printf( esc_html__( 'Local time is %s', 'wp-crontrol' ), '<code>' . esc_html( date_i18n( $time_format ) ) . '</code>' ); ?></span>
 			</p>
 		</div>
 
