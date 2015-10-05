@@ -923,7 +923,7 @@ class Crontrol {
 		}
 
 		// set output var
-		$output = sprintf( translate_nooped_plural( $name[0], $name[1], $count, 'wp-crontrol' ), $count );
+		$output = sprintf( translate_nooped_plural( $name, $count, 'wp-crontrol' ), $count );
 
 		// step two: the second chunk
 		if ( $i + 1 < $j ) {
@@ -932,7 +932,7 @@ class Crontrol {
 
 			if ( ( $count2 = floor( ( $since - ( $seconds * $count ) ) / $seconds2 ) ) != 0 ) {
 				// add to output var
-				$output .= ' ' . sprintf( translate_nooped_plural( $name2[0], $name2[1], $count2, 'wp-crontrol' ), $count2 );
+				$output .= ' ' . sprintf( translate_nooped_plural( $name2, $count2, 'wp-crontrol' ), $count2 );
 			}
 		}
 
