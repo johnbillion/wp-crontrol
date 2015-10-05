@@ -1,25 +1,27 @@
 === WP Crontrol ===
-Contributors: scompt, johnbillion
-Tags: admin, cron, plugin, control, wp-cron, crontrol, wp-cli
-Requires at least: 3.0
-Tested up to: 3.9
-Stable tag: 1.2.3
+Contributors: johnbillion, scompt
+Tags: admin, cron, plugin, control, wp-cron, crontrol
+Requires at least: 4.0
+Tested up to: 4.3
+Stable tag: 1.3
 
 WP Crontrol lets you view and control what's happening in the WP-Cron system.
 
 == Description ==
 
-WP Crontrol lets you view and control what's happening in the WP-Cron system. From the admin screen you can:
+WP Crontrol lets you view and control what's happening in the WP-Cron system. From the admin screens you can:
 
- * View all cron events along with their arguments, recurrence and when they are next due.
+ * View all cron events along with their arguments, recurrence, and when they are next due.
  * Edit, delete, and immediately run any cron events.
  * Add new cron events.
+ * Add, edit, and remove custom cron schedules.
 
 The admin screen will show you a warning message if your cron system doesn't appear to be working (for example if your server can't connect to itself to fire scheduled cron events).
 
-From the settings screen you can also add, edit and remove cron schedules.
+= Usage =
 
-WP Crontrol includes commands for [WP-CLI](http://wp-cli.org/). See the FAQ or type `wp help crontrol` for more details.
+1. Go to the Tools -> Cron Events menu to manage cron events.
+2. Go to the Settings -> Cron Schedules menu to manage cron schedules.
 
 == Installation ==
 
@@ -34,64 +36,57 @@ Alternatively, see the guide to [Manually Installing Plugins](http://codex.wordp
 
 = Usage =
 
-1. Go to the Tools -> Crontrol menu to see what cron events are scheduled and to add some new ones.
-2. Go to the Settings -> Cron Schedules menu to add new cron schedules.
+1. Go to the Tools -> Cron Events menu to manage cron events.
+2. Go to the Settings -> Cron Schedules menu to manage cron schedules.
 
 == Frequently Asked Questions ==
 
 = What's the use of adding new cron schedules? =
 
-Cron schedules are used by WordPress and WordPress plugins to allow you to schedule events to be executed at regular intervals.  Intervals must be provided by the WordPress core or a plugin in order to be used.  An example of a plugin that uses these schedules is [WordPress Database Backup](http://www.ilfilosofo.com/blog/wp-db-backup/).  Out of the box, only daily and hourly backups are supported.  In order to do a weekly backup, a weekly cron schedule must be entered into WP Crontrol first and then the backup plugin can take advantage of it as an interval.
+Cron schedules are used by WordPress and plugins for scheduling events to be executed at regular intervals. Intervals must be provided by the WordPress core or a plugin in order to be used. As an example, many backup plugins provide support for periodic backups. In order to do a weekly backup, a weekly cron schedule must be entered into WP Crontrol first and then a backup plugin can take advantage of it as an interval.
 
 = How do I create a new PHP cron event? =
 
-In the Tools -> Crontrol admin panel, click on the "Add new PHP event" link underneath the cron event table.  In the form that appears, enter the schedule and next run time in the boxes.  Next run is the next time that the hook will execute.  This can be entered in using [GNU Date Input Formats](http://www.gnu.org/software/tar/manual/html_node/tar_113.html), but often *now* is good enough.  The event schedule is how often your hook will be executed.  If you don't see a good interval, then add one in the Settings -> Cron Schedules admin panel.  In the "Hook code" area, enter the PHP code that should be run when your cron event is executed.  You don't need to provide the PHP opening tag (`<?php`).
+In the Tools -> Cron Events admin panel, click on the "Add PHP Cron Event" tab underneath the cron event table. In the form that appears, enter the schedule and next run time in the boxes. The event schedule is how often your event will be executed. If you don't see a good interval, then add one in the Settings -> Cron Schedules admin panel. In the "Hook code" area, enter the PHP code that should be run when your cron event is executed. You don't need to provide the PHP opening tag (`<?php`).
 
 = How do I create a new regular cron event? =
 
-There are two steps to getting a functioning cron event that executes regularly.  The first step is telling WordPress about the hook.  This is the part that WP Crontrol was created to provide.  The second step is calling your function when your hook is executed.  You've got to do that on your own, but I'll explain how below.
+There are two steps to getting a functioning cron event that executes regularly. The first step is telling WordPress about the hook. This is the part that WP Crontrol was created to provide. The second step is calling a function when your hook is executed.
 
 *Step One: Adding the hook*
 
-In the Tools -> Crontrol admin panel, enter the details of the hook.  You're best off having a hookname that conforms to normal PHP variable naming conventions.  This could save you trouble later.  Other than that, the hookname can be whatever you want it to be.  Next run is the next time that the hook will execute.  This can be entered in using [GNU Date Input Formats](http://www.gnu.org/software/tar/manual/html_node/tar_113.html), but often *now* is good enough.  The event schedule is how often your hook will be executed.  If you don't see a good interval, then add one in the Settings -> Cron Schedules admin panel.
+In the Tools -> Cron Events admin panel, enter the details of the hook. You're best off having a hookname that conforms to normal PHP variable naming conventions. The event schedule is how often your hook will be executed. If you don't see a good interval, then add one in the Settings -> Cron Schedules admin panel.
 
 *Step Two: Writing the function*
 
-This part takes place in PHP code (for example, in the `functions.php` file from your theme).  To execute your hook, WordPress runs an [action](http://codex.wordpress.org/Plugin_API#Actions).  For this reason, we need to now tell WordPress which function to execute when this action is run.  The following line accomplishes that:
+This part takes place in PHP code (for example, in the `functions.php` file from your theme). To execute your hook, WordPress runs an [action](https://codex.wordpress.org/Plugin_API#Actions). For this reason, we need to tell WordPress which function to execute when this action is run. The following line accomplishes that:
 
-`add_action('my_hookname', 'my_function');`
+`add_action( 'my_hookname', 'my_function' );`
 
-The next step is to write your function.  Here's a simple example:
+The next step is to write your function. Here's a simple example:
 
 `function my_function() {
-        wp_mail('hello@example.com', 'WP Crontrol', 'WP Crontrol rocks!');
+	wp_mail( 'hello@example.com', 'WP Crontrol', 'WP Crontrol rocks!' );
 }`
 
-= Do I really need the entire `wp-crontrol` directory? =
+= Are any WP-CLI commands available? =
 
-No, you can get rid of the whole directory and just use `wp-crontrol.php` if you wish. If you want to use WP-CLI then you'll need to include `class-wp-cli.php` too.
-
-= Which WP-CLI commands are available? =
-
- * `wp crontrol list-events` Lists the scheduled events on your site.
- * `wp crontrol run-event <hook>` Runs the next scheduled WP-Cron event for the given hook
- * `wp crontrol delete-event <hook>` Deletes the next scheduled WP-Cron event for the given hook
- * `wp crontrol list-schedules` Lists the available WP-Cron schedules on your site.
- * `wp crontrol test` Performs a WP-Cron spawning test to make sure WP-Cron can function as expected.
-
-Note that WP-CLI support is a work in progress and will be improved over time. Feedback welcome!
+The cron commands which were previously included in WP Crontrol are now part of WP-CLI (since 0.16), so this plugin no longer provides any WP-CLI commands. See `wp help cron` for more info.
 
 == Screenshots ==
 
-1. New cron events can be added, modified, and deleted.  In addition, they can be executed on-demand.
-1. New cron schedules can be added to WordPress, giving plugin developers more options when scheduling events.
-
-== Upgrade Notice ==
-
-= 1.2.2 =
-* Added `wp crontrol run-event` and `wp crontrol delete-event` WP-CLI commands
+1. New cron events can be added, modified, deleted, and executed.
+2. New cron schedules can be added, giving plugin developers more options when scheduling events.
 
 == Changelog ==
+
+= 1.3 =
+* Improvements to the UI.
+* More error detection when testing WP-Cron functionality.
+* Improve the capability checks for single site and multisite.
+* Lots of escaping and sanitising.
+* Fix various issues with multiple events with the same hook name.
+* Removed the WP-CLI commands, as these have now been added to WP-CLI core (see `wp help cron` for more info)
 
 = 1.2.3 =
 * Tweaks to i18n and date and args formatting
