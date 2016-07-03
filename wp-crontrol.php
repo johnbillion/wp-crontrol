@@ -536,11 +536,11 @@ class Crontrol {
 		global $wp_version;
 
 		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
-			return new WP_Error( 'disable_wp_cron', __( 'The DISABLE_WP_CRON constant is set to true. WP-Cron spawning is disabled.', 'wp-crontrol' ) );
+			return new WP_Error( 'crontrol_info', sprintf( __( 'The %s constant is set to true. WP-Cron spawning is disabled.', 'wp-crontrol' ), 'DISABLE_WP_CRON' ) );
 		}
 
 		if ( defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON ) {
-			return true;
+			return new WP_Error( 'crontrol_info', sprintf( __( 'The %s constant is set to true.', 'wp-crontrol' ), 'ALTERNATE_WP_CRON' ) );
 		}
 
 		$cached_status = get_transient( 'wp-cron-test-ok' );
@@ -589,11 +589,19 @@ class Crontrol {
 		$status = $this->test_cron_spawn();
 
 		if ( is_wp_error( $status ) ) {
-			?>
-			<div id="cron-status-error" class="error">
-				<p><?php printf( esc_html__( 'There was a problem spawning a call to the WP-Cron system on your site. This means WP-Cron events on your site may not work. The problem was: %s', 'wp-crontrol' ), '<br><strong>' . esc_html( $status->get_error_message() ) . '</strong>' ); ?></p>
-			</div>
-			<?php
+			if (  'crontrol_info' === $status->get_error_code() ) {
+				?>
+				<div id="cron-status-notice" class="notice notice-info">
+					<p><?php echo esc_html( $status->get_error_message() ); ?></p>
+				</div>
+				<?php
+			} else {
+				?>
+				<div id="cron-status-error" class="error">
+					<p><?php printf( esc_html__( 'There was a problem spawning a call to the WP-Cron system on your site. This means WP-Cron events on your site may not work. The problem was: %s', 'wp-crontrol' ), '<br><strong>' . esc_html( $status->get_error_message() ) . '</strong>' ); ?></p>
+				</div>
+				<?php
+			}
 		}
 
 	}
