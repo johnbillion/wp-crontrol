@@ -685,7 +685,7 @@ class Crontrol {
 							<th valign="top" scope="row"><label for="args"><?php esc_html_e( 'Arguments:', 'wp-crontrol' ); ?></label></th>
 							<td>
 								<input type="text" class="regular-text" id="args" name="args" value="<?php echo esc_attr( $existing['args'] ); ?>"/>
-								<p class="description"><?php esc_html_e( "e.g. [25], ['asdf'], or ['i','want',25,'cakes']", 'wp-crontrol' ); ?></p>
+								<p class="description"><?php esc_html_e( 'e.g. [25], ["asdf"], or ["i","want",25,"cakes"]', 'wp-crontrol' ); ?></p>
 							</td>
 						</tr>
 					<?php endif; ?>
