@@ -417,7 +417,6 @@ class Crontrol {
 		<div class="wrap">
 		<h1><?php esc_html_e( 'WP-Cron Schedules', 'wp-crontrol' ); ?></h1>
 		<p><?php esc_html_e( 'WP-Cron schedules are the time intervals that are available for scheduling events. You can only delete custom schedules.', 'wp-crontrol' ); ?></p>
-		<div id="ajax-response"></div>
 		<table class="widefat striped">
 		<thead>
 			<tr>
@@ -775,7 +774,6 @@ class Crontrol {
 		?>
 		<div class="wrap">
 		<h1><?php esc_html_e( 'WP-Cron Events', 'wp-crontrol' ); ?></h1>
-		<p></p>
 		<table class="widefat striped">
 		<thead>
 			<tr>
