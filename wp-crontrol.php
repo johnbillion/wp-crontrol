@@ -461,7 +461,7 @@ class Crontrol {
 						'id'     => urlencode( $name ),
 					), admin_url( 'options-general.php' ) );
 					$url = wp_nonce_url( $url, 'delete-sched_' . $name );
-					printf( '<td><a href="%s" class="delete">%s</a></td>',
+					printf( '<td><span class="row-actions visible"><span class="delete"><a href="%s">%s</a></span></span></td>',
 						esc_url( $url ),
 						esc_html__( 'Delete', 'wp-crontrol' )
 					);
@@ -807,11 +807,11 @@ class Crontrol {
 		<table class="widefat striped">
 		<thead>
 			<tr>
-				<th><?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?></th>
-				<th><?php esc_html_e( 'Arguments', 'wp-crontrol' ); ?></th>
-				<th><?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?></th>
-				<th><?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?></th>
-				<th colspan="3">&nbsp;</th>
+				<th scope="col"><?php esc_html_e( 'Action Name', 'wp-crontrol' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Arguments', 'wp-crontrol' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?></th>
+				<th scope="col"><span class="screen-reader-text"><?php esc_html_e( 'Actions', 'wp-crontrol' ); ?></span></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -882,7 +882,8 @@ class Crontrol {
 					'next_run' => urlencode( $event->time ),
 				);
 				$link = add_query_arg( $link, admin_url( 'tools.php' ) ) . '#crontrol_form';
-				echo "<td><a class='view' href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a></td>';
+				echo '<td><span class="row-actions visible">';
+				echo "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a> | ';
 
 				$link = array(
 					'page'     => 'crontrol_admin_manage_page',
@@ -893,7 +894,7 @@ class Crontrol {
 				);
 				$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 				$link = wp_nonce_url( $link, "run-cron_{$event->hook}_{$event->sig}" );
-				echo "<td><a class='view' href='". esc_url( $link ) ."'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a></td>';
+				echo "<a href='". esc_url( $link ) ."'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a> | ';
 
 				$link = array(
 					'page'     => 'crontrol_admin_manage_page',
@@ -904,7 +905,8 @@ class Crontrol {
 				);
 				$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 				$link = wp_nonce_url( $link, "delete-cron_{$event->hook}_{$event->sig}_{$event->time}" );
-				echo "<td><a class='delete' href='".esc_url( $link )."'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></td>';
+				echo "<span class='delete'><a href='".esc_url( $link )."'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
+				echo '</td>';
 
 				echo '</tr>';
 
