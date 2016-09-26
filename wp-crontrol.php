@@ -634,7 +634,7 @@ class Crontrol {
 		);
 		$display_args = '';
 		if ( $is_php ) {
-			$helper_text = esc_html__( 'Cron events trigger actions in your code. Using the form below, you can enter the schedule of the action, as well as the PHP code for the action itself.', 'wp-crontrol' );
+			$helper_text = esc_html__( 'Cron events trigger actions in your code. Using the form below, you can enter the schedule of the event, as well as the PHP code for the action itself.', 'wp-crontrol' );
 		} else {
 			$helper_text = sprintf(
 				esc_html__( 'Cron events trigger actions in your code. A cron event added using the form below needs a corresponding action hook somewhere in code, perhaps the %1$s file in your theme.', 'wp-crontrol' ),
@@ -691,7 +691,7 @@ class Crontrol {
 				<table class="form-table"><tbody>
 					<?php if ( $is_php ) : ?>
 						<tr>
-							<th valign="top" scope="row"><label for="hookcode"><?php esc_html_e( 'Hook code:', 'wp-crontrol' ); ?></label></th>
+							<th valign="top" scope="row"><label for="hookcode"><?php esc_html_e( 'Action code:', 'wp-crontrol' ); ?></label></th>
 							<td><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode"><?php echo esc_textarea( $existing['args']['code'] ); ?></textarea></td>
 						</tr>
 						<tr>
@@ -700,7 +700,7 @@ class Crontrol {
 						</tr>
 					<?php else : ?>
 						<tr>
-							<th valign="top" scope="row"><label for="hookname"><?php esc_html_e( 'Hook name:', 'wp-crontrol' ); ?></label></th>
+							<th valign="top" scope="row"><label for="hookname"><?php esc_html_e( 'Action name:', 'wp-crontrol' ); ?></label></th>
 							<td><input type="text" class="regular-text" id="hookname" name="hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>"/></td>
 						</tr>
 						<tr>
@@ -769,12 +769,12 @@ class Crontrol {
 	 */
 	public function admin_manage_page() {
 		$messages = array(
-			'1' => __( 'Successfully executed the cron event %s', 'wp-crontrol' ),
-			'4' => __( 'Successfully edited the cron event %s', 'wp-crontrol' ),
-			'5' => __( 'Successfully created the cron event %s', 'wp-crontrol' ),
-			'6' => __( 'Successfully deleted the cron event %s', 'wp-crontrol' ),
-			'7' => __( 'Failed to the delete the cron event %s', 'wp-crontrol' ),
-			'8' => __( 'Failed to the execute the cron event %s', 'wp-crontrol' ),
+			'1' => __( 'Successfully executed the cron event %s.', 'wp-crontrol' ),
+			'4' => __( 'Successfully edited the cron event %s.', 'wp-crontrol' ),
+			'5' => __( 'Successfully created the cron event %s.', 'wp-crontrol' ),
+			'6' => __( 'Successfully deleted the cron event %s.', 'wp-crontrol' ),
+			'7' => __( 'Failed to the delete the cron event %s.', 'wp-crontrol' ),
+			'8' => __( 'Failed to the execute the cron event %s.', 'wp-crontrol' ),
 		);
 		if ( isset( $_GET['crontrol_name'] ) && isset( $_GET['crontrol_message'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
 			$hook = wp_unslash( $_GET['crontrol_name'] );
