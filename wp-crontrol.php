@@ -936,8 +936,8 @@ class Crontrol {
 	/**
 	 * Pretty-prints the difference in two times.
 	 *
-	 * @param time $older_date
-	 * @param time $newer_date
+	 * @param int $older_date Unix timestamp.
+	 * @param int $newer_date Unix timestamp.
 	 * @return string The pretty time_since value
 	 * @link http://binarybonsai.com/code/timesince.txt
 	 */
@@ -945,6 +945,17 @@ class Crontrol {
 		return $this->interval( $newer_date - $older_date );
 	}
 
+	/**
+	 * Converts a period of time in seconds into a human-readable format representing the interval.
+	 *
+	 * Example:
+	 *
+	 *     echo self::interval( 90 );
+	 *     // 1 minute 30 seconds
+	 *
+	 * @param  int    $since A period of time in seconds.
+	 * @return string        An interval represented as a string.
+	 */
 	public function interval( $since ) {
 		// array of time period chunks
 		$chunks = array(
