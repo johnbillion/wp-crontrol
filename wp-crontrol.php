@@ -409,8 +409,11 @@ class Crontrol {
 		$custom_keys = array_keys( $custom_schedules );
 
 		$messages = array(
+			/* translators: 1: The name of the cron schedule. */
 			'2' => __( 'Successfully deleted the cron schedule %s.', 'wp-crontrol' ),
+			/* translators: 1: The name of the cron schedule. */
 			'3' => __( 'Successfully added the cron schedule %s.', 'wp-crontrol' ),
+			/* translators: 1: The name of the cron schedule. */
 			'7' => __( 'Cron schedule not added because there was a problem parsing %s.', 'wp-crontrol' ),
 		);
 		if ( isset( $_GET['crontrol_message'] ) && isset( $_GET['crontrol_name'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
@@ -543,10 +546,12 @@ class Crontrol {
 		global $wp_version;
 
 		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
+			/* translators: 1: The name of the PHP constant that is set. */
 			return new WP_Error( 'crontrol_info', sprintf( __( 'The %s constant is set to true. WP-Cron spawning is disabled.', 'wp-crontrol' ), 'DISABLE_WP_CRON' ) );
 		}
 
 		if ( defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON ) {
+			/* translators: 1: The name of the PHP constant that is set. */
 			return new WP_Error( 'crontrol_info', sprintf( __( 'The %s constant is set to true.', 'wp-crontrol' ), 'ALTERNATE_WP_CRON' ) );
 		}
 
@@ -577,6 +582,7 @@ class Crontrol {
 			return $result;
 		} else if ( wp_remote_retrieve_response_code( $result ) >= 300 ) {
 			return new WP_Error( 'unexpected_http_response_code', sprintf(
+				/* translators: 1: The HTTP response code. */
 				__( 'Unexpected HTTP response code: %s', 'wp-crontrol' ),
 				intval( wp_remote_retrieve_response_code( $result ) )
 			) );
@@ -605,7 +611,12 @@ class Crontrol {
 			} else {
 				?>
 				<div id="cron-status-error" class="error">
-					<p><?php printf( esc_html__( 'There was a problem spawning a call to the WP-Cron system on your site. This means WP-Cron events on your site may not work. The problem was: %s', 'wp-crontrol' ), '<br><strong>' . esc_html( $status->get_error_message() ) . '</strong>' ); ?></p>
+					<p><?php
+						printf(
+							/* translators: 1: Error message text. */
+							esc_html__( 'There was a problem spawning a call to the WP-Cron system on your site. This means WP-Cron events on your site may not work. The problem was: %s', 'wp-crontrol' ),
+							'<br><strong>' . esc_html( $status->get_error_message() ) . '</strong>' );
+						?></p>
 				</div>
 				<?php
 			}
@@ -769,11 +780,17 @@ class Crontrol {
 	 */
 	public function admin_manage_page() {
 		$messages = array(
+			/* translators: 1: The name of the cron event. */
 			'1' => __( 'Successfully executed the cron event %s.', 'wp-crontrol' ),
+			/* translators: 1: The name of the cron event. */
 			'4' => __( 'Successfully edited the cron event %s.', 'wp-crontrol' ),
+			/* translators: 1: The name of the cron event. */
 			'5' => __( 'Successfully created the cron event %s.', 'wp-crontrol' ),
+			/* translators: 1: The name of the cron event. */
 			'6' => __( 'Successfully deleted the cron event %s.', 'wp-crontrol' ),
+			/* translators: 1: The name of the cron event. */
 			'7' => __( 'Failed to the delete the cron event %s.', 'wp-crontrol' ),
+			/* translators: 1: The name of the cron event. */
 			'8' => __( 'Failed to the execute the cron event %s.', 'wp-crontrol' ),
 		);
 		if ( isset( $_GET['crontrol_name'] ) && isset( $_GET['crontrol_message'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
@@ -847,6 +864,7 @@ class Crontrol {
 
 				if ( 'crontrol_cron_job' == $event->hook ) {
 					if ( ! empty( $event->args['name'] ) ) {
+						/* translators: 1: The name of the PHP cron event. */
 						echo '<td><em>' . esc_html( sprintf( __( 'PHP Cron (%s)', 'wp-crontrol' ), $event->args['name'] ) ) . '</em></td>';
 					} else {
 						echo '<td><em>' . esc_html__( 'PHP Cron', 'wp-crontrol' ) . '</em></td>';
@@ -918,9 +936,20 @@ class Crontrol {
 
 		<div class="tablenav">
 			<p class="description">
-				<?php printf( esc_html__( 'Local timezone is %s', 'wp-crontrol' ), '<code>' . esc_html( $tz ) . '</code>' ); ?>
-				<span id="utc-time"><?php printf( esc_html__( 'UTC time is %s', 'wp-crontrol' ), '<code>' . esc_html( date_i18n( $time_format, false, true ) ) . '</code>' ); ?></span>
-				<span id="local-time"><?php printf( esc_html__( 'Local time is %s', 'wp-crontrol' ), '<code>' . esc_html( date_i18n( $time_format ) ) . '</code>' ); ?></span>
+				<?php
+				/* translators: 1: The name of the local timezone. */
+				printf(
+					esc_html__( 'Local timezone is %s', 'wp-crontrol' ),
+					'<code>' . esc_html( $tz ) . '</code>'
+				);
+				?>
+				<span id="local-time"><?php
+					printf(
+						/* translators: 1: The local time. */
+						esc_html__( 'Local time is %s', 'wp-crontrol' ),
+						'<code>' . esc_html( date_i18n( $time_format ) ) . '</code>'
+					);
+				?></span>
 			</p>
 		</div>
 
@@ -959,12 +988,19 @@ class Crontrol {
 	public function interval( $since ) {
 		// array of time period chunks
 		$chunks = array(
+			/* translators: 1: The number of years in an interval of time. */
 			array( 60 * 60 * 24 * 365, _n_noop( '%s year', '%s years', 'wp-crontrol' ) ),
+			/* translators: 1: The number of months in an interval of time. */
 			array( 60 * 60 * 24 * 30, _n_noop( '%s month', '%s months', 'wp-crontrol' ) ),
+			/* translators: 1: The number of weeks in an interval of time. */
 			array( 60 * 60 * 24 * 7, _n_noop( '%s week', '%s weeks', 'wp-crontrol' ) ),
+			/* translators: 1: The number of days in an interval of time. */
 			array( 60 * 60 * 24, _n_noop( '%s day', '%s days', 'wp-crontrol' ) ),
+			/* translators: 1: The number of hours in an interval of time. */
 			array( 60 * 60, _n_noop( '%s hour', '%s hours', 'wp-crontrol' ) ),
+			/* translators: 1: The number of minutes in an interval of time. */
 			array( 60, _n_noop( '%s minute', '%s minutes', 'wp-crontrol' ) ),
+			/* translators: 1: The number of seconds in an interval of time. */
 			array( 1, _n_noop( '%s second', '%s seconds', 'wp-crontrol' ) ),
 		);
 
