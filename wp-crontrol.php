@@ -100,7 +100,10 @@ class Crontrol {
 			}
 			check_admin_referer( 'new-cron' );
 			extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
-			$args = array( 'code' => $in_hookcode );
+			$args = array(
+				'code' => $in_hookcode,
+				'name' => $in_eventname,
+			);
 			$this->add_cron( $in_next_run, $in_schedule, 'crontrol_cron_job', $args );
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
@@ -136,7 +139,11 @@ class Crontrol {
 			extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
 			check_admin_referer( "edit-cron_{$in_original_hookname}_{$in_original_sig}_{$in_original_next_run}" );
 			$args['code'] = $in_hookcode;
-			$args = array( 'code' => $in_hookcode );
+			$args['name'] = $in_eventname;
+			$args = array(
+				'code' => $in_hookcode,
+				'name' => $in_eventname,
+			);
 			$i = $this->delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
 			$i = $this->add_cron( $in_next_run, $in_schedule, 'crontrol_cron_job', $args );
 			$redirect = array(
@@ -625,6 +632,7 @@ class Crontrol {
 			'cron'     => admin_url( 'tools.php?page=crontrol_admin_manage_page&action=new-cron' ) . '#crontrol_form',
 			'php-cron' => admin_url( 'tools.php?page=crontrol_admin_manage_page&action=new-php-cron' ) . '#crontrol_form',
 		);
+		$display_args = '';
 		if ( $is_php ) {
 			$helper_text = esc_html__( 'Cron events trigger actions in your code. Using the form below, you can enter the schedule of the action, as well as the PHP code for the action itself.', 'wp-crontrol' );
 		} else {
@@ -644,17 +652,27 @@ class Crontrol {
 			$other_fields .= sprintf( '<input name="original_next_run" type="hidden" value="%s" />',
 				esc_attr( $existing['next_run'] )
 			);
-			$existing['args'] = $is_php ? $existing['args']['code'] : wp_json_encode( $existing['args'] );
+			if ( ! empty( $existing['args'] ) ) {
+				$display_args = wp_json_encode( $existing['args'] );
+			}
 			$existing['next_run'] = date( 'Y-m-d H:i:s', $existing['next_run'] );
 			$action = $is_php ? 'edit_php_cron' : 'edit_cron';
 			$button = $is_php ? $modify_tabs['php-cron'] : $modify_tabs['cron'];
 			$show_edit_tab = true;
 		} else {
 			$other_fields = wp_nonce_field( 'new-cron', '_wpnonce', true, false );
-			$existing = array( 'hookname' => '', 'hookcode' => '', 'args' => '', 'next_run' => 'now', 'schedule' => false );
+			$existing = array( 'hookname' => '', 'args' => array(), 'next_run' => 'now', 'schedule' => false );
 			$action = $is_php ? 'new_php_cron' : 'new_cron';
 			$button = $is_php ? $new_tabs['php-cron'] : $new_tabs['cron'];
 			$show_edit_tab = false;
+		}
+		if ( $is_php ) {
+			if ( ! isset( $existing['args']['code'] ) ) {
+				$existing['args']['code'] = '';
+			}
+			if ( ! isset( $existing['args']['name'] ) ) {
+				$existing['args']['name'] = '';
+			}
 		}
 		?>
 		<div id="crontrol_form" class="wrap narrow">
@@ -674,7 +692,11 @@ class Crontrol {
 					<?php if ( $is_php ) : ?>
 						<tr>
 							<th valign="top" scope="row"><label for="hookcode"><?php esc_html_e( 'Hook code:', 'wp-crontrol' ); ?></label></th>
-							<td><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode"><?php echo esc_textarea( $existing['args'] ); ?></textarea></td>
+							<td><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode"><?php echo esc_textarea( $existing['args']['code'] ); ?></textarea></td>
+						</tr>
+						<tr>
+							<th valign="top" scope="row"><label for="eventname"><?php esc_html_e( 'Event name (optional):', 'wp-crontrol' ); ?></label></th>
+							<td><input type="text" class="regular-text" id="eventname" name="eventname" value="<?php echo esc_attr( $existing['args']['name'] ); ?>"/></td>
 						</tr>
 					<?php else : ?>
 						<tr>
@@ -684,7 +706,7 @@ class Crontrol {
 						<tr>
 							<th valign="top" scope="row"><label for="args"><?php esc_html_e( 'Arguments:', 'wp-crontrol' ); ?></label></th>
 							<td>
-								<input type="text" class="regular-text" id="args" name="args" value="<?php echo esc_attr( $existing['args'] ); ?>"/>
+								<input type="text" class="regular-text" id="args" name="args" value="<?php echo esc_attr( $display_args ); ?>"/>
 								<p class="description"><?php esc_html_e( 'e.g. [25], ["asdf"], or ["i","want",25,"cakes"]', 'wp-crontrol' ); ?></p>
 							</td>
 						</tr>
@@ -824,7 +846,11 @@ class Crontrol {
 				echo '<tr id="cron-' . esc_attr( $id ) . '" class="">';
 
 				if ( 'crontrol_cron_job' == $event->hook ) {
-					echo '<td><em>' . esc_html__( 'PHP Cron', 'wp-crontrol' ) . '</em></td>';
+					if ( ! empty( $event->args['name'] ) ) {
+						echo '<td><em>' . esc_html( sprintf( __( 'PHP Cron (%s)', 'wp-crontrol' ), $event->args['name'] ) ) . '</em></td>';
+					} else {
+						echo '<td><em>' . esc_html__( 'PHP Cron', 'wp-crontrol' ) . '</em></td>';
+					}
 					echo '<td><em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em></td>';
 				} else {
 					echo '<td>' . esc_html( $event->hook ) . '</td>';
