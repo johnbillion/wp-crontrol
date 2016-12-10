@@ -645,10 +645,10 @@ class Crontrol {
 		);
 		$display_args = '';
 		if ( $is_php ) {
-			$helper_text = esc_html__( 'Cron events trigger actions in your code. Using the form below, you can enter the schedule of the event, as well as the PHP code for the action itself.', 'wp-crontrol' );
+			$helper_text = esc_html__( 'Cron events trigger actions in your code. Enter the schedule of the event, as well as the PHP code to execute when the action is triggered.', 'wp-crontrol' );
 		} else {
 			$helper_text = sprintf(
-				esc_html__( 'Cron events trigger actions in your code. A cron event added using the form below needs a corresponding action hook somewhere in code, perhaps the %1$s file in your theme.', 'wp-crontrol' ),
+				esc_html__( 'Cron events trigger actions in your code. A cron event needs a corresponding action hook somewhere in code, e.g. the %1$s file in your theme.', 'wp-crontrol' ),
 				'<code>functions.php</code>'
 			);
 		}
@@ -702,23 +702,31 @@ class Crontrol {
 				<table class="form-table"><tbody>
 					<?php if ( $is_php ) : ?>
 						<tr>
-							<th valign="top" scope="row"><label for="hookcode"><?php esc_html_e( 'Action code:', 'wp-crontrol' ); ?></label></th>
+							<th valign="top" scope="row"><label for="hookcode"><?php esc_html_e( 'PHP Code:', 'wp-crontrol' ); ?></label></th>
 							<td><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode"><?php echo esc_textarea( $existing['args']['code'] ); ?></textarea></td>
 						</tr>
 						<tr>
-							<th valign="top" scope="row"><label for="eventname"><?php esc_html_e( 'Event name (optional):', 'wp-crontrol' ); ?></label></th>
+							<th valign="top" scope="row"><label for="eventname"><?php esc_html_e( 'Event Name (optional):', 'wp-crontrol' ); ?></label></th>
 							<td><input type="text" class="regular-text" id="eventname" name="eventname" value="<?php echo esc_attr( $existing['args']['name'] ); ?>"/></td>
 						</tr>
 					<?php else : ?>
 						<tr>
-							<th valign="top" scope="row"><label for="hookname"><?php esc_html_e( 'Action name:', 'wp-crontrol' ); ?></label></th>
+							<th valign="top" scope="row"><label for="hookname"><?php esc_html_e( 'Action Name:', 'wp-crontrol' ); ?></label></th>
 							<td><input type="text" class="regular-text" id="hookname" name="hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>"/></td>
 						</tr>
 						<tr>
 							<th valign="top" scope="row"><label for="args"><?php esc_html_e( 'Arguments:', 'wp-crontrol' ); ?></label></th>
 							<td>
 								<input type="text" class="regular-text" id="args" name="args" value="<?php echo esc_attr( $display_args ); ?>"/>
-								<p class="description"><?php esc_html_e( 'e.g. [25], ["asdf"], or ["i","want",25,"cakes"]', 'wp-crontrol' ); ?></p>
+								<p class="description"><?php
+									/* translators: 1, 2, and 3: Example values for an input field. */
+									echo esc_html( sprintf(
+										__( "e.g. %s, %s, or %s", 'wp-crontrol' ),
+										'[25]',
+										'["asdf"]',
+										'["i","want",25,"cakes"]'
+									) );
+								?></p>
 							</td>
 						</tr>
 					<?php endif; ?>
@@ -726,10 +734,18 @@ class Crontrol {
 						<th valign="top" scope="row"><label for="next_run"><?php esc_html_e( 'Next run (UTC):', 'wp-crontrol' ); ?></label></th>
 						<td>
 							<input type="text" class="regular-text" id="next_run" name="next_run" value="<?php echo esc_attr( $existing['next_run'] ); ?>"/>
-							<p class="description"><?php esc_html_e( "e.g. 'now', 'tomorrow', '+2 days', or '25-02-2020 12:34:00'", 'wp-crontrol' ); ?></p>
+							<p class="description"><?php
+								/* translators: 1, 2, and 3: Example values for an input field. */
+								echo esc_html( sprintf(
+									__( "e.g. %s, %s, or %s", 'wp-crontrol' ),
+									"'now'",
+									"'+2 days'",
+									"'25-02-2020 12:34:00'"
+								) );
+							?></p>
 						</td>
 					</tr><tr>
-						<th valign="top" scope="row"><label for="schedule"><?php esc_html_e( 'Event schedule:', 'wp-crontrol' ); ?></label></th>
+						<th valign="top" scope="row"><label for="schedule"><?php esc_html_e( 'Event Schedule:', 'wp-crontrol' ); ?></label></th>
 						<td>
 							<?php $this->schedules_dropdown( $existing['schedule'] ); ?>
 						</td>
