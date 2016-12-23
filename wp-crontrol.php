@@ -85,7 +85,8 @@ class Crontrol {
 			check_admin_referer( 'new-cron' );
 			extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
 			$in_args = json_decode( $in_args, true );
-			$this->add_cron( $in_next_run, $in_schedule, $in_hookname, $in_args );
+			$next_run = $in_next_run_date . ' ' . $in_next_run_time;
+			$this->add_cron( $next_run, $in_schedule, $in_hookname, $in_args );
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '5',
@@ -104,7 +105,8 @@ class Crontrol {
 				'code' => $in_hookcode,
 				'name' => $in_eventname,
 			);
-			$this->add_cron( $in_next_run, $in_schedule, 'crontrol_cron_job', $args );
+			$next_run = $in_next_run_date . ' ' . $in_next_run_time;
+			$this->add_cron( $next_run, $in_schedule, 'crontrol_cron_job', $args );
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '5',
@@ -122,7 +124,8 @@ class Crontrol {
 			check_admin_referer( "edit-cron_{$in_original_hookname}_{$in_original_sig}_{$in_original_next_run}" );
 			$in_args = json_decode( $in_args, true );
 			$i = $this->delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
-			$i = $this->add_cron( $in_next_run, $in_schedule, $in_hookname, $in_args );
+			$next_run = $in_next_run_date . ' ' . $in_next_run_time;
+			$i = $this->add_cron( $next_run, $in_schedule, $in_hookname, $in_args );
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '4',
@@ -145,7 +148,8 @@ class Crontrol {
 				'name' => $in_eventname,
 			);
 			$i = $this->delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
-			$i = $this->add_cron( $in_next_run, $in_schedule, 'crontrol_cron_job', $args );
+			$next_run = $in_next_run_date . ' ' . $in_next_run_time;
+			$i = $this->add_cron( $next_run, $in_schedule, 'crontrol_cron_job', $args );
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '4',
@@ -290,15 +294,17 @@ class Crontrol {
 	/**
 	 * Adds a new cron event.
 	 *
-	 * @param string $next_run A human-readable (strtotime) time that the event should be run at
+	 * @param string $next_run A human-readable (strtotime) time that the event should be run at, in the local timezone
 	 * @param string $schedule The recurrence of the cron event
 	 * @param string $hookname The name of the hook to execute
 	 * @param array $args Arguments to add to the cron event
 	 */
 	public function add_cron( $next_run, $schedule, $hookname, $args ) {
 		$next_run = strtotime( $next_run );
-		if ( false === $next_run || -1 == $next_run ) {
+		if ( false === $next_run ) {
 			$next_run = time();
+		} else {
+			$next_run = get_gmt_from_date( date( 'Y-m-d H:i:s', $next_run ), 'U' );
 		}
 		if ( ! is_array( $args ) ) {
 			$args = array();
@@ -625,6 +631,28 @@ class Crontrol {
 	}
 
 	/**
+	 * Get the display name for the site's timezone.
+	 *
+	 * @return string The name and UTC offset for the site's timezone.
+	 */
+	public function get_timezone_name() {
+		$timezone_string = get_option( 'timezone_string', '' );
+		$gmt_offset      = get_option( 'gmt_offset', 0 );
+
+		if ( $gmt_offset >= 0 ) {
+			$gmt_offset = '+' . $gmt_offset;
+		}
+
+		if ( '' === $timezone_string ) {
+			$name = sprintf( 'UTC%s', $gmt_offset );
+		} else {
+			$name = sprintf( '%s (UTC%s)', str_replace( '_', ' ', $timezone_string ), $gmt_offset );
+		}
+
+		return $name;
+	}
+
+	/**
 	 * Shows the form used to add/edit cron events.
 	 *
 	 * @param boolean $is_php Whether this is a PHP cron event
@@ -666,16 +694,17 @@ class Crontrol {
 			if ( ! empty( $existing['args'] ) ) {
 				$display_args = wp_json_encode( $existing['args'] );
 			}
-			$existing['next_run'] = date( 'Y-m-d H:i:s', $existing['next_run'] );
 			$action = $is_php ? 'edit_php_cron' : 'edit_cron';
 			$button = $is_php ? $modify_tabs['php-cron'] : $modify_tabs['cron'];
 			$show_edit_tab = true;
+			list( $next_run_date, $next_run_time ) = explode( ' ', get_date_from_gmt( date( 'Y-m-d H:i:s', $existing['next_run'] ), 'Y-m-d H:i:s' ) );
 		} else {
 			$other_fields = wp_nonce_field( 'new-cron', '_wpnonce', true, false );
 			$existing = array( 'hookname' => '', 'args' => array(), 'next_run' => 'now', 'schedule' => false );
 			$action = $is_php ? 'new_php_cron' : 'new_cron';
 			$button = $is_php ? $new_tabs['php-cron'] : $new_tabs['cron'];
 			$show_edit_tab = false;
+			$next_run_time = $next_run_date = '';
 		}
 		if ( $is_php ) {
 			if ( ! isset( $existing['args']['code'] ) ) {
@@ -731,16 +760,34 @@ class Crontrol {
 						</tr>
 					<?php endif; ?>
 					<tr>
-						<th valign="top" scope="row"><label for="next_run"><?php esc_html_e( 'Next run (UTC):', 'wp-crontrol' ); ?></label></th>
+						<th valign="top" scope="row"><label for="next_run_date"><?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?></label></th>
 						<td>
-							<input type="text" class="regular-text" id="next_run" name="next_run" value="<?php echo esc_attr( $existing['next_run'] ); ?>"/>
-							<p class="description"><?php
-								/* translators: 1, 2, and 3: Example values for an input field. */
+							<script>
+								jQuery( function( $ ) {
+									var isDateInputSupported = function() {
+										var elem = document.createElement( 'input' );
+										elem.setAttribute( 'type', 'date' );
+										elem.value = 'foo';
+										return ( elem.type == 'date' && elem.value != 'foo' );
+									}
+
+									if ( ! isDateInputSupported() ) {
+										$( '.datetime-fallback' ).show();
+									}
+								} );
+							</script>
+							<input type="date" placeholder="YYYY-MM-DD" id="next_run_date" name="next_run_date" value="<?php echo esc_attr( $next_run_date ); ?>" maxlength="10" pattern="\d{4}\-\d{2}\-\d{2}" required />
+							<input type="time" step="1" placeholder="HH:MM:SS" id="next_run_time" name="next_run_time" value="<?php echo esc_attr( $next_run_time ); ?>" maxlength="8" pattern="\d{2}:\d{2}:\d{2}" required />
+							<?php printf(
+								/* translators: %s Timezone name. */
+								esc_html__( 'Timezone: %s', 'wp-crontrol' ),
+								'<code>' . esc_html( $this->get_timezone_name() ) . '</code>'
+							); ?>
+							<p class="description datetime-fallback hidden"><?php
+								/* translators: %s Date/time format for an input field. */
 								echo esc_html( sprintf(
-									__( "e.g. %s, %s, or %s", 'wp-crontrol' ),
-									"'now'",
-									"'+2 days'",
-									"'25-02-2020 12:34:00'"
+									__( 'Format: %s', 'wp-crontrol' ),
+									date( 'Y' ) . '-02-25 12:34:00'
 								) );
 							?></p>
 						</td>
@@ -818,19 +865,6 @@ class Crontrol {
 		$events = $this->get_cron_events();
 		$doing_edit = ( isset( $_GET['action'] ) && 'edit-cron' == $_GET['action'] ) ? wp_unslash( $_GET['id'] ) : false ;
 		$time_format = 'Y-m-d H:i:s';
-
-		$tzstring = get_option( 'timezone_string' );
-		$current_offset = get_option( 'gmt_offset' );
-
-		if ( $current_offset >= 0 ) {
-			$current_offset = '+' . $current_offset;
-		}
-
-		if ( '' === $tzstring ) {
-			$tz = sprintf( 'UTC%s', $current_offset );
-		} else {
-			$tz = sprintf( '%s (UTC%s)', str_replace( '_', ' ', $tzstring ), $current_offset );
-		}
 
 		$this->show_cron_status();
 
@@ -949,25 +983,6 @@ class Crontrol {
 		?>
 		</tbody>
 		</table>
-
-		<div class="tablenav">
-			<p class="description">
-				<?php
-				/* translators: 1: The name of the local timezone. */
-				printf(
-					esc_html__( 'Local timezone is %s', 'wp-crontrol' ),
-					'<code>' . esc_html( $tz ) . '</code>'
-				);
-				?>
-				<span id="local-time"><?php
-					printf(
-						/* translators: 1: The local time. */
-						esc_html__( 'Local time is %s', 'wp-crontrol' ),
-						'<code>' . esc_html( date_i18n( $time_format ) ) . '</code>'
-					);
-				?></span>
-			</p>
-		</div>
 
 		</div>
 		<?php
