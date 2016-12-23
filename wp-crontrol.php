@@ -714,17 +714,18 @@ class Crontrol {
 				$existing['args']['name'] = '';
 			}
 		}
+
+		$allowed = ( ! $is_php || current_user_can( 'edit_files' ) );
 		?>
 		<div id="crontrol_form" class="wrap narrow">
 			<h2 class="nav-tab-wrapper">
 				<a href="<?php echo esc_url( $new_links['cron'] ); ?>" class="nav-tab<?php if ( ! $show_edit_tab && ! $is_php ) { echo ' nav-tab-active'; } ?>"><?php echo esc_html( $new_tabs['cron'] ); ?></a>
-				<?php if ( current_user_can( 'edit_files' ) ) { ?>
-					<a href="<?php echo esc_url( $new_links['php-cron'] ); ?>" class="nav-tab<?php if ( ! $show_edit_tab && $is_php ) { echo ' nav-tab-active'; } ?>"><?php echo esc_html( $new_tabs['php-cron'] ); ?></a>
-				<?php } ?>
+				<a href="<?php echo esc_url( $new_links['php-cron'] ); ?>" class="nav-tab<?php if ( ! $show_edit_tab && $is_php ) { echo ' nav-tab-active'; } ?>"><?php echo esc_html( $new_tabs['php-cron'] ); ?></a>
 				<?php if ( $show_edit_tab ) { ?>
 					<span class="nav-tab nav-tab-active"><?php echo esc_html( $button ); ?></span>
 				<?php } ?>
 			</h2>
+			<?php if ( $allowed ) { ?>
 			<p><?php echo $helper_text; // WPCS:: XSS ok. ?></p>
 			<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ); ?>">
 				<?php echo $other_fields; // WPCS:: XSS ok. ?>
@@ -800,6 +801,11 @@ class Crontrol {
 				</tbody></table>
 				<p class="submit"><input type="submit" class="button-primary" value="<?php echo esc_attr( $button ); ?>" name="<?php echo esc_attr( $action ); ?>"/></p>
 			</form>
+			<?php } else { ?>
+				<div class="error inline">
+					<p><?php esc_html_e( 'You cannot add or edit PHP cron events because your user account does not have the ability to edit files.', 'wp-crontrol' ); ?></p>
+				</div>
+			<?php } ?>
 		</div>
 		<?php
 	}
