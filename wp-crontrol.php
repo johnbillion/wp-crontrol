@@ -135,7 +135,7 @@ class Crontrol {
 			exit;
 
 		} else if ( isset( $_POST['edit_php_cron'] ) ) {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! current_user_can( 'edit_files' ) ) {
 				wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ) );
 			}
 
