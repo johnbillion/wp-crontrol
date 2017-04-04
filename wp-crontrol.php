@@ -888,6 +888,7 @@ class Crontrol {
 			<tr>
 				<th scope="col"><?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Arguments', 'wp-crontrol' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Actions', 'wp-crontrol' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?></th>
 				<th scope="col"><span class="screen-reader-text"><?php esc_html_e( 'Actions', 'wp-crontrol' ); ?></span></th>
@@ -897,7 +898,7 @@ class Crontrol {
 		<?php
 		if ( is_wp_error( $events ) ) {
 			?>
-			<tr><td colspan="7"><?php echo esc_html( $events->get_error_message() ); ?></td></tr>
+			<tr><td colspan="6"><?php echo esc_html( $events->get_error_message() ); ?></td></tr>
 			<?php
 		} else {
 			foreach ( $events as $id => $event ) {
@@ -913,12 +914,12 @@ class Crontrol {
 				}
 
 				if ( empty( $event->args ) ) {
-					$args = __( 'None', 'wp-crontrol' );
+					$args = '<em>' . esc_html__( 'None', 'wp-crontrol' ) . '</em>';
 				} else {
 					if ( defined( 'JSON_UNESCAPED_SLASHES' ) ) {
-						$args = wp_json_encode( $event->args, JSON_UNESCAPED_SLASHES );
+						$args = '<code>' . wp_json_encode( $event->args, JSON_UNESCAPED_SLASHES ) . '</code>';
 					} else {
-						$args = stripslashes( wp_json_encode( $event->args ) );
+						$args = '<code>' . stripslashes( wp_json_encode( $event->args ) ) . '</code>';
 					}
 				}
 
@@ -932,9 +933,17 @@ class Crontrol {
 						echo '<td><em>' . esc_html__( 'PHP Cron', 'wp-crontrol' ) . '</em></td>';
 					}
 					echo '<td><em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em></td>';
+					echo '<td><em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em></td>';
 				} else {
 					echo '<td>' . esc_html( $event->hook ) . '</td>';
-					echo '<td>' . esc_html( $args ) . '</td>';
+					echo '<td>' . $args . '</td>'; // WPCS:: XSS ok.
+					echo '<td>';
+					$callbacks = array();
+					foreach ( $this->get_action_callbacks( $event->hook ) as $callback ) {
+						$callbacks[] = '<code>' . esc_html( $callback['callback']['name'] ) . '</code>';
+					}
+					echo implode( '<br>', $callbacks ); // WPCS:: XSS ok.
+					echo '</td>';
 				}
 
 				echo '<td>';
@@ -1009,6 +1018,79 @@ class Crontrol {
 		} else {
 			$this->show_cron_form( ( isset( $_GET['action'] ) and 'new-php-cron' == $_GET['action'] ), false );
 		}
+	}
+
+	protected function get_action_callbacks( $name ) {
+		global $wp_filter;
+
+		$actions = array();
+
+		if ( isset( $wp_filter[$name] ) ) {
+
+			# http://core.trac.wordpress.org/ticket/17817
+			$action = $wp_filter[$name];
+
+			foreach ( $action as $priority => $callbacks ) {
+
+				foreach ( $callbacks as $callback ) {
+
+					$callback = self::populate_callback( $callback );
+
+					$actions[] = array(
+						'priority'  => $priority,
+						'callback'  => $callback,
+					);
+
+				}
+
+			}
+
+		}
+
+		return $actions;
+
+	}
+
+	public static function populate_callback( array $callback ) {
+
+		// If Query Monitor is installed, use its rich callback analysis:
+		if ( method_exists( 'QM_Util', 'populate_callback' ) ) {
+			return QM_Util::populate_callback( $callback );
+		}
+
+		if ( is_string( $callback['function'] ) && ( false !== strpos( $callback['function'], '::' ) ) ) {
+			$callback['function'] = explode( '::', $callback['function'] );
+		}
+
+		if ( is_array( $callback['function'] ) ) {
+
+			if ( is_object( $callback['function'][0] ) ) {
+				$class  = get_class( $callback['function'][0] );
+				$access = '->';
+			} else {
+				$class  = $callback['function'][0];
+				$access = '::';
+			}
+
+			$callback['name'] = $class . $access . $callback['function'][1] . '()';
+
+		} elseif ( is_object( $callback['function'] ) ) {
+
+			if ( is_a( $callback['function'], 'Closure' ) ) {
+				$callback['name'] = 'Closure';
+			} else {
+				$class = get_class( $callback['function'] );
+				$callback['name'] = $class . '->__invoke()';
+			}
+
+		} else {
+
+			$callback['name'] = $callback['function'] . '()';
+
+		}
+
+		return $callback;
+
 	}
 
 	/**
