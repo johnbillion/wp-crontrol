@@ -878,6 +878,9 @@ class Crontrol {
 			'wp_version_check',
 			'wp_update_plugins',
 			'wp_update_themes',
+			'wp_scheduled_delete',
+			'wp_scheduled_auto_draft_delete',
+			'update_network_counts',
 		);
 
 		$this->show_cron_status();
