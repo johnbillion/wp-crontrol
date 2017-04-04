@@ -741,7 +741,7 @@ class Crontrol {
 						</tr>
 					<?php else : ?>
 						<tr>
-							<th valign="top" scope="row"><label for="hookname"><?php esc_html_e( 'Action Name', 'wp-crontrol' ); ?></label></th>
+							<th valign="top" scope="row"><label for="hookname"><?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?></label></th>
 							<td><input type="text" class="regular-text" id="hookname" name="hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>" required /></td>
 						</tr>
 						<tr>
@@ -880,7 +880,7 @@ class Crontrol {
 		<table class="widefat striped">
 		<thead>
 			<tr>
-				<th scope="col"><?php esc_html_e( 'Action Name', 'wp-crontrol' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Arguments', 'wp-crontrol' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?></th>
