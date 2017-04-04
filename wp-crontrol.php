@@ -107,10 +107,11 @@ class Crontrol {
 			);
 			$next_run = $in_next_run_date . ' ' . $in_next_run_time;
 			$this->add_cron( $next_run, $in_schedule, 'crontrol_cron_job', $args );
+			$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '5',
-				'crontrol_name'    => urlencode( $in_hookname ),
+				'crontrol_name'    => urlencode( $hookname ),
 			);
 			wp_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
@@ -150,10 +151,11 @@ class Crontrol {
 			$i = $this->delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
 			$next_run = $in_next_run_date . ' ' . $in_next_run_time;
 			$i = $this->add_cron( $next_run, $in_schedule, 'crontrol_cron_job', $args );
+			$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '4',
-				'crontrol_name'    => urlencode( $in_hookname ),
+				'crontrol_name'    => urlencode( $hookname ),
 			);
 			wp_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
