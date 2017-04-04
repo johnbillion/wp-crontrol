@@ -71,7 +71,7 @@ class Crontrol {
 	 * Run using the 'init' action.
 	 */
 	public function action_init() {
-		load_plugin_textdomain( 'wp-crontrol', false, dirname( plugin_basename( __FILE__ ) ) . '/gettext' );
+		load_plugin_textdomain( 'wp-crontrol', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	}
 
 	/**
