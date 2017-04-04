@@ -11,7 +11,7 @@ WP Crontrol lets you view and control what's happening in the WP-Cron system.
 
 WP Crontrol lets you view and control what's happening in the WP-Cron system. From the admin screens you can:
 
- * View all cron events along with their arguments, recurrence, and when they are next due.
+ * View all cron events along with their arguments, recurrence, callback functions, and when they are next due.
  * Edit, delete, and immediately run any cron events.
  * Add new cron events.
  * Add, edit, and remove custom cron schedules.
@@ -20,24 +20,8 @@ The admin screen will show you a warning message if your cron system doesn't app
 
 = Usage =
 
-1. Go to the Tools -> Cron Events menu to manage cron events.
-2. Go to the Settings -> Cron Schedules menu to manage cron schedules.
-
-== Installation ==
-
-You can install this plugin directly from your WordPress dashboard:
-
- 1. Go to the *Plugins* menu and click *Add New*.
- 2. Search for *WP Crontrol*.
- 3. Click *Install Now* next to the *WP Crontrol* plugin.
- 4. Activate the plugin.
-
-Alternatively, see the guide to [Manually Installing Plugins](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
-
-= Usage =
-
-1. Go to the Tools -> Cron Events menu to manage cron events.
-2. Go to the Settings -> Cron Schedules menu to manage cron schedules.
+1. Go to the `Tools -> Cron Events` menu to manage cron events.
+2. Go to the `Settings -> Cron Schedules` menu to manage cron schedules.
 
 == Frequently Asked Questions ==
 
