@@ -83,6 +83,9 @@ class Crontrol {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ) );
 			}
+			if ( 'crontrol_cron_job' === $in_hookname && ! current_user_can( 'edit_files' ) ) {
+				wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ) );
+			}
 			check_admin_referer( 'new-cron' );
 			extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
 			$in_args = json_decode( $in_args, true );
