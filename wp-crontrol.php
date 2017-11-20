@@ -93,7 +93,7 @@ class Crontrol {
 				'crontrol_message' => '5',
 				'crontrol_name'    => urlencode( $in_hookname ),
 			);
-			wp_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
 
 		} else if ( isset( $_POST['new_php_cron'] ) ) {
@@ -114,7 +114,7 @@ class Crontrol {
 				'crontrol_message' => '5',
 				'crontrol_name'    => urlencode( $hookname ),
 			);
-			wp_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
 
 		} else if ( isset( $_POST['edit_cron'] ) ) {
@@ -133,7 +133,7 @@ class Crontrol {
 				'crontrol_message' => '4',
 				'crontrol_name'    => urlencode( $in_hookname ),
 			);
-			wp_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
 
 		} else if ( isset( $_POST['edit_php_cron'] ) ) {
@@ -158,7 +158,7 @@ class Crontrol {
 				'crontrol_message' => '4',
 				'crontrol_name'    => urlencode( $hookname ),
 			);
-			wp_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
 
 		} else if ( isset( $_POST['new_schedule'] ) ) {
@@ -181,7 +181,7 @@ class Crontrol {
 						'crontrol_message' => '7',
 						'crontrol_name'    => urlencode( $interval ),
 					);
-					wp_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
+					wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 					exit;
 				}
 				$interval = $future - $now;
@@ -191,7 +191,7 @@ class Crontrol {
 					'crontrol_message' => '7',
 					'crontrol_name'    => urlencode( $interval ),
 				);
-				wp_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
+				wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 				exit;
 			}
 
@@ -201,7 +201,7 @@ class Crontrol {
 				'crontrol_message' => '3',
 				'crontrol_name'    => urlencode( $name ),
 			);
-			wp_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 			exit;
 
 		} else if ( isset( $_GET['action'] ) && 'delete-sched' == $_GET['action'] ) {
@@ -216,7 +216,7 @@ class Crontrol {
 				'crontrol_message' => '2',
 				'crontrol_name'    => urlencode( $id ),
 			);
-			wp_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 			exit;
 
 		} else if ( isset( $_GET['action'] ) && 'delete-cron' == $_GET['action'] ) {
@@ -233,7 +233,7 @@ class Crontrol {
 					'crontrol_message' => '6',
 					'crontrol_name'    => urlencode( $id ),
 				);
-				wp_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+				wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 				exit;
 			} else {
 				$redirect = array(
@@ -241,7 +241,7 @@ class Crontrol {
 					'crontrol_message' => '7',
 					'crontrol_name'    => urlencode( $id ),
 				);
-				wp_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+				wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 				exit;
 
 			};
@@ -259,7 +259,7 @@ class Crontrol {
 					'crontrol_message' => '1',
 					'crontrol_name'    => urlencode( $id ),
 				);
-				wp_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+				wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 				exit;
 			} else {
 				$redirect = array(
@@ -267,7 +267,7 @@ class Crontrol {
 					'crontrol_message' => '8',
 					'crontrol_name'    => urlencode( $id ),
 				);
-				wp_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+				wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 				exit;
 			}
 		}
