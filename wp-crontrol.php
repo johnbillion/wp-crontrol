@@ -1088,24 +1088,18 @@ class Crontrol {
 			$action = $wp_filter[ $name ];
 
 			foreach ( $action as $priority => $callbacks ) {
-
 				foreach ( $callbacks as $callback ) {
-
 					$callback = self::populate_callback( $callback );
 
 					$actions[] = array(
 						'priority'  => $priority,
 						'callback'  => $callback,
 					);
-
 				}
-
 			}
-
 		}
 
 		return $actions;
-
 	}
 
 	public static function populate_callback( array $callback ) {
@@ -1120,7 +1114,6 @@ class Crontrol {
 		}
 
 		if ( is_array( $callback['function'] ) ) {
-
 			if ( is_object( $callback['function'][0] ) ) {
 				$class  = get_class( $callback['function'][0] );
 				$access = '->';
@@ -1130,20 +1123,15 @@ class Crontrol {
 			}
 
 			$callback['name'] = $class . $access . $callback['function'][1] . '()';
-
 		} elseif ( is_object( $callback['function'] ) ) {
-
 			if ( is_a( $callback['function'], 'Closure' ) ) {
 				$callback['name'] = 'Closure';
 			} else {
 				$class = get_class( $callback['function'] );
 				$callback['name'] = $class . '->__invoke()';
 			}
-
 		} else {
-
 			$callback['name'] = $callback['function'] . '()';
-
 		}
 
 		return $callback;
