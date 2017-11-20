@@ -1009,7 +1009,7 @@ class Crontrol {
 
 				if ( $event->schedule ) {
 					echo '<td>';
-					echo esc_html( $this->interval( $event->interval ) );
+					echo esc_html( $this->get_schedule_name( $event->interval ) );
 					echo '</td>';
 				} else {
 					echo '<td>';
@@ -1224,6 +1224,18 @@ class Crontrol {
 		}
 
 		return $output;
+	}
+
+	protected function get_schedule_name( $interval ) {
+		$schedules = $this->get_schedules();
+
+		foreach ( $schedules as $schedule ) {
+			if ( $interval === $schedule['interval'] ) {
+				return $schedule['display'];
+			}
+		}
+
+		$this->interval( $interval );
 	}
 
 	public static function init() {
