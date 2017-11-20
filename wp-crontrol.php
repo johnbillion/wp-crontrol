@@ -929,6 +929,7 @@ class Crontrol {
 			'wp_scheduled_delete',
 			'wp_scheduled_auto_draft_delete',
 			'update_network_counts',
+			'delete_expired_transients',
 		);
 
 		$this->show_cron_status();
