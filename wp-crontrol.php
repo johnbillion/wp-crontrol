@@ -762,9 +762,9 @@ class Crontrol {
 							<td>
 								<input type="text" class="regular-text" id="args" name="args" value="<?php echo esc_attr( $display_args ); ?>"/>
 								<p class="description"><?php
-									/* translators: 1, 2, and 3: Example values for an input field. */
 									echo esc_html( sprintf(
-										__( 'e.g. %s, %s, or %s', 'wp-crontrol' ),
+										/* translators: 1, 2, and 3: Example values for an input field. */
+										__( 'e.g. %1$s, %2$s, or %3$s', 'wp-crontrol' ),
 										'[25]',
 										'["asdf"]',
 										'["i","want",25,"cakes"]'
@@ -798,8 +798,8 @@ class Crontrol {
 								'<code>' . esc_html( $this->get_timezone_name() ) . '</code>'
 							); ?>
 							<p class="description datetime-fallback hidden"><?php
-								/* translators: %s Date/time format for an input field. */
 								echo esc_html( sprintf(
+									/* translators: %s Date/time format for an input field. */
 									__( 'Format: %s', 'wp-crontrol' ),
 									date( 'Y' ) . '-02-25 12:34:00'
 								) );
