@@ -417,8 +417,15 @@ class Crontrol {
 	 */
 	public function admin_options_page() {
 		$schedules = $this->get_schedules();
+		$events = $this->get_cron_events();
 		$custom_schedules = get_option( 'crontrol_schedules', array() );
 		$custom_keys = array_keys( $custom_schedules );
+
+		if ( is_wp_error( $events ) ) {
+			$events = array();
+		}
+
+		$used_schedules = array_unique( wp_list_pluck( $events, 'schedule' ) );
 
 		$messages = array(
 			/* translators: 1: The name of the cron schedule. */
@@ -445,7 +452,7 @@ class Crontrol {
 				<th scope="col"><?php esc_html_e( 'Name', 'wp-crontrol' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Interval', 'wp-crontrol' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Display Name', 'wp-crontrol' ); ?></th>
-				<th>&nbsp;</th>
+				<th scope="col"><?php esc_html_e( 'Delete', 'wp-crontrol' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -469,20 +476,27 @@ class Crontrol {
 				printf( '<td>%s</td>',
 					esc_html( $data['display'] )
 				);
+
+				echo '<td>';
 				if ( in_array( $name, $custom_keys, true ) ) {
-					$url = add_query_arg( array(
-						'page'   => 'crontrol_admin_options_page',
-						'action' => 'delete-sched',
-						'id'     => urlencode( $name ),
-					), admin_url( 'options-general.php' ) );
-					$url = wp_nonce_url( $url, 'delete-sched_' . $name );
-					printf( '<td><span class="row-actions visible"><span class="delete"><a href="%s">%s</a></span></span></td>',
-						esc_url( $url ),
-						esc_html__( 'Delete', 'wp-crontrol' )
-					);
+					if ( in_array( $name, $used_schedules, true ) ) {
+						esc_html_e( 'This custom schedule is in use and cannot be deleted', 'wp-crontrol' );
+					} else {
+						$url = add_query_arg( array(
+							'page'   => 'crontrol_admin_options_page',
+							'action' => 'delete-sched',
+							'id'     => urlencode( $name ),
+						), admin_url( 'options-general.php' ) );
+						$url = wp_nonce_url( $url, 'delete-sched_' . $name );
+						printf( '<span class="row-actions visible"><span class="delete"><a href="%s">%s</a></span></span>',
+							esc_url( $url ),
+							esc_html__( 'Delete', 'wp-crontrol' )
+						);
+					}
 				} else {
 					echo '<td>&nbsp;</td>';
 				}
+				echo '</td>';
 				echo '</tr>';
 			}
 		}
