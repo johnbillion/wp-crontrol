@@ -222,7 +222,7 @@ class Crontrol {
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 			exit;
 
-		} else if ( isset( $_GET['action'] ) && 'delete-cron' == $_GET['action'] ) {
+		} elseif ( isset( $_GET['action'] ) && 'delete-cron' == $_GET['action'] ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ) );
 			}
