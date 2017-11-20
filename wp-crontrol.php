@@ -521,8 +521,12 @@ class Crontrol {
 	 */
 	public function get_schedules() {
 		$schedules = wp_get_schedules();
-		uasort( $schedules, create_function( '$a, $b', 'return $a["interval"] - $b["interval"];' ) );
+		uasort( $schedules, array( $this, 'sort_schedules' ) );
 		return $schedules;
+	}
+
+	protected function sort_schedules( $a, $b ) {
+		return ( $a['interval'] - $b['interval'] );
 	}
 
 	/**
