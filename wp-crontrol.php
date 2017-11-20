@@ -388,12 +388,12 @@ class Crontrol {
 	public function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
 		$actions['crontrol-events'] = sprintf(
 			'<a href="%s">%s</a>',
-			admin_url( 'tools.php?page=crontrol_admin_manage_page' ),
+			esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ),
 			esc_html__( 'Cron Events', 'wp-crontrol' )
 		);
 		$actions['crontrol-schedules'] = sprintf(
 			'<a href="%s">%s</a>',
-			admin_url( 'options-general.php?page=crontrol_admin_options_page' ),
+			esc_url( admin_url( 'options-general.php?page=crontrol_admin_options_page' ) ),
 			esc_html__( 'Cron Schedules', 'wp-crontrol' )
 		);
 		return $actions;
