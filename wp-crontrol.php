@@ -259,7 +259,7 @@ class Crontrol {
 			}
 			$id = wp_unslash( $_GET['id'] );
 			$sig = wp_unslash( $_GET['sig'] );
-			$next_run = $_GET['next_run'];
+			$next_run = intval( $_GET['next_run'] );
 			check_admin_referer( "delete-cron_{$id}_{$sig}_{$next_run}" );
 			if ( $this->delete_cron( $id, $sig, $next_run ) ) {
 				$redirect = array(
