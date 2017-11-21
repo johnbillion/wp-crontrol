@@ -1025,7 +1025,7 @@ class Crontrol {
 						$json_options |= JSON_PRETTY_PRINT;
 					}
 
-					$args = '<pre style="white-space:pre-wrap">' . wp_json_encode( $event->args, $json_options ) . '</pre>';
+					$args = '<pre style="white-space:pre-wrap;margin-top:0">' . wp_json_encode( $event->args, $json_options ) . '</pre>';
 				}
 
 				echo '<tr id="cron-' . esc_attr( $id ) . '" class="">';
@@ -1056,9 +1056,9 @@ class Crontrol {
 					echo '<td>';
 					$callbacks = array();
 					foreach ( $this->get_action_callbacks( $event->hook ) as $callback ) {
-						$callbacks[] = '<code>' . esc_html( $callback['callback']['name'] ) . '</code>';
+						$callbacks[] = '<pre style="margin-top:0">' . self::output_callback( $callback ) . '</pre>';
 					}
-					echo implode( '<br>', $callbacks ); // WPCS:: XSS ok.
+					echo implode( '', $callbacks ); // WPCS:: XSS ok.
 					echo '</td>';
 				}
 
@@ -1202,6 +1202,29 @@ class Crontrol {
 
 		return $callback;
 
+	}
+
+	public static function output_callback( array $callback ) {
+		global $wp_filesystem;
+
+		$plugins = $wp_filesystem->wp_plugins_dir();
+		$qm      = $plugins . 'query-monitor/query-monitor.php';
+		$html    = plugin_dir_path( $qm ) . 'output/Html.php';
+
+		// If Query Monitor is installed, use its rich callback output:
+		if ( file_exists( $html ) ) {
+			require_once $html;
+
+			if ( class_exists( 'QM_Output_Html' ) ) {
+				return QM_Output_Html::output_filename(
+					$callback['callback']['name'],
+					$callback['callback']['file'],
+					$callback['callback']['line']
+				);
+			}
+		}
+
+		return $callback['callback']['name'];
 	}
 
 	/**
