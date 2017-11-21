@@ -1345,7 +1345,7 @@ class Crontrol {
 	/**
 	 * Enqueues the editor UI that's used for the PHP cron event code editor.
 	 */
-	function enqueue_code_editor() {
+	public function enqueue_code_editor() {
 		if ( ! function_exists( 'wp_enqueue_code_editor' ) ) {
 			return;
 		}
