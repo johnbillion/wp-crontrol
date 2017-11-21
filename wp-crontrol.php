@@ -96,7 +96,7 @@ class Crontrol {
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '5',
-				'crontrol_name'    => urlencode( $in_hookname ),
+				'crontrol_name'    => rawurlencode( $in_hookname ),
 			);
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
@@ -117,7 +117,7 @@ class Crontrol {
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '5',
-				'crontrol_name'    => urlencode( $hookname ),
+				'crontrol_name'    => rawurlencode( $hookname ),
 			);
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
@@ -136,7 +136,7 @@ class Crontrol {
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '4',
-				'crontrol_name'    => urlencode( $in_hookname ),
+				'crontrol_name'    => rawurlencode( $in_hookname ),
 			);
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
@@ -161,7 +161,7 @@ class Crontrol {
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '4',
-				'crontrol_name'    => urlencode( $hookname ),
+				'crontrol_name'    => rawurlencode( $hookname ),
 			);
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
@@ -184,7 +184,7 @@ class Crontrol {
 					$redirect = array(
 						'page'             => 'crontrol_admin_options_page',
 						'crontrol_message' => '7',
-						'crontrol_name'    => urlencode( $interval ),
+						'crontrol_name'    => rawurlencode( $interval ),
 					);
 					wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 					exit;
@@ -194,7 +194,7 @@ class Crontrol {
 				$redirect = array(
 					'page'             => 'crontrol_admin_options_page',
 					'crontrol_message' => '7',
-					'crontrol_name'    => urlencode( $interval ),
+					'crontrol_name'    => rawurlencode( $interval ),
 				);
 				wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 				exit;
@@ -204,7 +204,7 @@ class Crontrol {
 			$redirect = array(
 				'page'             => 'crontrol_admin_options_page',
 				'crontrol_message' => '3',
-				'crontrol_name'    => urlencode( $name ),
+				'crontrol_name'    => rawurlencode( $name ),
 			);
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 			exit;
@@ -219,7 +219,7 @@ class Crontrol {
 			$redirect = array(
 				'page'             => 'crontrol_admin_options_page',
 				'crontrol_message' => '2',
-				'crontrol_name'    => urlencode( $id ),
+				'crontrol_name'    => rawurlencode( $id ),
 			);
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 			exit;
@@ -265,7 +265,7 @@ class Crontrol {
 				$redirect = array(
 					'page'             => 'crontrol_admin_manage_page',
 					'crontrol_message' => '6',
-					'crontrol_name'    => urlencode( $id ),
+					'crontrol_name'    => rawurlencode( $id ),
 				);
 				wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 				exit;
@@ -273,7 +273,7 @@ class Crontrol {
 				$redirect = array(
 					'page'             => 'crontrol_admin_manage_page',
 					'crontrol_message' => '7',
-					'crontrol_name'    => urlencode( $id ),
+					'crontrol_name'    => rawurlencode( $id ),
 				);
 				wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 				exit;
@@ -291,7 +291,7 @@ class Crontrol {
 				$redirect = array(
 					'page'             => 'crontrol_admin_manage_page',
 					'crontrol_message' => '1',
-					'crontrol_name'    => urlencode( $id ),
+					'crontrol_name'    => rawurlencode( $id ),
 				);
 				wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 				exit;
@@ -299,7 +299,7 @@ class Crontrol {
 				$redirect = array(
 					'page'             => 'crontrol_admin_manage_page',
 					'crontrol_message' => '8',
-					'crontrol_name'    => urlencode( $id ),
+					'crontrol_name'    => rawurlencode( $id ),
 				);
 				wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 				exit;
@@ -520,7 +520,7 @@ class Crontrol {
 						$url = add_query_arg( array(
 							'page'   => 'crontrol_admin_options_page',
 							'action' => 'delete-sched',
-							'id'     => urlencode( $name ),
+							'id'     => rawurlencode( $name ),
 						), admin_url( 'options-general.php' ) );
 						$url = wp_nonce_url( $url, 'delete-sched_' . $name );
 						printf( '<span class="row-actions visible"><span class="delete"><a href="%s">%s</a></span></span>',
@@ -1047,7 +1047,7 @@ class Crontrol {
 					printf(
 						'<input type="checkbox" name="delete[%1$s][%2$s]" value="%3$s">',
 						esc_attr( $event->time ),
-						esc_attr( urlencode( $event->hook ) ),
+						esc_attr( rawurlencode( $event->hook ) ),
 						esc_attr( $event->sig )
 					);
 				}
@@ -1096,9 +1096,9 @@ class Crontrol {
 				$link = array(
 					'page'     => 'crontrol_admin_manage_page',
 					'action'   => 'edit-cron',
-					'id'       => urlencode( $event->hook ),
-					'sig'      => urlencode( $event->sig ),
-					'next_run' => urlencode( $event->time ),
+					'id'       => rawurlencode( $event->hook ),
+					'sig'      => rawurlencode( $event->sig ),
+					'next_run' => rawurlencode( $event->time ),
 				);
 				$link = add_query_arg( $link, admin_url( 'tools.php' ) ) . '#crontrol_form';
 				$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a>';
@@ -1106,9 +1106,9 @@ class Crontrol {
 				$link = array(
 					'page'     => 'crontrol_admin_manage_page',
 					'action'   => 'run-cron',
-					'id'       => urlencode( $event->hook ),
-					'sig'      => urlencode( $event->sig ),
-					'next_run' => urlencode( $event->time ),
+					'id'       => rawurlencode( $event->hook ),
+					'sig'      => rawurlencode( $event->sig ),
+					'next_run' => rawurlencode( $event->time ),
 				);
 				$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 				$link = wp_nonce_url( $link, "run-cron_{$event->hook}_{$event->sig}" );
@@ -1118,9 +1118,9 @@ class Crontrol {
 					$link = array(
 						'page'     => 'crontrol_admin_manage_page',
 						'action'   => 'delete-cron',
-						'id'       => urlencode( $event->hook ),
-						'sig'      => urlencode( $event->sig ),
-						'next_run' => urlencode( $event->time ),
+						'id'       => rawurlencode( $event->hook ),
+						'sig'      => rawurlencode( $event->sig ),
+						'next_run' => rawurlencode( $event->time ),
 					);
 					$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 					$link = wp_nonce_url( $link, "delete-cron_{$event->hook}_{$event->sig}_{$event->time}" );
