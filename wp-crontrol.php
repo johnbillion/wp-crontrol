@@ -549,7 +549,7 @@ class Crontrol {
 			</p>
 		</div>
 		<div class="wrap narrow">
-			<h2 class="title"><?php esc_html_e( 'Add new cron schedule', 'wp-crontrol' ); ?></h2>
+			<h2 class="title"><?php esc_html_e( 'Add Cron Schedule', 'wp-crontrol' ); ?></h2>
 			<p><?php esc_html_e( 'Adding a new cron schedule will allow you to schedule events that re-occur at the given interval.', 'wp-crontrol' ); ?></p>
 			<form method="post" action="options-general.php?page=crontrol_admin_options_page">
 				<table class="form-table">
