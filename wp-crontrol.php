@@ -224,6 +224,35 @@ class Crontrol {
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 			exit;
 
+		} elseif ( isset( $_POST['delete_crons'] ) ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ) );
+			}
+			check_admin_referer( 'bulk-delete-crons' );
+
+			if ( empty( $_POST['delete'] ) ) {
+				return;
+			}
+
+			$delete  = wp_unslash( $_POST['delete'] );
+			$deleted = 0;
+
+			foreach ( $delete as $next_run => $events ) {
+				foreach ( $events as $id => $sig ) {
+					if ( $this->delete_cron( $id, $sig, $next_run ) ) {
+						$deleted++;
+					}
+				}
+			}
+
+			$redirect = array(
+				'page'             => 'crontrol_admin_manage_page',
+				'crontrol_name'    => $deleted,
+				'crontrol_message' => '9',
+			);
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			exit;
+
 		} elseif ( isset( $_GET['action'] ) && 'delete-cron' == $_GET['action'] ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ) );
@@ -925,6 +954,7 @@ class Crontrol {
 			'7' => __( 'Failed to the delete the cron event %s.', 'wp-crontrol' ),
 			/* translators: 1: The name of the cron event. */
 			'8' => __( 'Failed to the execute the cron event %s.', 'wp-crontrol' ),
+			'9' => __( 'Successfully deleted the selected cron events.', 'wp-crontrol' ),
 		);
 		if ( isset( $_GET['crontrol_name'] ) && isset( $_GET['crontrol_message'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
 			$hook = wp_unslash( $_GET['crontrol_name'] );
@@ -951,9 +981,11 @@ class Crontrol {
 		?>
 		<div class="wrap">
 		<h1><?php esc_html_e( 'WP-Cron Events', 'wp-crontrol' ); ?></h1>
+		<form method="post" action="tools.php?page=crontrol_admin_manage_page">
 		<table class="widefat striped">
 		<thead>
 			<tr>
+				<td id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'wp-crontrol' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
 				<th scope="col"><?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Arguments', 'wp-crontrol' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Actions', 'wp-crontrol' ); ?></th>
@@ -966,7 +998,7 @@ class Crontrol {
 		<?php
 		if ( is_wp_error( $events ) ) {
 			?>
-			<tr><td colspan="6"><?php echo esc_html( $events->get_error_message() ); ?></td></tr>
+			<tr><td colspan="7"><?php echo esc_html( $events->get_error_message() ); ?></td></tr>
 			<?php
 		} else {
 			foreach ( $events as $id => $event ) {
@@ -992,6 +1024,17 @@ class Crontrol {
 				}
 
 				echo '<tr id="cron-' . esc_attr( $id ) . '" class="">';
+
+				echo '<th scope="row" class="check-column">';
+				if ( ! in_array( $event->hook, $core_hooks, true ) ) {
+					printf(
+						'<input type="checkbox" name="delete[%1$s][%2$s]" value="%3$s">',
+						esc_attr( $event->time ),
+						esc_attr( $event->hook ),
+						esc_attr( $event->sig )
+					);
+				}
+				echo '</th>';
 
 				if ( 'crontrol_cron_job' === $event->hook ) {
 					if ( ! empty( $event->args['name'] ) ) {
@@ -1078,6 +1121,15 @@ class Crontrol {
 		?>
 		</tbody>
 		</table>
+		<?php
+		wp_nonce_field( 'bulk-delete-crons' );
+		submit_button(
+			__( 'Delete Selected Events', 'wp-crontrol' ),
+			'primary large',
+			'delete_crons'
+		);
+		?>
+		</form>
 
 		</div>
 		<?php
