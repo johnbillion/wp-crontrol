@@ -1016,11 +1016,16 @@ class Crontrol {
 				if ( empty( $event->args ) ) {
 					$args = '<em>' . esc_html__( 'None', 'wp-crontrol' ) . '</em>';
 				} else {
+					$json_options = 0;
+
 					if ( defined( 'JSON_UNESCAPED_SLASHES' ) ) {
-						$args = '<code>' . wp_json_encode( $event->args, JSON_UNESCAPED_SLASHES ) . '</code>';
-					} else {
-						$args = '<code>' . stripslashes( wp_json_encode( $event->args ) ) . '</code>';
+						$json_options |= JSON_UNESCAPED_SLASHES;
 					}
+					if ( defined( 'JSON_PRETTY_PRINT' ) ) {
+						$json_options |= JSON_PRETTY_PRINT;
+					}
+
+					$args = '<pre>' . wp_json_encode( $event->args, $json_options ) . '</pre>';
 				}
 
 				echo '<tr id="cron-' . esc_attr( $id ) . '" class="">';
