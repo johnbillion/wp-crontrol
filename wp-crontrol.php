@@ -1028,7 +1028,7 @@ class Crontrol {
 					$args = '<pre style="white-space:pre-wrap;margin-top:0">' . wp_json_encode( $event->args, $json_options ) . '</pre>';
 				}
 
-				echo '<tr id="cron-' . esc_attr( $id ) . '" class="">';
+				echo '<tr>';
 
 				echo '<th scope="row" class="check-column">';
 				if ( ! in_array( $event->hook, $core_hooks, true ) ) {
