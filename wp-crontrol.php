@@ -816,7 +816,7 @@ class Crontrol {
 										'<code>&lt;?php</code>'
 									);
 								?></p>
-								<p><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode" required><?php echo esc_textarea( $existing['args']['code'] ); ?></textarea></p>
+								<p><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode"><?php echo esc_textarea( $existing['args']['code'] ); ?></textarea></p>
 							</td>
 						</tr>
 						<tr>
