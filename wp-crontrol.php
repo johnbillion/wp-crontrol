@@ -1217,6 +1217,14 @@ class Crontrol {
 		return $output;
 	}
 
+	/**
+	 * Returns the schedule display name for a given interval.
+	 *
+	 * Falls back to the time interval if no corresponding schedule exists.
+	 *
+	 * @param int $interval An interval of time.
+	 * @return string The interval display name.
+	 */
 	protected function get_schedule_name( $interval ) {
 		$schedules = $this->get_schedules();
 
@@ -1226,7 +1234,7 @@ class Crontrol {
 			}
 		}
 
-		$this->interval( $interval );
+		return $this->interval( $interval );
 	}
 
 	public static function init() {
