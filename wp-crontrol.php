@@ -55,6 +55,8 @@ class Crontrol {
 		add_action( 'admin_menu',                         array( $this, 'action_admin_menu' ) );
 		add_filter( "plugin_action_links_{$plugin_file}", array( $this, 'plugin_action_links' ), 10, 4 );
 
+		add_action( 'load-tools_page_crontrol_admin_manage_page', array( $this, 'enqueue_code_editor' ) );
+
 		register_activation_hook( __FILE__, array( $this, 'action_activate' ) );
 
 		add_filter( 'cron_schedules',    array( $this, 'filter_cron_schedules' ) );
@@ -777,7 +779,13 @@ class Crontrol {
 					<?php if ( $is_php ) : ?>
 						<tr>
 							<th valign="top" scope="row"><label for="hookcode"><?php esc_html_e( 'PHP Code', 'wp-crontrol' ); ?></label></th>
-							<td><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode" required><?php echo esc_textarea( $existing['args']['code'] ); ?></textarea></td>
+							<td><?php
+								printf(
+									/* translators: The PHP tag name */
+									esc_html__( 'The opening %s tag must not be included.', 'wp-crontrol' ),
+									'<code>&lt;?php</code>'
+								);
+							?><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode" required><?php echo esc_textarea( $existing['args']['code'] ); ?></textarea></td>
 						</tr>
 						<tr>
 							<th valign="top" scope="row"><label for="eventname"><?php esc_html_e( 'Event Name (optional)', 'wp-crontrol' ); ?></label></th>
@@ -1235,6 +1243,35 @@ class Crontrol {
 		}
 
 		return $this->interval( $interval );
+	}
+
+	/**
+	 * Enqueues the editor UI that's used for the PHP cron event code editor.
+	 */
+	function enqueue_code_editor() {
+		if ( ! function_exists( 'wp_enqueue_code_editor' ) ) {
+			return;
+		}
+		if ( ! current_user_can( 'edit_files' ) ) {
+			return;
+		}
+
+		$settings = wp_enqueue_code_editor( array(
+			'type' => 'text/x-php',
+		) );
+
+		if ( false === $settings ) {
+			return;
+		}
+
+		wp_add_inline_script( 'code-editor', sprintf(
+			'jQuery( function( $ ) {
+				if ( $( "#hookcode" ).length ) {
+					wp.codeEditor.initialize( "hookcode", %s );
+				}
+			} );',
+			wp_json_encode( $settings )
+		) );
 	}
 
 	public static function init() {
