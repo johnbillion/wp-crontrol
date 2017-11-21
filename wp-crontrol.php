@@ -810,13 +810,15 @@ class Crontrol {
 						<tr>
 							<th valign="top" scope="row"><label for="hookcode"><?php esc_html_e( 'PHP Code', 'wp-crontrol' ); ?></label></th>
 							<td>
-								<p class="description"><?php
-									printf(
-										/* translators: The PHP tag name */
-										esc_html__( 'The opening %s tag must not be included.', 'wp-crontrol' ),
-										'<code>&lt;?php</code>'
-									);
-								?></p>
+								<p class="description">
+									<?php
+										printf(
+											/* translators: The PHP tag name */
+											esc_html__( 'The opening %s tag must not be included.', 'wp-crontrol' ),
+											'<code>&lt;?php</code>'
+										);
+									?>
+								</p>
 								<p><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode"><?php echo esc_textarea( $existing['args']['code'] ); ?></textarea></p>
 							</td>
 						</tr>
@@ -833,15 +835,17 @@ class Crontrol {
 							<th valign="top" scope="row"><label for="args"><?php esc_html_e( 'Arguments (optional)', 'wp-crontrol' ); ?></label></th>
 							<td>
 								<input type="text" class="regular-text" id="args" name="args" value="<?php echo esc_attr( $display_args ); ?>"/>
-								<p class="description"><?php
-									printf(
-										/* translators: 1, 2, and 3: Example values for an input field. */
-										esc_html__( 'Use a JSON encoded array, e.g. %1$s, %2$s, or %3$s', 'wp-crontrol' ),
-										'<code>[25]</code>',
-										'<code>["asdf"]</code>',
-										'<code>["i","want",25,"cakes"]</code>'
-									);
-								?></p>
+								<p class="description">
+									<?php
+										printf(
+											/* translators: 1, 2, and 3: Example values for an input field. */
+											esc_html__( 'Use a JSON encoded array, e.g. %1$s, %2$s, or %3$s', 'wp-crontrol' ),
+											'<code>[25]</code>',
+											'<code>["asdf"]</code>',
+											'<code>["i","want",25,"cakes"]</code>'
+										);
+									?>
+								</p>
 							</td>
 						</tr>
 					<?php endif; ?>
@@ -864,18 +868,24 @@ class Crontrol {
 							</script>
 							<input type="date" placeholder="YYYY-MM-DD" id="next_run_date" name="next_run_date" value="<?php echo esc_attr( $next_run_date ); ?>" maxlength="10" pattern="\d{4}\-\d{2}\-\d{2}" required />
 							<input type="time" step="1" placeholder="HH:MM:SS" id="next_run_time" name="next_run_time" value="<?php echo esc_attr( $next_run_time ); ?>" maxlength="8" pattern="\d{2}:\d{2}:\d{2}" required />
-							<p class="description"><?php printf(
-								/* translators: %s Timezone name. */
-								esc_html__( 'Timezone: %s', 'wp-crontrol' ),
-								'<code>' . esc_html( $this->get_timezone_name() ) . '</code>'
-							); ?></p>
-							<p class="description datetime-fallback hidden"><?php
-								echo esc_html( sprintf(
-									/* translators: %s Date/time format for an input field. */
-									__( 'Format: %s', 'wp-crontrol' ),
-									date( 'Y' ) . '-02-25 12:34:00'
-								) );
-							?></p>
+							<p class="description">
+								<?php
+									printf(
+										/* translators: %s Timezone name. */
+										esc_html__( 'Timezone: %s', 'wp-crontrol' ),
+										'<code>' . esc_html( $this->get_timezone_name() ) . '</code>'
+									);
+								?>
+							</p>
+							<p class="description datetime-fallback hidden">
+								<?php
+									echo esc_html( sprintf(
+										/* translators: %s Date/time format for an input field. */
+										__( 'Format: %s', 'wp-crontrol' ),
+										date( 'Y' ) . '-02-25 12:34:00'
+									) );
+								?>
+							</p>
 						</td>
 					</tr><tr>
 						<th valign="top" scope="row"><label for="schedule"><?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?></label></th>
