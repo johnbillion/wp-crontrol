@@ -1025,7 +1025,7 @@ class Crontrol {
 						$json_options |= JSON_PRETTY_PRINT;
 					}
 
-					$args = '<pre>' . wp_json_encode( $event->args, $json_options ) . '</pre>';
+					$args = '<pre style="white-space:pre-wrap">' . wp_json_encode( $event->args, $json_options ) . '</pre>';
 				}
 
 				echo '<tr id="cron-' . esc_attr( $id ) . '" class="">';
@@ -1062,26 +1062,24 @@ class Crontrol {
 					echo '</td>';
 				}
 
-				echo '<td>';
+				echo '<td style="white-space:nowrap">';
 				printf( '%s (%s)',
 					esc_html( get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), $time_format ) ),
 					esc_html( $this->time_since( time(), $event->time ) )
 				);
 				echo '</td>';
 
+				echo '<td style="white-space:nowrap">';
 				if ( $event->schedule ) {
-					echo '<td>';
 					echo esc_html( $this->get_schedule_name( $event->interval ) );
-					echo '</td>';
 				} else {
-					echo '<td>';
 					esc_html_e( 'Non-repeating', 'wp-crontrol' );
-					echo '</td>';
 				}
+				echo '</td>';
 
 				$links = array();
 
-				echo '<td><span class="row-actions visible">';
+				echo '<td style="white-space:nowrap"><span class="row-actions visible">';
 
 				$link = array(
 					'page'     => 'crontrol_admin_manage_page',
