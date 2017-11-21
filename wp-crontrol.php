@@ -54,6 +54,7 @@ class Crontrol {
 		add_action( 'init',                               array( $this, 'action_handle_posts' ) );
 		add_action( 'admin_menu',                         array( $this, 'action_admin_menu' ) );
 		add_filter( "plugin_action_links_{$plugin_file}", array( $this, 'plugin_action_links' ), 10, 4 );
+		add_filter( 'removable_query_args',               array( $this, 'filter_removable_query_args' ) );
 
 		add_action( 'load-tools_page_crontrol_admin_manage_page', array( $this, 'enqueue_code_editor' ) );
 
@@ -1368,6 +1369,21 @@ class Crontrol {
 				}
 			} );',
 			wp_json_encode( $settings )
+		) );
+	}
+
+	/**
+	 * Filters the list of query arguments which get removed from admin area URLs in WordPress.
+	 *
+	 * @link https://core.trac.wordpress.org/ticket/23367
+	 *
+	 * @param string[] $args List of removable query arguments.
+	 * @return string[] Updated list of removable query arguments.
+	 */
+	public function filter_removable_query_args( array $args ) {
+		return array_merge( $args, array(
+			'crontrol_message',
+			'crontrol_name',
 		) );
 	}
 
