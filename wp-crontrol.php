@@ -779,13 +779,16 @@ class Crontrol {
 					<?php if ( $is_php ) : ?>
 						<tr>
 							<th valign="top" scope="row"><label for="hookcode"><?php esc_html_e( 'PHP Code', 'wp-crontrol' ); ?></label></th>
-							<td><?php
-								printf(
-									/* translators: The PHP tag name */
-									esc_html__( 'The opening %s tag must not be included.', 'wp-crontrol' ),
-									'<code>&lt;?php</code>'
-								);
-							?><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode" required><?php echo esc_textarea( $existing['args']['code'] ); ?></textarea></td>
+							<td>
+								<p class="description"><?php
+									printf(
+										/* translators: The PHP tag name */
+										esc_html__( 'The opening %s tag must not be included.', 'wp-crontrol' ),
+										'<code>&lt;?php</code>'
+									);
+								?></p>
+								<p><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode" required><?php echo esc_textarea( $existing['args']['code'] ); ?></textarea></p>
+							</td>
 						</tr>
 						<tr>
 							<th valign="top" scope="row"><label for="eventname"><?php esc_html_e( 'Event Name (optional)', 'wp-crontrol' ); ?></label></th>
@@ -801,13 +804,13 @@ class Crontrol {
 							<td>
 								<input type="text" class="regular-text" id="args" name="args" value="<?php echo esc_attr( $display_args ); ?>"/>
 								<p class="description"><?php
-									echo esc_html( sprintf(
+									printf(
 										/* translators: 1, 2, and 3: Example values for an input field. */
-										__( 'e.g. %1$s, %2$s, or %3$s', 'wp-crontrol' ),
-										'[25]',
-										'["asdf"]',
-										'["i","want",25,"cakes"]'
-									) );
+										esc_html__( 'Use a JSON encoded array, e.g. %1$s, %2$s, or %3$s', 'wp-crontrol' ),
+										'<code>[25]</code>',
+										'<code>["asdf"]</code>',
+										'<code>["i","want",25,"cakes"]</code>'
+									);
 								?></p>
 							</td>
 						</tr>
@@ -831,11 +834,11 @@ class Crontrol {
 							</script>
 							<input type="date" placeholder="YYYY-MM-DD" id="next_run_date" name="next_run_date" value="<?php echo esc_attr( $next_run_date ); ?>" maxlength="10" pattern="\d{4}\-\d{2}\-\d{2}" required />
 							<input type="time" step="1" placeholder="HH:MM:SS" id="next_run_time" name="next_run_time" value="<?php echo esc_attr( $next_run_time ); ?>" maxlength="8" pattern="\d{2}:\d{2}:\d{2}" required />
-							<?php printf(
+							<p class="description"><?php printf(
 								/* translators: %s Timezone name. */
 								esc_html__( 'Timezone: %s', 'wp-crontrol' ),
 								'<code>' . esc_html( $this->get_timezone_name() ) . '</code>'
-							); ?>
+							); ?></p>
 							<p class="description datetime-fallback hidden"><?php
 								echo esc_html( sprintf(
 									/* translators: %s Date/time format for an input field. */
