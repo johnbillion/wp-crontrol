@@ -471,7 +471,8 @@ class Crontrol {
 		);
 		if ( isset( $_GET['crontrol_message'] ) && isset( $_GET['crontrol_name'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
 			$hook = wp_unslash( $_GET['crontrol_name'] );
-			$msg  = sprintf( esc_html( $messages[ $_GET['crontrol_message'] ] ), '<strong>' . esc_html( $hook ) . '</strong>' );
+			$message = wp_unslash( $_GET['crontrol_message'] );
+			$msg  = sprintf( esc_html( $messages[ $message ] ), '<strong>' . esc_html( $hook ) . '</strong>' );
 
 			printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg ); // WPCS:: XSS ok.
 		}
@@ -958,7 +959,8 @@ class Crontrol {
 		);
 		if ( isset( $_GET['crontrol_name'] ) && isset( $_GET['crontrol_message'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
 			$hook = wp_unslash( $_GET['crontrol_name'] );
-			$msg = sprintf( esc_html( $messages[ $_GET['crontrol_message'] ] ), '<strong>' . esc_html( $hook ) . '</strong>' );
+			$message = wp_unslash( $_GET['crontrol_message'] );
+			$msg = sprintf( esc_html( $messages[ $message ] ), '<strong>' . esc_html( $hook ) . '</strong>' );
 
 			printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg ); // WPCS:: XSS ok.
 		}
@@ -1278,13 +1280,16 @@ class Crontrol {
 		// x days, xx hours
 		// so there's only two bits of calculation below:
 
+		$j = count( $chunks );
+
 		// step one: the first chunk
-		for ( $i = 0, $j = count( $chunks ); $i < $j; $i++ ) {
+		for ( $i = 0; $i < $j; $i++ ) {
 			$seconds = $chunks[ $i ][0];
 			$name = $chunks[ $i ][1];
 
 			// finding the biggest chunk (if the chunk fits, break)
-			if ( ( $count = floor( $since / $seconds ) ) != 0 ) {
+			$count = floor( $since / $seconds );
+			if ( $count ) {
 				break;
 			}
 		}
@@ -1296,8 +1301,8 @@ class Crontrol {
 		if ( $i + 1 < $j ) {
 			$seconds2 = $chunks[ $i + 1 ][0];
 			$name2 = $chunks[ $i + 1 ][1];
-
-			if ( ( $count2 = floor( ( $since - ( $seconds * $count ) ) / $seconds2 ) ) != 0 ) {
+			$count2 = floor( ( $since - ( $seconds * $count ) ) / $seconds2 );
+			if ( $count2 ) {
 				// add to output var
 				$output .= ' ' . sprintf( translate_nooped_plural( $name2, $count2, 'wp-crontrol' ), $count2 );
 			}
