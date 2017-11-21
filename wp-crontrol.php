@@ -746,6 +746,7 @@ class Crontrol {
 			$helper_text = esc_html__( 'Cron events trigger actions in your code. Enter the schedule of the event, as well as the PHP code to execute when the action is triggered.', 'wp-crontrol' );
 		} else {
 			$helper_text = sprintf(
+				/* translators: %s: A file name */
 				esc_html__( 'Cron events trigger actions in your code. A cron event needs a corresponding action hook somewhere in code, e.g. the %1$s file in your theme.', 'wp-crontrol' ),
 				'<code>functions.php</code>'
 			);
