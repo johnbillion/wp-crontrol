@@ -14,6 +14,7 @@ WP Crontrol lets you view and control what's happening in the WP-Cron system. Fr
  * View all cron events along with their arguments, recurrence, callback functions, and when they are next due.
  * Edit, delete, and immediately run any cron events.
  * Add new cron events.
+ * Bulk delete cron events.
  * Add, edit, and remove custom cron schedules.
 
 The admin screen will show you a warning message if your cron system doesn't appear to be working (for example if your server can't connect to itself to fire scheduled cron events).
@@ -52,6 +53,14 @@ The next step is to write your function. Here's a simple example:
 `function my_function() {
 	wp_mail( 'hello@example.com', 'WP Crontrol', 'WP Crontrol rocks!' );
 }`
+
+= Which users can manage cron events and schedules? =
+
+Only users with the `manage_options` capability can manage cron events and schedules. By default, only Administrators have this capability.
+
+= Which users can manage PHP cron events? =
+
+Only users with the `edit_files` capability can manage PHP cron events. By default, only Administrators have this capability, and with Multisite enabled only Super Admins have this capability.
 
 = Are any WP-CLI commands available? =
 
