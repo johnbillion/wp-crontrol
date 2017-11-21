@@ -528,7 +528,7 @@ class Crontrol {
 						);
 					}
 				} else {
-					echo '<td>&nbsp;</td>';
+					echo '&nbsp;';
 				}
 				echo '</td>';
 				echo '</tr>';
