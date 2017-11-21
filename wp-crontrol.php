@@ -239,7 +239,7 @@ class Crontrol {
 
 			foreach ( $delete as $next_run => $events ) {
 				foreach ( $events as $id => $sig ) {
-					if ( $this->delete_cron( $id, $sig, $next_run ) ) {
+					if ( $this->delete_cron( urldecode( $id ), $sig, $next_run ) ) {
 						$deleted++;
 					}
 				}
@@ -1035,7 +1035,7 @@ class Crontrol {
 					printf(
 						'<input type="checkbox" name="delete[%1$s][%2$s]" value="%3$s">',
 						esc_attr( $event->time ),
-						esc_attr( $event->hook ),
+						esc_attr( urlencode( $event->hook ) ),
 						esc_attr( $event->sig )
 					);
 				}
