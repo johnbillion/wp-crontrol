@@ -1212,7 +1212,7 @@ class Crontrol {
 		$html    = plugin_dir_path( $qm ) . 'output/Html.php';
 
 		// If Query Monitor is installed, use its rich callback output:
-		if ( file_exists( $html ) ) {
+		if ( class_exists( 'QueryMonitor' ) && file_exists( $html ) ) {
 			require_once $html;
 
 			if ( class_exists( 'QM_Output_Html' ) ) {
