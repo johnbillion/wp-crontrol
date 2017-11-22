@@ -130,6 +130,11 @@ class Crontrol {
 
 			extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
 			check_admin_referer( "edit-cron_{$in_original_hookname}_{$in_original_sig}_{$in_original_next_run}" );
+
+			if ( 'crontrol_cron_job' === $in_hookname && ! current_user_can( 'edit_files' ) ) {
+				wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ) );
+			}
+
 			$in_args = json_decode( $in_args, true );
 			$i = $this->delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
 			$next_run = $in_next_run_date . ' ' . $in_next_run_time;
@@ -144,7 +149,7 @@ class Crontrol {
 
 		} elseif ( isset( $_POST['edit_php_cron'] ) ) {
 			if ( ! current_user_can( 'edit_files' ) ) {
-				wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ) );
+				wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ) );
 			}
 
 			extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
@@ -979,6 +984,7 @@ class Crontrol {
 		$events = $this->get_cron_events();
 		$doing_edit = ( isset( $_GET['action'] ) && 'edit-cron' === $_GET['action'] ) ? wp_unslash( $_GET['id'] ) : false ;
 		$time_format = 'Y-m-d H:i:s';
+		$can_edit_files = current_user_can( 'edit_files' );
 
 		$core_hooks = array(
 			'wp_version_check',
@@ -1095,15 +1101,17 @@ class Crontrol {
 
 				echo '<td style="white-space:nowrap"><span class="row-actions visible">';
 
-				$link = array(
-					'page'     => 'crontrol_admin_manage_page',
-					'action'   => 'edit-cron',
-					'id'       => rawurlencode( $event->hook ),
-					'sig'      => rawurlencode( $event->sig ),
-					'next_run' => rawurlencode( $event->time ),
-				);
-				$link = add_query_arg( $link, admin_url( 'tools.php' ) ) . '#crontrol_form';
-				$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a>';
+				if ( ( 'crontrol_cron_job' !== $event->hook ) || $can_edit_files ) {
+					$link = array(
+						'page'     => 'crontrol_admin_manage_page',
+						'action'   => 'edit-cron',
+						'id'       => rawurlencode( $event->hook ),
+						'sig'      => rawurlencode( $event->sig ),
+						'next_run' => rawurlencode( $event->time ),
+					);
+					$link = add_query_arg( $link, admin_url( 'tools.php' ) ) . '#crontrol_form';
+					$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a>';
+				}
 
 				$link = array(
 					'page'     => 'crontrol_admin_manage_page',
