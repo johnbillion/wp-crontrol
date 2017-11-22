@@ -245,6 +245,9 @@ class Crontrol {
 
 			foreach ( $delete as $next_run => $events ) {
 				foreach ( $events as $id => $sig ) {
+					if ( 'crontrol_cron_job' === $id && ! current_user_can( 'edit_files' ) ) {
+						continue;
+					}
 					if ( $this->delete_cron( urldecode( $id ), $sig, $next_run ) ) {
 						$deleted++;
 					}
@@ -267,6 +270,11 @@ class Crontrol {
 			$sig = wp_unslash( $_GET['sig'] );
 			$next_run = intval( $_GET['next_run'] );
 			check_admin_referer( "delete-cron_{$id}_{$sig}_{$next_run}" );
+
+			if ( 'crontrol_cron_job' === $id && ! current_user_can( 'edit_files' ) ) {
+				wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ) );
+			}
+
 			if ( $this->delete_cron( $id, $sig, $next_run ) ) {
 				$redirect = array(
 					'page'             => 'crontrol_admin_manage_page',
@@ -914,7 +922,7 @@ class Crontrol {
 			</form>
 			<?php } else { ?>
 				<div class="error inline">
-					<p><?php esc_html_e( 'You cannot add or edit PHP cron events because your user account does not have the ability to edit files.', 'wp-crontrol' ); ?></p>
+					<p><?php esc_html_e( 'You cannot add, edit, or delete PHP cron events because your user account does not have the ability to edit files.', 'wp-crontrol' ); ?></p>
 				</div>
 			<?php } ?>
 		</div>
@@ -1124,7 +1132,7 @@ class Crontrol {
 				$link = wp_nonce_url( $link, "run-cron_{$event->hook}_{$event->sig}" );
 				$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
 
-				if ( ! in_array( $event->hook, $core_hooks, true ) ) {
+				if ( ! in_array( $event->hook, $core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || $can_edit_files ) ) {
 					$link = array(
 						'page'     => 'crontrol_admin_manage_page',
 						'action'   => 'delete-cron',
