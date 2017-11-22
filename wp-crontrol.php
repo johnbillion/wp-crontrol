@@ -1219,11 +1219,8 @@ class Crontrol {
 	}
 
 	public static function output_callback( array $callback ) {
-		global $wp_filesystem;
-
-		$plugins = $wp_filesystem->wp_plugins_dir();
-		$qm      = $plugins . 'query-monitor/query-monitor.php';
-		$html    = plugin_dir_path( $qm ) . 'output/Html.php';
+		$qm   = WP_PLUGIN_DIR . '/query-monitor/query-monitor.php';
+		$html = plugin_dir_path( $qm ) . 'output/Html.php';
 
 		// If Query Monitor is installed, use its rich callback output:
 		if ( class_exists( 'QueryMonitor' ) && file_exists( $html ) ) {
