@@ -62,6 +62,7 @@ class Crontrol {
 
 		add_filter( 'cron_schedules',    array( $this, 'filter_cron_schedules' ) );
 		add_action( 'crontrol_cron_job', array( $this, 'action_php_cron_event' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 	}
 
 	/**
@@ -1010,7 +1011,8 @@ class Crontrol {
 		<div class="wrap">
 		<h1><?php esc_html_e( 'WP-Cron Events', 'wp-crontrol' ); ?></h1>
 		<form method="post" action="tools.php?page=crontrol_admin_manage_page">
-		<table class="widefat striped">
+        <div class="table-responsive">
+		<table class="widefat striped table">
 		<thead>
 			<tr>
 				<td id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'wp-crontrol' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
@@ -1154,6 +1156,7 @@ class Crontrol {
 		?>
 		</tbody>
 		</table>
+        </div>
 		<?php
 		wp_nonce_field( 'bulk-delete-crons' );
 		submit_button(
@@ -1383,6 +1386,18 @@ class Crontrol {
 			} );',
 			wp_json_encode( $settings )
 		) );
+	}
+
+	/**
+	 * Register the stylesheets for the admin area.
+	 */
+	public function enqueue_styles( $hook ) {
+		if ( $hook !== 'tools_page_crontrol_admin_manage_page' ) {
+			return;
+		}
+
+		wp_enqueue_style( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'css/wp-crontrol.css', array(), '', 'all' );
+
 	}
 
 	/**
