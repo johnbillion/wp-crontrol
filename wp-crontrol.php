@@ -1163,6 +1163,47 @@ class Crontrol {
 		);
 		?>
 		</form>
+        <div class="selector-template">
+            <h2><?php _e( 'Selector template ', 'wp-crontrol' ) ?></h2>
+            <table class="form-table" style="max-width: 600px;">
+                <tbody>
+                <tr class="form-field">
+                    <th>
+                        <label class="control-label"><?php _e( 'Template:', 'wp-crontrol' ) ?></label>
+                    </th>
+                    <td>
+                        <input id="wp-crontrol-selector-template" type="text" value="">
+                    </td>
+                </tr>
+                <tr class="form-field">
+                    <th>
+                        <label class="control-label"><?php _e( 'Max selected items count:', 'wp-crontrol' ) ?></label>
+                    </th>
+                    <td>
+                        <input id="wp-crontrol-selector-count" type="number" value="100"  style="max-width: 100px;">
+                    </td>
+                </tr>
+                <tr class="form-field">
+                    <th colspan="2">
+                        <button id="wp-crontrol-selector-apply" type="button" class="button button-primary"><?php _e( 'Apply template', 'wp-crontrol' ) ?></button>
+                        <button id="wp-crontrol-selector-uncheck-all" type="button" class="button button-primary"><?php _e( 'Uncheck all', 'wp-crontrol' ) ?></button>
+                    </th>
+                </tr>
+                </tbody>
+            </table>
+            <script type="text/javascript">
+              jQuery( function( $ ) {
+                $('#wp-crontrol-selector-apply').click(function() {
+                  $("input[type='checkbox'][name*='" +
+                    $('#wp-crontrol-selector-template').val() +
+                    "']").slice(0, parseInt($('#wp-crontrol-selector-count').val())).prop("checked", true);
+                });
+                $('#wp-crontrol-selector-uncheck-all').click(function() {
+                  $("input[type='checkbox'][name*='delete']").prop("checked", false);
+                });
+              })
+            </script>
+        </div>
 
 		</div>
 		<?php
