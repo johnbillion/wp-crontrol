@@ -64,7 +64,7 @@ class Control_Base {
  * Class Control_Request
  */
 class Control_Request extends Control_Base {
-	/**
+
 	/**
 	 * @var string $schedule
 	 */
