@@ -52,7 +52,7 @@ class Control_Base {
 	 * @param array $args
 	 */
 	public function __construct( $args = array() ) {
-		foreach( $args as $name => $value ) {
+		foreach ( $args as $name => $value ) {
 			if ( property_exists( $this, $name ) ) {
 				$this->$name = $value;
 			}
@@ -131,37 +131,38 @@ class Control_Request extends Control_Base {
  */
 class Control_Event extends Control_Base {
 
-    /**
+	/**
 	 * @var string
 	 */
-    public $hook;
+	public $hook;
 
-    /**
+	/**
 	 * @var string
 	 */
-    public $time;
+	public $time;
 
-    /**
+	/**
 	 * @var string
 	 */
-    public $sig;
+	public $sig;
 
-    /**
+	/**
 	 * @var array
 	 */
-    public $args;
+	public $args;
 
-    /**
+	/**
 	 * @var string
 	 */
-    public $schedule = false;
+	public $schedule = false;
 
-    /**
+	/**
 	 * @var string
 	 */
-    public $interval;
+	public $interval;
 
 }
+
 class Crontrol {
 
 	/**
@@ -448,7 +449,8 @@ class Crontrol {
 	 * Executes an event by scheduling a new single event with the same arguments.
 	 *
 	 * @param string $hookname The hookname of the cron event to run
-     * @return bool
+	 *
+	 * @return bool
 	 */
 	public function run_cron( $hookname, $sig ) {
 		$crons = _get_cron_array();
@@ -456,7 +458,7 @@ class Crontrol {
 			if ( isset( $cron[ $hookname ][ $sig ] ) ) {
 				$args = $cron[ $hookname ][ $sig ]['args'];
 				delete_transient( 'doing_cron' );
-                if ( $this->_okay_to_schedule() ) {
+				if ( $this->_okay_to_schedule() ) {
 				wp_schedule_single_event( time() - 1, $hookname, $args );
 				}
 				spawn_cron();
@@ -467,18 +469,18 @@ class Crontrol {
 	}
 
 	/**
-     * Do not schedule event when both:
-     *
+	 * Do not schedule event when both:
+	 *
 	 *      1. DISABLE_WP_CRON is true because wp_cron() will not
 	 *         have consumed the previously scheduled event, and
 	 *
 	 *      2. $_GET[ 'doing_wp_cron' ] is set because spawn_cron()
 	 *         will just return and not consume this event.
-     *
+	 *
 	 */
 	private function _okay_to_schedule() {
-        return ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON
-           && isset( $_GET[ 'doing_wp_cron' ] ) );
+		return ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON
+		           && isset( $_GET[ 'doing_wp_cron' ] ) );
 	}
 	/**
 	 * Adds a new cron event.
@@ -510,7 +512,8 @@ class Crontrol {
 	 * Deletes a cron event.
 	 *
 	 * @param string $name The hookname of the event to delete.
-     * @return bool
+	 *
+	 * @return bool
 	 */
 	public function delete_cron( $to_delete, $sig, $next_run ) {
 		$crons = _get_cron_array();
@@ -574,11 +577,11 @@ class Crontrol {
 	}
 
 	/**
-     * Add links for this plugin on the plugin page
-     *\
-	 * @param array $actions
+	 * Add links for this plugin on the plugin page
+	 *
+	 * @param array  $actions
 	 * @param string $plugin_file
-	 * @param array $plugin_data
+	 * @param array  $plugin_data
 	 * @param string $context
 	 *
 	 * @return mixed
@@ -1079,8 +1082,8 @@ class Crontrol {
 	}
 
 	/**
-     * Returns an array Control_Event objects
-     *
+	 * Returns an array Control_Event objects
+	 *
 	 * @return Control_Event[]|WP_Error
 	 */
 	public function get_cron_events() {
@@ -1099,15 +1102,15 @@ class Crontrol {
 			foreach ( $cron as $hook => $dings ) {
 				foreach ( $dings as $sig => $data ) {
 
-					$event = new Control_Event();
+					$event           = new Control_Event();
 					$event->hook     = $hook;
 					$event->time     = $time;
 					$event->sig      = $sig;
-					$event->args     = $data['args'];
-					$event->schedule = $data['schedule'];
-					$event->interval = isset( $data['interval'] )
-                        ? $data['interval']
-                        : null;
+					$event->args     = $data[ 'args' ];
+					$event->schedule = $data[ 'schedule' ];
+					$event->interval = isset( $data[ 'interval' ] )
+						? $data[ 'interval' ]
+						: null;
 					$events[ "$hook-$sig-$time" ] = $event;
 
 				}
