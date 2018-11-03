@@ -459,7 +459,7 @@ class Crontrol {
 				$args = $cron[ $hookname ][ $sig ]['args'];
 				delete_transient( 'doing_cron' );
 				if ( $this->_okay_to_schedule() ) {
-				wp_schedule_single_event( time() - 1, $hookname, $args );
+					wp_schedule_single_event( time() - 1, $hookname, $args );
 				}
 				spawn_cron();
 				return true;
