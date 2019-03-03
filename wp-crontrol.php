@@ -1165,6 +1165,15 @@ class Crontrol {
 		?>
 		</tbody>
 		</table>
+		<p style="float:right">
+			<?php
+				echo esc_html( sprintf(
+					/* translators: %s: The current date and time */
+					__( 'Current site time: %s', 'wp-crontrol' ),
+					date_i18n( 'Y-m-d H:i:s' )
+				) );
+			?>
+		</p>
 		<?php
 		wp_nonce_field( 'bulk-delete-crons' );
 		submit_button(
