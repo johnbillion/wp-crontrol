@@ -84,12 +84,12 @@ class Crontrol {
 	public function action_handle_posts() {
 		if ( isset( $_POST['new_cron'] ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ) );
+				wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ), 401 );
 			}
 			check_admin_referer( 'new-cron' );
 			extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
 			if ( 'crontrol_cron_job' === $in_hookname && ! current_user_can( 'edit_files' ) ) {
-				wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ) );
+				wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
 			}
 			$in_args = json_decode( $in_args, true );
 			$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
@@ -104,7 +104,7 @@ class Crontrol {
 
 		} elseif ( isset( $_POST['new_php_cron'] ) ) {
 			if ( ! current_user_can( 'edit_files' ) ) {
-				wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ) );
+				wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
 			}
 			check_admin_referer( 'new-cron' );
 			extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
@@ -125,14 +125,14 @@ class Crontrol {
 
 		} elseif ( isset( $_POST['edit_cron'] ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ) );
+				wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ), 401 );
 			}
 
 			extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
 			check_admin_referer( "edit-cron_{$in_original_hookname}_{$in_original_sig}_{$in_original_next_run}" );
 
 			if ( 'crontrol_cron_job' === $in_hookname && ! current_user_can( 'edit_files' ) ) {
-				wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ) );
+				wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 401 );
 			}
 
 			$in_args = json_decode( $in_args, true );
@@ -149,7 +149,7 @@ class Crontrol {
 
 		} elseif ( isset( $_POST['edit_php_cron'] ) ) {
 			if ( ! current_user_can( 'edit_files' ) ) {
-				wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ) );
+				wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 401 );
 			}
 
 			extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
@@ -174,7 +174,7 @@ class Crontrol {
 
 		} elseif ( isset( $_POST['new_schedule'] ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( esc_html__( 'You are not allowed to add new cron schedules.', 'wp-crontrol' ) );
+				wp_die( esc_html__( 'You are not allowed to add new cron schedules.', 'wp-crontrol' ), 401 );
 			}
 			check_admin_referer( 'new-sched' );
 			$name = wp_unslash( $_POST['internal_name'] );
@@ -217,7 +217,7 @@ class Crontrol {
 
 		} elseif ( isset( $_GET['action'] ) && 'delete-sched' == $_GET['action'] ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( esc_html__( 'You are not allowed to delete cron schedules.', 'wp-crontrol' ) );
+				wp_die( esc_html__( 'You are not allowed to delete cron schedules.', 'wp-crontrol' ), 401 );
 			}
 			$id = wp_unslash( $_GET['id'] );
 			check_admin_referer( "delete-sched_{$id}" );
@@ -232,7 +232,7 @@ class Crontrol {
 
 		} elseif ( isset( $_POST['delete_crons'] ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ) );
+				wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
 			}
 			check_admin_referer( 'bulk-delete-crons' );
 
@@ -264,7 +264,7 @@ class Crontrol {
 
 		} elseif ( isset( $_GET['action'] ) && 'delete-cron' == $_GET['action'] ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ) );
+				wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
 			}
 			$id = wp_unslash( $_GET['id'] );
 			$sig = wp_unslash( $_GET['sig'] );
@@ -272,7 +272,7 @@ class Crontrol {
 			check_admin_referer( "delete-cron_{$id}_{$sig}_{$next_run}" );
 
 			if ( 'crontrol_cron_job' === $id && ! current_user_can( 'edit_files' ) ) {
-				wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ) );
+				wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 401 );
 			}
 
 			if ( $this->delete_cron( $id, $sig, $next_run ) ) {
@@ -296,7 +296,7 @@ class Crontrol {
 
 		} elseif ( isset( $_GET['action'] ) && 'run-cron' == $_GET['action'] ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ) );
+				wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 401 );
 			}
 			$id = wp_unslash( $_GET['id'] );
 			$sig = wp_unslash( $_GET['sig'] );
