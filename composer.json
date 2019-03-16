@@ -14,7 +14,11 @@
 			"homepage": "http://scompt.com/"
 		}
 	],
-        "require": {
-                "composer/installers": "~1.0"
-        }
+	"require-dev": {
+		"wp-coding-standards/wpcs": "^2",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.5"
+	},
+	"require": {
+		"composer/installers": "~1.0"
+	}
 }
