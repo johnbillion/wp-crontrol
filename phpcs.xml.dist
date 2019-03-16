@@ -1,19 +1,15 @@
 <?xml version="1.0"?>
 <ruleset name="WP Crontrol">
 
+	<exclude-pattern>*/build/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>Gruntfile.js</exclude-pattern>
 
 	<rule ref="WordPress-Extra">
 
-		<!-- WP Crontrol supports WordPress versions older than 4.4: -->
-		<exclude name="WordPress.WP.AlternativeFunctions.parse_url_parse_url" />
-		<exclude name="WordPress.PHP.DiscouragedPHPFunctions.urlencode_urlencode" />
-
 		<!-- Skip checks for naming and indentation because IDGAF: -->
 		<exclude name="WordPress.Files.FileName" />
-		<exclude name="PEAR.NamingConventions.ValidClassName" />
-		<exclude name="Generic.WhiteSpace.ScopeIndent" />
-		<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
 		<exclude name="Generic.Functions.FunctionCallArgumentSpacing.TooMuchSpaceAfterComma" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket" />
@@ -21,9 +17,6 @@
 
 		<!-- I'll fix this eventually: -->
 		<exclude name="WordPress.PHP.DontExtract.extract_extract" />
-
-		<!-- These are all false positives: -->
-		<exclude name="WordPress.Security.NonceVerification.Recommended" />
 
 	</rule>
 

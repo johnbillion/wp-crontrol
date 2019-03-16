@@ -179,7 +179,7 @@ class Crontrol {
 			$display = wp_unslash( $_POST['display_name'] );
 
 			// The user entered something that wasn't a number.
-			// Try to convert it with strtotime
+			// Try to convert it with strtotime.
 			if ( ! is_numeric( $interval ) ) {
 				$now = time();
 				$future = strtotime( $interval, $now );
