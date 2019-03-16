@@ -1143,7 +1143,15 @@ class Crontrol {
 
 				echo '<td style="white-space:nowrap">';
 				if ( $event->schedule ) {
-					echo esc_html( $this->get_schedule_name( $event->interval ) );
+					$schedule_name = $this->get_schedule_name( $event );
+					if ( is_wp_error( $schedule_name ) ) {
+						printf(
+							'<span class="dashicons dashicons-warning"></span>%s',
+							esc_html( $schedule_name->get_error_message() )
+						);
+					} else {
+						echo esc_html( $schedule_name );
+					}
 				} else {
 					esc_html_e( 'Non-repeating', 'wp-crontrol' );
 				}
@@ -1408,23 +1416,19 @@ class Crontrol {
 	}
 
 	/**
-	 * Returns the schedule display name for a given interval.
+	 * Returns the schedule display name for a given event.
 	 *
-	 * Falls back to the time interval if no corresponding schedule exists.
-	 *
-	 * @param int $interval An interval of time.
-	 * @return string The interval display name.
+	 * @param stdClass $event A WP-Cron event.
+	 * @return string|WP_Error The interval display name, or a WP_Error object if no such schedule exists.
 	 */
-	protected function get_schedule_name( $interval ) {
+	protected function get_schedule_name( stdClass $event ) {
 		$schedules = $this->get_schedules();
 
-		foreach ( $schedules as $schedule ) {
-			if ( $interval === $schedule['interval'] ) {
-				return $schedule['display'];
-			}
+		if ( isset( $schedules[ $event->schedule ] ) ) {
+			return $schedules[ $event->schedule ]['display'];
 		}
 
-		return $this->interval( $interval );
+		return new WP_Error( 'unknown_schedule', __( 'Unknown', 'wp-crontrol' ) );
 	}
 
 	/**
