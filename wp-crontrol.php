@@ -927,7 +927,7 @@ class Crontrol {
 										/* translators: 1: Date/time format for an input field, 2: PHP function name. */
 										esc_html__( 'Format: %1$s or anything accepted by %2$s', 'wp-crontrol' ),
 										'<code>YYYY-MM-DD HH:MM:SS</code>',
-										'<a href="https://secure.php.net/manual/en/function.strtotime.html"><code>strtotime()</code></a>'
+										'<a href="https://www.php.net/manual/en/function.strtotime.php"><code>strtotime()</code></a>'
 									);
 								?>
 							</p>
