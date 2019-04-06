@@ -15,6 +15,9 @@
 		<exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments" />
 
+		<!-- False positives: -->
+		<exclude name="WordPress.Security.NonceVerification.Recommended" />
+
 		<!-- I'll fix this eventually: -->
 		<exclude name="WordPress.PHP.DontExtract.extract_extract" />
 
