@@ -1047,6 +1047,7 @@ class Crontrol {
 			'update_network_counts',
 			'delete_expired_transients',
 			'wp_privacy_delete_old_export_files',
+			'recovery_mode_clean_expired_keys',
 		);
 
 		$this->show_cron_status();
