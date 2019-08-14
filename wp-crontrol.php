@@ -992,6 +992,12 @@ function get_cron_events() {
  * Displays the manage page for the plugin.
  */
 function admin_manage_page() {
+	require_once __DIR__ . '/event-list-table.php';
+
+	$table = new Event_List_Table();
+
+	$table->prepare_items();
+
 	$messages = array(
 		/* translators: 1: The name of the cron event. */
 		'1' => __( 'Successfully executed the cron event %s.', 'wp-crontrol' ),
@@ -1054,11 +1060,14 @@ function admin_manage_page() {
 	?>
 	<div class="wrap">
 	<h1><?php esc_html_e( 'WP-Cron Events', 'wp-crontrol' ); ?></h1>
+
+	<?php $table->views(); ?>
+
 	<form method="post" action="tools.php?page=crontrol_admin_manage_page">
+
+	<?php $table->display(); ?>
+
 	<div class="table-responsive">
-	<div class="tablenav top">
-		<?php echo pagination( 'top', $page_args ); ?>
-	</div>
 	<table class="widefat striped table">
 	<thead>
 		<tr>
@@ -1244,9 +1253,6 @@ function admin_manage_page() {
 	?>
 	</tbody>
 	</table>
-	</div>
-	<div class="tablenav">
-		<?php echo pagination( 'bottom', $page_args ); ?>
 	</div>
 	<p style="float:right">
 		<?php
@@ -1509,114 +1515,6 @@ function enqueue_code_editor() {
 		} );',
 		wp_json_encode( $settings )
 	) );
-}
-
-/**
- * Displays the pagination.
- */
-function pagination( $which, $page_args ) {
-	if ( empty( $page_args ) ) {
-		return;
-	}
-
-	$total_items = $page_args['total_items'];
-	$total_pages = $page_args['total_pages'];
-
-	$output = '<span class="displaying-num">' . sprintf( _n( '%s item', '%s items', $total_items ), number_format_i18n( $total_items ) ) . '</span>';
-
-	$current              = $page_args['current_page'];
-	$removable_query_args = wp_removable_query_args();
-
-	$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
-
-	$current_url = remove_query_arg( $removable_query_args, $current_url );
-
-	$page_links = array();
-
-	$total_pages_before = '<span class="paging-input">';
-	$total_pages_after  = '</span></span>';
-
-	$disable_first = $disable_last = $disable_prev = $disable_next = false;
-
-	if ( $current == 1 ) {
-		$disable_first = true;
-		$disable_prev  = true;
-	}
-	if ( $current == 2 ) {
-		$disable_first = true;
-	}
-	if ( $current == $total_pages ) {
-		$disable_last = true;
-		$disable_next = true;
-	}
-	if ( $current == $total_pages - 1 ) {
-		$disable_last = true;
-	}
-
-	if ( $disable_first ) {
-		$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&laquo;</span>';
-	} else {
-		$page_links[] = sprintf( "<a class='first-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-			esc_url( remove_query_arg( 'paged', $current_url ) ),
-			__( 'First page' ),
-			'&laquo;'
-		);
-	}
-
-	if ( $disable_prev ) {
-		$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&lsaquo;</span>';
-	} else {
-		$page_links[] = sprintf( "<a class='prev-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-			esc_url( add_query_arg( 'paged', max( 1, $current - 1 ), $current_url ) ),
-			__( 'Previous page' ),
-			'&lsaquo;'
-		);
-	}
-
-	if ( 'bottom' === $which ) {
-		$html_current_page  = $current;
-		$total_pages_before = '<span class="screen-reader-text">' . __( 'Current Page' ) . '</span><span id="table-paging" class="paging-input"><span class="tablenav-paging-text">';
-	} else {
-		$html_current_page = sprintf( "%s<input class='current-page' id='current-page-selector' type='text' name='paged' value='%s' size='%d' aria-describedby='table-paging' /><span class='tablenav-paging-text'>",
-			'<label for="current-page-selector" class="screen-reader-text">' . __( 'Current Page' ) . '</label>',
-			$current,
-			strlen( $total_pages )
-		);
-	}
-	$html_total_pages = sprintf( "<span class='total-pages'>%s</span>", number_format_i18n( $total_pages ) );
-	$page_links[]     = $total_pages_before . sprintf( _x( '%1$s of %2$s', 'paging' ), $html_current_page, $html_total_pages ) . $total_pages_after;
-
-	if ( $disable_next ) {
-		$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&rsaquo;</span>';
-	} else {
-		$page_links[] = sprintf( "<a class='next-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-			esc_url( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
-			__( 'Next page' ),
-			'&rsaquo;'
-		);
-	}
-
-	if ( $disable_last ) {
-		$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&raquo;</span>';
-	} else {
-		$page_links[] = sprintf( "<a class='last-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-			esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
-			__( 'Last page' ),
-			'&raquo;'
-		);
-	}
-
-	$pagination_links_class = 'pagination-links';
-	$output                 .= "\n<span class='$pagination_links_class'>" . join( "\n", $page_links ) . '</span>';
-
-	if ( $total_pages ) {
-		$page_class = $total_pages < 2 ? ' one-page' : '';
-	} else {
-		$page_class = ' no-pages';
-	}
-	$_pagination = "<div class='tablenav-pages{$page_class}'>$output</div>";
-
-	return $_pagination;
 }
 
 /**
