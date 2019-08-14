@@ -1087,9 +1087,7 @@ class Crontrol {
 					);
 				}
 
-				if ( empty( $event->args ) ) {
-					$args = '<em>' . esc_html__( 'None', 'wp-crontrol' ) . '</em>';
-				} else {
+				if ( ! empty( $event->args ) ) {
 					$json_options = 0;
 
 					if ( defined( 'JSON_UNESCAPED_SLASHES' ) ) {
@@ -1099,7 +1097,7 @@ class Crontrol {
 						$json_options |= JSON_PRETTY_PRINT;
 					}
 
-					$args = '<pre style="white-space:pre-wrap;margin-top:0">' . wp_json_encode( $event->args, $json_options ) . '</pre>';
+					$args = wp_json_encode( $event->args, $json_options );
 				}
 
 				echo '<tr>';
@@ -1126,7 +1124,21 @@ class Crontrol {
 					echo '<td><em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em></td>';
 				} else {
 					echo '<td>' . esc_html( $event->hook ) . '</td>';
-					echo '<td>' . $args . '</td>'; // WPCS:: XSS ok.
+					echo '<td>';
+
+					if ( empty( $event->args ) ) {
+						printf(
+							'<em>%s</em>',
+							esc_html__( 'None', 'wp-crontrol' )
+						);
+					} else {
+						printf(
+							'<pre style="white-space:pre-wrap;margin-top:0">%s</pre>',
+							esc_html( $args )
+						);
+					}
+
+					echo '</td>';
 					echo '<td>';
 					$callbacks = array();
 					foreach ( $this->get_action_callbacks( $event->hook ) as $callback ) {
