@@ -324,6 +324,7 @@ function action_handle_posts() {
  *
  * @param string $hookname The hook name of the cron event to run.
  * @param string $sig      The cron event signature.
+ * @return bool Whether the execution was successful or not.
  */
 function run_cron( $hookname, $sig ) {
 	$crons = _get_cron_array();
@@ -370,6 +371,7 @@ function add_cron( $next_run, $schedule, $hookname, $args ) {
  * @param string $to_delete The hook name of the event to delete.
  * @param string $sig       The cron event signature.
  * @param string $next_run  The GMT time that the event would be run at.
+ * @return bool Whether the deletion was successful or not.
  */
 function delete_cron( $to_delete, $sig, $next_run ) {
 	$crons = _get_cron_array();
@@ -444,10 +446,10 @@ function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
 /**
  * Gives WordPress the plugin's set of cron schedules.
  *
- * Called by the 'cron_schedules' filter.
+ * Called by the `cron_schedules` filter.
  *
- * @param array $scheds The current cron schedules. Usually an empty array.
- * @return array The existing cron schedules along with the plugin's schedules.
+ * @param array[] $scheds Array of cron schedule arrays. Usually empty.
+ * @return array[] Array of modified cron schedule arrays.
  */
 function filter_cron_schedules( $scheds ) {
 	$new_scheds = get_option( 'crontrol_schedules', array() );
@@ -590,6 +592,8 @@ function admin_options_page() {
 
 /**
  * Gets a sorted (according to interval) list of the cron schedules
+ *
+ * @return array[] Array of cron schedule arrays.
  */
 function get_schedules() {
 	$schedules = wp_get_schedules();
@@ -638,7 +642,7 @@ function schedules_dropdown( $current = false ) {
  * Gets the status of WP-Cron functionality on the site by performing a test spawn. Cached for one hour when all is well.
  *
  * @param bool $cache Whether to use the cached result from previous calls.
- * @return true|WP_Error Boolean true if the cron spawner is working as expected, or a WP_Error object if not.
+ * @return true|WP_Error Boolean true if the cron spawner is working as expected, or a `WP_Error` object if not.
  */
 function test_cron_spawn( $cache = true ) {
 	global $wp_version;
@@ -695,7 +699,6 @@ function test_cron_spawn( $cache = true ) {
  * Shows the status of WP-Cron functionality on the site. Only displays a message when there's a problem.
  */
 function show_cron_status() {
-
 	$status = test_cron_spawn();
 
 	if ( is_wp_error( $status ) ) {
@@ -721,7 +724,6 @@ function show_cron_status() {
 			<?php
 		}
 	}
-
 }
 
 /**
@@ -766,6 +768,7 @@ function show_cron_form( $is_php, $existing ) {
 		'php-cron' => admin_url( 'tools.php?page=crontrol_admin_manage_page&action=new-php-cron' ) . '#crontrol_form',
 	);
 	$display_args = '';
+
 	if ( $is_php ) {
 		$helper_text = esc_html__( 'Cron events trigger actions in your code. Enter the schedule of the event, as well as the PHP code to execute when the action is triggered.', 'wp-crontrol' );
 	} else {
@@ -775,6 +778,7 @@ function show_cron_form( $is_php, $existing ) {
 			'<code>functions.php</code>'
 		);
 	}
+
 	if ( is_array( $existing ) ) {
 		$other_fields  = wp_nonce_field( "edit-cron_{$existing['hookname']}_{$existing['sig']}_{$existing['next_run']}", '_wpnonce', true, false );
 		$other_fields .= sprintf( '<input name="original_hookname" type="hidden" value="%s" />',
@@ -806,6 +810,7 @@ function show_cron_form( $is_php, $existing ) {
 		$show_edit_tab = false;
 		$next_run_date = '';
 	}
+
 	if ( $is_php ) {
 		if ( ! isset( $existing['args']['code'] ) ) {
 			$existing['args']['code'] = '';
@@ -959,7 +964,6 @@ function show_cron_form( $is_php, $existing ) {
  * @return array[]|WP_Error An array of cron event arrays, or a WP_Error object if there's an error or no events.
  */
 function get_cron_events() {
-
 	$crons  = _get_cron_array();
 	$events = array();
 
@@ -989,7 +993,6 @@ function get_cron_events() {
 	}
 
 	return $events;
-
 }
 
 /**
@@ -1011,6 +1014,7 @@ function admin_manage_page() {
 		'8' => __( 'Failed to the execute the cron event %s.', 'wp-crontrol' ),
 		'9' => __( 'Successfully deleted the selected cron events.', 'wp-crontrol' ),
 	);
+
 	if ( isset( $_GET['crontrol_name'] ) && isset( $_GET['crontrol_message'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
 		$hook = wp_unslash( $_GET['crontrol_name'] );
 		$message = wp_unslash( $_GET['crontrol_message'] );
@@ -1075,6 +1079,7 @@ function admin_manage_page() {
 	</thead>
 	<tbody>
 	<?php
+
 	if ( is_wp_error( $events ) ) {
 		?>
 		<tr><td colspan="7"><?php echo esc_html( $events->get_error_message() ); ?></td></tr>
@@ -1205,9 +1210,11 @@ function admin_manage_page() {
 				echo '</td>';
 				echo '<td>';
 				$callbacks = array();
+
 				foreach ( get_action_callbacks( $event->hook ) as $callback ) {
 					$callbacks[] = '<pre style="margin-top:0">' . output_callback( $callback ) . '</pre>';
 				}
+
 				echo implode( '', $callbacks ); // WPCS:: XSS ok.
 				echo '</td>';
 			}
@@ -1220,6 +1227,7 @@ function admin_manage_page() {
 			echo '</td>';
 
 			echo '<td style="white-space:nowrap">';
+
 			if ( $event->schedule ) {
 				$schedule_name = get_schedule_name( $event );
 				if ( is_wp_error( $schedule_name ) ) {
@@ -1233,6 +1241,7 @@ function admin_manage_page() {
 			} else {
 				esc_html_e( 'Non-repeating', 'wp-crontrol' );
 			}
+
 			echo '</td>';
 
 			echo '</tr>';
@@ -1273,6 +1282,7 @@ function admin_manage_page() {
 
 	</div>
 	<?php
+
 	if ( is_array( $doing_edit ) ) {
 		show_cron_form( 'crontrol_cron_job' == $doing_edit['hookname'], $doing_edit );
 	} else {
@@ -1292,7 +1302,6 @@ function get_action_callbacks( $name ) {
 	$actions = array();
 
 	if ( isset( $wp_filter[ $name ] ) ) {
-
 		// See http://core.trac.wordpress.org/ticket/17817.
 		$action = $wp_filter[ $name ];
 
@@ -1315,7 +1324,7 @@ function get_action_callbacks( $name ) {
  * Populates the details of the given callback function.
  *
  * @param array $callback A callback entry.
- * @return The updated callback entry.
+ * @return array The updated callback entry.
  */
 function populate_callback( array $callback ) {
 	// If Query Monitor is installed, use its rich callback analysis.
@@ -1349,7 +1358,6 @@ function populate_callback( array $callback ) {
 	}
 
 	return $callback;
-
 }
 
 /**
@@ -1511,7 +1519,7 @@ function enqueue_code_editor() {
 }
 
 /**
- * Display the pagination.
+ * Displays the pagination.
  */
 function pagination( $which, $page_args ) {
 	if ( empty( $page_args ) ) {
@@ -1629,7 +1637,6 @@ function enqueue_styles( $id ) {
 	}
 
 	wp_enqueue_style( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'css/wp-crontrol.css', array(), '', 'all' );
-
 }
 
 /**
