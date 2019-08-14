@@ -132,9 +132,9 @@ function action_handle_posts() {
 		}
 
 		$in_args = json_decode( $in_args, true );
-		$i = delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
+		delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
 		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
-		$i = add_cron( $next_run, $in_schedule, $in_hookname, $in_args );
+		add_cron( $next_run, $in_schedule, $in_hookname, $in_args );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '4',
@@ -156,9 +156,9 @@ function action_handle_posts() {
 			'code' => $in_hookcode,
 			'name' => $in_eventname,
 		);
-		$i = delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
+		delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
 		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
-		$i = add_cron( $next_run, $in_schedule, 'crontrol_cron_job', $args );
+		add_cron( $next_run, $in_schedule, 'crontrol_cron_job', $args );
 		$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
