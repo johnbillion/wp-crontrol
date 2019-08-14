@@ -41,8 +41,7 @@ class Crontrol {
 	/**
 	 * Hook onto all of the actions and filters needed by the plugin.
 	 */
-	protected function __construct() {
-
+	public function init_hooks() {
 		$plugin_file = plugin_basename( __FILE__ );
 
 		add_action( 'init',                               array( $this, 'action_init' ) );
@@ -1654,7 +1653,13 @@ class Crontrol {
 		return $instance;
 
 	}
+
+	/**
+	 * Constructor. Private to enforce singleton.
+	 */
+	private function __construct() {}
+
 }
 
 // Get this show on the road.
-Crontrol::init();
+Crontrol::init()->init_hooks();
