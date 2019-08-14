@@ -1070,7 +1070,6 @@ class Crontrol {
 				<th scope="col"><?php esc_html_e( 'Actions', 'wp-crontrol' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?></th>
-				<th scope="col"><span class="screen-reader-text"><?php esc_html_e( 'Actions', 'wp-crontrol' ); ?></span></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -1118,17 +1117,76 @@ class Crontrol {
 				}
 				echo '</th>';
 
+				$links = array();
+
+				if ( ( 'crontrol_cron_job' !== $event->hook ) || $can_edit_files ) {
+					$link = array(
+						'page'     => 'crontrol_admin_manage_page',
+						'action'   => 'edit-cron',
+						'id'       => rawurlencode( $event->hook ),
+						'sig'      => rawurlencode( $event->sig ),
+						'next_run' => rawurlencode( $event->time ),
+					);
+					$link = add_query_arg( $link, admin_url( 'tools.php' ) ) . '#crontrol_form';
+					$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a>';
+				}
+
+				$link = array(
+					'page'     => 'crontrol_admin_manage_page',
+					'action'   => 'run-cron',
+					'id'       => rawurlencode( $event->hook ),
+					'sig'      => rawurlencode( $event->sig ),
+					'next_run' => rawurlencode( $event->time ),
+				);
+				$link = add_query_arg( $link, admin_url( 'tools.php' ) );
+				$link = wp_nonce_url( $link, "run-cron_{$event->hook}_{$event->sig}" );
+				$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
+
+				if ( ! in_array( $event->hook, $core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || $can_edit_files ) ) {
+					$link = array(
+						'page'     => 'crontrol_admin_manage_page',
+						'action'   => 'delete-cron',
+						'id'       => rawurlencode( $event->hook ),
+						'sig'      => rawurlencode( $event->sig ),
+						'next_run' => rawurlencode( $event->time ),
+					);
+					$link = add_query_arg( $link, admin_url( 'tools.php' ) );
+					$link = wp_nonce_url( $link, "delete-cron_{$event->hook}_{$event->sig}_{$event->time}" );
+					$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
+				}
+
 				if ( 'crontrol_cron_job' === $event->hook ) {
 					if ( ! empty( $event->args['name'] ) ) {
 						/* translators: 1: The name of the PHP cron event. */
-						echo '<td><em>' . esc_html( sprintf( __( 'PHP Cron (%s)', 'wp-crontrol' ), $event->args['name'] ) ) . '</em></td>';
+						echo '<td>';
+						echo '<em>' . esc_html( sprintf( __( 'PHP Cron (%s)', 'wp-crontrol' ), $event->args['name'] ) ) . '</em>';
+
+						echo '<div class="row-actions">';
+						echo implode( ' | ', $links ); // WPCS:: XSS ok.
+						echo '</div>';
+
+						echo '</td>';
 					} else {
-						echo '<td><em>' . esc_html__( 'PHP Cron', 'wp-crontrol' ) . '</em></td>';
+						echo '<td>';
+						echo '<em>' . esc_html__( 'PHP Cron', 'wp-crontrol' ) . '</em>';
+
+						echo '<div class="row-actions">';
+						echo implode( ' | ', $links ); // WPCS:: XSS ok.
+						echo '</div>';
+
+						echo '</td>';
 					}
 					echo '<td><em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em></td>';
 					echo '<td><em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em></td>';
 				} else {
-					echo '<td>' . esc_html( $event->hook ) . '</td>';
+					echo '<td>';
+					echo esc_html( $event->hook );
+
+					echo '<div class="row-actions">';
+					echo implode( ' | ', $links ); // WPCS:: XSS ok.
+					echo '</div>';
+
+					echo '</td>';
 					echo '<td>';
 
 					if ( empty( $event->args ) ) {
@@ -1176,48 +1234,6 @@ class Crontrol {
 				}
 				echo '</td>';
 
-				$links = array();
-
-				echo '<td style="white-space:nowrap"><span class="row-actions visible">';
-
-				if ( ( 'crontrol_cron_job' !== $event->hook ) || $can_edit_files ) {
-					$link = array(
-						'page'     => 'crontrol_admin_manage_page',
-						'action'   => 'edit-cron',
-						'id'       => rawurlencode( $event->hook ),
-						'sig'      => rawurlencode( $event->sig ),
-						'next_run' => rawurlencode( $event->time ),
-					);
-					$link = add_query_arg( $link, admin_url( 'tools.php' ) ) . '#crontrol_form';
-					$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a>';
-				}
-
-				$link = array(
-					'page'     => 'crontrol_admin_manage_page',
-					'action'   => 'run-cron',
-					'id'       => rawurlencode( $event->hook ),
-					'sig'      => rawurlencode( $event->sig ),
-					'next_run' => rawurlencode( $event->time ),
-				);
-				$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-				$link = wp_nonce_url( $link, "run-cron_{$event->hook}_{$event->sig}" );
-				$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
-
-				if ( ! in_array( $event->hook, $core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || $can_edit_files ) ) {
-					$link = array(
-						'page'     => 'crontrol_admin_manage_page',
-						'action'   => 'delete-cron',
-						'id'       => rawurlencode( $event->hook ),
-						'sig'      => rawurlencode( $event->sig ),
-						'next_run' => rawurlencode( $event->time ),
-					);
-					$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-					$link = wp_nonce_url( $link, "delete-cron_{$event->hook}_{$event->sig}_{$event->time}" );
-					$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
-				}
-
-				echo implode( ' | ', $links ); // WPCS:: XSS ok.
-				echo '</span></td>';
 				echo '</tr>';
 
 			}
