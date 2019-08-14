@@ -1022,26 +1022,10 @@ function admin_manage_page() {
 		printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg ); // WPCS:: XSS ok.
 	}
 
-	$events         = get_cron_events();
+	$events         = $table->items;
 	$doing_edit     = ( isset( $_GET['action'] ) && 'edit-cron' === $_GET['action'] ) ? wp_unslash( $_GET['id'] ) : false;
 	$time_format    = 'Y-m-d H:i:s';
 	$can_edit_files = current_user_can( 'edit_files' );
-
-	$page            = get_query_var( 'paged', 1 );
-	$total_items     = count( $events );
-	$events_per_page = 50;
-	$total_pages     = ceil( $total_items / $events_per_page );
-	$page            = max( $page, 1 );
-	$page            = min( $page, $total_pages );
-	$events_offset   = ( $page - 1 ) * $events_per_page;
-
-	$events = array_slice( $events, $events_offset, $events_per_page );
-
-	$page_args = [
-		'total_items'  => $total_items,
-		'total_pages'  => $total_pages,
-		'current_page' => $page,
-	];
 
 	$core_hooks = array(
 		'wp_version_check',
@@ -1082,11 +1066,7 @@ function admin_manage_page() {
 	<tbody>
 	<?php
 
-	if ( empty( $events ) ) {
-		?>
-		<tr><td colspan="7"><?php esc_html_e( 'You currently have no scheduled cron events.', 'wp-crontrol' ); ?></td></tr>
-		<?php
-	} else {
+	if ( ! empty( $events ) ) {
 		foreach ( $events as $id => $event ) {
 
 			if ( $doing_edit && $doing_edit == $event->hook && $event->time == $_GET['next_run'] && $event->sig == $_GET['sig'] ) {

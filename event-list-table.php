@@ -8,11 +8,22 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 class Event_List_Table extends \WP_List_Table {
 
-	public function prepare_items() {
-		$this->items = get_cron_events();
+	public function __construct() {
+		parent::__construct( [
+			'singular' => 'crontrol-event',
+			'plural'   => 'crontrol-events',
+			'ajax'     => false,
+			'screen'   => 'crontrol-events',
+		] );
+	}
 
-		$count    = count( $this->items );
+	public function prepare_items() {
+		$events   = get_cron_events();
+		$count    = count( $events );
 		$per_page = 50;
+		$offset   = ( $this->get_pagenum() - 1 ) * $per_page;
+
+		$this->items = array_slice( $events, $offset, $per_page );
 
 		$this->set_pagination_args( array(
 			'total_items' => $count,
@@ -22,7 +33,18 @@ class Event_List_Table extends \WP_List_Table {
 	}
 
 	public function get_columns() {
-		return array();
+		return array(
+			'cb'         => '<input type="checkbox" />',
+			'hook'       => __( 'Hook Name', 'wp-crontrol' ),
+			'args'       => __( 'Arguments', 'wp-crontrol' ),
+			'actions'    => __( 'Actions', 'wp-crontrol' ),
+			'next'       => __( 'Next Run', 'wp-crontrol' ),
+			'recurrance' => __( 'Recurrence', 'wp-crontrol' ),
+		);
+	}
+
+	public function no_items() {
+		esc_html_e( 'There are currently no scheduled cron events.', 'wp-crontrol' );
 	}
 
 }
