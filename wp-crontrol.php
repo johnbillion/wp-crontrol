@@ -1212,8 +1212,14 @@ class Crontrol {
 			<?php
 				echo esc_html( sprintf(
 					/* translators: %s: The current date and time */
-					__( 'Current site time: %s', 'wp-crontrol' ),
+					__( 'Site time: %s', 'wp-crontrol' ),
 					date_i18n( 'Y-m-d H:i:s' )
+				) );
+				echo '<br>';
+				echo esc_html( sprintf(
+					/* translators: %s: The timezone */
+					__( 'Site timezone: %s', 'wp-crontrol' ),
+					$this->get_timezone_name()
 				) );
 			?>
 		</p>
