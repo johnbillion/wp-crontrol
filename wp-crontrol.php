@@ -1165,7 +1165,7 @@ class Crontrol {
 					$schedule_name = $this->get_schedule_name( $event );
 					if ( is_wp_error( $schedule_name ) ) {
 						printf(
-							'<span class="dashicons dashicons-warning"></span>%s',
+							'<span class="dashicons dashicons-warning" style="color:#c00" aria-hidden="true"></span> %s',
 							esc_html( $schedule_name->get_error_message() )
 						);
 					} else {
