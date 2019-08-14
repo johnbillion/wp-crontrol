@@ -657,7 +657,7 @@ function test_cron_spawn( $cache = true ) {
 		return new WP_Error( 'crontrol_info', sprintf( __( 'The %s constant is set to true.', 'wp-crontrol' ), 'ALTERNATE_WP_CRON' ) );
 	}
 
-	$cached_status = get_transient( 'wp-cron-test-ok' );
+	$cached_status = get_transient( 'crontrol-cron-test-ok' );
 
 	if ( $cache && $cached_status ) {
 		return true;
@@ -689,7 +689,7 @@ function test_cron_spawn( $cache = true ) {
 			intval( wp_remote_retrieve_response_code( $result ) )
 		) );
 	} else {
-		set_transient( 'wp-cron-test-ok', 1, 3600 );
+		set_transient( 'crontrol-cron-test-ok', 1, 3600 );
 		return true;
 	}
 
