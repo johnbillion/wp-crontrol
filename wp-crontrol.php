@@ -39,28 +39,23 @@ use WP_Error;
 
 defined( 'ABSPATH' ) || die();
 
-/**
- * The main encapsulating class for WP Control.
- */
-class Crontrol {
-
 	/**
 	 * Hook onto all of the actions and filters needed by the plugin.
 	 */
-	public function init_hooks() {
+	function init_hooks() {
 		$plugin_file = plugin_basename( __FILE__ );
 
-		add_action( 'init',                               array( $this, 'action_init' ) );
-		add_action( 'init',                               array( $this, 'action_handle_posts' ) );
-		add_action( 'admin_menu',                         array( $this, 'action_admin_menu' ) );
-		add_filter( "plugin_action_links_{$plugin_file}", array( $this, 'plugin_action_links' ), 10, 4 );
-		add_filter( 'removable_query_args',               array( $this, 'filter_removable_query_args' ) );
+		add_action( 'init',                               __NAMESPACE__ . '\action_init' );
+		add_action( 'init',                               __NAMESPACE__ . '\action_handle_posts' );
+		add_action( 'admin_menu',                         __NAMESPACE__ . '\action_admin_menu' );
+		add_filter( "plugin_action_links_{$plugin_file}", __NAMESPACE__ . '\plugin_action_links', 10, 4 );
+		add_filter( 'removable_query_args',               __NAMESPACE__ . '\filter_removable_query_args' );
 
-		add_action( 'load-tools_page_crontrol_admin_manage_page', array( $this, 'enqueue_code_editor' ) );
+		add_action( 'load-tools_page_crontrol_admin_manage_page', __NAMESPACE__ . '\enqueue_code_editor' );
 
-		add_filter( 'cron_schedules',    array( $this, 'filter_cron_schedules' ) );
-		add_action( 'crontrol_cron_job', array( $this, 'action_php_cron_event' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+		add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
+		add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
+		add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_styles' );
 	}
 
 	/**
@@ -68,21 +63,21 @@ class Crontrol {
 	 *
 	 * @param string $code The PHP code to evaluate.
 	 */
-	public function action_php_cron_event( $code ) {
+	function action_php_cron_event( $code ) {
 		eval( $code ); // @codingStandardsIgnoreLine
 	}
 
 	/**
 	 * Run using the 'init' action.
 	 */
-	public function action_init() {
+	function action_init() {
 		load_plugin_textdomain( 'wp-crontrol', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	}
 
 	/**
 	 * Handles any POSTs made by the plugin. Run using the 'init' action.
 	 */
-	public function action_handle_posts() {
+	function action_handle_posts() {
 		if ( isset( $_POST['new_cron'] ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ), 401 );
@@ -94,7 +89,7 @@ class Crontrol {
 			}
 			$in_args = json_decode( $in_args, true );
 			$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
-			$this->add_cron( $next_run, $in_schedule, $in_hookname, $in_args );
+			add_cron( $next_run, $in_schedule, $in_hookname, $in_args );
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '5',
@@ -114,7 +109,7 @@ class Crontrol {
 				'name' => $in_eventname,
 			);
 			$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
-			$this->add_cron( $next_run, $in_schedule, 'crontrol_cron_job', $args );
+			add_cron( $next_run, $in_schedule, 'crontrol_cron_job', $args );
 			$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
@@ -137,9 +132,9 @@ class Crontrol {
 			}
 
 			$in_args = json_decode( $in_args, true );
-			$i = $this->delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
+			$i = delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
 			$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
-			$i = $this->add_cron( $next_run, $in_schedule, $in_hookname, $in_args );
+			$i = add_cron( $next_run, $in_schedule, $in_hookname, $in_args );
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '4',
@@ -161,9 +156,9 @@ class Crontrol {
 				'code' => $in_hookcode,
 				'name' => $in_eventname,
 			);
-			$i = $this->delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
+			$i = delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
 			$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
-			$i = $this->add_cron( $next_run, $in_schedule, 'crontrol_cron_job', $args );
+			$i = add_cron( $next_run, $in_schedule, 'crontrol_cron_job', $args );
 			$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
@@ -207,7 +202,7 @@ class Crontrol {
 				exit;
 			}
 
-			$this->add_schedule( $name, $interval, $display );
+			add_schedule( $name, $interval, $display );
 			$redirect = array(
 				'page'             => 'crontrol_admin_options_page',
 				'crontrol_message' => '3',
@@ -222,7 +217,7 @@ class Crontrol {
 			}
 			$id = wp_unslash( $_GET['id'] );
 			check_admin_referer( "delete-sched_{$id}" );
-			$this->delete_schedule( $id );
+			delete_schedule( $id );
 			$redirect = array(
 				'page'             => 'crontrol_admin_options_page',
 				'crontrol_message' => '2',
@@ -249,7 +244,7 @@ class Crontrol {
 					if ( 'crontrol_cron_job' === $id && ! current_user_can( 'edit_files' ) ) {
 						continue;
 					}
-					if ( $this->delete_cron( urldecode( $id ), $sig, $next_run ) ) {
+					if ( delete_cron( urldecode( $id ), $sig, $next_run ) ) {
 						$deleted++;
 					}
 				}
@@ -276,7 +271,7 @@ class Crontrol {
 				wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 401 );
 			}
 
-			if ( $this->delete_cron( $id, $sig, $next_run ) ) {
+			if ( delete_cron( $id, $sig, $next_run ) ) {
 				$redirect = array(
 					'page'             => 'crontrol_admin_manage_page',
 					'crontrol_message' => '6',
@@ -302,7 +297,7 @@ class Crontrol {
 			$id = wp_unslash( $_GET['id'] );
 			$sig = wp_unslash( $_GET['sig'] );
 			check_admin_referer( "run-cron_{$id}_{$sig}" );
-			if ( $this->run_cron( $id, $sig ) ) {
+			if ( run_cron( $id, $sig ) ) {
 				$redirect = array(
 					'page'             => 'crontrol_admin_manage_page',
 					'crontrol_message' => '1',
@@ -330,7 +325,7 @@ class Crontrol {
 	 * @param string $hookname The hook name of the cron event to run.
 	 * @param string $sig      The cron event signature.
 	 */
-	public function run_cron( $hookname, $sig ) {
+	function run_cron( $hookname, $sig ) {
 		$crons = _get_cron_array();
 		foreach ( $crons as $time => $cron ) {
 			if ( isset( $cron[ $hookname ][ $sig ] ) ) {
@@ -352,7 +347,7 @@ class Crontrol {
 	 * @param string $hookname The name of the hook to execute.
 	 * @param array  $args     Arguments to add to the cron event.
 	 */
-	public function add_cron( $next_run, $schedule, $hookname, $args ) {
+	function add_cron( $next_run, $schedule, $hookname, $args ) {
 		$next_run = strtotime( $next_run );
 		if ( false === $next_run ) {
 			$next_run = time();
@@ -376,7 +371,7 @@ class Crontrol {
 	 * @param string $sig       The cron event signature.
 	 * @param string $next_run  The GMT time that the event would be run at.
 	 */
-	public function delete_cron( $to_delete, $sig, $next_run ) {
+	function delete_cron( $to_delete, $sig, $next_run ) {
 		$crons = _get_cron_array();
 		if ( isset( $crons[ $next_run ][ $to_delete ][ $sig ] ) ) {
 			$args = $crons[ $next_run ][ $to_delete ][ $sig ]['args'];
@@ -393,7 +388,7 @@ class Crontrol {
 	 * @param int    $interval The interval between executions of the new schedule.
 	 * @param string $display  The display name of the schedule.
 	 */
-	public function add_schedule( $name, $interval, $display ) {
+	function add_schedule( $name, $interval, $display ) {
 		$old_scheds = get_option( 'crontrol_schedules', array() );
 		$old_scheds[ $name ] = array(
 			'interval' => $interval,
@@ -407,7 +402,7 @@ class Crontrol {
 	 *
 	 * @param string $name The internal_name of the schedule to delete.
 	 */
-	public function delete_schedule( $name ) {
+	function delete_schedule( $name ) {
 		$scheds = get_option( 'crontrol_schedules', array() );
 		unset( $scheds[ $name ] );
 		update_option( 'crontrol_schedules', $scheds );
@@ -418,9 +413,9 @@ class Crontrol {
 	 *
 	 * Run using the 'admin_menu' action.
 	 */
-	public function action_admin_menu() {
-		add_options_page( esc_html__( 'Cron Schedules', 'wp-crontrol' ), esc_html__( 'Cron Schedules', 'wp-crontrol' ), 'manage_options', 'crontrol_admin_options_page', array( $this, 'admin_options_page' ) );
-		add_management_page( esc_html__( 'Cron Events', 'wp-crontrol' ), esc_html__( 'Cron Events', 'wp-crontrol' ), 'manage_options', 'crontrol_admin_manage_page', array( $this, 'admin_manage_page' ) );
+	function action_admin_menu() {
+		add_options_page( esc_html__( 'Cron Schedules', 'wp-crontrol' ), esc_html__( 'Cron Schedules', 'wp-crontrol' ), 'manage_options', 'crontrol_admin_options_page', __NAMESPACE__ . '\admin_options_page' );
+		add_management_page( esc_html__( 'Cron Events', 'wp-crontrol' ), esc_html__( 'Cron Events', 'wp-crontrol' ), 'manage_options', 'crontrol_admin_manage_page', __NAMESPACE__ . '\admin_manage_page' );
 	}
 
 	/**
@@ -432,7 +427,7 @@ class Crontrol {
 	 * @param string   $context     The plugin context.
 	 * @return string[] Array of action links.
 	 */
-	public function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
+	function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
 		$actions['crontrol-events'] = sprintf(
 			'<a href="%s">%s</a>',
 			esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ),
@@ -454,7 +449,7 @@ class Crontrol {
 	 * @param array $scheds The current cron schedules. Usually an empty array.
 	 * @return array The existing cron schedules along with the plugin's schedules.
 	 */
-	public function filter_cron_schedules( $scheds ) {
+	function filter_cron_schedules( $scheds ) {
 		$new_scheds = get_option( 'crontrol_schedules', array() );
 		return array_merge( $new_scheds, $scheds );
 	}
@@ -462,9 +457,9 @@ class Crontrol {
 	/**
 	 * Displays the options page for the plugin.
 	 */
-	public function admin_options_page() {
-		$schedules = $this->get_schedules();
-		$events = $this->get_cron_events();
+	function admin_options_page() {
+		$schedules = get_schedules();
+		$events = get_cron_events();
 		$custom_schedules = get_option( 'crontrol_schedules', array() );
 		$custom_keys = array_keys( $custom_schedules );
 
@@ -522,7 +517,7 @@ class Crontrol {
 				printf(
 					'<td>%s (%s)</td>',
 					esc_html( $data['interval'] ),
-					esc_html( $this->interval( $data['interval'] ) )
+					esc_html( interval( $data['interval'] ) )
 				);
 				printf(
 					'<td>%s</td>',
@@ -596,9 +591,9 @@ class Crontrol {
 	/**
 	 * Gets a sorted (according to interval) list of the cron schedules
 	 */
-	public function get_schedules() {
+	function get_schedules() {
 		$schedules = wp_get_schedules();
-		uasort( $schedules, array( $this, 'sort_schedules' ) );
+		uasort( $schedules, __NAMESPACE__ . '\sort_schedules' );
 		return $schedules;
 	}
 
@@ -610,7 +605,7 @@ class Crontrol {
 	 * @return int An integer less than, equal to, or greater than zero if the first argument is considered to be
 	 *             respectively less than, equal to, or greater than the second.
 	 */
-	protected function sort_schedules( $a, $b ) {
+	function sort_schedules( $a, $b ) {
 		return ( $a['interval'] - $b['interval'] );
 	}
 
@@ -619,8 +614,8 @@ class Crontrol {
 	 *
 	 * @param bool $current The currently selected schedule.
 	 */
-	public function schedules_dropdown( $current = false ) {
-		$schedules = $this->get_schedules();
+	function schedules_dropdown( $current = false ) {
+		$schedules = get_schedules();
 		?>
 		<select class="postform" name="schedule" id="schedule" required>
 		<option <?php selected( $current, '_oneoff' ); ?> value="_oneoff"><?php esc_html_e( 'Non-repeating', 'wp-crontrol' ); ?></option>
@@ -630,7 +625,7 @@ class Crontrol {
 				printf(
 					'%s (%s)',
 					esc_html( $sched_data['display'] ),
-					esc_html( $this->interval( $sched_data['interval'] ) )
+					esc_html( interval( $sched_data['interval'] ) )
 				);
 				?>
 			</option>
@@ -645,7 +640,7 @@ class Crontrol {
 	 * @param bool $cache Whether to use the cached result from previous calls.
 	 * @return true|WP_Error Boolean true if the cron spawner is working as expected, or a WP_Error object if not.
 	 */
-	public function test_cron_spawn( $cache = true ) {
+	function test_cron_spawn( $cache = true ) {
 		global $wp_version;
 
 		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
@@ -699,9 +694,9 @@ class Crontrol {
 	/**
 	 * Shows the status of WP-Cron functionality on the site. Only displays a message when there's a problem.
 	 */
-	public function show_cron_status() {
+	function show_cron_status() {
 
-		$status = $this->test_cron_spawn();
+		$status = test_cron_spawn();
 
 		if ( is_wp_error( $status ) ) {
 			if ( 'crontrol_info' === $status->get_error_code() ) {
@@ -734,7 +729,7 @@ class Crontrol {
 	 *
 	 * @return string The name and UTC offset for the site's timezone.
 	 */
-	public function get_timezone_name() {
+	function get_timezone_name() {
 		$timezone_string = get_option( 'timezone_string', '' );
 		$gmt_offset      = get_option( 'gmt_offset', 0 );
 
@@ -757,7 +752,7 @@ class Crontrol {
 	 * @param bool  $is_php   Whether this is a PHP cron event.
 	 * @param mixed $existing An array of existing values for the cron event, or null.
 	 */
-	public function show_cron_form( $is_php, $existing ) {
+	function show_cron_form( $is_php, $existing ) {
 		$new_tabs = array(
 			'cron'     => __( 'Add Cron Event', 'wp-crontrol' ),
 			'php-cron' => __( 'Add PHP Cron Event', 'wp-crontrol' ),
@@ -926,7 +921,7 @@ class Crontrol {
 									printf(
 										/* translators: %s Timezone name. */
 										esc_html__( 'Timezone: %s', 'wp-crontrol' ),
-										'<code>' . esc_html( $this->get_timezone_name() ) . '</code>'
+										'<code>' . esc_html( get_timezone_name() ) . '</code>'
 									);
 								?>
 							</p>
@@ -934,7 +929,7 @@ class Crontrol {
 					</tr><tr>
 						<th valign="top" scope="row"><label for="schedule"><?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?></label></th>
 						<td>
-							<?php $this->schedules_dropdown( $existing['schedule'] ); ?>
+							<?php schedules_dropdown( $existing['schedule'] ); ?>
 							<p class="description">
 								<?php
 								printf(
@@ -963,7 +958,7 @@ class Crontrol {
 	 *
 	 * @return array[]|WP_Error An array of cron event arrays, or a WP_Error object if there's an error or no events.
 	 */
-	public function get_cron_events() {
+	function get_cron_events() {
 
 		$crons  = _get_cron_array();
 		$events = array();
@@ -1000,7 +995,7 @@ class Crontrol {
 	/**
 	 * Displays the manage page for the plugin.
 	 */
-	public function admin_manage_page() {
+	function admin_manage_page() {
 		$messages = array(
 			/* translators: 1: The name of the cron event. */
 			'1' => __( 'Successfully executed the cron event %s.', 'wp-crontrol' ),
@@ -1024,7 +1019,7 @@ class Crontrol {
 			printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg ); // WPCS:: XSS ok.
 		}
 
-		$events         = $this->get_cron_events();
+		$events         = get_cron_events();
 		$doing_edit     = ( isset( $_GET['action'] ) && 'edit-cron' === $_GET['action'] ) ? wp_unslash( $_GET['id'] ) : false;
 		$time_format    = 'Y-m-d H:i:s';
 		$can_edit_files = current_user_can( 'edit_files' );
@@ -1057,7 +1052,7 @@ class Crontrol {
 			'recovery_mode_clean_expired_keys',
 		);
 
-		$this->show_cron_status();
+		show_cron_status();
 
 		?>
 		<div class="wrap">
@@ -1065,7 +1060,7 @@ class Crontrol {
 		<form method="post" action="tools.php?page=crontrol_admin_manage_page">
 		<div class="table-responsive">
 		<div class="tablenav top">
-			<?php echo $this->pagination( 'top', $page_args ); ?>
+			<?php echo pagination( 'top', $page_args ); ?>
 		</div>
 		<table class="widefat striped table">
 		<thead>
@@ -1210,8 +1205,8 @@ class Crontrol {
 					echo '</td>';
 					echo '<td>';
 					$callbacks = array();
-					foreach ( $this->get_action_callbacks( $event->hook ) as $callback ) {
-						$callbacks[] = '<pre style="margin-top:0">' . self::output_callback( $callback ) . '</pre>';
+					foreach ( get_action_callbacks( $event->hook ) as $callback ) {
+						$callbacks[] = '<pre style="margin-top:0">' . output_callback( $callback ) . '</pre>';
 					}
 					echo implode( '', $callbacks ); // WPCS:: XSS ok.
 					echo '</td>';
@@ -1220,13 +1215,13 @@ class Crontrol {
 				echo '<td style="white-space:nowrap">';
 				printf( '%s (%s)',
 					esc_html( get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), $time_format ) ),
-					esc_html( $this->time_since( time(), $event->time ) )
+					esc_html( time_since( time(), $event->time ) )
 				);
 				echo '</td>';
 
 				echo '<td style="white-space:nowrap">';
 				if ( $event->schedule ) {
-					$schedule_name = $this->get_schedule_name( $event );
+					$schedule_name = get_schedule_name( $event );
 					if ( is_wp_error( $schedule_name ) ) {
 						printf(
 							'<span class="dashicons dashicons-warning" style="color:#c00" aria-hidden="true"></span> %s',
@@ -1249,7 +1244,7 @@ class Crontrol {
 		</table>
 		</div>
         <div class="tablenav">
-            <?php echo $this->pagination( 'bottom', $page_args ); ?>
+            <?php echo pagination( 'bottom', $page_args ); ?>
         </div>
 		<p style="float:right">
 			<?php
@@ -1262,7 +1257,7 @@ class Crontrol {
 				echo esc_html( sprintf(
 					/* translators: %s: The timezone */
 					__( 'Site timezone: %s', 'wp-crontrol' ),
-					$this->get_timezone_name()
+					get_timezone_name()
 				) );
 			?>
 		</p>
@@ -1279,9 +1274,9 @@ class Crontrol {
 		</div>
 		<?php
 		if ( is_array( $doing_edit ) ) {
-			$this->show_cron_form( 'crontrol_cron_job' == $doing_edit['hookname'], $doing_edit );
+			show_cron_form( 'crontrol_cron_job' == $doing_edit['hookname'], $doing_edit );
 		} else {
-			$this->show_cron_form( ( isset( $_GET['action'] ) && 'new-php-cron' === $_GET['action'] ), false );
+			show_cron_form( ( isset( $_GET['action'] ) && 'new-php-cron' === $_GET['action'] ), false );
 		}
 	}
 
@@ -1291,7 +1286,7 @@ class Crontrol {
 	 * @param string $name The hook name.
 	 * @return array[] Array of callbacks attached to the hook.
 	 */
-	protected function get_action_callbacks( $name ) {
+	function get_action_callbacks( $name ) {
 		global $wp_filter;
 
 		$actions = array();
@@ -1303,7 +1298,7 @@ class Crontrol {
 
 			foreach ( $action as $priority => $callbacks ) {
 				foreach ( $callbacks as $callback ) {
-					$callback = self::populate_callback( $callback );
+					$callback = populate_callback( $callback );
 
 					$actions[] = array(
 						'priority' => $priority,
@@ -1322,7 +1317,7 @@ class Crontrol {
 	 * @param array $callback A callback entry.
 	 * @return The updated callback entry.
 	 */
-	public static function populate_callback( array $callback ) {
+	function populate_callback( array $callback ) {
 		// If Query Monitor is installed, use its rich callback analysis.
 		if ( method_exists( '\QM_Util', 'populate_callback' ) ) {
 			return \QM_Util::populate_callback( $callback );
@@ -1363,7 +1358,7 @@ class Crontrol {
 	 * @param array $callback The callback entry.
 	 * @return string The displayable version of the callback name.
 	 */
-	public static function output_callback( array $callback ) {
+	function output_callback( array $callback ) {
 		$qm   = WP_PLUGIN_DIR . '/query-monitor/query-monitor.php';
 		$html = plugin_dir_path( $qm ) . 'output/Html.php';
 
@@ -1391,8 +1386,8 @@ class Crontrol {
 	 * @return string The pretty time_since value
 	 * @link http://binarybonsai.com/code/timesince.txt
 	 */
-	public function time_since( $older_date, $newer_date ) {
-		return $this->interval( $newer_date - $older_date );
+	function time_since( $older_date, $newer_date ) {
+		return interval( $newer_date - $older_date );
 	}
 
 	/**
@@ -1400,13 +1395,13 @@ class Crontrol {
 	 *
 	 * Example:
 	 *
-	 *     echo self::interval( 90 );
+	 *     echo \Crontrol\interval( 90 );
 	 *     // 1 minute 30 seconds
 	 *
 	 * @param  int $since A period of time in seconds.
 	 * @return string An interval represented as a string.
 	 */
-	public function interval( $since ) {
+	function interval( $since ) {
 		// Array of time period chunks.
 		$chunks = array(
 			/* translators: 1: The number of years in an interval of time. */
@@ -1472,8 +1467,8 @@ class Crontrol {
 	 * @param stdClass $event A WP-Cron event.
 	 * @return string|WP_Error The interval display name, or a WP_Error object if no such schedule exists.
 	 */
-	protected function get_schedule_name( stdClass $event ) {
-		$schedules = $this->get_schedules();
+	function get_schedule_name( stdClass $event ) {
+		$schedules = get_schedules();
 
 		if ( isset( $schedules[ $event->schedule ] ) ) {
 			return $schedules[ $event->schedule ]['display'];
@@ -1489,7 +1484,7 @@ class Crontrol {
 	/**
 	 * Enqueues the editor UI that's used for the PHP cron event code editor.
 	 */
-	public function enqueue_code_editor() {
+	function enqueue_code_editor() {
 		if ( ! function_exists( 'wp_enqueue_code_editor' ) ) {
 			return;
 		}
@@ -1518,7 +1513,7 @@ class Crontrol {
 	/**
 	 * Display the pagination.
 	 */
-	protected function pagination( $which, $page_args ) {
+	function pagination( $which, $page_args ) {
 		if ( empty( $page_args ) ) {
 			return;
 		}
@@ -1628,7 +1623,7 @@ class Crontrol {
 	 *
 	 * @param string $id The admin screen ID.
 	 */
-	public function enqueue_styles( $id ) {
+	function enqueue_styles( $id ) {
 		if ( 'tools_page_crontrol_admin_manage_page' !== $id ) {
 			return;
 		}
@@ -1645,34 +1640,12 @@ class Crontrol {
 	 * @param string[] $args List of removable query arguments.
 	 * @return string[] Updated list of removable query arguments.
 	 */
-	public function filter_removable_query_args( array $args ) {
+	function filter_removable_query_args( array $args ) {
 		return array_merge( $args, array(
 			'crontrol_message',
 			'crontrol_name',
 		) );
 	}
 
-	/**
-	 * Singleton instance instantiator.
-	 */
-	public static function init() {
-
-		static $instance = null;
-
-		if ( ! $instance ) {
-			$instance = new Crontrol();
-		}
-
-		return $instance;
-
-	}
-
-	/**
-	 * Constructor. Private to enforce singleton.
-	 */
-	private function __construct() {}
-
-}
-
 // Get this show on the road.
-Crontrol::init()->init_hooks();
+init_hooks();
