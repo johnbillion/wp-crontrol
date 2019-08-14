@@ -8,6 +8,7 @@
  * Version:     1.7.1
  * Text Domain: wp-crontrol
  * Domain Path: /languages/
+ * Requires PHP: 5.3.6
  * License:     GPL v2 or later
  *
  * LICENSE
@@ -30,6 +31,11 @@
  * @link       https://wordpress.org/plugins/wp-crontrol/
  * @since      0.2
  */
+
+namespace Crontrol;
+
+use stdClass;
+use WP_Error;
 
 defined( 'ABSPATH' ) || die();
 
@@ -1318,8 +1324,8 @@ class Crontrol {
 	 */
 	public static function populate_callback( array $callback ) {
 		// If Query Monitor is installed, use its rich callback analysis.
-		if ( method_exists( 'QM_Util', 'populate_callback' ) ) {
-			return QM_Util::populate_callback( $callback );
+		if ( method_exists( '\QM_Util', 'populate_callback' ) ) {
+			return \QM_Util::populate_callback( $callback );
 		}
 
 		if ( is_string( $callback['function'] ) && ( false !== strpos( $callback['function'], '::' ) ) ) {
@@ -1362,11 +1368,11 @@ class Crontrol {
 		$html = plugin_dir_path( $qm ) . 'output/Html.php';
 
 		// If Query Monitor is installed, use its rich callback output.
-		if ( class_exists( 'QueryMonitor' ) && file_exists( $html ) ) {
+		if ( class_exists( '\QueryMonitor' ) && file_exists( $html ) ) {
 			require_once $html;
 
-			if ( class_exists( 'QM_Output_Html' ) ) {
-				return QM_Output_Html::output_filename(
+			if ( class_exists( '\QM_Output_Html' ) ) {
+				return \QM_Output_Html::output_filename(
 					$callback['callback']['name'],
 					$callback['callback']['file'],
 					$callback['callback']['line']
