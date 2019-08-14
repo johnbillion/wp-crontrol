@@ -1017,22 +1017,23 @@ class Crontrol {
 
 			printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg ); // WPCS:: XSS ok.
 		}
-		$events = $this->get_cron_events();
-		$doing_edit = ( isset( $_GET['action'] ) && 'edit-cron' === $_GET['action'] ) ? wp_unslash( $_GET['id'] ) : false;
-		$time_format = 'Y-m-d H:i:s';
+
+		$events         = $this->get_cron_events();
+		$doing_edit     = ( isset( $_GET['action'] ) && 'edit-cron' === $_GET['action'] ) ? wp_unslash( $_GET['id'] ) : false;
+		$time_format    = 'Y-m-d H:i:s';
 		$can_edit_files = current_user_can( 'edit_files' );
 
-		$page = get_query_var( 'paged', 1 );
-		$total_items = count( $events );
-		$events_per_page = 20; // Implement user variable for per page
-		$total_pages = ceil( $total_items / $events_per_page );
-		$page = max( $page, 1 );
-		$page = min( $page, $total_pages );
-		$events_offset = ( $page - 1 ) * $events_per_page;
+		$page            = get_query_var( 'paged', 1 );
+		$total_items     = count( $events );
+		$events_per_page = 50;
+		$total_pages     = ceil( $total_items / $events_per_page );
+		$page            = max( $page, 1 );
+		$page            = min( $page, $total_pages );
+		$events_offset   = ( $page - 1 ) * $events_per_page;
 
 		$events = array_slice( $events, $events_offset, $events_per_page );
 
-		$page_args  = [
+		$page_args = [
 			'total_items'  => $total_items,
 			'total_pages'  => $total_pages,
 			'current_page' => $page,
@@ -1056,10 +1057,10 @@ class Crontrol {
 		<div class="wrap">
 		<h1><?php esc_html_e( 'WP-Cron Events', 'wp-crontrol' ); ?></h1>
 		<form method="post" action="tools.php?page=crontrol_admin_manage_page">
-        <div class="table-responsive">
-        <div class="tablenav top">
-            <?php echo $this->pagination( 'bottom', $page_args ); ?>
-        </div>
+		<div class="table-responsive">
+		<div class="tablenav top">
+			<?php echo $this->pagination( 'top', $page_args ); ?>
+		</div>
 		<table class="widefat striped table">
 		<thead>
 			<tr>
@@ -1597,10 +1598,12 @@ class Crontrol {
 	}
 
 	/**
-	 * Register the stylesheets for the admin area.
+	 * Registers the stylesheet for the admin area.
+	 *
+	 * @param string $id The admin screen ID.
 	 */
-	public function enqueue_styles( $hook ) {
-		if ( $hook !== 'tools_page_crontrol_admin_manage_page' ) {
+	public function enqueue_styles( $id ) {
+		if ( 'tools_page_crontrol_admin_manage_page' !== $id ) {
 			return;
 		}
 
