@@ -465,10 +465,6 @@ function admin_options_page() {
 	$custom_schedules = get_option( 'crontrol_schedules', array() );
 	$custom_keys = array_keys( $custom_schedules );
 
-	if ( is_wp_error( $events ) ) {
-		$events = array();
-	}
-
 	$used_schedules = array_unique( wp_list_pluck( $events, 'schedule' ) );
 
 	$messages = array(
@@ -961,17 +957,14 @@ function show_cron_form( $is_php, $existing ) {
 /**
  * Returns a flattened array of cron events.
  *
- * @return array[]|WP_Error An array of cron event arrays, or a WP_Error object if there's an error or no events.
+ * @return array[] An array of cron event arrays.
  */
 function get_cron_events() {
 	$crons  = _get_cron_array();
 	$events = array();
 
 	if ( empty( $crons ) ) {
-		return new WP_Error(
-			'no_events',
-			__( 'You currently have no scheduled cron events.', 'wp-crontrol' )
-		);
+		return array();
 	}
 
 	foreach ( $crons as $time => $cron ) {
@@ -1080,9 +1073,9 @@ function admin_manage_page() {
 	<tbody>
 	<?php
 
-	if ( is_wp_error( $events ) ) {
+	if ( empty( $events ) ) {
 		?>
-		<tr><td colspan="7"><?php echo esc_html( $events->get_error_message() ); ?></td></tr>
+		<tr><td colspan="7"><?php esc_html_e( 'You currently have no scheduled cron events.', 'wp-crontrol' ); ?></td></tr>
 		<?php
 	} else {
 		foreach ( $events as $id => $event ) {
