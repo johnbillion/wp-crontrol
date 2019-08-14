@@ -1473,7 +1473,11 @@ class Crontrol {
 			return $schedules[ $event->schedule ]['display'];
 		}
 
-		return new WP_Error( 'unknown_schedule', __( 'Unknown', 'wp-crontrol' ) );
+		return new WP_Error( 'unknown_schedule', sprintf(
+			/* translators: %s: Schedule name */
+			__( 'Unknown (%s)', 'wp-crontrol' ),
+			$event->schedule
+		) );
 	}
 
 	/**
