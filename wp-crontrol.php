@@ -52,8 +52,6 @@ class Crontrol {
 
 		add_action( 'load-tools_page_crontrol_admin_manage_page', array( $this, 'enqueue_code_editor' ) );
 
-		register_activation_hook( __FILE__, array( $this, 'action_activate' ) );
-
 		add_filter( 'cron_schedules',    array( $this, 'filter_cron_schedules' ) );
 		add_action( 'crontrol_cron_job', array( $this, 'action_php_cron_event' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
@@ -407,20 +405,6 @@ class Crontrol {
 		$scheds = get_option( 'crontrol_schedules', array() );
 		unset( $scheds[ $name ] );
 		update_option( 'crontrol_schedules', $scheds );
-	}
-
-	/**
-	 * Sets up the plugin environment upon first activation.
-	 *
-	 * Run using the 'activate_' action.
-	 */
-	public function action_activate() {
-		add_option( 'crontrol_schedules', array() );
-
-		// If there's never been a cron event, _get_cron_array will return false.
-		if ( _get_cron_array() === false ) {
-			_set_cron_array( array() );
-		}
 	}
 
 	/**
