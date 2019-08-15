@@ -45,7 +45,7 @@ class Event_List_Table extends \WP_List_Table {
 			'args'       => __( 'Arguments', 'wp-crontrol' ),
 			'actions'    => __( 'Actions', 'wp-crontrol' ),
 			'next'       => __( 'Next Run', 'wp-crontrol' ),
-			'recurrance' => __( 'Recurrence', 'wp-crontrol' ),
+			'recurrence' => __( 'Recurrence', 'wp-crontrol' ),
 		);
 	}
 
@@ -167,6 +167,22 @@ class Event_List_Table extends \WP_List_Table {
 			esc_html( get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), 'Y-m-d H:i:s' ) ),
 			esc_html( time_since( time(), $event->time ) )
 		);
+	}
+
+	protected function column_recurrence( $event ) {
+		if ( $event->schedule ) {
+			$schedule_name = get_schedule_name( $event );
+			if ( is_wp_error( $schedule_name ) ) {
+				return sprintf(
+					'<span class="dashicons dashicons-warning" style="color:#c00" aria-hidden="true"></span> %s',
+					esc_html( $schedule_name->get_error_message() )
+				);
+			} else {
+				return esc_html( $schedule_name );
+			}
+		} else {
+			return esc_html__( 'Non-repeating', 'wp-crontrol' );
+		}
 	}
 
 	public function no_items() {

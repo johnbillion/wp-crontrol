@@ -1080,24 +1080,6 @@ function admin_manage_page() {
 			}
 			echo '</th>';
 
-			echo '<td style="white-space:nowrap">';
-
-			if ( $event->schedule ) {
-				$schedule_name = get_schedule_name( $event );
-				if ( is_wp_error( $schedule_name ) ) {
-					printf(
-						'<span class="dashicons dashicons-warning" style="color:#c00" aria-hidden="true"></span> %s',
-						esc_html( $schedule_name->get_error_message() )
-					);
-				} else {
-					echo esc_html( $schedule_name );
-				}
-			} else {
-				esc_html_e( 'Non-repeating', 'wp-crontrol' );
-			}
-
-			echo '</td>';
-
 			echo '</tr>';
 
 		}
