@@ -1080,20 +1080,6 @@ function admin_manage_page() {
 			}
 			echo '</th>';
 
-			if ( 'crontrol_cron_job' === $event->hook ) {
-				echo '<td><em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em></td>';
-			} else {
-				echo '<td>';
-				$callbacks = array();
-
-				foreach ( get_action_callbacks( $event->hook ) as $callback ) {
-					$callbacks[] = '<pre style="margin-top:0">' . output_callback( $callback ) . '</pre>';
-				}
-
-				echo implode( '', $callbacks ); // WPCS:: XSS ok.
-				echo '</td>';
-			}
-
 			echo '<td style="white-space:nowrap">';
 			printf( '%s (%s)',
 				esc_html( get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), $time_format ) ),

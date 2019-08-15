@@ -64,7 +64,7 @@ class Event_List_Table extends \WP_List_Table {
 
 		$links = array();
 
-		if ( ( 'crontrol_cron_job' !== $event->hook ) || $can_edit_files ) {
+		if ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) {
 			$link = array(
 				'page'     => 'crontrol_admin_manage_page',
 				'action'   => 'edit-cron',
@@ -144,6 +144,20 @@ class Event_List_Table extends \WP_List_Table {
 					esc_html( $args )
 				);
 			}
+		}
+	}
+
+	protected function column_actions( $event ) {
+		if ( 'crontrol_cron_job' === $event->hook ) {
+			return '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
+		} else {
+			$callbacks = array();
+
+			foreach ( get_action_callbacks( $event->hook ) as $callback ) {
+				$callbacks[] = '<pre style="margin-top:0">' . output_callback( $callback ) . '</pre>';
+			}
+
+			return implode( '', $callbacks ); // WPCS:: XSS ok.
 		}
 	}
 
