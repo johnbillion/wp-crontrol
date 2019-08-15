@@ -161,6 +161,14 @@ class Event_List_Table extends \WP_List_Table {
 		}
 	}
 
+	protected function column_next( $event ) {
+		return sprintf(
+			'%s (%s)',
+			esc_html( get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), 'Y-m-d H:i:s' ) ),
+			esc_html( time_since( time(), $event->time ) )
+		);
+	}
+
 	public function no_items() {
 		esc_html_e( 'There are currently no scheduled cron events.', 'wp-crontrol' );
 	}

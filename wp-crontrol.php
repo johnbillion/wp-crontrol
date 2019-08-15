@@ -1081,13 +1081,6 @@ function admin_manage_page() {
 			echo '</th>';
 
 			echo '<td style="white-space:nowrap">';
-			printf( '%s (%s)',
-				esc_html( get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), $time_format ) ),
-				esc_html( time_since( time(), $event->time ) )
-			);
-			echo '</td>';
-
-			echo '<td style="white-space:nowrap">';
 
 			if ( $event->schedule ) {
 				$schedule_name = get_schedule_name( $event );
