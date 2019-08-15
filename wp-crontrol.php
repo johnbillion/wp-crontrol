@@ -34,7 +34,6 @@
 
 namespace Crontrol;
 
-use stdClass;
 use WP_Error;
 
 defined( 'ABSPATH' ) || die();

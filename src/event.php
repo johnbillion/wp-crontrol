@@ -2,6 +2,9 @@
 
 namespace Crontrol\Event;
 
+use stdClass;
+use Crontrol\Schedule;
+
 /**
  * Executes a cron event immediately.
  *

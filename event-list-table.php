@@ -22,7 +22,7 @@ class Event_List_Table extends \WP_List_Table {
 	}
 
 	public function prepare_items() {
-		$events   = Events\get();
+		$events   = Event\get();
 		$count    = count( $events );
 		$per_page = 50;
 		$offset   = ( $this->get_pagenum() - 1 ) * $per_page;

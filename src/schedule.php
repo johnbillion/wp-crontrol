@@ -2,6 +2,8 @@
 
 namespace Crontrol\Schedule;
 
+use function Crontrol\interval;
+
 /**
  * Adds a new custom cron schedule.
  *
@@ -9,7 +11,7 @@ namespace Crontrol\Schedule;
  * @param int    $interval The interval between executions of the new schedule.
  * @param string $display  The display name of the schedule.
  */
-function add_schedule( $name, $interval, $display ) {
+function add( $name, $interval, $display ) {
 	$old_scheds = get_option( 'crontrol_schedules', array() );
 	$old_scheds[ $name ] = array(
 		'interval' => $interval,
@@ -23,7 +25,7 @@ function add_schedule( $name, $interval, $display ) {
  *
  * @param string $name The internal_name of the schedule to delete.
  */
-function delete_schedule( $name ) {
+function delete( $name ) {
 	$scheds = get_option( 'crontrol_schedules', array() );
 	unset( $scheds[ $name ] );
 	update_option( 'crontrol_schedules', $scheds );
