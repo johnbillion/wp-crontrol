@@ -4,3 +4,4 @@
 
 /composer.lock
 /package-lock.json
+/tests/cache

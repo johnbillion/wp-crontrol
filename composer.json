@@ -20,5 +20,13 @@
 	},
 	"require": {
 		"composer/installers": "~1.0"
+	},
+	"scripts": {
+		"test:cs": [
+			"vendor/bin/phpcs -nps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs ."
+		],
+		"test": [
+			"@test:cs"
+		]
 	}
 }
