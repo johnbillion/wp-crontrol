@@ -39,6 +39,8 @@ use WP_Error;
 
 defined( 'ABSPATH' ) || die();
 
+require_once __DIR__ . '/src/event.php';
+
 /**
  * Hook onto all of the actions and filters needed by the plugin.
  */
@@ -89,7 +91,7 @@ function action_handle_posts() {
 		}
 		$in_args = json_decode( $in_args, true );
 		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
-		add_cron( $next_run, $in_schedule, $in_hookname, $in_args );
+		Event\add( $next_run, $in_schedule, $in_hookname, $in_args );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '5',
@@ -109,7 +111,7 @@ function action_handle_posts() {
 			'name' => $in_eventname,
 		);
 		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
-		add_cron( $next_run, $in_schedule, 'crontrol_cron_job', $args );
+		Event\add( $next_run, $in_schedule, 'crontrol_cron_job', $args );
 		$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
@@ -132,9 +134,9 @@ function action_handle_posts() {
 		}
 
 		$in_args = json_decode( $in_args, true );
-		delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
+		Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run );
 		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
-		add_cron( $next_run, $in_schedule, $in_hookname, $in_args );
+		Event\add( $next_run, $in_schedule, $in_hookname, $in_args );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '4',
@@ -156,9 +158,9 @@ function action_handle_posts() {
 			'code' => $in_hookcode,
 			'name' => $in_eventname,
 		);
-		delete_cron( $in_original_hookname, $in_original_sig, $in_original_next_run );
+		Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run );
 		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
-		add_cron( $next_run, $in_schedule, 'crontrol_cron_job', $args );
+		Event\add( $next_run, $in_schedule, 'crontrol_cron_job', $args );
 		$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
@@ -244,7 +246,7 @@ function action_handle_posts() {
 				if ( 'crontrol_cron_job' === $id && ! current_user_can( 'edit_files' ) ) {
 					continue;
 				}
-				if ( delete_cron( urldecode( $id ), $sig, $next_run ) ) {
+				if ( Event\delete( urldecode( $id ), $sig, $next_run ) ) {
 					$deleted++;
 				}
 			}
@@ -271,7 +273,7 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 
-		if ( delete_cron( $id, $sig, $next_run ) ) {
+		if ( Event\delete( $id, $sig, $next_run ) ) {
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '6',
@@ -297,7 +299,7 @@ function action_handle_posts() {
 		$id = wp_unslash( $_GET['id'] );
 		$sig = wp_unslash( $_GET['sig'] );
 		check_admin_referer( "run-cron_{$id}_{$sig}" );
-		if ( run_cron( $id, $sig ) ) {
+		if ( Event\run( $id, $sig ) ) {
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '1',
@@ -315,72 +317,6 @@ function action_handle_posts() {
 			exit;
 		}
 	}
-}
-
-/**
- * Executes a cron event immediately.
- *
- * Executes an event by scheduling a new single event with the same arguments.
- *
- * @param string $hookname The hook name of the cron event to run.
- * @param string $sig      The cron event signature.
- * @return bool Whether the execution was successful or not.
- */
-function run_cron( $hookname, $sig ) {
-	$crons = _get_cron_array();
-	foreach ( $crons as $time => $cron ) {
-		if ( isset( $cron[ $hookname ][ $sig ] ) ) {
-			$args = $cron[ $hookname ][ $sig ]['args'];
-			delete_transient( 'doing_cron' );
-			wp_schedule_single_event( time() - 1, $hookname, $args );
-			spawn_cron();
-			return true;
-		}
-	}
-	return false;
-}
-
-/**
- * Adds a new cron event.
- *
- * @param string $next_run A GMT time that the event should be run at.
- * @param string $schedule The recurrence of the cron event.
- * @param string $hookname The name of the hook to execute.
- * @param array  $args     Arguments to add to the cron event.
- */
-function add_cron( $next_run, $schedule, $hookname, $args ) {
-	$next_run = strtotime( $next_run );
-	if ( false === $next_run ) {
-		$next_run = time();
-	} else {
-		$next_run = get_gmt_from_date( date( 'Y-m-d H:i:s', $next_run ), 'U' );
-	}
-	if ( ! is_array( $args ) ) {
-		$args = array();
-	}
-	if ( '_oneoff' === $schedule ) {
-		return wp_schedule_single_event( $next_run, $hookname, $args ) === null;
-	} else {
-		return wp_schedule_event( $next_run, $schedule, $hookname, $args ) === null;
-	}
-}
-
-/**
- * Deletes a cron event.
- *
- * @param string $to_delete The hook name of the event to delete.
- * @param string $sig       The cron event signature.
- * @param string $next_run  The GMT time that the event would be run at.
- * @return bool Whether the deletion was successful or not.
- */
-function delete_cron( $to_delete, $sig, $next_run ) {
-	$crons = _get_cron_array();
-	if ( isset( $crons[ $next_run ][ $to_delete ][ $sig ] ) ) {
-		$args = $crons[ $next_run ][ $to_delete ][ $sig ]['args'];
-		wp_unschedule_event( $next_run, $to_delete, $args );
-		return true;
-	}
-	return false;
 }
 
 /**
@@ -461,7 +397,7 @@ function filter_cron_schedules( $scheds ) {
  */
 function admin_options_page() {
 	$schedules = get_schedules();
-	$events = get_cron_events();
+	$events = Events\get();
 	$custom_schedules = get_option( 'crontrol_schedules', array() );
 	$custom_keys = array_keys( $custom_schedules );
 
@@ -952,40 +888,6 @@ function show_cron_form( $is_php, $existing ) {
 		<?php } ?>
 	</div>
 	<?php
-}
-
-/**
- * Returns a flattened array of cron events.
- *
- * @return array[] An array of cron event arrays.
- */
-function get_cron_events() {
-	$crons  = _get_cron_array();
-	$events = array();
-
-	if ( empty( $crons ) ) {
-		return array();
-	}
-
-	foreach ( $crons as $time => $cron ) {
-		foreach ( $cron as $hook => $dings ) {
-			foreach ( $dings as $sig => $data ) {
-
-				// This is a prime candidate for a Crontrol_Event class but I'm not bothering currently.
-				$events[ "$hook-$sig-$time" ] = (object) array(
-					'hook'     => $hook,
-					'time'     => $time,
-					'sig'      => $sig,
-					'args'     => $data['args'],
-					'schedule' => $data['schedule'],
-					'interval' => isset( $data['interval'] ) ? $data['interval'] : null,
-				);
-
-			}
-		}
-	}
-
-	return $events;
 }
 
 /**
