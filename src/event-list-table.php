@@ -151,7 +151,7 @@ class Event_List_Table extends \WP_List_Table {
 	 * @param stdClass $event The cron event for the current row.
 	 */
 	protected function column_cb( $event ) {
-		if ( ! in_array( $event->hook, self::$core_hooks, true ) ) {
+		if ( ! in_array( $event->hook, self::$core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) ) {
 			?>
 			<label class="screen-reader-text" for="">
 				<?php printf( esc_html__( 'Select this row', 'wp-crontrol' ) ); ?>
