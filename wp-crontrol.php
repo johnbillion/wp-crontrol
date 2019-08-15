@@ -40,6 +40,7 @@ use WP_Error;
 defined( 'ABSPATH' ) || die();
 
 require_once __DIR__ . '/src/event.php';
+require_once __DIR__ . '/src/schedule.php';
 
 /**
  * Hook onto all of the actions and filters needed by the plugin.
@@ -204,7 +205,7 @@ function action_handle_posts() {
 			exit;
 		}
 
-		add_schedule( $name, $interval, $display );
+		Schedule\add( $name, $interval, $display );
 		$redirect = array(
 			'page'             => 'crontrol_admin_options_page',
 			'crontrol_message' => '3',
@@ -219,7 +220,7 @@ function action_handle_posts() {
 		}
 		$id = wp_unslash( $_GET['id'] );
 		check_admin_referer( "delete-sched_{$id}" );
-		delete_schedule( $id );
+		Schedule\delete( $id );
 		$redirect = array(
 			'page'             => 'crontrol_admin_options_page',
 			'crontrol_message' => '2',
@@ -317,33 +318,6 @@ function action_handle_posts() {
 			exit;
 		}
 	}
-}
-
-/**
- * Adds a new custom cron schedule.
- *
- * @param string $name     The internal name of the schedule.
- * @param int    $interval The interval between executions of the new schedule.
- * @param string $display  The display name of the schedule.
- */
-function add_schedule( $name, $interval, $display ) {
-	$old_scheds = get_option( 'crontrol_schedules', array() );
-	$old_scheds[ $name ] = array(
-		'interval' => $interval,
-		'display'  => $display,
-	);
-	update_option( 'crontrol_schedules', $old_scheds );
-}
-
-/**
- * Deletes a custom cron schedule.
- *
- * @param string $name The internal_name of the schedule to delete.
- */
-function delete_schedule( $name ) {
-	$scheds = get_option( 'crontrol_schedules', array() );
-	unset( $scheds[ $name ] );
-	update_option( 'crontrol_schedules', $scheds );
 }
 
 /**
