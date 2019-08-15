@@ -819,7 +819,7 @@ function show_cron_form( $is_php, $existing ) {
  * Displays the manage page for the plugin.
  */
 function admin_manage_page() {
-	require_once __DIR__ . '/event-list-table.php';
+	require_once __DIR__ . '/src/event-list-table.php';
 
 	$table = new Event_List_Table();
 
