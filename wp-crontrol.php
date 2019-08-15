@@ -1049,21 +1049,9 @@ function admin_manage_page() {
 
 	<form method="post" action="tools.php?page=crontrol_admin_manage_page">
 
+	<div class="table-responsive">
 	<?php $table->display(); ?>
 
-	<div class="table-responsive">
-	<table class="widefat striped table">
-	<thead>
-		<tr>
-			<td id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'wp-crontrol' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
-			<th scope="col"><?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?></th>
-			<th scope="col"><?php esc_html_e( 'Arguments', 'wp-crontrol' ); ?></th>
-			<th scope="col"><?php esc_html_e( 'Actions', 'wp-crontrol' ); ?></th>
-			<th scope="col"><?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?></th>
-			<th scope="col"><?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?></th>
-		</tr>
-	</thead>
-	<tbody>
 	<?php
 
 	if ( ! empty( $events ) ) {
@@ -1105,76 +1093,10 @@ function admin_manage_page() {
 			}
 			echo '</th>';
 
-			$links = array();
-
-			if ( ( 'crontrol_cron_job' !== $event->hook ) || $can_edit_files ) {
-				$link = array(
-					'page'     => 'crontrol_admin_manage_page',
-					'action'   => 'edit-cron',
-					'id'       => rawurlencode( $event->hook ),
-					'sig'      => rawurlencode( $event->sig ),
-					'next_run' => rawurlencode( $event->time ),
-				);
-				$link = add_query_arg( $link, admin_url( 'tools.php' ) ) . '#crontrol_form';
-				$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a>';
-			}
-
-			$link = array(
-				'page'     => 'crontrol_admin_manage_page',
-				'action'   => 'run-cron',
-				'id'       => rawurlencode( $event->hook ),
-				'sig'      => rawurlencode( $event->sig ),
-				'next_run' => rawurlencode( $event->time ),
-			);
-			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-			$link = wp_nonce_url( $link, "run-cron_{$event->hook}_{$event->sig}" );
-			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
-
-			if ( ! in_array( $event->hook, $core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || $can_edit_files ) ) {
-				$link = array(
-					'page'     => 'crontrol_admin_manage_page',
-					'action'   => 'delete-cron',
-					'id'       => rawurlencode( $event->hook ),
-					'sig'      => rawurlencode( $event->sig ),
-					'next_run' => rawurlencode( $event->time ),
-				);
-				$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-				$link = wp_nonce_url( $link, "delete-cron_{$event->hook}_{$event->sig}_{$event->time}" );
-				$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
-			}
-
 			if ( 'crontrol_cron_job' === $event->hook ) {
-				if ( ! empty( $event->args['name'] ) ) {
-					/* translators: 1: The name of the PHP cron event. */
-					echo '<td>';
-					echo '<em>' . esc_html( sprintf( __( 'PHP Cron (%s)', 'wp-crontrol' ), $event->args['name'] ) ) . '</em>';
-
-					echo '<div class="row-actions">';
-					echo implode( ' | ', $links ); // WPCS:: XSS ok.
-					echo '</div>';
-
-					echo '</td>';
-				} else {
-					echo '<td>';
-					echo '<em>' . esc_html__( 'PHP Cron', 'wp-crontrol' ) . '</em>';
-
-					echo '<div class="row-actions">';
-					echo implode( ' | ', $links ); // WPCS:: XSS ok.
-					echo '</div>';
-
-					echo '</td>';
-				}
 				echo '<td><em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em></td>';
 				echo '<td><em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em></td>';
 			} else {
-				echo '<td>';
-				echo esc_html( $event->hook );
-
-				echo '<div class="row-actions">';
-				echo implode( ' | ', $links ); // WPCS:: XSS ok.
-				echo '</div>';
-
-				echo '</td>';
 				echo '<td>';
 
 				if ( empty( $event->args ) ) {
@@ -1523,6 +1445,20 @@ function filter_removable_query_args( array $args ) {
 		'crontrol_message',
 		'crontrol_name',
 	) );
+}
+
+function get_core_hooks() {
+	return array(
+		'wp_version_check',
+		'wp_update_plugins',
+		'wp_update_themes',
+		'wp_scheduled_delete',
+		'wp_scheduled_auto_draft_delete',
+		'update_network_counts',
+		'delete_expired_transients',
+		'wp_privacy_delete_old_export_files',
+		'recovery_mode_clean_expired_keys',
+	);
 }
 
 // Get this show on the road.
