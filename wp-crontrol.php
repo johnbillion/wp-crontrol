@@ -1056,7 +1056,6 @@ function admin_manage_page() {
 
 	if ( ! empty( $events ) ) {
 		foreach ( $events as $id => $event ) {
-
 			if ( $doing_edit && $doing_edit == $event->hook && $event->time == $_GET['next_run'] && $event->sig == $_GET['sig'] ) {
 				$doing_edit = array(
 					'hookname' => $event->hook,
@@ -1066,24 +1065,9 @@ function admin_manage_page() {
 					'args'     => $event->args,
 				);
 			}
-
-			echo '<tr>';
-
-			echo '<th scope="row" class="check-column">';
-			if ( ! in_array( $event->hook, $core_hooks, true ) ) {
-				printf(
-					'<input type="checkbox" name="delete[%1$s][%2$s]" value="%3$s">',
-					esc_attr( $event->time ),
-					esc_attr( rawurlencode( $event->hook ) ),
-					esc_attr( $event->sig )
-				);
-			}
-			echo '</th>';
-
-			echo '</tr>';
-
 		}
 	}
+
 	?>
 	</tbody>
 	</table>

@@ -103,6 +103,23 @@ class Event_List_Table extends \WP_List_Table {
 		return $this->row_actions( $links );
 	}
 
+	protected function column_cb( $event ) {
+		if ( ! in_array( $event->hook, self::$core_hooks, true ) ) {
+			?>
+			<label class="screen-reader-text" for="">
+				<?php printf( esc_html__( 'Select this row', 'wp-crontrol' ) ); ?>
+			</label>
+			<?php printf(
+				'<input type="checkbox" name="delete[%1$s][%2$s]" value="%3$s" id="">',
+				esc_attr( $event->time ),
+				esc_attr( rawurlencode( $event->hook ) ),
+				esc_attr( $event->sig )
+			);
+			?>
+			<?php
+		}
+	}
+
 	protected function column_hook( $event ) {
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			if ( ! empty( $event->args['name'] ) ) {
