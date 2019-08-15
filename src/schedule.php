@@ -38,20 +38,10 @@ function delete( $name ) {
  */
 function get() {
 	$schedules = wp_get_schedules();
-	uasort( $schedules, __NAMESPACE__ . '\sort' );
+	uasort( $schedules, function( array $a, array $b ) {
+		return ( $a['interval'] - $b['interval'] );
+	} );
 	return $schedules;
-}
-
-/**
- * Internal sorting comparison callback function. Compares schedules by their interval.
- *
- * @param array $a The first schedule to compare for sorting.
- * @param array $b The second schedule to compare for sorting.
- * @return int An integer less than, equal to, or greater than zero if the first argument is considered to be
- *             respectively less than, equal to, or greater than the second.
- */
-function sort( $a, $b ) {
-	return ( $a['interval'] - $b['interval'] );
 }
 
 /**
