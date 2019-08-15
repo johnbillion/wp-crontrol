@@ -370,8 +370,8 @@ function filter_cron_schedules( $scheds ) {
  * Displays the options page for the plugin.
  */
 function admin_options_page() {
-	$schedules = get_schedules();
-	$events = Events\get();
+	$schedules = Schedule\get();
+	$events = Event\get();
 	$custom_schedules = get_option( 'crontrol_schedules', array() );
 	$custom_keys = array_keys( $custom_schedules );
 
@@ -493,54 +493,6 @@ function admin_options_page() {
 			<?php wp_nonce_field( 'new-sched' ); ?>
 		</form>
 	</div>
-	<?php
-}
-
-/**
- * Gets a sorted (according to interval) list of the cron schedules
- *
- * @return array[] Array of cron schedule arrays.
- */
-function get_schedules() {
-	$schedules = wp_get_schedules();
-	uasort( $schedules, __NAMESPACE__ . '\sort_schedules' );
-	return $schedules;
-}
-
-/**
- * Internal sorting comparison callback function. Compares schedules by their interval.
- *
- * @param array $a The first schedule to compare for sorting.
- * @param array $b The second schedule to compare for sorting.
- * @return int An integer less than, equal to, or greater than zero if the first argument is considered to be
- *             respectively less than, equal to, or greater than the second.
- */
-function sort_schedules( $a, $b ) {
-	return ( $a['interval'] - $b['interval'] );
-}
-
-/**
- * Displays a dropdown filled with the possible schedules, including non-repeating.
- *
- * @param bool $current The currently selected schedule.
- */
-function schedules_dropdown( $current = false ) {
-	$schedules = get_schedules();
-	?>
-	<select class="postform" name="schedule" id="schedule" required>
-	<option <?php selected( $current, '_oneoff' ); ?> value="_oneoff"><?php esc_html_e( 'Non-repeating', 'wp-crontrol' ); ?></option>
-	<?php foreach ( $schedules as $sched_name => $sched_data ) { ?>
-		<option <?php selected( $current, $sched_name ); ?> value="<?php echo esc_attr( $sched_name ); ?>">
-			<?php
-			printf(
-				'%s (%s)',
-				esc_html( $sched_data['display'] ),
-				esc_html( interval( $sched_data['interval'] ) )
-			);
-			?>
-		</option>
-	<?php } ?>
-	</select>
 	<?php
 }
 
@@ -840,7 +792,7 @@ function show_cron_form( $is_php, $existing ) {
 				</tr><tr>
 					<th valign="top" scope="row"><label for="schedule"><?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?></label></th>
 					<td>
-						<?php schedules_dropdown( $existing['schedule'] ); ?>
+						<?php Schedule\dropdown( $existing['schedule'] ); ?>
 						<p class="description">
 							<?php
 							printf(
@@ -1160,26 +1112,6 @@ function interval( $since ) {
 	}
 
 	return $output;
-}
-
-/**
- * Returns the schedule display name for a given event.
- *
- * @param stdClass $event A WP-Cron event.
- * @return string|WP_Error The interval display name, or a WP_Error object if no such schedule exists.
- */
-function get_schedule_name( stdClass $event ) {
-	$schedules = get_schedules();
-
-	if ( isset( $schedules[ $event->schedule ] ) ) {
-		return $schedules[ $event->schedule ]['display'];
-	}
-
-	return new WP_Error( 'unknown_schedule', sprintf(
-		/* translators: %s: Schedule name */
-		__( 'Unknown (%s)', 'wp-crontrol' ),
-		$event->schedule
-	) );
 }
 
 /**
