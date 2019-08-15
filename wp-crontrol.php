@@ -427,11 +427,22 @@ function admin_options_page() {
 				'<td>%s</td>',
 				esc_html( $name )
 			);
-			printf(
-				'<td>%s (%s)</td>',
-				esc_html( $data['interval'] ),
-				esc_html( interval( $data['interval'] ) )
-			);
+
+			if ( $data['interval'] < 600 ) {
+				printf(
+					'<td>%s (%s)<br><span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span>%s</span></td>',
+					esc_html( $data['interval'] ),
+					esc_html( interval( $data['interval'] ) ),
+					esc_html__( 'An interval of less than 10 minutes may be unreliable.', 'wp-crontrol' )
+				);
+			} else {
+				printf(
+					'<td>%s (%s)</td>',
+					esc_html( $data['interval'] ),
+					esc_html( interval( $data['interval'] ) )
+				);
+			}
+
 			printf(
 				'<td>%s</td>',
 				esc_html( $data['display'] )
