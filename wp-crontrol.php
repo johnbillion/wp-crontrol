@@ -1067,19 +1067,6 @@ function admin_manage_page() {
 				);
 			}
 
-			if ( ! empty( $event->args ) ) {
-				$json_options = 0;
-
-				if ( defined( 'JSON_UNESCAPED_SLASHES' ) ) {
-					$json_options |= JSON_UNESCAPED_SLASHES;
-				}
-				if ( defined( 'JSON_PRETTY_PRINT' ) ) {
-					$json_options |= JSON_PRETTY_PRINT;
-				}
-
-				$args = wp_json_encode( $event->args, $json_options );
-			}
-
 			echo '<tr>';
 
 			echo '<th scope="row" class="check-column">';
@@ -1094,24 +1081,8 @@ function admin_manage_page() {
 			echo '</th>';
 
 			if ( 'crontrol_cron_job' === $event->hook ) {
-				echo '<td><em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em></td>';
 				echo '<td><em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em></td>';
 			} else {
-				echo '<td>';
-
-				if ( empty( $event->args ) ) {
-					printf(
-						'<em>%s</em>',
-						esc_html__( 'None', 'wp-crontrol' )
-					);
-				} else {
-					printf(
-						'<pre style="white-space:pre-wrap;margin-top:0">%s</pre>',
-						esc_html( $args )
-					);
-				}
-
-				echo '</td>';
 				echo '<td>';
 				$callbacks = array();
 

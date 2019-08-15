@@ -116,6 +116,37 @@ class Event_List_Table extends \WP_List_Table {
 		}
 	}
 
+	protected function column_args( $event ) {
+		if ( ! empty( $event->args ) ) {
+			$json_options = 0;
+
+			if ( defined( 'JSON_UNESCAPED_SLASHES' ) ) {
+				$json_options |= JSON_UNESCAPED_SLASHES;
+			}
+			if ( defined( 'JSON_PRETTY_PRINT' ) ) {
+				$json_options |= JSON_PRETTY_PRINT;
+			}
+
+			$args = wp_json_encode( $event->args, $json_options );
+		}
+
+		if ( 'crontrol_cron_job' === $event->hook ) {
+			return '<em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em>';
+		} else {
+			if ( empty( $event->args ) ) {
+				return sprintf(
+					'<em>%s</em>',
+					esc_html__( 'None', 'wp-crontrol' )
+				);
+			} else {
+				return sprintf(
+					'<pre style="white-space:pre-wrap;margin-top:0">%s</pre>',
+					esc_html( $args )
+				);
+			}
+		}
+	}
+
 	public function no_items() {
 		esc_html_e( 'There are currently no scheduled cron events.', 'wp-crontrol' );
 	}
