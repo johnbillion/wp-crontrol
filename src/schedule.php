@@ -18,6 +18,7 @@ use function Crontrol\interval;
  */
 function add( $name, $interval, $display ) {
 	$old_scheds = get_option( 'crontrol_schedules', array() );
+
 	$old_scheds[ $name ] = array(
 		'interval' => $interval,
 		'display'  => $display,

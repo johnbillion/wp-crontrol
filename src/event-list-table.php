@@ -7,6 +7,8 @@
 
 namespace Crontrol;
 
+use stdClass;
+
 require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 
 /**
@@ -110,6 +112,7 @@ class Event_List_Table extends \WP_List_Table {
 				'next_run' => rawurlencode( $event->time ),
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) ) . '#crontrol_form';
+
 			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a>';
 		}
 
@@ -122,6 +125,7 @@ class Event_List_Table extends \WP_List_Table {
 		);
 		$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 		$link = wp_nonce_url( $link, "run-cron_{$event->hook}_{$event->sig}" );
+
 		$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
 
 		if ( ! in_array( $event->hook, self::$core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) ) {
@@ -134,6 +138,7 @@ class Event_List_Table extends \WP_List_Table {
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 			$link = wp_nonce_url( $link, "delete-cron_{$event->hook}_{$event->sig}_{$event->time}" );
+
 			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
 		}
 
@@ -151,12 +156,13 @@ class Event_List_Table extends \WP_List_Table {
 			<label class="screen-reader-text" for="">
 				<?php printf( esc_html__( 'Select this row', 'wp-crontrol' ) ); ?>
 			</label>
-			<?php printf(
-				'<input type="checkbox" name="delete[%1$s][%2$s]" value="%3$s" id="">',
-				esc_attr( $event->time ),
-				esc_attr( rawurlencode( $event->hook ) ),
-				esc_attr( $event->sig )
-			);
+			<?php
+				printf(
+					'<input type="checkbox" name="delete[%1$s][%2$s]" value="%3$s" id="">',
+					esc_attr( $event->time ),
+					esc_attr( rawurlencode( $event->hook ) ),
+					esc_attr( $event->sig )
+				);
 			?>
 			<?php
 		}

@@ -42,7 +42,7 @@ function run( $hookname, $sig ) {
  * @param array  $args     Arguments to add to the cron event.
  * @return bool Whether the additon was successful.
  */
-function add( $next_run, $schedule, $hookname, $args ) {
+function add( $next_run, $schedule, $hookname, array $args ) {
 	$next_run = strtotime( $next_run );
 	if ( false === $next_run ) {
 		$next_run = time();
