@@ -1152,7 +1152,9 @@ function enqueue_styles( $id ) {
 		return;
 	}
 
-	wp_enqueue_style( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'css/wp-crontrol.css', array(), '', 'all' );
+	$ver = filemtime( plugin_dir_path( __FILE__ ) . 'css/wp-crontrol.css' );
+
+	wp_enqueue_style( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'css/wp-crontrol.css', array(), $ver );
 }
 
 /**
@@ -1170,6 +1172,11 @@ function filter_removable_query_args( array $args ) {
 	) );
 }
 
+/**
+ * Returns an array of cron event hooks that are added by WordPress core.
+ *
+ * @return string[] Array of hook names.
+ */
 function get_core_hooks() {
 	return array(
 		'wp_version_check',
