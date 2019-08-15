@@ -40,12 +40,12 @@ class Event_List_Table extends \WP_List_Table {
 
 	public function get_columns() {
 		return array(
-			'cb'         => '<input type="checkbox" />',
-			'hook'       => __( 'Hook Name', 'wp-crontrol' ),
-			'args'       => __( 'Arguments', 'wp-crontrol' ),
-			'actions'    => __( 'Actions', 'wp-crontrol' ),
-			'next'       => __( 'Next Run', 'wp-crontrol' ),
-			'recurrence' => __( 'Recurrence', 'wp-crontrol' ),
+			'cb'                  => '<input type="checkbox" />',
+			'crontrol_hook'       => __( 'Hook Name', 'wp-crontrol' ),
+			'crontrol_args'       => __( 'Arguments', 'wp-crontrol' ),
+			'crontrol_actions'    => __( 'Actions', 'wp-crontrol' ),
+			'crontrol_next'       => __( 'Next Run', 'wp-crontrol' ),
+			'crontrol_recurrence' => __( 'Recurrence', 'wp-crontrol' ),
 		);
 	}
 
@@ -120,7 +120,7 @@ class Event_List_Table extends \WP_List_Table {
 		}
 	}
 
-	protected function column_hook( $event ) {
+	protected function column_crontrol_hook( $event ) {
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			if ( ! empty( $event->args['name'] ) ) {
 				/* translators: 1: The name of the PHP cron event. */
@@ -133,7 +133,7 @@ class Event_List_Table extends \WP_List_Table {
 		}
 	}
 
-	protected function column_args( $event ) {
+	protected function column_crontrol_args( $event ) {
 		if ( ! empty( $event->args ) ) {
 			$json_options = 0;
 
@@ -164,7 +164,7 @@ class Event_List_Table extends \WP_List_Table {
 		}
 	}
 
-	protected function column_actions( $event ) {
+	protected function column_crontrol_actions( $event ) {
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			return '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
 		} else {
@@ -178,7 +178,7 @@ class Event_List_Table extends \WP_List_Table {
 		}
 	}
 
-	protected function column_next( $event ) {
+	protected function column_crontrol_next( $event ) {
 		return sprintf(
 			'%s (%s)',
 			esc_html( get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), 'Y-m-d H:i:s' ) ),
@@ -186,7 +186,7 @@ class Event_List_Table extends \WP_List_Table {
 		);
 	}
 
-	protected function column_recurrence( $event ) {
+	protected function column_crontrol_recurrence( $event ) {
 		if ( $event->schedule ) {
 			$schedule_name = get_schedule_name( $event );
 			if ( is_wp_error( $schedule_name ) ) {
