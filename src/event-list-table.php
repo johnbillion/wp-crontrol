@@ -9,6 +9,8 @@ namespace Crontrol;
 
 use stdClass;
 
+use function Crontrol\get_core_hooks;
+
 require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 
 /**
@@ -182,9 +184,18 @@ class Event_List_Table extends \WP_List_Table {
 			} else {
 				return '<em>' . esc_html__( 'PHP Cron', 'wp-crontrol' ) . '</em>';
 			}
-		} else {
-			return esc_html( $event->hook );
 		}
+
+		$return = esc_html( $event->hook );
+
+		if ( in_array( $event->hook, get_core_hooks(), true ) ) {
+			$return .= sprintf(
+				'<br><em>(%s)</em>',
+				esc_html__( 'WordPress core hook', 'wp-crontrol' )
+			);
+		}
+
+		return $return;
 	}
 
 	/**
