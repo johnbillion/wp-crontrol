@@ -24,7 +24,7 @@
 	},
 	"scripts": {
 		"test:cs": [
-			"vendor/bin/phpcs -nps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs ."
+			"vendor/bin/phpcs -ps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs ."
 		],
 		"test": [
 			"@test:cs"

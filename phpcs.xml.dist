@@ -17,6 +17,7 @@
 
 		<!-- False positives: -->
 		<exclude name="WordPress.Security.NonceVerification.Recommended" />
+		<exclude name="WordPress.WP.CronInterval.ChangeDetected" />
 
 		<!-- I'll fix this eventually: -->
 		<exclude name="WordPress.PHP.DontExtract.extract_extract" />

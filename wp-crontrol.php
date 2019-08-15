@@ -89,7 +89,7 @@ function action_handle_posts() {
 		if ( 'crontrol_cron_job' === $in_hookname && ! current_user_can( 'edit_files' ) ) {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
 		}
-		$in_args = json_decode( $in_args, true );
+		$in_args  = json_decode( $in_args, true );
 		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
 		Event\add( $next_run, $in_schedule, $in_hookname, $in_args );
 		$redirect = array(
@@ -106,11 +106,11 @@ function action_handle_posts() {
 		}
 		check_admin_referer( 'new-cron' );
 		extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
-		$args = array(
+		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
+		$args     = array(
 			'code' => $in_hookcode,
 			'name' => $in_eventname,
 		);
-		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
 		Event\add( $next_run, $in_schedule, 'crontrol_cron_job', $args );
 		$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
@@ -152,8 +152,6 @@ function action_handle_posts() {
 
 		extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
 		check_admin_referer( "edit-cron_{$in_original_hookname}_{$in_original_sig}_{$in_original_next_run}" );
-		$args['code'] = $in_hookcode;
-		$args['name'] = $in_eventname;
 		$args = array(
 			'code' => $in_hookcode,
 			'name' => $in_eventname,
@@ -175,16 +173,16 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to add new cron schedules.', 'wp-crontrol' ), 401 );
 		}
 		check_admin_referer( 'new-sched' );
-		$name = wp_unslash( $_POST['internal_name'] );
+		$name     = wp_unslash( $_POST['internal_name'] );
 		$interval = wp_unslash( $_POST['interval'] );
-		$display = wp_unslash( $_POST['display_name'] );
+		$display  = wp_unslash( $_POST['display_name'] );
 
 		// The user entered something that wasn't a number.
 		// Try to convert it with strtotime.
 		if ( ! is_numeric( $interval ) ) {
-			$now = time();
+			$now    = time();
 			$future = strtotime( $interval, $now );
-			if ( false === $future || -1 == $future || $now > $future ) {
+			if ( false === $future || $now > $future ) {
 				$redirect = array(
 					'page'             => 'crontrol_admin_options_page',
 					'crontrol_message' => '7',
@@ -213,7 +211,7 @@ function action_handle_posts() {
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 		exit;
 
-	} elseif ( isset( $_GET['action'] ) && 'delete-sched' == $_GET['action'] ) {
+	} elseif ( isset( $_GET['action'] ) && 'delete-sched' === $_GET['action'] ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete cron schedules.', 'wp-crontrol' ), 401 );
 		}
@@ -260,12 +258,12 @@ function action_handle_posts() {
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 
-	} elseif ( isset( $_GET['action'] ) && 'delete-cron' == $_GET['action'] ) {
+	} elseif ( isset( $_GET['action'] ) && 'delete-cron' === $_GET['action'] ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
 		}
-		$id = wp_unslash( $_GET['id'] );
-		$sig = wp_unslash( $_GET['sig'] );
+		$id       = wp_unslash( $_GET['id'] );
+		$sig      = wp_unslash( $_GET['sig'] );
 		$next_run = intval( $_GET['next_run'] );
 		check_admin_referer( "delete-cron_{$id}_{$sig}_{$next_run}" );
 
@@ -292,11 +290,11 @@ function action_handle_posts() {
 
 		};
 
-	} elseif ( isset( $_GET['action'] ) && 'run-cron' == $_GET['action'] ) {
+	} elseif ( isset( $_GET['action'] ) && 'run-cron' === $_GET['action'] ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 401 );
 		}
-		$id = wp_unslash( $_GET['id'] );
+		$id  = wp_unslash( $_GET['id'] );
 		$sig = wp_unslash( $_GET['sig'] );
 		check_admin_referer( "run-cron_{$id}_{$sig}" );
 		if ( Event\run( $id, $sig ) ) {
@@ -339,7 +337,7 @@ function action_admin_menu() {
  * @return string[] Array of action links.
  */
 function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
-	$actions['crontrol-events'] = sprintf(
+	$actions['crontrol-events']    = sprintf(
 		'<a href="%s">%s</a>',
 		esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ),
 		esc_html__( 'Cron Events', 'wp-crontrol' )
@@ -349,6 +347,7 @@ function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
 		esc_url( admin_url( 'options-general.php?page=crontrol_admin_options_page' ) ),
 		esc_html__( 'Cron Schedules', 'wp-crontrol' )
 	);
+
 	return $actions;
 }
 
@@ -369,10 +368,10 @@ function filter_cron_schedules( $scheds ) {
  * Displays the options page for the plugin.
  */
 function admin_options_page() {
-	$schedules = Schedule\get();
-	$events = Event\get();
+	$schedules        = Schedule\get();
+	$events           = Event\get();
 	$custom_schedules = get_option( 'crontrol_schedules', array() );
-	$custom_keys = array_keys( $custom_schedules );
+	$custom_keys      = array_keys( $custom_schedules );
 
 	$used_schedules = array_unique( wp_list_pluck( $events, 'schedule' ) );
 
@@ -385,11 +384,18 @@ function admin_options_page() {
 		'7' => __( 'Cron schedule not added because there was a problem parsing %s.', 'wp-crontrol' ),
 	);
 	if ( isset( $_GET['crontrol_message'] ) && isset( $_GET['crontrol_name'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
-		$hook = wp_unslash( $_GET['crontrol_name'] );
+		$hook    = wp_unslash( $_GET['crontrol_name'] );
 		$message = wp_unslash( $_GET['crontrol_message'] );
-		$msg  = sprintf( esc_html( $messages[ $message ] ), '<strong>' . esc_html( $hook ) . '</strong>' );
+		$msg     = sprintf(
+			esc_html( $messages[ $message ] ),
+			'<strong>' . esc_html( $hook ) . '</strong>'
+		);
 
-		printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg ); // WPCS:: XSS ok.
+		printf(
+			'<div id="message" class="updated notice is-dismissible"><p>%s</p></div>',
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$msg
+		);
 	}
 
 	?>
@@ -612,7 +618,7 @@ function get_timezone_name() {
  * @param mixed $existing An array of existing values for the cron event, or null.
  */
 function show_cron_form( $is_php, $existing ) {
-	$new_tabs = array(
+	$new_tabs    = array(
 		'cron'     => __( 'Add Cron Event', 'wp-crontrol' ),
 		'php-cron' => __( 'Add PHP Cron Event', 'wp-crontrol' ),
 	);
@@ -620,10 +626,11 @@ function show_cron_form( $is_php, $existing ) {
 		'cron'     => __( 'Edit Cron Event', 'wp-crontrol' ),
 		'php-cron' => __( 'Edit PHP Cron Event', 'wp-crontrol' ),
 	);
-	$new_links = array(
+	$new_links   = array(
 		'cron'     => admin_url( 'tools.php?page=crontrol_admin_manage_page&action=new-cron' ) . '#crontrol_form',
 		'php-cron' => admin_url( 'tools.php?page=crontrol_admin_manage_page&action=new-php-cron' ) . '#crontrol_form',
 	);
+
 	$display_args = '';
 
 	if ( $is_php ) {
@@ -650,20 +657,21 @@ function show_cron_form( $is_php, $existing ) {
 		if ( ! empty( $existing['args'] ) ) {
 			$display_args = wp_json_encode( $existing['args'] );
 		}
-		$action = $is_php ? 'edit_php_cron' : 'edit_cron';
-		$button = $is_php ? $modify_tabs['php-cron'] : $modify_tabs['cron'];
+		$action        = $is_php ? 'edit_php_cron' : 'edit_cron';
+		$button        = $is_php ? $modify_tabs['php-cron'] : $modify_tabs['cron'];
 		$show_edit_tab = true;
 		$next_run_date = get_date_from_gmt( date( 'Y-m-d H:i:s', $existing['next_run'] ), 'Y-m-d H:i:s' );
 	} else {
 		$other_fields = wp_nonce_field( 'new-cron', '_wpnonce', true, false );
-		$existing = array(
+		$existing     = array(
 			'hookname' => '',
 			'args'     => array(),
 			'next_run' => 'now',
 			'schedule' => false,
 		);
-		$action = $is_php ? 'new_php_cron' : 'new_cron';
-		$button = $is_php ? $new_tabs['php-cron'] : $new_tabs['cron'];
+
+		$action        = $is_php ? 'new_php_cron' : 'new_cron';
+		$button        = $is_php ? $new_tabs['php-cron'] : $new_tabs['cron'];
 		$show_edit_tab = false;
 		$next_run_date = '';
 	}
@@ -687,10 +695,19 @@ function show_cron_form( $is_php, $existing ) {
 				<span class="nav-tab nav-tab-active"><?php echo esc_html( $button ); ?></span>
 			<?php } ?>
 		</h2>
-		<?php if ( $allowed ) { ?>
-		<p><?php echo $helper_text; // WPCS:: XSS ok. ?></p>
+		<?php
+		if ( $allowed ) {
+			printf(
+				'<p>%s</p>',
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				$helper_text
+			);
+			?>
 		<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ); ?>">
-			<?php echo $other_fields; // WPCS:: XSS ok. ?>
+			<?php
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $other_fields;
+			?>
 			<table class="form-table"><tbody>
 				<?php if ( $is_php ) : ?>
 					<tr>
@@ -842,11 +859,12 @@ function admin_manage_page() {
 	);
 
 	if ( isset( $_GET['crontrol_name'] ) && isset( $_GET['crontrol_message'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
-		$hook = wp_unslash( $_GET['crontrol_name'] );
+		$hook    = wp_unslash( $_GET['crontrol_name'] );
 		$message = wp_unslash( $_GET['crontrol_message'] );
-		$msg = sprintf( esc_html( $messages[ $message ] ), '<strong>' . esc_html( $hook ) . '</strong>' );
+		$msg     = sprintf( esc_html( $messages[ $message ] ), '<strong>' . esc_html( $hook ) . '</strong>' );
 
-		printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg ); // WPCS:: XSS ok.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg );
 	}
 
 	$events         = $table->items;
@@ -883,7 +901,7 @@ function admin_manage_page() {
 
 	if ( ! empty( $events ) ) {
 		foreach ( $events as $id => $event ) {
-			if ( $doing_edit && $doing_edit == $event->hook && $event->time == $_GET['next_run'] && $event->sig == $_GET['sig'] ) {
+			if ( $doing_edit && $doing_edit === $event->hook && intval( $_GET['next_run'] ) === $event->time && $event->sig === $_GET['sig'] ) {
 				$doing_edit = array(
 					'hookname' => $event->hook,
 					'next_run' => $event->time,
@@ -928,7 +946,7 @@ function admin_manage_page() {
 	<?php
 
 	if ( is_array( $doing_edit ) ) {
-		show_cron_form( 'crontrol_cron_job' == $doing_edit['hookname'], $doing_edit );
+		show_cron_form( 'crontrol_cron_job' === $doing_edit['hookname'], $doing_edit );
 	} else {
 		show_cron_form( ( isset( $_GET['action'] ) && 'new-php-cron' === $_GET['action'] ), false );
 	}
@@ -995,6 +1013,7 @@ function populate_callback( array $callback ) {
 			$callback['name'] = 'Closure';
 		} else {
 			$class = get_class( $callback['function'] );
+
 			$callback['name'] = $class . '->__invoke()';
 		}
 	} else {
@@ -1087,7 +1106,7 @@ function interval( $since ) {
 	// Step one: the first chunk.
 	for ( $i = 0; $i < $j; $i++ ) {
 		$seconds = $chunks[ $i ][0];
-		$name = $chunks[ $i ][1];
+		$name    = $chunks[ $i ][1];
 
 		// Finding the biggest chunk (if the chunk fits, break).
 		$count = floor( $since / $seconds );
@@ -1102,8 +1121,8 @@ function interval( $since ) {
 	// Step two: the second chunk.
 	if ( $i + 1 < $j ) {
 		$seconds2 = $chunks[ $i + 1 ][0];
-		$name2 = $chunks[ $i + 1 ][1];
-		$count2 = floor( ( $since - ( $seconds * $count ) ) / $seconds2 );
+		$name2    = $chunks[ $i + 1 ][1];
+		$count2   = floor( ( $since - ( $seconds * $count ) ) / $seconds2 );
 		if ( $count2 ) {
 			// Add to output var.
 			$output .= ' ' . sprintf( translate_nooped_plural( $name2, $count2, 'wp-crontrol' ), $count2 );
