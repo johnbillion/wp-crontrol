@@ -190,7 +190,7 @@ class Event_List_Table extends \WP_List_Table {
 
 	protected function column_crontrol_recurrence( $event ) {
 		if ( $event->schedule ) {
-			$schedule_name = get_schedule_name( $event );
+			$schedule_name = Event\get_schedule_name( $event );
 			if ( is_wp_error( $schedule_name ) ) {
 				return sprintf(
 					'<span class="dashicons dashicons-warning" style="color:#c00" aria-hidden="true"></span> %s',

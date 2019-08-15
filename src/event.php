@@ -102,3 +102,23 @@ function get() {
 
 	return $events;
 }
+
+/**
+ * Returns the schedule display name for a given event.
+ *
+ * @param stdClass $event A WP-Cron event.
+ * @return string|WP_Error The interval display name, or a WP_Error object if no such schedule exists.
+ */
+function get_schedule_name( stdClass $event ) {
+	$schedules = Schedule\get();
+
+	if ( isset( $schedules[ $event->schedule ] ) ) {
+		return $schedules[ $event->schedule ]['display'];
+	}
+
+	return new WP_Error( 'unknown_schedule', sprintf(
+		/* translators: %s: Schedule name */
+		__( 'Unknown (%s)', 'wp-crontrol' ),
+		$event->schedule
+	) );
+}
