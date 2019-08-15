@@ -1,14 +1,36 @@
 <?php
+/**
+ * List table for cron events.
+ *
+ * @package WP Crontrol
+ */
 
 namespace Crontrol;
 
 require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 
+/**
+ * Cron event list table class.
+ */
 class Event_List_Table extends \WP_List_Table {
 
+	/**
+	 * Array of cron event hooks that are added by WordPress core.
+	 *
+	 * @var string[] Array of hook names.
+	 */
 	protected static $core_hooks;
+
+	/**
+	 * Whether the current user has the capability to edit files.
+	 *
+	 * @var bool Whether the user can edit files.
+	 */
 	protected static $can_edit_files;
 
+	/**
+	 * Constructor.
+	 */
 	public function __construct() {
 		parent::__construct( [
 			'singular' => 'crontrol-event',
@@ -21,6 +43,9 @@ class Event_List_Table extends \WP_List_Table {
 		self::$can_edit_files = current_user_can( 'edit_files' );
 	}
 
+	/**
+	 * Prepares the list table items and arguments.
+	 */
 	public function prepare_items() {
 		$events   = Event\get();
 		$count    = count( $events );
@@ -36,6 +61,11 @@ class Event_List_Table extends \WP_List_Table {
 		) );
 	}
 
+	/**
+	 * Returns an array of column names for the table.
+	 *
+	 * @return string[] Array of column names keyed by their ID.
+	 */
 	public function get_columns() {
 		return array(
 			'cb'                  => '<input type="checkbox" />',
@@ -47,16 +77,21 @@ class Event_List_Table extends \WP_List_Table {
 		);
 	}
 
+	/**
+	 * Returns an array of CSS class names for the table.
+	 *
+	 * @return string[] Array of class names.
+	 */
 	protected function get_table_classes() {
 		return array( 'widefat', 'striped', $this->_args['plural'] );
 	}
 
 	/**
-	 * Generates and display row actions links for the list table.
+	 * Generates and displays row action links for the table.
 	 *
-	 * @param object $event        The event being acted upon.
-	 * @param string $column_name Current column name.
-	 * @param string $primary     Primary column name.
+	 * @param stdClass $event       The cron event for the current row.
+	 * @param string   $column_name Current column name.
+	 * @param string   $primary     Primary column name.
 	 * @return string The row actions HTML.
 	 */
 	protected function handle_row_actions( $event, $column_name, $primary ) {
@@ -105,6 +140,11 @@ class Event_List_Table extends \WP_List_Table {
 		return $this->row_actions( $links );
 	}
 
+	/**
+	 * Outputs the checkbox cell of a table row.
+	 *
+	 * @param stdClass $event The cron event for the current row.
+	 */
 	protected function column_cb( $event ) {
 		if ( ! in_array( $event->hook, self::$core_hooks, true ) ) {
 			?>
@@ -122,6 +162,12 @@ class Event_List_Table extends \WP_List_Table {
 		}
 	}
 
+	/**
+	 * Returns the output for the hook name cell of a table row.
+	 *
+	 * @param stdClass $event The cron event for the current row.
+	 * @return string The cell output.
+	 */
 	protected function column_crontrol_hook( $event ) {
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			if ( ! empty( $event->args['name'] ) ) {
@@ -135,6 +181,12 @@ class Event_List_Table extends \WP_List_Table {
 		}
 	}
 
+	/**
+	 * Returns the output for the arguments cell of a table row.
+	 *
+	 * @param stdClass $event The cron event for the current row.
+	 * @return string The cell output.
+	 */
 	protected function column_crontrol_args( $event ) {
 		if ( ! empty( $event->args ) ) {
 			$json_options = 0;
@@ -166,6 +218,12 @@ class Event_List_Table extends \WP_List_Table {
 		}
 	}
 
+	/**
+	 * Returns the output for the actions cell of a table row.
+	 *
+	 * @param stdClass $event The cron event for the current row.
+	 * @return string The cell output.
+	 */
 	protected function column_crontrol_actions( $event ) {
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			return '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
@@ -180,6 +238,12 @@ class Event_List_Table extends \WP_List_Table {
 		}
 	}
 
+	/**
+	 * Returns the output for the next run cell of a table row.
+	 *
+	 * @param stdClass $event The cron event for the current row.
+	 * @return string The cell output.
+	 */
 	protected function column_crontrol_next( $event ) {
 		return sprintf(
 			'%s (%s)',
@@ -188,6 +252,12 @@ class Event_List_Table extends \WP_List_Table {
 		);
 	}
 
+	/**
+	 * Returns the output for the recurrence cell of a table row.
+	 *
+	 * @param stdClass $event The cron event for the current row.
+	 * @return string The cell output.
+	 */
 	protected function column_crontrol_recurrence( $event ) {
 		if ( $event->schedule ) {
 			$schedule_name = Event\get_schedule_name( $event );
@@ -204,6 +274,9 @@ class Event_List_Table extends \WP_List_Table {
 		}
 	}
 
+	/**
+	 * Outputs a message when there are no items to show in the table.
+	 */
 	public function no_items() {
 		esc_html_e( 'There are currently no scheduled cron events.', 'wp-crontrol' );
 	}

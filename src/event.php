@@ -1,4 +1,9 @@
 <?php
+/**
+ * Functions related to cron events.
+ *
+ * @package WP Crontrol
+ */
 
 namespace Crontrol\Event;
 
@@ -12,7 +17,7 @@ use Crontrol\Schedule;
  *
  * @param string $hookname The hook name of the cron event to run.
  * @param string $sig      The cron event signature.
- * @return bool Whether the execution was successful or not.
+ * @return bool Whether the execution was successful.
  */
 function run( $hookname, $sig ) {
 	$crons = _get_cron_array();
