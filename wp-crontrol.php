@@ -617,8 +617,8 @@ function show_cron_form( $is_php, $existing ) {
 		'php-cron' => __( 'Add PHP Cron Event', 'wp-crontrol' ),
 	);
 	$modify_tabs = array(
-		'cron'     => __( 'Modify Cron Event', 'wp-crontrol' ),
-		'php-cron' => __( 'Modify PHP Cron Event', 'wp-crontrol' ),
+		'cron'     => __( 'Edit Cron Event', 'wp-crontrol' ),
+		'php-cron' => __( 'Edit PHP Cron Event', 'wp-crontrol' ),
 	);
 	$new_links = array(
 		'cron'     => admin_url( 'tools.php?page=crontrol_admin_manage_page&action=new-cron' ) . '#crontrol_form',
