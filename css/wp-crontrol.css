@@ -32,3 +32,12 @@
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
 }
+
+.crontrol-events pre {
+	white-space: pre-wrap;
+	margin: 0;
+}
+
+.column-crontrol_next {
+	white-space: nowrap;
+}

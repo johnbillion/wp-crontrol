@@ -49,6 +49,10 @@ class Event_List_Table extends \WP_List_Table {
 		);
 	}
 
+	protected function get_table_classes() {
+		return array( 'widefat', 'striped', $this->_args['plural'] );
+	}
+
 	/**
 	 * Generates and display row actions links for the list table.
 	 *
@@ -157,7 +161,7 @@ class Event_List_Table extends \WP_List_Table {
 				);
 			} else {
 				return sprintf(
-					'<pre style="white-space:pre-wrap;margin-top:0">%s</pre>',
+					'<pre>%s</pre>',
 					esc_html( $args )
 				);
 			}
@@ -171,7 +175,7 @@ class Event_List_Table extends \WP_List_Table {
 			$callbacks = array();
 
 			foreach ( get_action_callbacks( $event->hook ) as $callback ) {
-				$callbacks[] = '<pre style="margin-top:0">' . output_callback( $callback ) . '</pre>';
+				$callbacks[] = '<pre>' . output_callback( $callback ) . '</pre>';
 			}
 
 			return implode( '', $callbacks ); // WPCS:: XSS ok.
