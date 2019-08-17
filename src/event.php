@@ -62,7 +62,8 @@ function add( $next_run, $schedule, $hookname, array $args ) {
 				$args['code']
 			) );
 		} catch ( \ParseError $e ) {
-			$args['syntax_error'] = $e->getMessage();
+			$args['syntax_error_message'] = $e->getMessage();
+			$args['syntax_error_line']    = $e->getLine();
 		}
 	}
 

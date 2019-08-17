@@ -221,13 +221,15 @@ class Event_List_Table extends \WP_List_Table {
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			$return = '<em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em>';
 
-			if ( ! empty( $event->args['syntax_error'] ) ) {
+			if ( ! empty( $event->args['syntax_error_message'] ) ) {
 				$return .= '<br><span style="color:#c00"><span class="dashicons dashicons-warning"></span> ';
 				$return .= sprintf(
-					/* translators: %s: Error message text */
-					esc_html__( 'Syntax check: %s', 'wp-crontrol' ),
-					esc_html( $event->args['syntax_error'] ) . '</span>'
+					/* translators: 1: Error message, 2: Line number */
+					esc_html__( 'Syntax check: %1$s on line %2$s', 'wp-crontrol' ),
+					esc_html( $event->args['syntax_error_message'] ),
+					esc_html( number_format_i18n( $event->args['syntax_error_line'] ) )
 				);
+				$return .= '</span>';
 			}
 
 			if ( ! empty( $event->args['code'] ) ) {
