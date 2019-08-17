@@ -25,6 +25,7 @@ class Log {
 		register_post_type( 'crontrol_log', array(
 			'public'  => false,
 			'show_ui' => true,
+			'show_in_admin_bar' => false,
 			'labels'  => array(
 				'name'                     => 'Cron Logs',
 				'singular_name'            => 'Cron Log',
@@ -55,6 +56,21 @@ class Log {
 				'item_updated'             => 'Cron log updated.',
 			),
 			'show_in_menu' => 'tools.php',
+			'map_meta_cap' => true,
+			'capabilities' => array(
+				'edit_posts'             => 'manage_options',
+				'edit_others_posts'      => 'do_not_allow',
+				'publish_posts'          => 'do_not_allow',
+				'read_private_posts'     => 'manage_options',
+				'read'                   => 'manage_options',
+				'delete_posts'           => 'manage_options',
+				'delete_private_posts'   => 'manage_options',
+				'delete_published_posts' => 'manage_options',
+				'delete_others_posts'    => 'manage_options',
+				'edit_private_posts'     => 'do_not_allow',
+				'edit_published_posts'   => 'do_not_allow',
+				'create_posts'           => 'do_not_allow',
+			),
 		) );
 	}
 
