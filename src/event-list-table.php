@@ -222,7 +222,7 @@ class Event_List_Table extends \WP_List_Table {
 			$return = '<em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em>';
 
 			if ( ! empty( $event->args['syntax_error_message'] ) ) {
-				$return .= '<br><span style="color:#c00"><span class="dashicons dashicons-warning"></span> ';
+				$return .= '<br><span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
 				$return .= sprintf(
 					/* translators: 1: Line number, 2: Error message text */
 					esc_html__( 'Line %1$s: %2$s', 'wp-crontrol' ),
