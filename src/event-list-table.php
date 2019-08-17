@@ -42,15 +42,14 @@ class Event_List_Table extends \WP_List_Table {
 			'ajax'     => false,
 			'screen'   => 'crontrol-events',
 		] );
-
-		self::$core_hooks     = get_core_hooks();
-		self::$can_edit_files = current_user_can( 'edit_files' );
 	}
 
 	/**
 	 * Prepares the list table items and arguments.
 	 */
 	public function prepare_items() {
+		self::$core_hooks     = get_core_hooks();
+		self::$can_edit_files = current_user_can( 'edit_files' );
 		$events   = Event\get();
 		$count    = count( $events );
 		$per_page = 50;
