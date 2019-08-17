@@ -66,7 +66,8 @@ function init_hooks() {
  * @param string $code The PHP code to evaluate.
  */
 function action_php_cron_event( $code ) {
-	eval( $code ); // @codingStandardsIgnoreLine
+	// phpcs:ignore Squiz.PHP.Eval.Discouraged
+	eval( $code );
 }
 
 /**
