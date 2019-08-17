@@ -9,6 +9,7 @@ namespace Crontrol\Event;
 
 use stdClass;
 use Crontrol\Schedule;
+use ParseError;
 
 /**
  * Executes a cron event immediately.
@@ -52,6 +53,19 @@ function add( $next_run, $schedule, $hookname, array $args ) {
 	if ( ! is_array( $args ) ) {
 		$args = array();
 	}
+
+	if ( 'crontrol_cron_job' === $hookname && ! empty( $args['code'] ) && class_exists( '\ParseError' ) ) {
+		try {
+			// phpcs:ignore Squiz.PHP.Eval.Discouraged
+			eval( sprintf(
+				'return true; %s',
+				$args['code']
+			) );
+		} catch ( \ParseError $e ) {
+			$args['syntax_error'] = $e->getMessage();
+		}
+	}
+
 	if ( '_oneoff' === $schedule ) {
 		return wp_schedule_single_event( $next_run, $hookname, $args ) !== false;
 	} else {
