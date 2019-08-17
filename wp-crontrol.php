@@ -40,6 +40,7 @@ defined( 'ABSPATH' ) || die();
 
 require_once __DIR__ . '/src/event.php';
 require_once __DIR__ . '/src/schedule.php';
+require_once __DIR__ . '/src/log.php';
 
 /**
  * Hook onto all of the actions and filters needed by the plugin.
@@ -58,6 +59,8 @@ function init_hooks() {
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_styles' );
+
+	add_action( 'init', array( Log::get_instance(), 'init' ) );
 }
 
 /**
@@ -1027,6 +1030,12 @@ function get_action_callbacks( $name ) {
 		foreach ( $action as $priority => $callbacks ) {
 			foreach ( $callbacks as $callback ) {
 				$callback = populate_callback( $callback );
+
+				if ( isset( $callback['function'] ) && is_array( $callback['function'] ) ) {
+					if ( $callback['function'][0] instanceof Log ) {
+						continue;
+					}
+				}
 
 				$actions[] = array(
 					'priority' => $priority,
