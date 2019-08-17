@@ -163,8 +163,9 @@ class Event_List_Table extends \WP_List_Table {
 				$link = wp_nonce_url( $link, "delete-hook_{$event->hook}" );
 
 				$text = sprintf(
+					/* translators: %s: Number of events with a given name */
 					__( 'Delete All %s', 'wp-crontrol' ),
-					self::$count_by_hook[ $event->hook ]
+					esc_html( number_format_i18n( self::$count_by_hook[ $event->hook ] ) )
 				);
 				$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html( $text ) . '</a></span>';
 			}
