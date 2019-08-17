@@ -224,10 +224,10 @@ class Event_List_Table extends \WP_List_Table {
 			if ( ! empty( $event->args['syntax_error_message'] ) ) {
 				$return .= '<br><span style="color:#c00"><span class="dashicons dashicons-warning"></span> ';
 				$return .= sprintf(
-					/* translators: 1: Error message, 2: Line number */
-					esc_html__( 'Syntax check: %1$s on line %2$s', 'wp-crontrol' ),
-					esc_html( $event->args['syntax_error_message'] ),
-					esc_html( number_format_i18n( $event->args['syntax_error_line'] ) )
+					/* translators: 1: Line number, 2: Error message text */
+					esc_html__( 'Line %1$s: %2$s', 'wp-crontrol' ),
+					esc_html( number_format_i18n( $event->args['syntax_error_line'] ) ),
+					esc_html( $event->args['syntax_error_message'] )
 				);
 				$return .= '</span>';
 			}
