@@ -94,6 +94,11 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 		$in_args  = json_decode( $in_args, true );
+
+		if ( empty( $in_args ) ) {
+			$in_args = array();
+		}
+
 		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
 		Event\add( $next_run, $in_schedule, $in_hookname, $in_args );
 		$redirect = array(
@@ -138,6 +143,11 @@ function action_handle_posts() {
 		}
 
 		$in_args = json_decode( $in_args, true );
+
+		if ( empty( $in_args ) ) {
+			$in_args = array();
+		}
+
 		Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run );
 		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
 		Event\add( $next_run, $in_schedule, $in_hookname, $in_args );
