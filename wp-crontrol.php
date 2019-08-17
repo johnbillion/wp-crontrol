@@ -291,6 +291,47 @@ function action_handle_posts() {
 
 		};
 
+	} elseif ( isset( $_GET['action'] ) && 'delete-hook' === $_GET['action'] ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
+		}
+		$id      = wp_unslash( $_GET['id'] );
+		$deleted = false;
+		check_admin_referer( "delete-hook_{$id}" );
+
+		if ( 'crontrol_cron_job' === $id ) {
+			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 401 );
+		}
+
+		if ( function_exists( 'wp_unschedule_hook' ) ) {
+			$deleted = wp_unschedule_hook( $id );
+		}
+
+		if ( 0 === $deleted ) {
+			$redirect = array(
+				'page'             => 'crontrol_admin_manage_page',
+				'crontrol_message' => '3',
+				'crontrol_name'    => rawurlencode( $id ),
+			);
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			exit;
+		} elseif ( $deleted ) {
+			$redirect = array(
+				'page'             => 'crontrol_admin_manage_page',
+				'crontrol_message' => '2',
+				'crontrol_name'    => rawurlencode( $id ),
+			);
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			exit;
+		} else {
+			$redirect = array(
+				'page'             => 'crontrol_admin_manage_page',
+				'crontrol_message' => '7',
+				'crontrol_name'    => rawurlencode( $id ),
+			);
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			exit;
+		}
 	} elseif ( isset( $_GET['action'] ) && 'run-cron' === $_GET['action'] ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 401 );
@@ -857,6 +898,10 @@ function admin_manage_page() {
 	$messages = array(
 		/* translators: 1: The name of the cron event. */
 		'1' => __( 'Successfully executed the cron event %s.', 'wp-crontrol' ),
+		/* translators: 1: The name of the cron event. */
+		'2' => __( 'Successfully deleted all %s cron events.', 'wp-crontrol' ),
+		/* translators: 1: The name of the cron event. */
+		'3' => __( 'There are no %s cron events to delete.', 'wp-crontrol' ),
 		/* translators: 1: The name of the cron event. */
 		'4' => __( 'Successfully edited the cron event %s.', 'wp-crontrol' ),
 		/* translators: 1: The name of the cron event. */

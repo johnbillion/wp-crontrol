@@ -33,6 +33,13 @@ class Event_List_Table extends \WP_List_Table {
 	protected static $can_edit_files;
 
 	/**
+	 * Array of the count of each hook.
+	 *
+	 * @var int[] Array of count of each hooked, keyed by hook name.
+	 */
+	protected static $count_by_hook;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -50,6 +57,8 @@ class Event_List_Table extends \WP_List_Table {
 	public function prepare_items() {
 		self::$core_hooks     = get_core_hooks();
 		self::$can_edit_files = current_user_can( 'edit_files' );
+		self::$count_by_hook  = Event\count_by_hook();
+
 		$events   = Event\get();
 		$count    = count( $events );
 		$per_page = 50;
@@ -141,6 +150,24 @@ class Event_List_Table extends \WP_List_Table {
 			$link = wp_nonce_url( $link, "delete-cron_{$event->hook}_{$event->sig}_{$event->time}" );
 
 			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
+		}
+
+		if ( function_exists( 'wp_unschedule_hook' ) && ! in_array( $event->hook, self::$core_hooks, true ) && ( 'crontrol_cron_job' !== $event->hook ) ) {
+			if ( self::$count_by_hook[ $event->hook ] > 1 ) {
+				$link = array(
+					'page'   => 'crontrol_admin_manage_page',
+					'action' => 'delete-hook',
+					'id'     => rawurlencode( $event->hook ),
+				);
+				$link = add_query_arg( $link, admin_url( 'tools.php' ) );
+				$link = wp_nonce_url( $link, "delete-hook_{$event->hook}" );
+
+				$text = sprintf(
+					__( 'Delete All %s', 'wp-crontrol' ),
+					self::$count_by_hook[ $event->hook ]
+				);
+				$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html( $text ) . '</a></span>';
+			}
 		}
 
 		return $this->row_actions( $links );

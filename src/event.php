@@ -127,6 +127,32 @@ function get() {
 }
 
 /**
+ * Returns an array of the number of events for each hook.
+ *
+ * @return int[] Array of number of events for each hook, keyed by the hook name.
+ */
+function count_by_hook() {
+	$crons  = _get_cron_array();
+	$events = array();
+
+	if ( empty( $crons ) ) {
+		return array();
+	}
+
+	foreach ( $crons as $time => $cron ) {
+		foreach ( $cron as $hook => $dings ) {
+			if ( ! isset( $events[ $hook ] ) ) {
+				$events[ $hook ] = 0;
+			}
+
+			$events[ $hook ] += count( $dings );
+		}
+	}
+
+	return $events;
+}
+
+/**
  * Returns the schedule display name for a given event.
  *
  * @param stdClass $event A WP-Cron event.
