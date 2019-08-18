@@ -140,9 +140,9 @@ class Log {
 		}
 
 		$metas = array(
-			'memory'  => ( $this->data['end_memory'] - $this->data['start_memory'] ),
-			'time'    => ( $this->data['end_time'] - $this->data['start_time'] ),
-			'queries' => ( $this->data['end_queries'] - $this->data['start_queries'] ),
+			'crontrol_log_memory'  => ( $this->data['end_memory'] - $this->data['start_memory'] ),
+			'crontrol_log_time'    => ( $this->data['end_time'] - $this->data['start_time'] ),
+			'crontrol_log_queries' => ( $this->data['end_queries'] - $this->data['start_queries'] ),
 		);
 
 		foreach ( $metas as $meta_key => $meta_value ) {
