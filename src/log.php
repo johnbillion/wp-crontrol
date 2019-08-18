@@ -72,6 +72,41 @@ class Log {
 				'create_posts'           => 'do_not_allow',
 			),
 		) );
+
+		register_taxonomy( 'crontrol_log_action', 'crontrol_log', array(
+			'public' => false,
+			'show_admin_column' => true,
+			'capabilities' => array(
+				'manage_terms' => 'do_not_allow',
+				'edit_terms'   => 'do_not_allow',
+				'delete_terms' => 'do_not_allow',
+				'assign_terms' => 'do_not_allow',
+			),
+			'labels' => array(
+				'menu_name'                  => 'Actions',
+				'name'                       => 'Actions',
+				'singular_name'              => 'Action',
+				'search_items'               => 'Search Actions',
+				'popular_items'              => 'Popular Actions',
+				'all_items'                  => 'All Actions',
+				'parent_item'                => 'Parent Action',
+				'parent_item_colon'          => 'Parent Action:',
+				'edit_item'                  => 'Edit Action',
+				'view_item'                  => 'View Action',
+				'update_item'                => 'Update Action',
+				'add_new_item'               => 'Add New Action',
+				'new_item_name'              => 'New Action Name',
+				'separate_items_with_commas' => 'Separate actions with commas',
+				'add_or_remove_items'        => 'Add or remove actions',
+				'choose_from_most_used'      => 'Choose from most used actions',
+				'not_found'                  => 'No actions found',
+				'no_terms'                   => 'No actions',
+				'items_list_navigation'      => 'Actions list navigation',
+				'items_list'                 => 'Actions list',
+				'most_used'                  => 'Most Used',
+				'back_to_items'              => '&larr; Back to Actions',
+			),
+		) );
 	}
 
 	public function log_start() {
@@ -112,6 +147,8 @@ class Log {
 		foreach ( $metas as $meta_key => $meta_value ) {
 			add_post_meta( $post_id, $meta_key, $meta_value, true );
 		}
+
+		wp_set_post_terms( $post_id, $this->data['action'], 'crontrol_log_action' );
 	}
 
 	/**
