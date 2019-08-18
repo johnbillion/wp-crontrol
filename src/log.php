@@ -132,6 +132,7 @@ class Log {
 			'post_date'    => get_date_from_gmt( date( 'Y-m-d H:i:s', $this->data['start_time'] ), 'Y-m-d H:i:s' ),
 			'post_status'  => 'publish',
 			'post_content' => wp_json_encode( $this->data['args'] ),
+			'post_name'    => uniqid(),
 		), true );
 
 		if ( is_wp_error( $post_id ) ) {
