@@ -1028,7 +1028,7 @@ function admin_manage_page() {
  * @param string $name The hook name.
  * @return array[] Array of callbacks attached to the hook.
  */
-function get_action_callbacks( $name ) {
+function get_hook_callbacks( $name ) {
 	global $wp_filter;
 
 	$actions = array();

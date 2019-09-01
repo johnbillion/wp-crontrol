@@ -306,7 +306,7 @@ class Event_List_Table extends \WP_List_Table {
 		} else {
 			$callbacks = array();
 
-			foreach ( get_action_callbacks( $event->hook ) as $callback ) {
+			foreach ( get_hook_callbacks( $event->hook ) as $callback ) {
 				$callbacks[] = output_callback( $callback );
 			}
 
