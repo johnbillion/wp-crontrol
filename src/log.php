@@ -159,7 +159,7 @@ class Log {
 	}
 
 	public function column( $name, $post_id ) {
-		$hook    = get_post_meta( $post_id, 'crontrol_log_hook', true );
+		$hook    = wp_list_pluck( get_the_terms( $post_id, self::$taxonomy ), 'slug' )[0];
 		$actions = get_post_meta( $post_id, 'crontrol_log_actions', true );
 		$queries = get_post_meta( $post_id, 'crontrol_log_queries', true );
 		$https   = get_post_meta( $post_id, 'crontrol_log_https', true );
@@ -184,7 +184,7 @@ class Log {
 
 			case 'actions':
 				if ( 'crontrol_cron_job' === $hook ) {
-					return '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
+					echo '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
 				} elseif ( ! empty( $actions ) ) {
 					$actions = array_map( 'esc_html', $actions );
 					echo '<code>';
