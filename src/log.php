@@ -80,7 +80,6 @@ class Log {
 
 		register_taxonomy( 'crontrol_log_hook', 'crontrol_log', array(
 			'public' => false,
-			'show_admin_column' => true,
 			'capabilities' => array(
 				'manage_terms' => 'do_not_allow',
 				'edit_terms'   => 'do_not_allow',
