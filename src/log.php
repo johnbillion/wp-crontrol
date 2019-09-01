@@ -123,7 +123,8 @@ class Log {
 
 	public function columns( array $columns ) {
 		$columns['actions'] = 'Actions';
-		$columns['error'] = 'Error';
+		$columns['queries'] = 'Database Queries';
+		$columns['error']   = 'Error';
 
 		return $columns;
 	}
@@ -131,6 +132,7 @@ class Log {
 	public function column( $name, $post_id ) {
 		$hook    = get_post_meta( $post_id, 'crontrol_log_hook', true );
 		$actions = get_post_meta( $post_id, 'crontrol_log_actions', true );
+		$queries = get_post_meta( $post_id, 'crontrol_log_queries', true );
 
 		if ( empty( $actions ) ) {
 			$actions = array();
@@ -159,6 +161,10 @@ class Log {
 					echo implode( '</code><br><code>', $actions );
 					echo '</code>';
 				}
+				break;
+
+			case 'queries':
+				echo esc_html( number_format_i18n( $queries ) );
 				break;
 
 		}
