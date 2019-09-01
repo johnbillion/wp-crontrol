@@ -307,7 +307,7 @@ class Event_List_Table extends \WP_List_Table {
 			$callbacks = array();
 
 			foreach ( get_action_callbacks( $event->hook ) as $callback ) {
-				$callbacks[] = '<pre>' . output_callback( $callback ) . '</pre>';
+				$callbacks[] = output_callback( $callback );
 			}
 
 			return implode( '', $callbacks ); // WPCS:: XSS ok.
