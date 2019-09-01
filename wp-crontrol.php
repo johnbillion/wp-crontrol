@@ -910,7 +910,7 @@ function admin_manage_page() {
 
 	$messages = array(
 		/* translators: 1: The name of the cron event. */
-		'1' => __( 'Successfully executed the cron event %s.', 'wp-crontrol' ),
+		'1' => __( 'Successfully schdeuled the cron event %s to run now.', 'wp-crontrol' ),
 		/* translators: 1: The name of the cron event. */
 		'2' => __( 'Successfully deleted all %s cron events.', 'wp-crontrol' ),
 		/* translators: 1: The name of the cron event. */
