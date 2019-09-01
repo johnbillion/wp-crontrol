@@ -123,12 +123,20 @@ class Log {
 	}
 
 	public function columns( array $columns ) {
+		$columns['actions'] = 'Actions';
 		$columns['error'] = 'Error';
 
 		return $columns;
 	}
 
 	public function column( $name, $post_id ) {
+		$hook    = get_post_meta( $post_id, 'crontrol_log_hook', true );
+		$actions = get_post_meta( $post_id, 'crontrol_log_actions', true );
+
+		if ( empty( $actions ) ) {
+			$actions = array();
+		}
+
 		switch ( $name ) {
 
 			case 'error':
@@ -140,6 +148,17 @@ class Log {
 						esc_html( str_replace( [ WP_CONTENT_DIR . '/', ABSPATH . '/' ], '', $error['file'] ) ),
 						esc_html( $error['line'] )
 					);
+				}
+				break;
+
+			case 'actions':
+				if ( 'crontrol_cron_job' === $hook ) {
+					return '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
+				} else {
+					$actions = array_map( 'esc_html', $actions );
+					echo '<code>';
+					echo implode( '</code><br><code>', $actions );
+					echo '</code>';
 				}
 				break;
 
@@ -176,6 +195,12 @@ class Log {
 		$this->data['args']          = func_get_args();
 		$this->data['hook']          = current_filter();
 
+		$actions = get_hook_callbacks( $this->data['hook'] );
+
+		foreach ( $actions as $action ) {
+			$this->data['actions'][] = $action['callback']['name'];
+		}
+
 		$this->old_exception_handler = set_exception_handler( array( $this, 'exception_handler' ) );
 	}
 
@@ -205,6 +230,7 @@ class Log {
 			'crontrol_log_memory'  => ( $this->data['end_memory'] - $this->data['start_memory'] ),
 			'crontrol_log_time'    => ( $this->data['end_time'] - $this->data['start_time'] ),
 			'crontrol_log_queries' => ( $this->data['end_queries'] - $this->data['start_queries'] ),
+			'crontrol_log_actions' => $this->data['actions'],
 		);
 
 		if ( ! empty( $this->data['exception'] ) ) {
