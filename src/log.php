@@ -15,6 +15,7 @@ use Exception;
 class Log {
 
 	protected $data = array();
+	protected $old_exception_handler = null;
 
 	public function init() {
 		foreach ( Event\count_by_hook() as $hook => $count ) {
@@ -109,6 +110,27 @@ class Log {
 		) );
 	}
 
+	/**
+	 * Exception handler.
+	 *
+	 * In PHP >= 7 this will catch Throwable objects.
+	 * In PHP < 7 it will catch Exception objects.
+	 *
+	 * @param Throwable|Exception $e The error or exception.
+	 * @throws Exception Re-thrown when necessary.
+	 */
+	public function exception_handler( $e ) {
+		$this->data['exception'] = $e;
+
+		$this->log_end();
+
+		if ( $this->old_exception_handler ) {
+			call_user_func( $this->old_exception_handler, $e );
+		} else {
+			throw new Exception( $e->getMessage(), $e->getCode(), $e );
+		}
+	}
+
 	public function log_start() {
 		global $wpdb;
 
@@ -117,10 +139,14 @@ class Log {
 		$this->data['start_queries'] = $wpdb->num_queries;
 		$this->data['args']          = func_get_args();
 		$this->data['action']        = current_filter();
+
+		$this->old_exception_handler = set_exception_handler( array( $this, 'exception_handler' ) );
 	}
 
 	public function log_end() {
 		global $wpdb;
+
+		set_exception_handler( $this->old_exception_handler );
 
 		$this->data['end_memory']  = memory_get_usage();
 		$this->data['end_time']    = microtime( true );
@@ -144,6 +170,14 @@ class Log {
 			'crontrol_log_time'    => ( $this->data['end_time'] - $this->data['start_time'] ),
 			'crontrol_log_queries' => ( $this->data['end_queries'] - $this->data['start_queries'] ),
 		);
+
+		if ( ! empty( $this->data['exception'] ) ) {
+			$metas['crontrol_log_exception'] = array(
+				'message' => $this->data['exception']->getMessage(),
+				'file'    => $this->data['exception']->getFile(),
+				'line'    => $this->data['exception']->getLine(),
+			);
+		}
 
 		foreach ( $metas as $meta_key => $meta_value ) {
 			add_post_meta( $post_id, $meta_key, $meta_value, true );
