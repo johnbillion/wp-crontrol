@@ -210,7 +210,7 @@ class Log {
 			add_post_meta( $post_id, $meta_key, $meta_value, true );
 		}
 
-		wp_set_post_terms( $post_id, $this->data['hook'], 'crontrol_log_hook' );
+		wp_set_post_terms( $post_id, array( $this->data['hook'] ), 'crontrol_log_hook', true );
 	}
 
 	/**
