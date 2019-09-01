@@ -190,7 +190,7 @@ class Log {
 			case 'actions':
 				if ( 'crontrol_cron_job' === $hook ) {
 					return '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
-				} else {
+				} elseif ( ! empty( $actions ) ) {
 					$actions = array_map( 'esc_html', $actions );
 					echo '<code>';
 					echo implode( '</code><br><code>', $actions );
