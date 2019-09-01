@@ -16,6 +16,7 @@ class Log {
 
 	protected $data = array();
 	protected $old_exception_handler = null;
+	public static $post_type = 'crontrol_log';
 
 	public function init() {
 		foreach ( Event\count_by_hook() as $hook => $count ) {
@@ -28,7 +29,7 @@ class Log {
 		add_filter( 'manage_crontrol_log_posts_columns',       array( $this, 'columns' ) );
 		add_action( 'manage_crontrol_log_posts_custom_column', array( $this, 'column' ), 10, 2 );
 
-		register_post_type( 'crontrol_log', array(
+		register_post_type( self::$post_type, array(
 			'public'  => false,
 			'show_ui' => true,
 			'show_in_admin_bar' => false,
@@ -72,7 +73,7 @@ class Log {
 			),
 		) );
 
-		register_taxonomy( 'crontrol_log_hook', 'crontrol_log', array(
+		register_taxonomy( 'crontrol_log_hook', self::$post_type, array(
 			'public' => false,
 			'capabilities' => array(
 				'manage_terms' => 'do_not_allow',
@@ -99,7 +100,7 @@ class Log {
 	}
 
 	public function filter_wpcom_async_transition( $schedule, array $args ) {
-		if ( 'crontrol_log' === get_post_type( $args['post_id'] ) ) {
+		if ( self::$post_type === get_post_type( $args['post_id'] ) ) {
 			return false;
 		}
 
@@ -107,7 +108,7 @@ class Log {
 	}
 
 	public function filter_disable_months_dropdown( $disable, $post_type ) {
-		if ( 'crontrol_log' === $post_type ) {
+		if ( self::$post_type === $post_type ) {
 			return true;
 		}
 
@@ -267,7 +268,7 @@ class Log {
 		set_exception_handler( $this->old_exception_handler );
 
 		$post_id = wp_insert_post( array(
-			'post_type'    => 'crontrol_log',
+			'post_type'    => self::$post_type,
 			'post_title'   => $this->data['hook'],
 			'post_date'    => get_date_from_gmt( date( 'Y-m-d H:i:s', $this->data['start_time'] ), 'Y-m-d H:i:s' ),
 			'post_status'  => 'publish',
