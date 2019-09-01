@@ -153,6 +153,7 @@ class Log {
 
 		unset( $columns['date'] );
 
+		$columns['title']   = 'Hook';
 		$columns['ran']     = 'Date';
 		$columns['actions'] = 'Actions';
 		$columns['time']    = 'Time (s)';
