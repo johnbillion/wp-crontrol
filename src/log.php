@@ -239,9 +239,14 @@ class Log {
 	public function log_start() {
 		global $wpdb;
 
+		$this->data = array();
+
 		$this->old_exception_handler = set_exception_handler( array( $this, 'exception_handler' ) );
 
 		$this->data['actions'] = array();
+		$this->data['args']    = func_get_args();
+		$this->data['hook']    = current_filter();
+		$this->data['https']   = array();
 
 		foreach ( get_hook_callbacks( $this->data['hook'] ) as $action ) {
 			$this->data['actions'][] = $action['callback']['name'];
@@ -252,9 +257,6 @@ class Log {
 		$this->data['start_memory']  = memory_get_usage();
 		$this->data['start_time']    = microtime( true );
 		$this->data['start_queries'] = $wpdb->num_queries;
-		$this->data['args']          = func_get_args();
-		$this->data['hook']          = current_filter();
-		$this->data['https']         = array();
 	}
 
 	public function log_end() {
