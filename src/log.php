@@ -77,7 +77,7 @@ class Log {
 			),
 		) );
 
-		register_taxonomy( 'crontrol_log_action', 'crontrol_log', array(
+		register_taxonomy( 'crontrol_log_hook', 'crontrol_log', array(
 			'public' => false,
 			'show_admin_column' => true,
 			'capabilities' => array(
@@ -87,28 +87,28 @@ class Log {
 				'assign_terms' => 'do_not_allow',
 			),
 			'labels' => array(
-				'menu_name'                  => 'Actions',
-				'name'                       => 'Actions',
-				'singular_name'              => 'Action',
-				'search_items'               => 'Search Actions',
-				'popular_items'              => 'Popular Actions',
-				'all_items'                  => 'All Actions',
-				'parent_item'                => 'Parent Action',
-				'parent_item_colon'          => 'Parent Action:',
-				'edit_item'                  => 'Edit Action',
-				'view_item'                  => 'View Action',
-				'update_item'                => 'Update Action',
-				'add_new_item'               => 'Add New Action',
-				'new_item_name'              => 'New Action Name',
-				'separate_items_with_commas' => 'Separate actions with commas',
-				'add_or_remove_items'        => 'Add or remove actions',
-				'choose_from_most_used'      => 'Choose from most used actions',
-				'not_found'                  => 'No actions found',
-				'no_terms'                   => 'No actions',
-				'items_list_navigation'      => 'Actions list navigation',
-				'items_list'                 => 'Actions list',
+				'menu_name'                  => 'Hooks',
+				'name'                       => 'Hooks',
+				'singular_name'              => 'Hook',
+				'search_items'               => 'Search Hooks',
+				'popular_items'              => 'Popular Hooks',
+				'all_items'                  => 'All Hooks',
+				'parent_item'                => 'Parent Hook',
+				'parent_item_colon'          => 'Parent Hook:',
+				'edit_item'                  => 'Edit Hook',
+				'view_item'                  => 'View Hook',
+				'update_item'                => 'Update Hook',
+				'add_new_item'               => 'Add New Hook',
+				'new_item_name'              => 'New Hook Name',
+				'separate_items_with_commas' => 'Separate hooks with commas',
+				'add_or_remove_items'        => 'Add or remove hooks',
+				'choose_from_most_used'      => 'Choose from most used hooks',
+				'not_found'                  => 'No hooks found',
+				'no_terms'                   => 'No hooks',
+				'items_list_navigation'      => 'Hooks list navigation',
+				'items_list'                 => 'Hooks list',
 				'most_used'                  => 'Most Used',
-				'back_to_items'              => '&larr; Back to Actions',
+				'back_to_items'              => '&larr; Back to Hooks',
 			),
 		) );
 	}
@@ -165,7 +165,7 @@ class Log {
 		$this->data['start_time']    = microtime( true );
 		$this->data['start_queries'] = $wpdb->num_queries;
 		$this->data['args']          = func_get_args();
-		$this->data['action']        = current_filter();
+		$this->data['hook']          = current_filter();
 
 		$this->old_exception_handler = set_exception_handler( array( $this, 'exception_handler' ) );
 	}
@@ -181,7 +181,7 @@ class Log {
 
 		$post_id = wp_insert_post( array(
 			'post_type'    => 'crontrol_log',
-			'post_title'   => $this->data['action'],
+			'post_title'   => $this->data['hook'],
 			'post_date'    => get_date_from_gmt( date( 'Y-m-d H:i:s', $this->data['start_time'] ), 'Y-m-d H:i:s' ),
 			'post_status'  => 'publish',
 			'post_content' => wp_json_encode( $this->data['args'] ),
@@ -210,7 +210,7 @@ class Log {
 			add_post_meta( $post_id, $meta_key, $meta_value, true );
 		}
 
-		wp_set_post_terms( $post_id, $this->data['action'], 'crontrol_log_action' );
+		wp_set_post_terms( $post_id, $this->data['hook'], 'crontrol_log_hook' );
 	}
 
 	/**
