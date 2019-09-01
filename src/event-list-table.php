@@ -138,7 +138,7 @@ class Event_List_Table extends \WP_List_Table {
 
 		$link = add_query_arg( array(
 			'post_type'         => Log::$post_type,
-			'crontrol_log_hook' => rawurlencode( sanitize_title( $event->hook ) ),
+			Log::$taxonomy => rawurlencode( sanitize_title( $event->hook ) ),
 		), admin_url( 'edit.php' ) );
 
 		$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'View Logs', 'wp-crontrol' ) . '</a>';

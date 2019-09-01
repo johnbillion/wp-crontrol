@@ -17,6 +17,7 @@ class Log {
 	protected $data = array();
 	protected $old_exception_handler = null;
 	public static $post_type = 'crontrol_log';
+	public static $taxonomy  = 'crontrol_log_hook';
 
 	public function init() {
 		foreach ( Event\count_by_hook() as $hook => $count ) {
@@ -73,7 +74,7 @@ class Log {
 			),
 		) );
 
-		register_taxonomy( 'crontrol_log_hook', self::$post_type, array(
+		register_taxonomy( self::$taxonomy, self::$post_type, array(
 			'public' => false,
 			'capabilities' => array(
 				'manage_terms' => 'do_not_allow',
@@ -300,7 +301,7 @@ class Log {
 			add_post_meta( $post_id, $meta_key, wp_slash( $meta_value ), true );
 		}
 
-		wp_set_post_terms( $post_id, array( $this->data['hook'] ), 'crontrol_log_hook', true );
+		wp_set_post_terms( $post_id, array( $this->data['hook'] ), self::$taxonomy, true );
 	}
 
 	/**
