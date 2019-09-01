@@ -23,6 +23,9 @@ class Log {
 			add_action( $hook, array( $this, 'log_end' ), 9999, 50 );
 		}
 
+		add_filter( 'manage_crontrol_log_posts_columns',       array( $this, 'columns' ) );
+		add_action( 'manage_crontrol_log_posts_custom_column', array( $this, 'column' ), 10, 2 );
+
 		register_post_type( 'crontrol_log', array(
 			'public'  => false,
 			'show_ui' => true,
@@ -108,6 +111,30 @@ class Log {
 				'back_to_items'              => '&larr; Back to Actions',
 			),
 		) );
+	}
+
+	public function columns( array $columns ) {
+		$columns['error'] = 'Error';
+
+		return $columns;
+	}
+
+	public function column( $name, $post_id ) {
+		switch ( $name ) {
+
+			case 'error':
+				$error = get_post_meta( $post_id, 'crontrol_log_exception', true );
+				if ( ! empty( $error ) ) {
+					printf(
+						'<span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %1$s</span><br>%2$s:%3$s',
+						esc_html( $error['message'] ),
+						esc_html( str_replace( [ WP_CONTENT_DIR . '/', ABSPATH . '/' ], '', $error['file'] ) ),
+						esc_html( $error['line'] )
+					);
+				}
+				break;
+
+		}
 	}
 
 	/**
