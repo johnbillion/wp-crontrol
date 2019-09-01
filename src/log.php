@@ -121,9 +121,43 @@ class Log {
 		return $schedule;
 	}
 
+	/**
+	 * Debugging action for the HTTP API.
+	 *
+	 * @param mixed  $response A parameter which varies depending on $action.
+	 * @param string $action   The debug action. Currently one of 'response' or 'transports_list'.
+	 * @param string $class    The HTTP transport class name.
+	 * @param array  $args     HTTP request arguments.
+	 * @param string $url      The request URL.
+	 */
+	public function action_http_api_debug( $response, $action, $class, $args, $url ) {
+		if ( 'response' !== $action ) {
+			return;
+		}
+
+		if ( is_wp_error( $response ) ) {
+			$response = $response->get_error_message();
+		} elseif ( ! $args['blocking'] ) {
+			/* translators: A non-blocking HTTP API request */
+			$response = __( 'Non-blocking', 'wp-crontrol' );
+		} else {
+			$code = wp_remote_retrieve_response_code( $response );
+			$msg  = wp_remote_retrieve_response_message( $response );
+
+			$response = $code . ' ' . $msg;
+		}
+
+		$this->data['https'][] = array(
+			'method'   => $args['method'],
+			'url'      => $url,
+			'response' => $response,
+		);
+	}
+
 	public function columns( array $columns ) {
 		$columns['actions'] = 'Actions';
 		$columns['queries'] = 'Database Queries';
+		$columns['https']   = 'HTTP Requests';
 		$columns['error']   = 'Error';
 
 		return $columns;
@@ -133,6 +167,7 @@ class Log {
 		$hook    = get_post_meta( $post_id, 'crontrol_log_hook', true );
 		$actions = get_post_meta( $post_id, 'crontrol_log_actions', true );
 		$queries = get_post_meta( $post_id, 'crontrol_log_queries', true );
+		$https   = get_post_meta( $post_id, 'crontrol_log_https', true );
 
 		if ( empty( $actions ) ) {
 			$actions = array();
@@ -167,6 +202,21 @@ class Log {
 				echo esc_html( number_format_i18n( $queries ) );
 				break;
 
+			case 'https':
+				if ( ! empty( $https ) ) {
+					echo '<ol>';
+					foreach ( $https as $key => $http ) {
+						printf(
+							'<li>%1$s %2$s<br>%3$s</li>',
+							esc_html( $http['method'] ),
+							esc_html( $http['url'] ),
+							esc_html( $http['response'] )
+						);
+					}
+					echo '</ol>';
+				}
+				break;
+
 		}
 	}
 
@@ -199,6 +249,7 @@ class Log {
 		$this->data['start_queries'] = $wpdb->num_queries;
 		$this->data['args']          = func_get_args();
 		$this->data['hook']          = current_filter();
+		$this->data['https']         = array();
 
 		$actions = get_hook_callbacks( $this->data['hook'] );
 
@@ -206,11 +257,15 @@ class Log {
 			$this->data['actions'][] = $action['callback']['name'];
 		}
 
+		add_action( 'http_api_debug', array( $this, 'action_http_api_debug' ), 9999, 5 );
+
 		$this->old_exception_handler = set_exception_handler( array( $this, 'exception_handler' ) );
 	}
 
 	public function log_end() {
 		global $wpdb;
+
+		remove_action( 'http_api_debug', array( $this, 'action_http_api_debug' ), 9999 );
 
 		set_exception_handler( $this->old_exception_handler );
 
@@ -236,6 +291,7 @@ class Log {
 			'crontrol_log_time'    => ( $this->data['end_time'] - $this->data['start_time'] ),
 			'crontrol_log_queries' => ( $this->data['end_queries'] - $this->data['start_queries'] ),
 			'crontrol_log_actions' => $this->data['actions'],
+			'crontrol_log_https'   => $this->data['https'],
 		);
 
 		if ( ! empty( $this->data['exception'] ) ) {
