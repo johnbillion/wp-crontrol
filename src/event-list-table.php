@@ -310,7 +310,7 @@ class Event_List_Table extends \WP_List_Table {
 				$callbacks[] = output_callback( $callback );
 			}
 
-			return implode( '', $callbacks ); // WPCS:: XSS ok.
+			return implode( '<br>', $callbacks ); // WPCS:: XSS ok.
 		}
 	}
 

@@ -1130,7 +1130,7 @@ function output_callback( array $callback ) {
 		}
 	}
 
-	return '<pre>' . $callback['callback']['name'] . '</pre>';
+	return '<code>' . $callback['callback']['name'] . '</code>';
 }
 
 /**
