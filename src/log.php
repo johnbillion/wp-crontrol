@@ -242,7 +242,7 @@ class Log {
 		}
 
 		foreach ( $metas as $meta_key => $meta_value ) {
-			add_post_meta( $post_id, $meta_key, $meta_value, true );
+			add_post_meta( $post_id, $meta_key, wp_slash( $meta_value ), true );
 		}
 
 		wp_set_post_terms( $post_id, array( $this->data['hook'] ), 'crontrol_log_hook', true );
