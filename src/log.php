@@ -23,6 +23,7 @@ class Log {
 			add_action( $hook, array( $this, 'log_end' ), 9999, 50 );
 		}
 
+		add_filter( 'disable_months_dropdown', array( $this, 'filter_disable_months_dropdown' ), 10, 2 );
 		add_filter( 'wpcom_async_transition_post_status_schedule_async', array( $this, 'filter_wpcom_async_transition' ), 10, 2 );
 		add_filter( 'manage_crontrol_log_posts_columns',       array( $this, 'columns' ) );
 		add_action( 'manage_crontrol_log_posts_custom_column', array( $this, 'column' ), 10, 2 );
@@ -114,11 +115,19 @@ class Log {
 	}
 
 	public function filter_wpcom_async_transition( $schedule, array $args ) {
-		if ( get_post_type( $args['post_id'] ) === 'crontrol_log' ) {
+		if ( 'crontrol_log' === get_post_type( $args['post_id'] ) ) {
 			return false;
 		}
 
 		return $schedule;
+	}
+
+	public function filter_disable_months_dropdown( $disable, $post_type ) {
+		if ( 'crontrol_log' === $post_type ) {
+			return true;
+		}
+
+		return $disable;
 	}
 
 	/**
