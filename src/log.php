@@ -150,6 +150,10 @@ class Log {
 	}
 
 	public function columns( array $columns ) {
+
+		unset( $columns['date'] );
+
+		$columns['ran']     = 'Date';
 		$columns['actions'] = 'Actions';
 		$columns['time']    = 'Time (s)';
 		$columns['queries'] = 'Database Queries';
@@ -160,6 +164,7 @@ class Log {
 	}
 
 	public function column( $name, $post_id ) {
+		$post    = get_post( $post_id );
 		$hook    = wp_list_pluck( get_the_terms( $post_id, self::$taxonomy ), 'slug' )[0];
 		$actions = get_post_meta( $post_id, 'crontrol_log_actions', true );
 		$queries = get_post_meta( $post_id, 'crontrol_log_queries', true );
@@ -171,6 +176,10 @@ class Log {
 		}
 
 		switch ( $name ) {
+
+			case 'ran':
+				echo esc_html( mysql2date( 'Y-m-d H:i:s', $post->post_date ) );
+				break;
 
 			case 'time':
 				echo esc_html( number_format_i18n( $time, 4 ) );
