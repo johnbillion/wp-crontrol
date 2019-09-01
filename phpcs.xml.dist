@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <ruleset name="WP Crontrol">
 
+	<config name="testVersion" value="5.3-"/>
+
 	<exclude-pattern>*/build/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
@@ -37,5 +39,7 @@
 			<property name="minimum_supported_version" value="4.1" />
 		</properties>
 	</rule>
+
+	<rule ref="PHPCompatibilityWP"/>
 
 </ruleset>

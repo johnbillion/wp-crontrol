@@ -14,9 +14,14 @@
 			"homepage": "http://scompt.com/"
 		}
 	],
+	"config": {
+		"sort-packages": true,
+		"preferred-install": "dist"
+	},
 	"require-dev": {
-		"wp-coding-standards/wpcs": "^2",
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.5"
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.5",
+		"phpcompatibility/phpcompatibility-wp": "^2.0",
+		"wp-coding-standards/wpcs": "^2"
 	},
 	"require": {
 		"php": ">=5.3.6",
