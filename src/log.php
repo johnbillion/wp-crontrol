@@ -244,34 +244,34 @@ class Log {
 	public function log_start() {
 		global $wpdb;
 
+		$this->old_exception_handler = set_exception_handler( array( $this, 'exception_handler' ) );
+
+		$this->data['actions'] = array();
+
+		foreach ( get_hook_callbacks( $this->data['hook'] ) as $action ) {
+			$this->data['actions'][] = $action['callback']['name'];
+		}
+
+		add_action( 'http_api_debug', array( $this, 'action_http_api_debug' ), 9999, 5 );
+
 		$this->data['start_memory']  = memory_get_usage();
 		$this->data['start_time']    = microtime( true );
 		$this->data['start_queries'] = $wpdb->num_queries;
 		$this->data['args']          = func_get_args();
 		$this->data['hook']          = current_filter();
 		$this->data['https']         = array();
-
-		$actions = get_hook_callbacks( $this->data['hook'] );
-
-		foreach ( $actions as $action ) {
-			$this->data['actions'][] = $action['callback']['name'];
-		}
-
-		add_action( 'http_api_debug', array( $this, 'action_http_api_debug' ), 9999, 5 );
-
-		$this->old_exception_handler = set_exception_handler( array( $this, 'exception_handler' ) );
 	}
 
 	public function log_end() {
 		global $wpdb;
 
-		remove_action( 'http_api_debug', array( $this, 'action_http_api_debug' ), 9999 );
-
-		set_exception_handler( $this->old_exception_handler );
-
 		$this->data['end_memory']  = memory_get_usage();
 		$this->data['end_time']    = microtime( true );
 		$this->data['end_queries'] = $wpdb->num_queries;
+
+		remove_action( 'http_api_debug', array( $this, 'action_http_api_debug' ), 9999 );
+
+		set_exception_handler( $this->old_exception_handler );
 
 		$post_id = wp_insert_post( array(
 			'post_type'    => 'crontrol_log',
