@@ -151,6 +151,7 @@ class Log {
 
 	public function columns( array $columns ) {
 		$columns['actions'] = 'Actions';
+		$columns['time']    = 'Time (s)';
 		$columns['queries'] = 'Database Queries';
 		$columns['https']   = 'HTTP Requests';
 		$columns['error']   = 'Error';
@@ -163,12 +164,17 @@ class Log {
 		$actions = get_post_meta( $post_id, 'crontrol_log_actions', true );
 		$queries = get_post_meta( $post_id, 'crontrol_log_queries', true );
 		$https   = get_post_meta( $post_id, 'crontrol_log_https', true );
+		$time    = get_post_meta( $post_id, 'crontrol_log_time', true );
 
 		if ( empty( $actions ) ) {
 			$actions = array();
 		}
 
 		switch ( $name ) {
+
+			case 'time':
+				echo esc_html( number_format_i18n( $time, 4 ) );
+				break;
 
 			case 'error':
 				$error = get_post_meta( $post_id, 'crontrol_log_exception', true );
