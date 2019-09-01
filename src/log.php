@@ -181,7 +181,7 @@ class Log {
 					printf(
 						'<span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %1$s</span><br>%2$s:%3$s',
 						esc_html( $error['message'] ),
-						esc_html( str_replace( [ WP_CONTENT_DIR . '/', ABSPATH . '/' ], '', $error['file'] ) ),
+						esc_html( str_replace( array( WP_CONTENT_DIR . '/', ABSPATH . '/' ), '', $error['file'] ) ),
 						esc_html( $error['line'] )
 					);
 				}

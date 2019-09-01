@@ -9,8 +9,6 @@ namespace Crontrol;
 
 use stdClass;
 
-use function Crontrol\get_core_hooks;
-
 require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 
 /**
@@ -43,19 +41,19 @@ class Event_List_Table extends \WP_List_Table {
 	 * Constructor.
 	 */
 	public function __construct() {
-		parent::__construct( [
+		parent::__construct( array(
 			'singular' => 'crontrol-event',
 			'plural'   => 'crontrol-events',
 			'ajax'     => false,
 			'screen'   => 'crontrol-events',
-		] );
+		) );
 	}
 
 	/**
 	 * Prepares the list table items and arguments.
 	 */
 	public function prepare_items() {
-		self::$core_hooks     = get_core_hooks();
+		self::$core_hooks     = \Crontrol\get_core_hooks();
 		self::$can_edit_files = current_user_can( 'edit_files' );
 		self::$count_by_hook  = Event\count_by_hook();
 
@@ -222,7 +220,7 @@ class Event_List_Table extends \WP_List_Table {
 
 		$return = esc_html( $event->hook );
 
-		if ( in_array( $event->hook, get_core_hooks(), true ) ) {
+		if ( in_array( $event->hook, \Crontrol\get_core_hooks(), true ) ) {
 			$return .= sprintf(
 				'<br><em>(%s)</em>',
 				esc_html__( 'WordPress core hook', 'wp-crontrol' )
@@ -243,6 +241,7 @@ class Event_List_Table extends \WP_List_Table {
 			$json_options = 0;
 
 			if ( defined( 'JSON_UNESCAPED_SLASHES' ) ) {
+				// phpcs:ignore PHPCompatibility.Constants.NewConstants.json_unescaped_slashesFound
 				$json_options |= JSON_UNESCAPED_SLASHES;
 			}
 			if ( defined( 'JSON_PRETTY_PRINT' ) ) {

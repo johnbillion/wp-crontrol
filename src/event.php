@@ -61,6 +61,7 @@ function add( $next_run, $schedule, $hookname, array $args ) {
 				'return true; %s',
 				$args['code']
 			) );
+		// phpcs:ignore PHPCompatibility.Classes.NewClasses.parseerrorFound
 		} catch ( \ParseError $e ) {
 			$args['syntax_error_message'] = $e->getMessage();
 			$args['syntax_error_line']    = $e->getLine();

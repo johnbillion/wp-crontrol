@@ -7,8 +7,6 @@
 
 namespace Crontrol\Schedule;
 
-use function Crontrol\interval;
-
 /**
  * Adds a new custom cron schedule.
  *
@@ -66,7 +64,7 @@ function dropdown( $current = false ) {
 			printf(
 				'%s (%s)',
 				esc_html( $sched_data['display'] ),
-				esc_html( interval( $sched_data['interval'] ) )
+				esc_html( \Crontrol\interval( $sched_data['interval'] ) )
 			);
 			?>
 		</option>
