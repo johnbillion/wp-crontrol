@@ -1246,12 +1246,19 @@ function enqueue_code_editor() {
 }
 
 /**
- * Registers the stylesheet for the admin area.
+ * Registers the stylesheet for the admin areas.
  *
- * @param string $id The admin screen ID.
+ * @param string $hook_suffix The admin screen ID.
  */
-function enqueue_styles( $id ) {
-	if ( 'tools_page_crontrol_admin_manage_page' !== $id ) {
+function enqueue_styles( $hook_suffix ) {
+	$screens = array(
+		'edit-crontrol_log',
+		'tools_page_crontrol_admin_manage_page',
+	);
+
+	$screen = get_current_screen();
+
+	if ( ! $screen || ! in_array( $screen->id, $screens, true ) ) {
 		return;
 	}
 
