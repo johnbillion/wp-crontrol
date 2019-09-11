@@ -186,6 +186,7 @@ class Log {
 
 		$columns['title']   = 'Hook';
 		$columns['ran']     = 'Date';
+		$columns['args']    = 'Args';
 		$columns['actions'] = 'Actions';
 		$columns['time']    = 'Time (s)';
 		$columns['queries'] = 'Database Queries';
@@ -215,6 +216,22 @@ class Log {
 
 			case 'time':
 				echo esc_html( number_format_i18n( $time, 4 ) );
+				break;
+
+			case 'args':
+				$args = $post->post_content;
+
+				if ( '[]' === $args ) {
+					printf(
+						'<em>%s</em>',
+						esc_html__( 'None', 'wp-crontrol' )
+					);
+				} else {
+					printf(
+						'<pre>%s</pre>',
+						esc_html( $args )
+					);
+				}
 				break;
 
 			case 'error':
@@ -322,7 +339,7 @@ class Log {
 			'post_title'   => $this->data['hook'],
 			'post_date'    => get_date_from_gmt( date( 'Y-m-d H:i:s', $this->data['start_time'] ), 'Y-m-d H:i:s' ),
 			'post_status'  => 'publish',
-			'post_content' => wp_json_encode( $this->data['args'] ),
+			'post_content' => wp_json_encode( $this->data['args'] ), // @TODO check slashing
 			'post_name'    => uniqid(),
 		), true );
 
