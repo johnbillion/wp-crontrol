@@ -257,6 +257,11 @@ class Log {
 						esc_html( str_replace( array( WP_CONTENT_DIR . '/', ABSPATH . '/' ), '', $error['file'] ) ),
 						esc_html( $error['line'] )
 					);
+				} else {
+					printf(
+						'<em>%s</em>',
+						esc_html__( 'None', 'wp-crontrol' )
+					);
 				}
 				break;
 
@@ -268,11 +273,23 @@ class Log {
 					echo '<code>';
 					echo implode( '</code><br><code>', $actions );
 					echo '</code>';
+				} else {
+					printf(
+						'<em>%s</em>',
+						esc_html__( 'None', 'wp-crontrol' )
+					);
 				}
 				break;
 
 			case 'queries':
-				echo esc_html( number_format_i18n( $queries ) );
+				if ( ! empty( $queries ) ) {
+					echo esc_html( number_format_i18n( $queries ) );
+				} else {
+					printf(
+						'<em>%s</em>',
+						esc_html__( 'None', 'wp-crontrol' )
+					);
+				}
 				break;
 
 			case 'https':
@@ -287,6 +304,11 @@ class Log {
 						);
 					}
 					echo '</ol>';
+				} else {
+					printf(
+						'<em>%s</em>',
+						esc_html__( 'None', 'wp-crontrol' )
+					);
 				}
 				break;
 
