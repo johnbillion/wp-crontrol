@@ -184,14 +184,14 @@ class Log {
 
 		unset( $columns['date'] );
 
-		$columns['title']   = 'Hook';
-		$columns['ran']     = 'Date';
-		$columns['args']    = 'Args';
-		$columns['actions'] = 'Actions';
-		$columns['time']    = 'Time (s)';
-		$columns['queries'] = 'Database Queries';
-		$columns['https']   = 'HTTP Requests';
-		$columns['error']   = 'Error';
+		$columns['title']   = esc_html__( 'Hook', 'wp-crontrol' );
+		$columns['ran']     = esc_html__( 'Date', 'wp-crontrol' );
+		$columns['args']    = esc_html__( 'Args', 'wp-crontrol' );
+		$columns['actions'] = esc_html__( 'Actions', 'wp-crontrol' );
+		$columns['time']    = esc_html__( 'Time (s)', 'wp-crontrol' );
+		$columns['queries'] = esc_html__( 'Database Queries', 'wp-crontrol' );
+		$columns['https']   = esc_html__( 'HTTP Requests', 'wp-crontrol' );
+		$columns['error']   = esc_html__( 'Error', 'wp-crontrol' );
 
 		return $columns;
 	}
