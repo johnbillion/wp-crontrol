@@ -9,7 +9,6 @@ namespace Crontrol\Event;
 
 use stdClass;
 use Crontrol\Schedule;
-use ParseError;
 
 /**
  * Executes a cron event immediately.

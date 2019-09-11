@@ -7,8 +7,6 @@
 
 namespace Crontrol;
 
-use ParseError;
-use Error;
 use Throwable;
 use Exception;
 
@@ -20,7 +18,7 @@ class Log {
 	public static $taxonomy  = 'crontrol_log_hook';
 
 	public function init() {
-		foreach ( Event\count_by_hook() as $hook => $count ) {
+		foreach ( array_keys( Event\count_by_hook() ) as $hook ) {
 			add_action( $hook, array( $this, 'log_start' ), -9999, 50 );
 			add_action( $hook, array( $this, 'log_end' ), 9999, 50 );
 		}
@@ -216,7 +214,7 @@ class Log {
 			case 'https':
 				if ( ! empty( $https ) ) {
 					echo '<ol>';
-					foreach ( $https as $key => $http ) {
+					foreach ( $https as $http ) {
 						printf(
 							'<li>%1$s %2$s<br>%3$s</li>',
 							esc_html( $http['method'] ),
