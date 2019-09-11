@@ -1,43 +1,23 @@
-.table {
+table.wp-list-table {
 	width: 100%;
 	max-width: 100%;
-	margin-bottom: 1rem;
-	background-color: transparent;
-}
-
-.table th,
-.table td {
-	padding: 0.75rem;
-	vertical-align: top;
-	border-top: 1px solid #dee2e6;
-}
-
-.table thead th {
-	vertical-align: bottom;
-	border-bottom: 2px solid #dee2e6;
-}
-
-.table tbody + tbody {
-	border-top: 2px solid #dee2e6;
-}
-
-.table .table {
-	background-color: #fff;
-}
-
-.table-responsive {
-	display: block;
-	width: 100%;
+	table-layout: auto;
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
 	-ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
-.crontrol-events pre {
+.wp-list-table pre {
 	white-space: pre-wrap;
 	margin: 0;
 }
 
+.column-time,
+.column-ran,
 .column-crontrol_next {
 	white-space: nowrap;
+}
+
+.column-https ol {
+	margin: 0 0 0 1.5em;
 }
