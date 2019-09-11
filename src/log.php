@@ -9,6 +9,7 @@ namespace Crontrol;
 
 use Throwable;
 use Exception;
+use WP_Post;
 
 class Log {
 
@@ -27,6 +28,8 @@ class Log {
 		add_filter( 'wpcom_async_transition_post_status_schedule_async', array( $this, 'filter_wpcom_async_transition' ), 10, 2 );
 		add_filter( 'manage_crontrol_log_posts_columns',       array( $this, 'columns' ) );
 		add_action( 'manage_crontrol_log_posts_custom_column', array( $this, 'column' ), 10, 2 );
+		add_filter( 'post_row_actions',                        array( $this, 'remove_quick_edit_action' ), 10, 2 );
+		add_filter( 'bulk_actions-edit-' . self::$post_type,   array( $this, 'remove_quick_edit_menu' ) );
 
 		register_post_type( self::$post_type, array(
 			'public'  => false,
@@ -112,6 +115,36 @@ class Log {
 		}
 
 		return $disable;
+	}
+
+
+	/**
+	 * Removes the Quick Edit link from the post row actions.
+	 *
+	 * @param string[] $actions Array of post actions.
+	 * @param WP_Post  $post    The current post object.
+	 * @return string[] Array of updated post actions.
+	 */
+	public function remove_quick_edit_action( array $actions, WP_Post $post ) {
+		if ( self::$post_type !== $post->post_type ) {
+			return $actions;
+		}
+
+		unset( $actions['inline'], $actions['inline hide-if-no-js'] );
+
+		return $actions;
+	}
+
+	/**
+	 * Removes the Quick Edit link from the bulk actions menu.
+	 *
+	 * @param string[] $actions Array of bulk actions.
+	 * @return string[] Array of updated bulk actions.
+	 */
+	public function remove_quick_edit_menu( array $actions ) {
+		unset( $actions['edit'] );
+
+		return $actions;
 	}
 
 	/**
