@@ -229,7 +229,7 @@ class Log {
 				} else {
 					printf(
 						'<pre>%s</pre>',
-						esc_html( $args )
+						esc_html( json_output( json_decode( $args ) ) )
 					);
 				}
 				break;

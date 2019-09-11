@@ -238,17 +238,7 @@ class Event_List_Table extends \WP_List_Table {
 	 */
 	protected function column_crontrol_args( $event ) {
 		if ( ! empty( $event->args ) ) {
-			$json_options = 0;
-
-			if ( defined( 'JSON_UNESCAPED_SLASHES' ) ) {
-				// phpcs:ignore PHPCompatibility.Constants.NewConstants.json_unescaped_slashesFound
-				$json_options |= JSON_UNESCAPED_SLASHES;
-			}
-			if ( defined( 'JSON_PRETTY_PRINT' ) ) {
-				$json_options |= JSON_PRETTY_PRINT;
-			}
-
-			$args = wp_json_encode( $event->args, $json_options );
+			$args = json_output( $event->args );
 		}
 
 		if ( 'crontrol_cron_job' === $event->hook ) {

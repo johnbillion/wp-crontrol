@@ -1294,5 +1294,25 @@ function get_core_hooks() {
 	);
 }
 
+/**
+ * Encodes some input as JSON for output.
+ *
+ * @param mixed $input The input.
+ * @return string The JSON-encoded output.
+ */
+function json_output( $input ) {
+	$json_options = 0;
+
+	if ( defined( 'JSON_UNESCAPED_SLASHES' ) ) {
+		// phpcs:ignore PHPCompatibility.Constants.NewConstants.json_unescaped_slashesFound
+		$json_options |= JSON_UNESCAPED_SLASHES;
+	}
+	if ( defined( 'JSON_PRETTY_PRINT' ) ) {
+		$json_options |= JSON_PRETTY_PRINT;
+	}
+
+	return wp_json_encode( $input, $json_options );
+}
+
 // Get this show on the road.
 init_hooks();
