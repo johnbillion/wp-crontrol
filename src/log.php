@@ -191,7 +191,7 @@ class Log {
 		$columns['time']    = esc_html__( 'Time (s)', 'wp-crontrol' );
 		$columns['queries'] = esc_html__( 'Database Queries', 'wp-crontrol' );
 		$columns['https']   = esc_html__( 'HTTP Requests', 'wp-crontrol' );
-		$columns['error']   = esc_html__( 'Error', 'wp-crontrol' );
+		$columns['error']   = esc_html__( 'Fatal Errors', 'wp-crontrol' );
 
 		return $columns;
 	}
