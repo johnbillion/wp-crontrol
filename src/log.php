@@ -237,9 +237,23 @@ class Log {
 			case 'error':
 				$error = get_post_meta( $post_id, 'crontrol_log_exception', true );
 				if ( ! empty( $error ) ) {
+					if ( 'Exception' === $error['type'] ) {
+						$message = sprintf(
+							/* translators: %s: PHP error message */
+							__( 'Uncaught Exception: %s', 'wp-crontrol' ),
+							$error['message']
+						);
+					} else {
+						$message = sprintf(
+							/* translators: %s: PHP error message */
+							__( 'Uncaught Error: %s', 'wp-crontrol' ),
+							$error['message']
+						);
+					}
+
 					printf(
 						'<span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %1$s</span><br>%2$s:%3$s',
-						esc_html( $error['message'] ),
+						esc_html( $message ),
 						esc_html( str_replace( array( WP_CONTENT_DIR . '/', ABSPATH . '/' ), '', $error['file'] ) ),
 						esc_html( $error['line'] )
 					);
@@ -360,6 +374,7 @@ class Log {
 				'message' => $this->data['exception']->getMessage(),
 				'file'    => $this->data['exception']->getFile(),
 				'line'    => $this->data['exception']->getLine(),
+				'type'    => is_a( $this->data['exception'], 'Exception' ) ? 'Exception' : 'Throwable',
 			);
 		}
 
