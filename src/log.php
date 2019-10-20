@@ -371,14 +371,14 @@ class Log {
 
 		set_exception_handler( $this->old_exception_handler );
 
-		$post_id = wp_insert_post( array(
+		$post_id = wp_insert_post( wp_slash( array(
 			'post_type'    => self::$post_type,
 			'post_title'   => $this->data['hook'],
 			'post_date'    => get_date_from_gmt( date( 'Y-m-d H:i:s', $this->data['start_time'] ), 'Y-m-d H:i:s' ),
 			'post_status'  => 'publish',
-			'post_content' => wp_slash( wp_json_encode( $this->data['args'] ) ),
+			'post_content' => wp_json_encode( $this->data['args'] ),
 			'post_name'    => uniqid(),
-		), true );
+		) ), true );
 
 		if ( is_wp_error( $post_id ) ) {
 			return; // ¯\_(ツ)_/¯
