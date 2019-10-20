@@ -53,7 +53,7 @@ class Event_List_Table extends \WP_List_Table {
 	 * Prepares the list table items and arguments.
 	 */
 	public function prepare_items() {
-		self::$core_hooks     = \Crontrol\get_core_hooks();
+		self::$core_hooks     = get_core_hooks();
 		self::$can_edit_files = current_user_can( 'edit_files' );
 		self::$count_by_hook  = Event\count_by_hook();
 
@@ -137,7 +137,7 @@ class Event_List_Table extends \WP_List_Table {
 		$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
 
 		$link = add_query_arg( array(
-			'post_type'         => Log::$post_type,
+			'post_type'    => Log::$post_type,
 			Log::$taxonomy => rawurlencode( sanitize_title( $event->hook ) ),
 		), admin_url( 'edit.php' ) );
 
@@ -192,7 +192,7 @@ class Event_List_Table extends \WP_List_Table {
 			</label>
 			<?php
 				printf(
-					'<input type="checkbox" name="delete[%1$s][%2$s]" value="%3$s" id="">',
+					'<input type="checkbox" name="delete[%1$s][%2$s]" value="%3$s">',
 					esc_attr( $event->time ),
 					esc_attr( rawurlencode( $event->hook ) ),
 					esc_attr( $event->sig )
@@ -220,7 +220,7 @@ class Event_List_Table extends \WP_List_Table {
 
 		$return = esc_html( $event->hook );
 
-		if ( in_array( $event->hook, \Crontrol\get_core_hooks(), true ) ) {
+		if ( in_array( $event->hook, get_core_hooks(), true ) ) {
 			$return .= sprintf(
 				'<br><em>(%s)</em>',
 				esc_html__( 'WordPress core hook', 'wp-crontrol' )

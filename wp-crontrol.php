@@ -560,7 +560,7 @@ function admin_options_page() {
 					<td><input type="text" class="regular-text" value="" id="cron_display_name" name="display_name" required/></td>
 				</tr>
 			</tbody></table>
-			<p class="submit"><input id="schedadd-submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Add Cron Schedule', 'wp-crontrol' ); ?>" name="new_schedule"/></p>
+			<p class="submit"><input id="schedadd-submit" type="submit" class="button button-primary" value="<?php esc_attr_e( 'Add Cron Schedule', 'wp-crontrol' ); ?>" name="new_schedule"/></p>
 			<?php wp_nonce_field( 'new-sched' ); ?>
 		</form>
 	</div>
@@ -893,7 +893,7 @@ function show_cron_form( $is_php, $existing ) {
 					</td>
 				</tr>
 			</tbody></table>
-			<p class="submit"><input type="submit" class="button-primary" value="<?php echo esc_attr( $button ); ?>" name="<?php echo esc_attr( $action ); ?>"/></p>
+			<p class="submit"><input type="submit" class="button button-primary" value="<?php echo esc_attr( $button ); ?>" name="<?php echo esc_attr( $action ); ?>"/></p>
 		</form>
 		<?php } else { ?>
 			<div class="error inline">
