@@ -664,8 +664,14 @@ function get_timezone_name() {
 	$timezone_string = get_option( 'timezone_string', '' );
 	$gmt_offset      = get_option( 'gmt_offset', 0 );
 
-	if ( $gmt_offset >= 0 ) {
+	if ( 'UTC' === $timezone_string || ( empty( $gmt_offset ) && empty( $timezone_string ) ) ) {
+		return 'UTC';
+	}
+
+	if ( $gmt_offset > 0 ) {
 		$gmt_offset = '+' . $gmt_offset;
+	} elseif ( empty( $gmt_offset ) ) {
+		$gmt_offset = '';
 	}
 
 	if ( '' === $timezone_string ) {
