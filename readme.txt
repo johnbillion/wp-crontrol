@@ -1,6 +1,6 @@
 === WP Crontrol ===
 Contributors: johnbillion, scompt
-Tags: admin, cron, plugin, control, wp-cron, crontrol
+Tags: cron, wp-cron, crontrol, debug
 Requires at least: 4.1
 Tested up to: 5.1
 Stable tag: 1.7.1
