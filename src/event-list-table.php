@@ -97,6 +97,20 @@ class Event_List_Table extends \WP_List_Table {
 	}
 
 	/**
+	 * Get an associative array ( option_name => option_title ) with the list
+	 * of bulk actions available on this table.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @return array
+	 */
+	protected function get_bulk_actions() {
+		return array(
+			'delete_crons' => esc_html__( 'Delete', 'wp-crontrol' ),
+		);
+	}
+
+	/**
 	 * Generates and displays row action links for the table.
 	 *
 	 * @param stdClass $event       The cron event for the current row.

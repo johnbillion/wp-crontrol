@@ -241,11 +241,11 @@ function action_handle_posts() {
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 		exit;
 
-	} elseif ( isset( $_POST['delete_crons'] ) ) {
+	} elseif ( isset( $_POST['action'] ) && 'delete_crons' === $_POST['action'] ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
 		}
-		check_admin_referer( 'bulk-delete-crons' );
+		check_admin_referer( 'bulk-crontrol-events' );
 
 		if ( empty( $_POST['delete'] ) ) {
 			return;
@@ -1009,14 +1009,6 @@ function admin_manage_page() {
 			) );
 		?>
 	</p>
-	<?php
-	wp_nonce_field( 'bulk-delete-crons' );
-	submit_button(
-		__( 'Delete Selected Events', 'wp-crontrol' ),
-		'primary large',
-		'delete_crons'
-	);
-	?>
 	</form>
 
 	</div>
