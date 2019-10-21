@@ -127,7 +127,6 @@ class Log {
 		return $disable;
 	}
 
-
 	/**
 	 * Removes the Quick Edit link from the post row actions.
 	 *
@@ -191,7 +190,6 @@ class Log {
 	}
 
 	public function columns( array $columns ) {
-
 		unset( $columns['date'] );
 
 		$columns['title']   = esc_html__( 'Hook', 'wp-crontrol' );
