@@ -60,7 +60,7 @@ class Log {
 				'edit_posts'             => 'manage_options',
 				'edit_others_posts'      => 'do_not_allow',
 				'publish_posts'          => 'do_not_allow',
-				'read_private_posts'     => 'manage_options',
+				'read_private_posts'     => 'do_not_allow',
 				'read'                   => 'manage_options',
 				'delete_posts'           => 'manage_options',
 				'delete_private_posts'   => 'manage_options',
