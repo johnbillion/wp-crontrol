@@ -19,17 +19,14 @@ class Log {
 	public static $taxonomy  = 'crontrol_log_hook';
 
 	public function init() {
-		foreach ( array_keys( Event\count_by_hook() ) as $hook ) {
-			add_action( $hook, array( $this, 'log_start' ), -9999, 50 );
-			add_action( $hook, array( $this, 'log_end' ), 9999, 50 );
-		}
-
 		add_filter( 'disable_months_dropdown', array( $this, 'filter_disable_months_dropdown' ), 10, 2 );
 		add_filter( 'wpcom_async_transition_post_status_schedule_async', array( $this, 'filter_wpcom_async_transition' ), 10, 2 );
 		add_filter( 'manage_crontrol_log_posts_columns',       array( $this, 'columns' ) );
 		add_action( 'manage_crontrol_log_posts_custom_column', array( $this, 'column' ), 10, 2 );
 		add_filter( 'post_row_actions',                        array( $this, 'remove_quick_edit_action' ), 10, 2 );
 		add_filter( 'bulk_actions-edit-' . self::$post_type,   array( $this, 'remove_quick_edit_menu' ) );
+
+		$this->setup_hooks();
 
 		register_post_type( self::$post_type, array(
 			'public'  => false,
@@ -99,6 +96,19 @@ class Log {
 				'back_to_items'              => '&larr; Back to Hooks',
 			),
 		) );
+	}
+
+	public function setup_hooks() {
+		$exclude = apply_filters( 'crontrol/log/exclude', array() );
+		$hooks   = array_keys( Event\count_by_hook() );
+		$hooks   = array_diff( $hooks, $exclude );
+
+		array_map( array( $this, 'observe' ), $hooks );
+	}
+
+	public function observe( $hook ) {
+		add_action( $hook, array( $this, 'log_start' ), -9999, 50 );
+		add_action( $hook, array( $this, 'log_end' ), 9999, 50 );
 	}
 
 	public function filter_wpcom_async_transition( $schedule, array $args ) {

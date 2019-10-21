@@ -59,6 +59,7 @@ function init_hooks() {
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_styles' );
+	add_filter( 'crontrol/log/exclude',  __NAMESPACE__ . '\\get_core_hooks' );
 
 	add_action( 'init', array( Log::get_instance(), 'init' ) );
 }
