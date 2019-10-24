@@ -431,13 +431,6 @@ function filter_cron_schedules( $scheds ) {
  * Displays the options page for the plugin.
  */
 function admin_options_page() {
-	$schedules        = Schedule\get();
-	$events           = Event\get();
-	$custom_schedules = get_option( 'crontrol_schedules', array() );
-	$custom_keys      = array_keys( $custom_schedules );
-
-	$used_schedules = array_unique( wp_list_pluck( $events, 'schedule' ) );
-
 	$messages = array(
 		/* translators: 1: The name of the cron schedule. */
 		'2' => __( 'Successfully deleted the cron schedule %s.', 'wp-crontrol' ),
@@ -461,82 +454,21 @@ function admin_options_page() {
 		);
 	}
 
+	require_once __DIR__ . '/src/schedule-list-table.php';
+
+	$table = new Schedule_List_Table();
+
+	$table->prepare_items();
+
 	?>
 	<div class="wrap">
-	<h1><?php esc_html_e( 'WP-Cron Schedules', 'wp-crontrol' ); ?></h1>
-	<p><?php esc_html_e( 'WP-Cron schedules are the time intervals that are available for scheduling events. You can only delete custom schedules.', 'wp-crontrol' ); ?></p>
-	<table class="widefat striped">
-	<thead>
-		<tr>
-			<th scope="col"><?php esc_html_e( 'Name', 'wp-crontrol' ); ?></th>
-			<th scope="col"><?php esc_html_e( 'Interval', 'wp-crontrol' ); ?></th>
-			<th scope="col"><?php esc_html_e( 'Display Name', 'wp-crontrol' ); ?></th>
-			<th scope="col"><?php esc_html_e( 'Delete', 'wp-crontrol' ); ?></th>
-		</tr>
-	</thead>
-	<tbody>
-	<?php
-	if ( empty( $schedules ) ) {
-		?>
-		<tr colspan="4"><td><?php esc_html_e( 'You currently have no schedules. Add one below.', 'wp-crontrol' ); ?></td></tr>
-		<?php
-	} else {
-		foreach ( $schedules as $name => $data ) {
-			printf(
-				'<tr id="sched-%s">',
-				esc_attr( $name )
-			);
-			printf(
-				'<td>%s</td>',
-				esc_html( $name )
-			);
 
-			if ( $data['interval'] < 600 ) {
-				printf(
-					'<td>%s (%s)<br><span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span>%s</span></td>',
-					esc_html( $data['interval'] ),
-					esc_html( interval( $data['interval'] ) ),
-					esc_html__( 'An interval of less than 10 minutes may be unreliable.', 'wp-crontrol' )
-				);
-			} else {
-				printf(
-					'<td>%s (%s)</td>',
-					esc_html( $data['interval'] ),
-					esc_html( interval( $data['interval'] ) )
-				);
-			}
+	<h1><?php esc_html_e( 'Cron Schedules', 'wp-crontrol' ); ?></h1>
 
-			printf(
-				'<td>%s</td>',
-				esc_html( $data['display'] )
-			);
+	<?php $table->views(); ?>
 
-			echo '<td>';
-			if ( in_array( $name, $custom_keys, true ) ) {
-				if ( in_array( $name, $used_schedules, true ) ) {
-					esc_html_e( 'This custom schedule is in use and cannot be deleted', 'wp-crontrol' );
-				} else {
-					$url = add_query_arg( array(
-						'page'   => 'crontrol_admin_options_page',
-						'action' => 'delete-sched',
-						'id'     => rawurlencode( $name ),
-					), admin_url( 'options-general.php' ) );
-					$url = wp_nonce_url( $url, 'delete-sched_' . $name );
-					printf( '<span class="row-actions visible"><span class="delete"><a href="%s">%s</a></span></span>',
-						esc_url( $url ),
-						esc_html__( 'Delete', 'wp-crontrol' )
-					);
-				}
-			} else {
-				echo '&nbsp;';
-			}
-			echo '</td>';
-			echo '</tr>';
-		}
-	}
-	?>
-	</tbody>
-	</table>
+	<div class="table-responsive">
+		<?php $table->display(); ?>
 	</div>
 	<div class="wrap">
 		<p class="description">
@@ -1260,6 +1192,7 @@ function enqueue_styles( $hook_suffix ) {
 	$screens = array(
 		'edit-crontrol_log',
 		'tools_page_crontrol_admin_manage_page',
+		'settings_page_crontrol_admin_options_page',
 	);
 
 	$screen = get_current_screen();
@@ -1304,6 +1237,19 @@ function get_core_hooks() {
 		'delete_expired_transients',
 		'wp_privacy_delete_old_export_files',
 		'recovery_mode_clean_expired_keys',
+	);
+}
+
+/**
+ * Returns an array of cron schedules that are added by WordPress core.
+ *
+ * @return string[] Array of schedule names.
+ */
+function get_core_schedules() {
+	return array(
+		'hourly',
+		'twicedaily',
+		'daily',
 	);
 }
 

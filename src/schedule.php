@@ -45,6 +45,11 @@ function get() {
 	uasort( $schedules, function( array $a, array $b ) {
 		return ( $a['interval'] - $b['interval'] );
 	} );
+
+	array_walk( $schedules, function( array & $schedule, $name ) {
+		$schedule['name'] = $name;
+	} );
+
 	return $schedules;
 }
 
