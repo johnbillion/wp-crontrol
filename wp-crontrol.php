@@ -472,17 +472,7 @@ function admin_options_page() {
 	<div class="table-responsive">
 		<?php $table->display(); ?>
 	</div>
-	<div class="wrap">
-		<p class="description">
-			<?php
-				printf(
-					'<a href="%s">%s</a>',
-					esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ),
-					esc_html__( 'Manage Cron Events', 'wp-crontrol' )
-				);
-			?>
-		</p>
-	</div>
+
 	<div class="wrap narrow">
 		<h2 class="title"><?php esc_html_e( 'Add Cron Schedule', 'wp-crontrol' ); ?></h2>
 		<p><?php esc_html_e( 'Adding a new cron schedule will allow you to schedule events that re-occur at the given interval.', 'wp-crontrol' ); ?></p>
@@ -803,15 +793,6 @@ function show_cron_form( $is_php, $existing ) {
 					<th valign="top" scope="row"><label for="schedule"><?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?></label></th>
 					<td>
 						<?php Schedule\dropdown( $existing['schedule'] ); ?>
-						<p class="description">
-							<?php
-							printf(
-								'<a href="%s">%s</a>',
-								esc_url( admin_url( 'options-general.php?page=crontrol_admin_options_page' ) ),
-								esc_html__( 'Manage Cron Schedules', 'wp-crontrol' )
-							);
-							?>
-						</p>
 					</td>
 				</tr>
 			</tbody></table>
