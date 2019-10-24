@@ -463,6 +463,8 @@ function admin_options_page() {
 	?>
 	<div class="wrap">
 
+	<?php do_tabs(); ?>
+
 	<h1><?php esc_html_e( 'Cron Schedules', 'wp-crontrol' ); ?></h1>
 
 	<?php $table->views(); ?>
@@ -630,19 +632,6 @@ function get_timezone_name() {
  * @param mixed $existing An array of existing values for the cron event, or null.
  */
 function show_cron_form( $is_php, $existing ) {
-	$new_tabs    = array(
-		'cron'     => __( 'Add Cron Event', 'wp-crontrol' ),
-		'php-cron' => __( 'Add PHP Cron Event', 'wp-crontrol' ),
-	);
-	$modify_tabs = array(
-		'cron'     => __( 'Edit Cron Event', 'wp-crontrol' ),
-		'php-cron' => __( 'Edit PHP Cron Event', 'wp-crontrol' ),
-	);
-	$new_links   = array(
-		'cron'     => admin_url( 'tools.php?page=crontrol_admin_manage_page&action=new-cron' ) . '#crontrol_form',
-		'php-cron' => admin_url( 'tools.php?page=crontrol_admin_manage_page&action=new-php-cron' ) . '#crontrol_form',
-	);
-
 	$display_args = '';
 
 	if ( $is_php ) {
@@ -700,13 +689,6 @@ function show_cron_form( $is_php, $existing ) {
 	$allowed = ( ! $is_php || current_user_can( 'edit_files' ) );
 	?>
 	<div id="crontrol_form" class="wrap narrow">
-		<h2 class="nav-tab-wrapper">
-			<a href="<?php echo esc_url( $new_links['cron'] ); ?>" class="nav-tab<?php echo ( ! $show_edit_tab && ! $is_php ) ? ' nav-tab-active' : ''; ?>"><?php echo esc_html( $new_tabs['cron'] ); ?></a>
-			<a href="<?php echo esc_url( $new_links['php-cron'] ); ?>" class="nav-tab<?php echo ( ! $show_edit_tab && $is_php ) ? ' nav-tab-active' : ''; ?>"><?php echo esc_html( $new_tabs['php-cron'] ); ?></a>
-			<?php if ( $show_edit_tab ) { ?>
-				<span class="nav-tab nav-tab-active"><?php echo esc_html( $button ); ?></span>
-			<?php } ?>
-		</h2>
 		<?php
 		if ( $allowed ) {
 			printf(
@@ -900,11 +882,15 @@ function admin_manage_page() {
 		'recovery_mode_clean_expired_keys',
 	);
 
-	show_cron_status();
 
 	?>
 	<div class="wrap">
+
+	<?php do_tabs(); ?>
+
 	<h1><?php esc_html_e( 'Cron Events', 'wp-crontrol' ); ?></h1>
+
+	<?php show_cron_status(); ?>
 
 	<?php $table->views(); ?>
 
@@ -956,6 +942,72 @@ function admin_manage_page() {
 	} else {
 		show_cron_form( ( isset( $_GET['action'] ) && 'new-php-cron' === $_GET['action'] ), false );
 	}
+}
+
+function get_tab_states() {
+	return array(
+		'events'        => ( ! empty( $_GET['page'] ) && 'crontrol_admin_manage_page' === $_GET['page'] && empty( $_GET['action'] ) ),
+		'logs'          => ( get_current_screen()->post_type === Log::$post_type ),
+		'schedules'     => ( ! empty( $_GET['page'] ) && 'crontrol_admin_options_page' === $_GET['page'] ),
+		'add-event'     => ( ! empty( $_GET['action'] ) && 'new-cron' === $_GET['action'] ),
+		'add-php-event' => ( ! empty( $_GET['action'] ) && 'new-php-cron' === $_GET['action'] ),
+		'edit-event'    => ( ! empty( $_GET['action'] ) && 'edit-cron' === $_GET['action'] ),
+	);
+}
+
+function do_tabs() {
+	$links = array(
+		'events'        => array(
+			'tools.php?page=crontrol_admin_manage_page',
+			__( 'Cron Events', 'wp-crontrol' ),
+		),
+		'logs'          => array(
+			'edit.php?post_type=crontrol_log',
+			__( 'Cron Logs', 'wp-crontrol' ),
+		),
+		'schedules'     => array(
+			'options-general.php?page=crontrol_admin_options_page',
+			__( 'Cron Schedules', 'wp-crontrol' ),
+		),
+		'add-event'     => array(
+			'tools.php?page=crontrol_admin_manage_page&action=new-cron',
+			__( 'Add Cron Event', 'wp-crontrol' ),
+		),
+		'add-php-event' => array(
+			'tools.php?page=crontrol_admin_manage_page&action=new-php-cron',
+			__( 'Add PHP Cron Event', 'wp-crontrol' ),
+		),
+	);
+	$tab = get_tab_states();
+
+	?>
+	<nav class="nav-tab-wrapper wp-clearfix">
+		<?php
+			foreach ( $links as $id => $link ) {
+				if ( $tab[ $id ] ) {
+					printf(
+						'<a href="%s" class="nav-tab nav-tab-active">%s</a>',
+						esc_url( $link[0] ),
+						esc_html( $link[1] )
+					);
+				} else {
+					printf(
+						'<a href="%s" class="nav-tab">%s</a>',
+						esc_url( $link[0] ),
+						esc_html( $link[1] )
+					);
+				}
+			}
+
+			if ( $tab['edit-event'] ) {
+				printf(
+					'<span class="nav-tab nav-tab-active">%s</span>',
+					esc_html__( 'Edit Cron Event', 'wp-crontrol' )
+				);
+			}
+		?>
+	</nav>
+	<?php
 }
 
 /**
