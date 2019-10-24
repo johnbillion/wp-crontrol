@@ -422,7 +422,7 @@ function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
  * @param array[] $scheds Array of cron schedule arrays. Usually empty.
  * @return array[] Array of modified cron schedule arrays.
  */
-function filter_cron_schedules( $scheds ) {
+function filter_cron_schedules( array $scheds ) {
 	$new_scheds = get_option( 'crontrol_schedules', array() );
 	return array_merge( $new_scheds, $scheds );
 }
@@ -930,8 +930,6 @@ function admin_manage_page() {
 	}
 
 	?>
-	</tbody>
-	</table>
 	</div>
 	<p style="float:right">
 		<?php
@@ -1208,8 +1206,6 @@ function enqueue_styles( $hook_suffix ) {
 
 /**
  * Filters the list of query arguments which get removed from admin area URLs in WordPress.
- *
- * @link https://core.trac.wordpress.org/ticket/23367
  *
  * @param string[] $args List of removable query arguments.
  * @return string[] Updated list of removable query arguments.
