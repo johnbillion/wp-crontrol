@@ -53,6 +53,7 @@ function init_hooks() {
 	add_action( 'admin_menu',                         __NAMESPACE__ . '\action_admin_menu' );
 	add_filter( "plugin_action_links_{$plugin_file}", __NAMESPACE__ . '\plugin_action_links', 10, 4 );
 	add_filter( 'removable_query_args',               __NAMESPACE__ . '\filter_removable_query_args' );
+	add_filter( 'in_admin_header',                    __NAMESPACE__ . '\do_tabs' );
 
 	add_action( 'load-tools_page_crontrol_admin_manage_page', __NAMESPACE__ . '\enqueue_code_editor' );
 
@@ -463,8 +464,6 @@ function admin_options_page() {
 	?>
 	<div class="wrap">
 
-	<?php do_tabs(); ?>
-
 	<h1><?php esc_html_e( 'Cron Schedules', 'wp-crontrol' ); ?></h1>
 
 	<?php $table->views(); ?>
@@ -867,8 +866,6 @@ function admin_manage_page() {
 	?>
 	<div class="wrap">
 
-	<?php do_tabs(); ?>
-
 	<h1><?php esc_html_e( 'Cron Events', 'wp-crontrol' ); ?></h1>
 
 	<?php show_cron_status(); ?>
@@ -937,6 +934,12 @@ function get_tab_states() {
 }
 
 function do_tabs() {
+	$tab = get_tab_states();
+
+	if ( ! array_filter( $tab ) ) {
+		return;
+	}
+
 	$links = array(
 		'events'        => array(
 			'tools.php?page=crontrol_admin_manage_page',
@@ -959,7 +962,6 @@ function do_tabs() {
 			__( 'Add PHP Cron Event', 'wp-crontrol' ),
 		),
 	);
-	$tab = get_tab_states();
 
 	?>
 	<nav class="nav-tab-wrapper wp-clearfix">
