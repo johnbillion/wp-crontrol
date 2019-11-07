@@ -59,7 +59,7 @@ function init_hooks() {
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_styles' );
-	add_filter( 'crontrol/log/exclude',  __NAMESPACE__ . '\get_core_hooks' );
+	add_filter( 'crontrol/log/exclude',  __NAMESPACE__ . '\get_all_core_hooks' );
 
 	add_action( 'init', array( Log::get_instance(), 'init' ) );
 }
@@ -1251,21 +1251,40 @@ function filter_removable_query_args( array $args ) {
 }
 
 /**
- * Returns an array of cron event hooks that are added by WordPress core.
+ * Returns an array of cron event hooks that are persistently added by WordPress core.
  *
  * @return string[] Array of hook names.
  */
-function get_core_hooks() {
+function get_persistent_core_hooks() {
 	return array(
-		'wp_version_check',
+		'delete_expired_transients',
+		'recovery_mode_clean_expired_keys',
+		'update_network_counts',
+		'wp_privacy_delete_old_export_files',
+		'wp_scheduled_auto_draft_delete',
+		'wp_scheduled_delete',
 		'wp_update_plugins',
 		'wp_update_themes',
-		'wp_scheduled_delete',
-		'wp_scheduled_auto_draft_delete',
-		'update_network_counts',
-		'delete_expired_transients',
-		'wp_privacy_delete_old_export_files',
-		'recovery_mode_clean_expired_keys',
+		'wp_version_check',
+	);
+}
+
+/**
+ * Returns an array of all cron event hooks that are added by WordPress core.
+ *
+ * @return string[] Array of hook names.
+ */
+function get_all_core_hooks() {
+	return array_merge(
+		get_persistent_core_hooks(),
+		array(
+			'do_pings',
+			'importer_scheduled_cleanup',
+			'publish_future_post',
+			'upgrader_scheduled_cleanup',
+			'wp_maybe_auto_update',
+			'wp_split_shared_term_batch',
+		)
 	);
 }
 

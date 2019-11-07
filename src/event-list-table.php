@@ -17,11 +17,11 @@ require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 class Event_List_Table extends \WP_List_Table {
 
 	/**
-	 * Array of cron event hooks that are added by WordPress core.
+	 * Array of cron event hooks that are persistently added by WordPress core.
 	 *
 	 * @var string[] Array of hook names.
 	 */
-	protected static $core_hooks;
+	protected static $persistent_core_hooks;
 
 	/**
 	 * Whether the current user has the capability to edit files.
@@ -53,7 +53,7 @@ class Event_List_Table extends \WP_List_Table {
 	 * Prepares the list table items and arguments.
 	 */
 	public function prepare_items() {
-		self::$core_hooks     = get_core_hooks();
+		self::$persistent_core_hooks = get_persistent_core_hooks();
 		self::$can_edit_files = current_user_can( 'edit_files' );
 		self::$count_by_hook  = Event\count_by_hook();
 
@@ -157,7 +157,7 @@ class Event_List_Table extends \WP_List_Table {
 
 		$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'View Logs', 'wp-crontrol' ) . '</a>';
 
-		if ( ! in_array( $event->hook, self::$core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) ) {
+		if ( ! in_array( $event->hook, self::$persistent_core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) ) {
 			$link = array(
 				'page'     => 'crontrol_admin_manage_page',
 				'action'   => 'delete-cron',
@@ -171,7 +171,7 @@ class Event_List_Table extends \WP_List_Table {
 			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
 		}
 
-		if ( function_exists( 'wp_unschedule_hook' ) && ! in_array( $event->hook, self::$core_hooks, true ) && ( 'crontrol_cron_job' !== $event->hook ) ) {
+		if ( function_exists( 'wp_unschedule_hook' ) && ! in_array( $event->hook, self::$persistent_core_hooks, true ) && ( 'crontrol_cron_job' !== $event->hook ) ) {
 			if ( self::$count_by_hook[ $event->hook ] > 1 ) {
 				$link = array(
 					'page'   => 'crontrol_admin_manage_page',
@@ -199,7 +199,7 @@ class Event_List_Table extends \WP_List_Table {
 	 * @param stdClass $event The cron event for the current row.
 	 */
 	protected function column_cb( $event ) {
-		if ( ! in_array( $event->hook, self::$core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) ) {
+		if ( ! in_array( $event->hook, self::$persistent_core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) ) {
 			?>
 			<label class="screen-reader-text" for="">
 				<?php printf( esc_html__( 'Select this row', 'wp-crontrol' ) ); ?>
@@ -234,7 +234,7 @@ class Event_List_Table extends \WP_List_Table {
 
 		$return = esc_html( $event->hook );
 
-		if ( in_array( $event->hook, get_core_hooks(), true ) ) {
+		if ( in_array( $event->hook, get_all_core_hooks(), true ) ) {
 			$return .= sprintf(
 				'<br><em>(%s)</em>',
 				esc_html__( 'WordPress core hook', 'wp-crontrol' )
