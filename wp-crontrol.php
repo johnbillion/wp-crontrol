@@ -616,12 +616,24 @@ function get_timezone_name() {
 
 /**
  * Shows the form used to add/edit cron events.
- *
- * @param bool  $is_php   Whether this is a PHP cron event.
- * @param mixed $existing An array of existing values for the cron event, or null.
  */
-function show_cron_form( $is_php, $existing ) {
+function show_cron_form( array $events, $is_php, $show_edit_tab ) {
 	$display_args = '';
+	$edit_id      = wp_unslash( $_GET['id'] );
+	$existing     = false;
+
+	foreach ( $events as $event ) {
+		if ( $edit_id === $event->hook && intval( $_GET['next_run'] ) === $event->time && $event->sig === $_GET['sig'] ) {
+			$existing = array(
+				'hookname' => $event->hook,
+				'next_run' => $event->time,
+				'schedule' => ( $event->schedule ? $event->schedule : '_oneoff' ),
+				'sig'      => $event->sig,
+				'args'     => $event->args,
+			);
+			break;
+		}
+	}
 
 	if ( $is_php ) {
 		$helper_text = esc_html__( 'Cron events trigger actions in your code. Enter the schedule of the event, as well as the PHP code to execute when the action is triggered.', 'wp-crontrol' );
@@ -648,8 +660,7 @@ function show_cron_form( $is_php, $existing ) {
 			$display_args = wp_json_encode( $existing['args'] );
 		}
 		$action        = $is_php ? 'edit_php_cron' : 'edit_cron';
-		$button        = $is_php ? $modify_tabs['php-cron'] : $modify_tabs['cron'];
-		$show_edit_tab = true;
+		$button        = __( 'Save', 'wp-crontrol' );
 		$next_run_date = get_date_from_gmt( date( 'Y-m-d H:i:s', $existing['next_run'] ), 'Y-m-d H:i:s' );
 	} else {
 		$other_fields = wp_nonce_field( 'new-cron', '_wpnonce', true, false );
@@ -661,8 +672,7 @@ function show_cron_form( $is_php, $existing ) {
 		);
 
 		$action        = $is_php ? 'new_php_cron' : 'new_cron';
-		$button        = $is_php ? $new_tabs['php-cron'] : $new_tabs['cron'];
-		$show_edit_tab = false;
+		$button        = __( 'Save', 'wp-crontrol' );
 		$next_run_date = '';
 	}
 
@@ -810,12 +820,6 @@ function show_cron_form( $is_php, $existing ) {
  * Displays the manage page for the plugin.
  */
 function admin_manage_page() {
-	require_once __DIR__ . '/src/event-list-table.php';
-
-	$table = new Event_List_Table();
-
-	$table->prepare_items();
-
 	$messages = array(
 		/* translators: 1: The name of the cron event. */
 		'1' => __( 'Successfully schdeuled the cron event %s to run now.', 'wp-crontrol' ),
@@ -845,76 +849,62 @@ function admin_manage_page() {
 		printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg );
 	}
 
-	$events         = $table->items;
-	$doing_edit     = ( isset( $_GET['action'] ) && 'edit-cron' === $_GET['action'] ) ? wp_unslash( $_GET['id'] ) : false;
-	$time_format    = 'Y-m-d H:i:s';
-	$can_edit_files = current_user_can( 'edit_files' );
+	require_once __DIR__ . '/src/event-list-table.php';
 
-	$core_hooks = array(
-		'wp_version_check',
-		'wp_update_plugins',
-		'wp_update_themes',
-		'wp_scheduled_delete',
-		'wp_scheduled_auto_draft_delete',
-		'update_network_counts',
-		'delete_expired_transients',
-		'wp_privacy_delete_old_export_files',
-		'recovery_mode_clean_expired_keys',
-	);
+	$tabs  = get_tab_states();
+	$table = new Event_List_Table();
 
+	$table->prepare_items();
 
-	?>
-	<div class="wrap">
+	switch ( true ) {
+		case $tabs['events']:
+			?>
+			<div class="wrap">
+				<h1><?php esc_html_e( 'Cron Events', 'wp-crontrol' ); ?></h1>
 
-	<h1><?php esc_html_e( 'Cron Events', 'wp-crontrol' ); ?></h1>
+				<?php show_cron_status(); ?>
 
-	<?php show_cron_status(); ?>
+				<?php $table->views(); ?>
 
-	<?php $table->views(); ?>
+				<form method="post" action="tools.php?page=crontrol_admin_manage_page">
+					<div class="table-responsive">
+						<?php $table->display(); ?>
+					</div>
+				</form>
 
-	<form method="post" action="tools.php?page=crontrol_admin_manage_page">
+				<p>
+					<?php
+						echo esc_html( sprintf(
+							/* translators: 1: Date and time, 2: Timezone */
+							__( 'Site time: %1$s (%2$s)', 'wp-crontrol' ),
+							date_i18n( 'Y-m-d H:i:s' ),
+							get_timezone_name()
+						) );
+					?>
+				</p>
+			</div>
+			<?php
 
-	<div class="table-responsive">
-	<?php $table->display(); ?>
+			break;
 
-	<?php
+		case $tabs['add-event']:
+			show_cron_form( $table->items, false, false );
+			break;
 
-	if ( ! empty( $events ) ) {
-		foreach ( $events as $id => $event ) {
-			if ( $doing_edit && $doing_edit === $event->hook && intval( $_GET['next_run'] ) === $event->time && $event->sig === $_GET['sig'] ) {
-				$doing_edit = array(
-					'hookname' => $event->hook,
-					'next_run' => $event->time,
-					'schedule' => ( $event->schedule ? $event->schedule : '_oneoff' ),
-					'sig'      => $event->sig,
-					'args'     => $event->args,
-				);
-			}
-		}
+		case $tabs['edit-event']:
+			show_cron_form( $table->items, false, true );
+			break;
+
+		case $tabs['add-php-event']:
+			show_cron_form( $table->items, true, false );
+			break;
+
+		case $tabs['edit-php-event']:
+			show_cron_form( $table->items, true, true );
+			break;
+
 	}
 
-	?>
-	</div>
-	<p>
-		<?php
-			echo esc_html( sprintf(
-				/* translators: 1: Date and time, 2: Timezone */
-				__( 'Site time: %1$s (%2$s)', 'wp-crontrol' ),
-				date_i18n( 'Y-m-d H:i:s' ),
-				get_timezone_name()
-			) );
-		?>
-	</p>
-	</form>
-
-	</div>
-	<?php
-
-	if ( is_array( $doing_edit ) ) {
-		show_cron_form( 'crontrol_cron_job' === $doing_edit['hookname'], $doing_edit );
-	} else {
-		show_cron_form( ( isset( $_GET['action'] ) && 'new-php-cron' === $_GET['action'] ), false );
-	}
 }
 
 function get_tab_states() {

@@ -133,7 +133,7 @@ class Event_List_Table extends \WP_List_Table {
 				'sig'      => rawurlencode( $event->sig ),
 				'next_run' => rawurlencode( $event->time ),
 			);
-			$link = add_query_arg( $link, admin_url( 'tools.php' ) ) . '#crontrol_form';
+			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 
 			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a>';
 		}
