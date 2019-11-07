@@ -608,7 +608,7 @@ function get_timezone_name() {
 	if ( '' === $timezone_string ) {
 		$name = sprintf( 'UTC%s', $gmt_offset );
 	} else {
-		$name = sprintf( '%s (UTC%s)', str_replace( '_', ' ', $timezone_string ), $gmt_offset );
+		$name = sprintf( '%s, UTC%s', str_replace( '_', ' ', $timezone_string ), $gmt_offset );
 	}
 
 	return $name;
@@ -895,17 +895,12 @@ function admin_manage_page() {
 
 	?>
 	</div>
-	<p style="float:right">
+	<p>
 		<?php
 			echo esc_html( sprintf(
-				/* translators: %s: The current date and time */
-				__( 'Site time: %s', 'wp-crontrol' ),
-				date_i18n( 'Y-m-d H:i:s' )
-			) );
-			echo '<br>';
-			echo esc_html( sprintf(
-				/* translators: %s: The timezone */
-				__( 'Site timezone: %s', 'wp-crontrol' ),
+				/* translators: 1: Date and time, 2: Timezone */
+				__( 'Site time: %1$s (%2$s)', 'wp-crontrol' ),
+				date_i18n( 'Y-m-d H:i:s' ),
 				get_timezone_name()
 			) );
 		?>
