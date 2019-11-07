@@ -97,7 +97,7 @@ class Schedule_List_Table extends \WP_List_Table {
 		$links = array();
 
 		if ( ! in_array( $schedule['name'], self::$core_schedules, true ) ) {
-			if ( true || in_array( $schedule['name'], self::$used_schedules, true ) ) {
+			if ( in_array( $schedule['name'], self::$used_schedules, true ) ) {
 				$links[] = "<span class='in-use'>" . esc_html__( 'This custom schedule is in use and cannot be deleted', 'wp-crontrol' ) . '</span>';
 			} else {
 				$link = add_query_arg( array(
