@@ -931,7 +931,7 @@ function do_tabs() {
 			__( 'Cron Events', 'wp-crontrol' ),
 		),
 		'logs'          => array(
-			'edit.php?post_type=crontrol_log',
+			'edit.php?post_type=' . Log::$post_type,
 			__( 'Cron Logs', 'wp-crontrol' ),
 		),
 		'schedules'     => array(
