@@ -205,16 +205,7 @@ class Log {
 	}
 
 	public function column( $name, $post_id ) {
-		$post    = get_post( $post_id );
-		$hook    = wp_list_pluck( get_the_terms( $post_id, self::$taxonomy ), 'slug' )[0];
-		$actions = get_post_meta( $post_id, 'crontrol_log_actions', true );
-		$queries = get_post_meta( $post_id, 'crontrol_log_queries', true );
-		$https   = get_post_meta( $post_id, 'crontrol_log_https', true );
-		$time    = get_post_meta( $post_id, 'crontrol_log_time', true );
-
-		if ( empty( $actions ) ) {
-			$actions = array();
-		}
+		$post = get_post( $post_id );
 
 		switch ( $name ) {
 
@@ -223,6 +214,8 @@ class Log {
 				break;
 
 			case 'time':
+				$time = get_post_meta( $post_id, 'crontrol_log_time', true );
+
 				echo esc_html( number_format_i18n( $time, 4 ) );
 				break;
 
@@ -243,7 +236,7 @@ class Log {
 				break;
 
 			case 'error':
-				$error = get_post_meta( $post_id, 'crontrol_log_exception', true );
+				$error = get_post_meta( $post->ID, 'crontrol_log_exception', true );
 				if ( ! empty( $error ) ) {
 					if ( 'Exception' === $error['type'] ) {
 						$message = sprintf(
@@ -274,6 +267,14 @@ class Log {
 				break;
 
 			case 'actions':
+				$actions = get_post_meta( $post_id, 'crontrol_log_actions', true );
+				$hook    = '';
+				$terms   = get_the_terms( $post_id, self::$taxonomy );
+
+				if ( is_array( $terms ) ) {
+					$hook = wp_list_pluck( $terms, 'slug' )[0];
+				}
+
 				if ( 'crontrol_cron_job' === $hook ) {
 					echo '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
 				} elseif ( ! empty( $actions ) ) {
@@ -290,6 +291,8 @@ class Log {
 				break;
 
 			case 'queries':
+				$queries = get_post_meta( $post_id, 'crontrol_log_queries', true );
+
 				if ( ! empty( $queries ) ) {
 					echo esc_html( number_format_i18n( $queries ) );
 				} else {
@@ -301,6 +304,8 @@ class Log {
 				break;
 
 			case 'https':
+				$https   = get_post_meta( $post_id, 'crontrol_log_https', true );
+
 				if ( ! empty( $https ) ) {
 					echo '<ol>';
 					foreach ( $https as $http ) {
