@@ -619,8 +619,12 @@ function get_timezone_name() {
  */
 function show_cron_form( array $events, $is_php, $show_edit_tab ) {
 	$display_args = '';
-	$edit_id      = wp_unslash( $_GET['id'] );
+	$edit_id      = null;
 	$existing     = false;
+
+	if ( ! empty( $_GET['id'] ) ) {
+		$edit_id = wp_unslash( $_GET['id'] );
+	}
 
 	foreach ( $events as $event ) {
 		if ( $edit_id === $event->hook && intval( $_GET['next_run'] ) === $event->time && $event->sig === $_GET['sig'] ) {
