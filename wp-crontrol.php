@@ -793,7 +793,7 @@ function show_cron_form( array $events, $is_php, $show_edit_tab ) {
 								printf(
 									/* translators: %s Timezone name. */
 									esc_html__( 'Timezone: %s', 'wp-crontrol' ),
-									'<code>' . esc_html( get_timezone_name() ) . '</code>'
+									esc_html( get_timezone_name() )
 								);
 							?>
 						</p>
