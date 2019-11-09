@@ -33,6 +33,7 @@ class Log {
 			'public'  => false,
 			'show_ui' => true,
 			'show_in_admin_bar' => false,
+			'hierarchical' => true,
 			'labels'  => array(
 				'name'                     => 'Cron Logs',
 				'singular_name'            => 'Cron Log',
