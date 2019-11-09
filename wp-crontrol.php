@@ -617,7 +617,7 @@ function get_timezone_name() {
 /**
  * Shows the form used to add/edit cron events.
  */
-function show_cron_form( array $events, $is_php, $show_edit_tab ) {
+function show_cron_form( array $events, $show_edit_tab, $is_php = null ) {
 	$display_args = '';
 	$edit_id      = null;
 	$existing     = false;
@@ -637,6 +637,10 @@ function show_cron_form( array $events, $is_php, $show_edit_tab ) {
 			);
 			break;
 		}
+	}
+
+	if ( null === $is_php ) {
+		$is_php = ( $existing && 'crontrol_cron_job' === $existing['hookname'] );
 	}
 
 	if ( $is_php ) {
@@ -892,19 +896,15 @@ function admin_manage_page() {
 			break;
 
 		case $tabs['add-event']:
-			show_cron_form( $table->items, false, false );
-			break;
-
-		case $tabs['edit-event']:
-			show_cron_form( $table->items, false, true );
+			show_cron_form( $table->items, false );
 			break;
 
 		case $tabs['add-php-event']:
-			show_cron_form( $table->items, true, false );
+			show_cron_form( $table->items, false, true );
 			break;
 
-		case $tabs['edit-php-event']:
-			show_cron_form( $table->items, true, true );
+		case $tabs['edit-event']:
+			show_cron_form( $table->items, true );
 			break;
 
 	}
