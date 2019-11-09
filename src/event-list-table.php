@@ -58,6 +58,15 @@ class Event_List_Table extends \WP_List_Table {
 		self::$count_by_hook  = Event\count_by_hook();
 
 		$events   = Event\get();
+
+		if ( ! empty( $_GET['s'] ) ) {
+			$s = sanitize_text_field( wp_unslash( $_GET['s'] ) );
+
+			$events = array_filter( $events, function( $event ) use ( $s ) {
+				return ( false !== strpos( $event->hook, $s ) );
+			} );
+		}
+
 		$count    = count( $events );
 		$per_page = 50;
 		$offset   = ( $this->get_pagenum() - 1 ) * $per_page;

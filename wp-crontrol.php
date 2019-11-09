@@ -874,6 +874,11 @@ function admin_manage_page() {
 
 				<?php $table->views(); ?>
 
+				<form id="posts-filter" method="get" action="tools.php">
+					<input type="hidden" name="page" value="crontrol_admin_manage_page" />
+					<?php $table->search_box( __( 'Search Hooks', 'wp-crontrol' ), 'cron-event' ); ?>
+				</form>
+
 				<form method="post" action="tools.php?page=crontrol_admin_manage_page">
 					<div class="table-responsive">
 						<?php $table->display(); ?>
