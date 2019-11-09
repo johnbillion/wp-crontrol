@@ -25,6 +25,7 @@ class Log {
 		add_action( 'manage_crontrol_log_posts_custom_column', array( $this, 'column' ), 10, 2 );
 		add_filter( 'post_row_actions',                        array( $this, 'remove_quick_edit_action' ), 10, 2 );
 		add_filter( 'bulk_actions-edit-' . self::$post_type,   array( $this, 'remove_quick_edit_menu' ) );
+		add_filter( 'display_post_states',                     array( $this, 'filter_post_state' ), 20, 2 );
 
 		$this->setup_hooks();
 
@@ -117,6 +118,14 @@ class Log {
 		}
 
 		return $schedule;
+	}
+
+	public function filter_post_state( array $states, \WP_Post $post ) {
+		if ( self::$post_type === get_post_type( $post ) ) {
+			$states = array();
+		}
+
+		return $states;
 	}
 
 	public function filter_disable_months_dropdown( $disable, $post_type ) {
