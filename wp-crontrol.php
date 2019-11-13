@@ -617,7 +617,7 @@ function get_timezone_name() {
 /**
  * Shows the form used to add/edit cron events.
  */
-function show_cron_form( array $events, $show_edit_tab, $is_php = null ) {
+function show_cron_form( array $events, $editing, $is_php = null ) {
 	$display_args = '';
 	$edit_id      = null;
 	$existing     = false;
@@ -668,7 +668,7 @@ function show_cron_form( array $events, $show_edit_tab, $is_php = null ) {
 			$display_args = wp_json_encode( $existing['args'] );
 		}
 		$action        = $is_php ? 'edit_php_cron' : 'edit_cron';
-		$button        = __( 'Save', 'wp-crontrol' );
+		$button        = __( 'Update Event', 'wp-crontrol' );
 		$next_run_date = get_date_from_gmt( date( 'Y-m-d H:i:s', $existing['next_run'] ), 'Y-m-d H:i:s' );
 	} else {
 		$other_fields = wp_nonce_field( 'new-cron', '_wpnonce', true, false );
@@ -680,7 +680,7 @@ function show_cron_form( array $events, $show_edit_tab, $is_php = null ) {
 		);
 
 		$action        = $is_php ? 'new_php_cron' : 'new_cron';
-		$button        = __( 'Save', 'wp-crontrol' );
+		$button        = __( 'Add Event', 'wp-crontrol' );
 		$next_run_date = '';
 	}
 
@@ -698,6 +698,24 @@ function show_cron_form( array $events, $show_edit_tab, $is_php = null ) {
 	<div id="crontrol_form" class="wrap narrow">
 		<?php
 		if ( $allowed ) {
+			if ( $editing ) {
+				if ( $is_php ) {
+					$heading = __( 'Edit PHP Cron Event', 'wp-crontrol' );
+				} else {
+					$heading = __( 'Edit Cron Event', 'wp-crontrol' );
+				}
+			} else {
+				if ( $is_php ) {
+					$heading = __( 'Add PHP Cron Event', 'wp-crontrol' );
+				} else {
+					$heading = __( 'Add Cron Event', 'wp-crontrol' );
+				}
+			}
+
+			printf(
+				'<h1>%s</h1>',
+				esc_html( $heading )
+			);
 			printf(
 				'<p>%s</p>',
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -771,7 +789,7 @@ function show_cron_form( array $events, $show_edit_tab, $is_php = null ) {
 							</li>
 							<li>
 								<label>
-									<input type="radio" name="next_run_date" value="custom" id="next_run_date_custom" <?php checked( $show_edit_tab ); ?>>
+									<input type="radio" name="next_run_date" value="custom" id="next_run_date_custom" <?php checked( $editing ); ?>>
 									<?php
 									printf(
 										/* translators: %s: An input field for specifying a date and time */
