@@ -888,8 +888,6 @@ function admin_manage_page() {
 			<div class="wrap">
 				<h1><?php esc_html_e( 'Cron Events', 'wp-crontrol' ); ?></h1>
 
-				<?php show_cron_status(); ?>
-
 				<?php $table->views(); ?>
 
 				<form id="posts-filter" method="get" action="tools.php">
@@ -1003,6 +1001,7 @@ function do_tabs() {
 		?>
 	</nav>
 	<?php
+	show_cron_status();
 }
 
 /**
