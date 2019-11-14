@@ -566,20 +566,32 @@ class Log {
 	}
 
 	/**
-	 * Shows the event log related options panel.
+	 * Returns an array of all known cron event hooks. Hooks that are logged have a value or true, all others false.
+	 *
+	 * @return bool[] Array of logged status, keyed by hook name.
 	 */
-	public static function show_options() {
-		$events = array_keys( Event\count_by_hook() );
+	public static function get_logged_hooks() {
+		$events = Event\count_by_hook();
+		$events = array_fill_keys( array_keys( $events ), false );
 		$logged = get_option( 'crontrol_log', array() );
 
 		if ( empty( $logged ) ) {
 			$logged = array();
 		}
 
-		$all = array_unique( array_merge( $events, $logged ) );
+		$logged = array_fill_keys( $logged, true );
+		$all    = array_merge( $events, $logged );
 
-		sort( $all );
+		ksort( $all );
 
+		return $all;
+	}
+
+	/**
+	 * Shows the event log related options panel.
+	 */
+	public static function show_options() {
+		$all = self::get_logged_hooks();
 		?>
 		<form action="options.php" method="POST" class="crontrol-log-form">
 			<fieldset>
@@ -588,11 +600,11 @@ class Log {
 					<?php
 					settings_fields( 'crontrol_group' );
 
-					foreach ( $all as $hook ) {
+					foreach ( $all as $hook => $logged ) {
 						printf(
 							'<label><input type="checkbox" name="crontrol_log[]" value="%1$s" %2$s />%3$s</label>',
 							esc_attr( $hook ),
-							checked( in_array( $hook, $logged, true ), true, false ),
+							checked( $logged, true, false ),
 							esc_html( $hook )
 						);
 					}
