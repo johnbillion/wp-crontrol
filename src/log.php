@@ -329,7 +329,7 @@ class Log {
 			return;
 		}
 
-		// Loop over our columns to find the default sort column (if there is one):
+		// Specify the default sort column:
 		$_GET['orderby'] = 'date';
 		$_GET['order']   = 'desc';
 	}

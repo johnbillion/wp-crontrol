@@ -488,7 +488,7 @@ function admin_options_page() {
 }
 
 /**
- * Gets the status of WP-Cron functionality on the site by performing a test spawn. Cached for one hour when all is well.
+ * Gets the status of WP-Cron functionality on the site by performing a test spawn if necessary. Cached for one hour when all is well.
  *
  * @param bool $cache Whether to use the cached result from previous calls.
  * @return true|WP_Error Boolean true if the cron spawner is working as expected, or a `WP_Error` object if not.
