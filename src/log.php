@@ -48,12 +48,16 @@ class Log {
 	 * Sets up actions and filters for the cron event logging.
 	 */
 	public function init() {
-		add_filter( 'disable_months_dropdown',                 array( $this, 'filter_disable_months_dropdown' ), 10, 2 );
-		add_filter( 'manage_crontrol_log_posts_columns',       array( $this, 'columns' ) );
-		add_action( 'manage_crontrol_log_posts_custom_column', array( $this, 'column' ), 10, 2 );
-		add_filter( 'page_row_actions',                        array( $this, 'remove_quick_edit_action' ), 10, 2 );
-		add_filter( 'bulk_actions-edit-' . self::$post_type,   array( $this, 'remove_quick_edit_menu' ) );
-		add_filter( 'display_post_states',                     array( $this, 'filter_post_state' ), 20, 2 );
+		$post_type = self::$post_type;
+
+		add_filter( 'disable_months_dropdown',                   array( $this, 'filter_disable_months_dropdown' ), 10, 2 );
+		add_filter( "manage_{$post_type}_posts_columns",         array( $this, 'columns' ) );
+		add_filter( "manage_edit-{$post_type}_sortable_columns", array( $this, 'sortable_columns' ), 10, 2 );
+		add_action( "manage_{$post_type}_posts_custom_column",   array( $this, 'column' ), 10, 2 );
+		add_filter( 'page_row_actions',                          array( $this, 'remove_actions' ), 10, 2 );
+		add_filter( "bulk_actions-edit-{$post_type}",            array( $this, 'remove_quick_edit_menu' ) );
+		add_filter( 'display_post_states',                       array( $this, 'filter_post_state' ), 20, 2 );
+		add_action( 'load-edit.php',                             array( $this, 'default_sort' ) );
 
 		// WordPress.com VIP specific functionality:
 		add_filter( 'wpcom_async_transition_post_status_schedule_async', array( $this, 'filter_wpcom_async_transition' ), 10, 2 );
@@ -207,20 +211,18 @@ class Log {
 	}
 
 	/**
-	 * Removes the Quick Edit link from the post row actions.
+	 * Removes all actions from the post row actions. None of them are needed.
 	 *
 	 * @param string[] $actions Array of post actions.
 	 * @param WP_Post  $post    The current post object.
 	 * @return string[] Array of updated post actions.
 	 */
-	public function remove_quick_edit_action( array $actions, WP_Post $post ) {
+	public function remove_actions( array $actions, WP_Post $post ) {
 		if ( self::$post_type !== $post->post_type ) {
 			return $actions;
 		}
 
-		unset( $actions['inline'], $actions['inline hide-if-no-js'] );
-
-		return $actions;
+		return array();
 	}
 
 	/**
@@ -287,6 +289,45 @@ class Log {
 		$columns['error']   = esc_html__( 'Fatal Errors', 'wp-crontrol' );
 
 		return $columns;
+	}
+
+	/**
+	 * Sets the sortable columns for the log post type listing screen.
+	 *
+	 * @param array $columns List screen columns.
+	 * @return array Updated columns.
+	 */
+	public function sortable_columns( array $columns ) {
+		return array(
+			'title' => 'title',
+			'ran'   => array( 'date', true ),
+		);
+	}
+
+	/**
+	 * Sets the default sort field and order for the log post type listing screen.
+	 */
+	public function default_sort() {
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return;
+		}
+
+		if ( 'edit' !== get_current_screen()->base ) {
+			return;
+		}
+
+		if ( get_current_screen()->post_type !== self::$post_type ) {
+			return;
+		}
+
+		// If we've already ordered the screen, bail out:
+		if ( isset( $_GET['orderby'] ) ) {
+			return;
+		}
+
+		// Loop over our columns to find the default sort column (if there is one):
+		$_GET['orderby'] = 'date';
+		$_GET['order']   = 'desc';
 	}
 
 	/**
