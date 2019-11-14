@@ -66,16 +66,6 @@ function init_hooks() {
 }
 
 /**
- * Evaluates the provided code using eval.
- *
- * @param string $code The PHP code to evaluate.
- */
-function action_php_cron_event( $code ) {
-	// phpcs:ignore Squiz.PHP.Eval.Discouraged
-	eval( $code );
-}
-
-/**
  * Run using the 'init' action.
  */
 function action_init() {
@@ -1345,6 +1335,19 @@ function json_output( $input ) {
 	}
 
 	return wp_json_encode( $input, $json_options );
+}
+
+/**
+ * Evaluates the code in a PHP cron event using eval.
+ *
+ * Security: A user can only add or edit a PHP cron event if they have the `edit_files` capability. This means if a user
+ * cannot edit files on the site (eg. through the plugin or theme editor) then they cannot edit or add a PHP cron event.
+ *
+ * @param string $code The PHP code to evaluate.
+ */
+function action_php_cron_event( $code ) {
+	// phpcs:ignore Squiz.PHP.Eval.Discouraged
+	eval( $code );
 }
 
 // Get this show on the road.
