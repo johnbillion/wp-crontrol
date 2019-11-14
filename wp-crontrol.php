@@ -497,6 +497,21 @@ function admin_options_page() {
 function test_cron_spawn( $cache = true ) {
 	global $wp_version;
 
+	$cron_runner_plugins = array(
+		'\HM\Cavalcade\Plugin\Job'    => 'Cavalcade',
+		'\Automattic\WP\Cron_Control' => 'Cron Control',
+	);
+
+	foreach ( $cron_runner_plugins as $class => $plugin ) {
+		if ( class_exists( $class ) ) {
+			return new WP_Error( 'crontrol_info', sprintf(
+				/* translators: 1: The name of the plugin that controls the running of cron events. */
+				__( 'WP-Cron spawning is being managed by the %s plugin.', 'wp-crontrol' ),
+				$plugin
+			) );
+		}
+	}
+
 	if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
 		/* translators: 1: The name of the PHP constant that is set. */
 		return new WP_Error( 'crontrol_info', sprintf( __( 'The %s constant is set to true. WP-Cron spawning is disabled.', 'wp-crontrol' ), 'DISABLE_WP_CRON' ) );
