@@ -281,9 +281,9 @@ class Log {
 	 * @return string[] Updated array of columns.
 	 */
 	public function columns( array $columns ) {
-		unset( $columns['date'] );
+		unset( $columns['date'], $columns['title'] );
 
-		$columns['title']   = esc_html__( 'Hook', 'wp-crontrol' );
+		$columns['hook']    = esc_html__( 'Hook', 'wp-crontrol' );
 		$columns['ran']     = esc_html__( 'Date', 'wp-crontrol' );
 		$columns['args']    = esc_html__( 'Args', 'wp-crontrol' );
 		$columns['actions'] = esc_html__( 'Actions', 'wp-crontrol' );
@@ -303,8 +303,8 @@ class Log {
 	 */
 	public function sortable_columns( array $columns ) {
 		return array(
-			'title' => 'title',
-			'ran'   => array( 'date', true ),
+			'hook' => 'title',
+			'ran'  => array( 'date', true ),
 		);
 	}
 
@@ -344,6 +344,10 @@ class Log {
 		$post = get_post( $post_id );
 
 		switch ( $name ) {
+
+			case 'hook':
+				the_title();
+				break;
 
 			case 'ran':
 				echo esc_html( mysql2date( 'Y-m-d H:i:s', $post->post_date ) );
