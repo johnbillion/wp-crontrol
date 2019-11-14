@@ -59,7 +59,7 @@ function init_hooks() {
 
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
-	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_styles' );
+	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_assets' );
 
 	add_action( 'init', array( Log::get_instance(), 'init' ) );
 }
@@ -997,7 +997,8 @@ function do_tabs() {
 	);
 
 	?>
-	<nav class="nav-tab-wrapper wp-clearfix">
+	<div id="crontrol-header">
+	<nav class="nav-tab-wrapper">
 		<?php
 		foreach ( $links as $id => $link ) {
 			if ( $tab[ $id ] ) {
@@ -1024,11 +1025,12 @@ function do_tabs() {
 		?>
 	</nav>
 	<?php
-
 	if ( $tab['logs'] ) {
 		Log::show_options();
 	}
-
+	?>
+	</div>
+	<?php
 	show_cron_status();
 }
 
@@ -1256,11 +1258,11 @@ function enqueue_code_editor() {
 }
 
 /**
- * Registers the stylesheet for the admin areas.
+ * Registers the stylesheet and JavaScript for the admin areas.
  *
  * @param string $hook_suffix The admin screen ID.
  */
-function enqueue_styles( $hook_suffix ) {
+function enqueue_assets( $hook_suffix ) {
 	$tab = get_tab_states();
 
 	if ( ! array_filter( $tab ) ) {
@@ -1268,8 +1270,10 @@ function enqueue_styles( $hook_suffix ) {
 	}
 
 	$ver = filemtime( plugin_dir_path( __FILE__ ) . 'css/wp-crontrol.css' );
-
 	wp_enqueue_style( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'css/wp-crontrol.css', array(), $ver );
+
+	$ver = filemtime( plugin_dir_path( __FILE__ ) . 'js/wp-crontrol.js' );
+	wp_enqueue_script( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'js/wp-crontrol.js', array(), $ver, true );
 }
 
 /**
