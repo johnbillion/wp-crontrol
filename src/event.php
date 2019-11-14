@@ -32,11 +32,7 @@ function run( $hookname, $sig ) {
 				return $scheduled;
 			}
 
-			$spawned = spawn_cron();
-
-			if ( false === $spawned ) {
-				return $spawned;
-			}
+			spawn_cron();
 
 			return true;
 		}
