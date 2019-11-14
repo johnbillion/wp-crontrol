@@ -46,7 +46,7 @@ function get() {
 		return ( $a['interval'] - $b['interval'] );
 	} );
 
-	array_walk( $schedules, function( array & $schedule, $name ) {
+	array_walk( $schedules, function( array &$schedule, $name ) {
 		$schedule['name'] = $name;
 	} );
 

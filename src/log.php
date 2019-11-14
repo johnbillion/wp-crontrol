@@ -11,30 +11,61 @@ use Throwable;
 use Exception;
 use WP_Post;
 
+/**
+ * Main class which encapsulates cron event logging functionality.
+ */
 class Log {
 
+	/**
+	 * Array of data logged for a cron event.
+	 *
+	 * @var array
+	 */
 	protected $data = array();
-	protected $old_exception_handler = null;
-	public static $post_type = 'crontrol_log';
-	public static $taxonomy  = 'crontrol_log_hook';
 
+	/**
+	 * The old exception handler, if one was registered.
+	 *
+	 * @var callable
+	 */
+	protected $old_exception_handler = null;
+
+	/**
+	 * The post type name for the cron event log.
+	 *
+	 * @var string
+	 */
+	public static $post_type = 'crontrol_log';
+
+	/**
+	 * The taxonomy name for the cron event log hook.
+	 *
+	 * @var string
+	 */
+	public static $taxonomy = 'crontrol_log_hook';
+
+	/**
+	 * Sets up actions and filters for the cron event logging.
+	 */
 	public function init() {
-		add_filter( 'disable_months_dropdown', array( $this, 'filter_disable_months_dropdown' ), 10, 2 );
-		add_filter( 'wpcom_async_transition_post_status_schedule_async', array( $this, 'filter_wpcom_async_transition' ), 10, 2 );
+		add_filter( 'disable_months_dropdown',                 array( $this, 'filter_disable_months_dropdown' ), 10, 2 );
 		add_filter( 'manage_crontrol_log_posts_columns',       array( $this, 'columns' ) );
 		add_action( 'manage_crontrol_log_posts_custom_column', array( $this, 'column' ), 10, 2 );
 		add_filter( 'post_row_actions',                        array( $this, 'remove_quick_edit_action' ), 10, 2 );
 		add_filter( 'bulk_actions-edit-' . self::$post_type,   array( $this, 'remove_quick_edit_menu' ) );
 		add_filter( 'display_post_states',                     array( $this, 'filter_post_state' ), 20, 2 );
 
+		// WordPress.com VIP specific functionality:
+		add_filter( 'wpcom_async_transition_post_status_schedule_async', array( $this, 'filter_wpcom_async_transition' ), 10, 2 );
+
 		$this->setup_hooks();
 
 		register_post_type( self::$post_type, array(
-			'public'  => false,
-			'show_ui' => true,
+			'public'            => false,
+			'show_ui'           => true,
 			'show_in_admin_bar' => false,
-			'hierarchical' => true,
-			'labels'  => array(
+			'hierarchical'      => true,
+			'labels'            => array(
 				'name'                     => 'Cron Logs',
 				'singular_name'            => 'Cron Log',
 				'menu_name'                => 'Cron Logs',
@@ -56,9 +87,9 @@ class Log {
 				'item_scheduled'           => 'Cron log scheduled.',
 				'item_updated'             => 'Cron log updated.',
 			),
-			'show_in_menu' => 'tools.php',
-			'map_meta_cap' => true,
-			'capabilities' => array(
+			'show_in_menu'      => 'tools.php',
+			'map_meta_cap'      => true,
+			'capabilities'      => array(
 				'edit_posts'             => 'manage_options',
 				'edit_others_posts'      => 'do_not_allow',
 				'publish_posts'          => 'do_not_allow',
@@ -75,31 +106,34 @@ class Log {
 		) );
 
 		register_taxonomy( self::$taxonomy, self::$post_type, array(
-			'public' => false,
+			'public'       => false,
 			'capabilities' => array(
 				'manage_terms' => 'do_not_allow',
 				'edit_terms'   => 'do_not_allow',
 				'delete_terms' => 'do_not_allow',
 				'assign_terms' => 'do_not_allow',
 			),
-			'labels' => array(
-				'menu_name'                  => 'Hooks',
-				'name'                       => 'Hooks',
-				'singular_name'              => 'Hook',
-				'search_items'               => 'Search Hooks',
-				'popular_items'              => 'Popular Hooks',
-				'all_items'                  => 'All Hooks',
-				'view_item'                  => 'View Hook',
-				'not_found'                  => 'No hooks found',
-				'no_terms'                   => 'No hooks',
-				'items_list_navigation'      => 'Hooks list navigation',
-				'items_list'                 => 'Hooks list',
-				'most_used'                  => 'Most Used',
-				'back_to_items'              => '&larr; Back to Hooks',
+			'labels'       => array(
+				'menu_name'             => 'Hooks',
+				'name'                  => 'Hooks',
+				'singular_name'         => 'Hook',
+				'search_items'          => 'Search Hooks',
+				'popular_items'         => 'Popular Hooks',
+				'all_items'             => 'All Hooks',
+				'view_item'             => 'View Hook',
+				'not_found'             => 'No hooks found',
+				'no_terms'              => 'No hooks',
+				'items_list_navigation' => 'Hooks list navigation',
+				'items_list'            => 'Hooks list',
+				'most_used'             => 'Most Used',
+				'back_to_items'         => '&larr; Back to Hooks',
 			),
 		) );
 	}
 
+	/**
+	 * Sets up the hooks needed to log cront events as they run.
+	 */
 	public function setup_hooks() {
 		$exclude = apply_filters( 'crontrol/log/exclude', array() );
 		$hooks   = array_keys( Event\count_by_hook() );
@@ -108,27 +142,62 @@ class Log {
 		array_map( array( $this, 'observe' ), $hooks );
 	}
 
+	/**
+	 * Initialises the observance of the given hook.
+	 *
+	 * @param string $hook The hook name.
+	 */
 	public function observe( $hook ) {
 		add_action( $hook, array( $this, 'log_start' ), -9999, 50 );
 		add_action( $hook, array( $this, 'log_end' ), 9999, 50 );
 	}
 
+	/**
+	 * Prevents WordPress.com VIP from firing async transition hooks for the cron log post type.
+	 *
+	 * This avoids an infinite loop of cron events on VIP.
+	 *
+	 * @param bool  $schedule Whether to schedule the cron event.
+	 * @param array $args     {
+	 *     Array of arguments.
+	 *
+	 *     @type int    $post_id    The post ID.
+	 *     @type string $new_status The new post status.
+	 *     @type string $old_status The old post status.
+	 * @return bool Whether to schedule the cron event.
+	 */
 	public function filter_wpcom_async_transition( $schedule, array $args ) {
-		if ( self::$post_type === get_post_type( $args['post_id'] ) ) {
+		if ( get_post_type( $args['post_id'] ) === self::$post_type ) {
 			return false;
 		}
 
 		return $schedule;
 	}
 
+	/**
+	 * Removes all visible states from the log post type listing screen.
+	 *
+	 * Some plugins, such as Classic Editor, add states here that aren't desirable.
+	 *
+	 * @param string[] $states The post state links as HTML.
+	 * @param \WP_Post $post   The post object.
+	 * @return string[] The updated post state links.
+	 */
 	public function filter_post_state( array $states, \WP_Post $post ) {
-		if ( self::$post_type === get_post_type( $post ) ) {
+		if ( get_post_type( $post ) === self::$post_type ) {
 			$states = array();
 		}
 
 		return $states;
 	}
 
+	/**
+	 * Disables the "All dates" dropdown filter on the log post type listing screen.
+	 *
+	 * @param bool   $disable   Whether to disable the dropdown.
+	 * @param string $post_type The post type.
+	 * @return bool Whether to disable the dropdown.
+	 */
 	public function filter_disable_months_dropdown( $disable, $post_type ) {
 		if ( self::$post_type === $post_type ) {
 			return true;
@@ -199,6 +268,12 @@ class Log {
 		);
 	}
 
+	/**
+	 * Updates the list of columns on the log post type listing screen.
+	 *
+	 * @param string[] $columns Array of column headings keyed by column name.
+	 * @return string[] Updated array of columns.
+	 */
 	public function columns( array $columns ) {
 		unset( $columns['date'] );
 
@@ -214,6 +289,12 @@ class Log {
 		return $columns;
 	}
 
+	/**
+	 * Handles the output for the given column on the log post type listing screen.
+	 *
+	 * @param string $name    The column name.
+	 * @param int    $post_id The post ID.
+	 */
 	public function column( $name, $post_id ) {
 		$post = get_post( $post_id );
 
@@ -282,15 +363,17 @@ class Log {
 				$terms   = get_the_terms( $post_id, self::$taxonomy );
 
 				if ( is_array( $terms ) ) {
-					$hook = wp_list_pluck( $terms, 'slug' )[0];
+					$hooks = wp_list_pluck( $terms, 'slug' );
+					if ( $hooks ) {
+						$hook = $hooks[0];
+					}
 				}
 
 				if ( 'crontrol_cron_job' === $hook ) {
 					echo '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
 				} elseif ( ! empty( $actions ) ) {
-					$actions = array_map( 'esc_html', $actions );
 					echo '<code>';
-					echo implode( '</code><br><code>', $actions );
+					echo implode( '</code><br><code>', array_map( 'esc_html', $actions ) );
 					echo '</code>';
 				} else {
 					printf(
@@ -314,7 +397,7 @@ class Log {
 				break;
 
 			case 'https':
-				$https   = get_post_meta( $post_id, 'crontrol_log_https', true );
+				$https = get_post_meta( $post_id, 'crontrol_log_https', true );
 
 				if ( ! empty( $https ) ) {
 					echo '<ol>';
@@ -359,6 +442,9 @@ class Log {
 		}
 	}
 
+	/**
+	 * Starts the logging for the current cron event.
+	 */
 	public function log_start() {
 		global $wpdb;
 
@@ -382,6 +468,9 @@ class Log {
 		$this->data['start_queries'] = $wpdb->num_queries;
 	}
 
+	/**
+	 * Ends the logging for the current cron event.
+	 */
 	public function log_end() {
 		global $wpdb;
 

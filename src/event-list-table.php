@@ -54,10 +54,10 @@ class Event_List_Table extends \WP_List_Table {
 	 */
 	public function prepare_items() {
 		self::$persistent_core_hooks = get_persistent_core_hooks();
-		self::$can_edit_files = current_user_can( 'edit_files' );
-		self::$count_by_hook  = Event\count_by_hook();
+		self::$can_edit_files        = current_user_can( 'edit_files' );
+		self::$count_by_hook         = Event\count_by_hook();
 
-		$events   = Event\get();
+		$events = Event\get();
 
 		if ( ! empty( $_GET['s'] ) ) {
 			$s = sanitize_text_field( wp_unslash( $_GET['s'] ) );

@@ -11,11 +11,13 @@
 	<rule ref="WordPress-Extra">
 
 		<!-- Skip checks for naming and indentation because IDGAF: -->
+		<exclude name="WordPress.NamingConventions.ValidHookName.UseUnderscores" />
 		<exclude name="WordPress.Files.FileName" />
 		<exclude name="Generic.Functions.FunctionCallArgumentSpacing.TooMuchSpaceAfterComma" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments" />
+		<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
 
 		<!-- False positives: -->
 		<exclude name="WordPress.Security.NonceVerification.Recommended" />

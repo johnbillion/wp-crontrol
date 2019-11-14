@@ -95,7 +95,7 @@ function action_handle_posts() {
 		if ( 'crontrol_cron_job' === $in_hookname && ! current_user_can( 'edit_files' ) ) {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
 		}
-		$in_args  = json_decode( $in_args, true );
+		$in_args = json_decode( $in_args, true );
 
 		if ( empty( $in_args ) ) {
 			$in_args = array();
@@ -616,6 +616,11 @@ function get_timezone_name() {
 
 /**
  * Shows the form used to add/edit cron events.
+ *
+ * @param array $events  The cron event list.
+ * @param bool  $editing Whether the form is for the event editor.
+ * @param bool  $is_php  Whether the form is for a PHP event.
+ * @return void
  */
 function show_cron_form( array $events, $editing, $is_php = null ) {
 	$display_args = '';
@@ -932,6 +937,11 @@ function admin_manage_page() {
 
 }
 
+/**
+ * Get the states of the various cron-related tabs.
+ *
+ * @return bool[] Array of states keyed by tab name.
+ */
 function get_tab_states() {
 	return array(
 		'events'        => ( ! empty( $_GET['page'] ) && 'crontrol_admin_manage_page' === $_GET['page'] && empty( $_GET['action'] ) ),
@@ -943,6 +953,9 @@ function get_tab_states() {
 	);
 }
 
+/**
+ * Output the cron-related tabs if we're on a cron-related admin screen.
+ */
 function do_tabs() {
 	$tab = get_tab_states();
 
@@ -976,28 +989,28 @@ function do_tabs() {
 	?>
 	<nav class="nav-tab-wrapper wp-clearfix">
 		<?php
-			foreach ( $links as $id => $link ) {
-				if ( $tab[ $id ] ) {
-					printf(
-						'<a href="%s" class="nav-tab nav-tab-active">%s</a>',
-						esc_url( $link[0] ),
-						esc_html( $link[1] )
-					);
-				} else {
-					printf(
-						'<a href="%s" class="nav-tab">%s</a>',
-						esc_url( $link[0] ),
-						esc_html( $link[1] )
-					);
-				}
-			}
-
-			if ( $tab['edit-event'] ) {
+		foreach ( $links as $id => $link ) {
+			if ( $tab[ $id ] ) {
 				printf(
-					'<span class="nav-tab nav-tab-active">%s</span>',
-					esc_html__( 'Edit Cron Event', 'wp-crontrol' )
+					'<a href="%s" class="nav-tab nav-tab-active">%s</a>',
+					esc_url( $link[0] ),
+					esc_html( $link[1] )
+				);
+			} else {
+				printf(
+					'<a href="%s" class="nav-tab">%s</a>',
+					esc_url( $link[0] ),
+					esc_html( $link[1] )
 				);
 			}
+		}
+
+		if ( $tab['edit-event'] ) {
+			printf(
+				'<span class="nav-tab nav-tab-active">%s</span>',
+				esc_html__( 'Edit Cron Event', 'wp-crontrol' )
+			);
+		}
 		?>
 	</nav>
 	<?php
@@ -1097,7 +1110,7 @@ function output_callback( array $callback ) {
 
 		if ( class_exists( '\QM_Output_Html' ) ) {
 			if ( ! empty( $callback['callback']['error'] ) ) {
-				$return = '<code>' . $callback['callback']['name'] . '</code>';
+				$return  = '<code>' . $callback['callback']['name'] . '</code>';
 				$return .= '<br><span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
 				$return .= esc_html( $callback['callback']['error']->get_error_message() );
 				$return .= '</span>';

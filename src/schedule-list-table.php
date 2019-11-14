@@ -84,9 +84,9 @@ class Schedule_List_Table extends \WP_List_Table {
 	/**
 	 * Generates and displays row action links for the table.
 	 *
-	 * @param array    $schedule    The schedule for the current row.
-	 * @param string   $column_name Current column name.
-	 * @param string   $primary     Primary column name.
+	 * @param array  $schedule    The schedule for the current row.
+	 * @param string $column_name Current column name.
+	 * @param string $primary     Primary column name.
 	 * @return string The row actions HTML.
 	 */
 	protected function handle_row_actions( $schedule, $column_name, $primary ) {
