@@ -998,37 +998,37 @@ function do_tabs() {
 
 	?>
 	<div id="crontrol-header">
-	<nav class="nav-tab-wrapper">
-		<?php
-		foreach ( $links as $id => $link ) {
-			if ( $tab[ $id ] ) {
+		<nav class="nav-tab-wrapper">
+			<?php
+			foreach ( $links as $id => $link ) {
+				if ( $tab[ $id ] ) {
+					printf(
+						'<a href="%s" class="nav-tab nav-tab-active">%s</a>',
+						esc_url( $link[0] ),
+						esc_html( $link[1] )
+					);
+				} else {
+					printf(
+						'<a href="%s" class="nav-tab">%s</a>',
+						esc_url( $link[0] ),
+						esc_html( $link[1] )
+					);
+				}
+			}
+
+			if ( $tab['edit-event'] ) {
 				printf(
-					'<a href="%s" class="nav-tab nav-tab-active">%s</a>',
-					esc_url( $link[0] ),
-					esc_html( $link[1] )
-				);
-			} else {
-				printf(
-					'<a href="%s" class="nav-tab">%s</a>',
-					esc_url( $link[0] ),
-					esc_html( $link[1] )
+					'<span class="nav-tab nav-tab-active">%s</span>',
+					esc_html__( 'Edit Cron Event', 'wp-crontrol' )
 				);
 			}
-		}
-
-		if ( $tab['edit-event'] ) {
-			printf(
-				'<span class="nav-tab nav-tab-active">%s</span>',
-				esc_html__( 'Edit Cron Event', 'wp-crontrol' )
-			);
+			?>
+		</nav>
+		<?php
+		if ( $tab['logs'] ) {
+			Log::show_options();
 		}
 		?>
-	</nav>
-	<?php
-	if ( $tab['logs'] ) {
-		Log::show_options();
-	}
-	?>
 	</div>
 	<?php
 	show_cron_status();
