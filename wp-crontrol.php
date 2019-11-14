@@ -91,12 +91,19 @@ function action_handle_posts() {
 		}
 
 		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
-		Event\add( $next_run, $in_schedule, $in_hookname, $in_args );
+
+		$added = Event\add( $next_run, $in_schedule, $in_hookname, $in_args );
+
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '5',
 			'crontrol_name'    => rawurlencode( $in_hookname ),
 		);
+
+		if ( false === $added ) {
+			$redirect['crontrol_message'] = '10';
+		}
+
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 
@@ -111,13 +118,20 @@ function action_handle_posts() {
 			'code' => $in_hookcode,
 			'name' => $in_eventname,
 		);
-		Event\add( $next_run, $in_schedule, 'crontrol_cron_job', $args );
+
+		$added = Event\add( $next_run, $in_schedule, 'crontrol_cron_job', $args );
+
 		$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '5',
 			'crontrol_name'    => rawurlencode( $hookname ),
 		);
+
+		if ( false === $added ) {
+			$redirect['crontrol_message'] = '10';
+		}
+
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 
@@ -141,12 +155,19 @@ function action_handle_posts() {
 
 		Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run );
 		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
-		Event\add( $next_run, $in_schedule, $in_hookname, $in_args );
+
+		$added = Event\add( $next_run, $in_schedule, $in_hookname, $in_args );
+
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '4',
 			'crontrol_name'    => rawurlencode( $in_hookname ),
 		);
+
+		if ( false === $added ) {
+			$redirect['crontrol_message'] = '10';
+		}
+
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 
@@ -163,13 +184,20 @@ function action_handle_posts() {
 		);
 		Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run );
 		$next_run = ( 'custom' === $in_next_run_date ) ? $in_next_run_date_custom : $in_next_run_date;
-		Event\add( $next_run, $in_schedule, 'crontrol_cron_job', $args );
+
+		$added = Event\add( $next_run, $in_schedule, 'crontrol_cron_job', $args );
+
 		$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '4',
 			'crontrol_name'    => rawurlencode( $hookname ),
 		);
+
+		if ( false === $added ) {
+			$redirect['crontrol_message'] = '10';
+		}
+
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 
@@ -870,49 +898,54 @@ function show_cron_form( array $events, $editing, $is_php = null ) {
  */
 function admin_manage_page() {
 	$messages = array(
-		'1' => array(
+		'1'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Scheduled the cron event %s to run now.', 'wp-crontrol' ),
 			'success',
 		),
-		'2' => array(
+		'2'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Deleted all %s cron events.', 'wp-crontrol' ),
 			'success',
 		),
-		'3' => array(
+		'3'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'There are no %s cron events to delete.', 'wp-crontrol' ),
 			'info',
 		),
-		'4' => array(
+		'4'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Saved the cron event %s.', 'wp-crontrol' ),
 			'success',
 		),
-		'5' => array(
+		'5'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Created the cron event %s.', 'wp-crontrol' ),
 			'success',
 		),
-		'6' => array(
+		'6'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Deleted the cron event %s.', 'wp-crontrol' ),
 			'success',
 		),
-		'7' => array(
+		'7'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Failed to the delete the cron event %s.', 'wp-crontrol' ),
 			'error',
 		),
-		'8' => array(
+		'8'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Failed to the execute the cron event %s.', 'wp-crontrol' ),
 			'error',
 		),
-		'9' => array(
+		'9'  => array(
 			__( 'Deleted the selected cron events.', 'wp-crontrol' ),
 			'success',
+		),
+		'10' => array(
+			/* translators: 1: The name of the cron event. */
+			__( 'Failed to save the cron event %s.', 'wp-crontrol' ),
+			'error',
 		),
 	);
 

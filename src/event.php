@@ -26,8 +26,18 @@ function run( $hookname, $sig ) {
 		if ( isset( $cron[ $hookname ][ $sig ] ) ) {
 			$args = $cron[ $hookname ][ $sig ]['args'];
 			delete_transient( 'doing_cron' );
-			wp_schedule_single_event( time() - 1, $hookname, $args );
-			spawn_cron();
+			$scheduled = wp_schedule_single_event( time() - 1, $hookname, $args );
+
+			if ( false === $scheduled ) {
+				return $scheduled;
+			}
+
+			$spawned = spawn_cron();
+
+			if ( false === $spawned ) {
+				return $spawned;
+			}
+
 			return true;
 		}
 	}
@@ -41,7 +51,7 @@ function run( $hookname, $sig ) {
  * @param string $schedule The recurrence of the cron event.
  * @param string $hookname The name of the hook to execute.
  * @param array  $args     Arguments to add to the cron event.
- * @return bool|null Whether the addition was successful (WordPress 5.1+ only) or null.
+ * @return bool Whether the addition was successful.
  */
 function add( $next_run, $schedule, $hookname, array $args ) {
 	$next_run = strtotime( $next_run );
@@ -69,9 +79,9 @@ function add( $next_run, $schedule, $hookname, array $args ) {
 	}
 
 	if ( '_oneoff' === $schedule ) {
-		return wp_schedule_single_event( $next_run, $hookname, $args ) !== false;
+		return ( false !== wp_schedule_single_event( $next_run, $hookname, $args ) );
 	} else {
-		return wp_schedule_event( $next_run, $schedule, $hookname, $args ) !== false;
+		return ( false !== wp_schedule_event( $next_run, $schedule, $hookname, $args ) );
 	}
 }
 
