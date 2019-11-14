@@ -422,25 +422,33 @@ function filter_cron_schedules( array $scheds ) {
  */
 function admin_options_page() {
 	$messages = array(
-		/* translators: 1: The name of the cron schedule. */
-		'2' => __( 'Successfully deleted the cron schedule %s.', 'wp-crontrol' ),
-		/* translators: 1: The name of the cron schedule. */
-		'3' => __( 'Successfully added the cron schedule %s.', 'wp-crontrol' ),
-		/* translators: 1: The name of the cron schedule. */
-		'7' => __( 'Cron schedule not added because there was a problem parsing %s.', 'wp-crontrol' ),
+		'2' => array(
+			/* translators: 1: The name of the cron schedule. */
+			__( 'Deleted the cron schedule %s.', 'wp-crontrol' ),
+			'success',
+		),
+		'3' => array(
+			/* translators: 1: The name of the cron schedule. */
+			__( 'Added the cron schedule %s.', 'wp-crontrol' ),
+			'success',
+		),
+		'7' => array(
+			/* translators: 1: The name of the cron schedule. */
+			__( 'Cron schedule not added because there was a problem parsing %s.', 'wp-crontrol' ),
+			'error',
+		),
 	);
 	if ( isset( $_GET['crontrol_message'] ) && isset( $_GET['crontrol_name'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
 		$hook    = wp_unslash( $_GET['crontrol_name'] );
 		$message = wp_unslash( $_GET['crontrol_message'] );
-		$msg     = sprintf(
-			esc_html( $messages[ $message ] ),
-			'<strong>' . esc_html( $hook ) . '</strong>'
-		);
 
 		printf(
-			'<div id="message" class="updated notice is-dismissible"><p>%s</p></div>',
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			$msg
+			'<div id="crontrol-message" class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>',
+			esc_attr( $messages[ $message ][1] ),
+			sprintf(
+				esc_html( $messages[ $message ][0] ),
+				'<strong>' . esc_html( $hook ) . '</strong>'
+			)
 		);
 	}
 
@@ -862,32 +870,64 @@ function show_cron_form( array $events, $editing, $is_php = null ) {
  */
 function admin_manage_page() {
 	$messages = array(
-		/* translators: 1: The name of the cron event. */
-		'1' => __( 'Successfully schdeuled the cron event %s to run now.', 'wp-crontrol' ),
-		/* translators: 1: The name of the cron event. */
-		'2' => __( 'Successfully deleted all %s cron events.', 'wp-crontrol' ),
-		/* translators: 1: The name of the cron event. */
-		'3' => __( 'There are no %s cron events to delete.', 'wp-crontrol' ),
-		/* translators: 1: The name of the cron event. */
-		'4' => __( 'Successfully edited the cron event %s.', 'wp-crontrol' ),
-		/* translators: 1: The name of the cron event. */
-		'5' => __( 'Successfully created the cron event %s.', 'wp-crontrol' ),
-		/* translators: 1: The name of the cron event. */
-		'6' => __( 'Successfully deleted the cron event %s.', 'wp-crontrol' ),
-		/* translators: 1: The name of the cron event. */
-		'7' => __( 'Failed to the delete the cron event %s.', 'wp-crontrol' ),
-		/* translators: 1: The name of the cron event. */
-		'8' => __( 'Failed to the execute the cron event %s.', 'wp-crontrol' ),
-		'9' => __( 'Successfully deleted the selected cron events.', 'wp-crontrol' ),
+		'1' => array(
+			/* translators: 1: The name of the cron event. */
+			__( 'Scheduled the cron event %s to run now.', 'wp-crontrol' ),
+			'success',
+		),
+		'2' => array(
+			/* translators: 1: The name of the cron event. */
+			__( 'Deleted all %s cron events.', 'wp-crontrol' ),
+			'success',
+		),
+		'3' => array(
+			/* translators: 1: The name of the cron event. */
+			__( 'There are no %s cron events to delete.', 'wp-crontrol' ),
+			'info',
+		),
+		'4' => array(
+			/* translators: 1: The name of the cron event. */
+			__( 'Saved the cron event %s.', 'wp-crontrol' ),
+			'success',
+		),
+		'5' => array(
+			/* translators: 1: The name of the cron event. */
+			__( 'Created the cron event %s.', 'wp-crontrol' ),
+			'success',
+		),
+		'6' => array(
+			/* translators: 1: The name of the cron event. */
+			__( 'Deleted the cron event %s.', 'wp-crontrol' ),
+			'success',
+		),
+		'7' => array(
+			/* translators: 1: The name of the cron event. */
+			__( 'Failed to the delete the cron event %s.', 'wp-crontrol' ),
+			'error',
+		),
+		'8' => array(
+			/* translators: 1: The name of the cron event. */
+			__( 'Failed to the execute the cron event %s.', 'wp-crontrol' ),
+			'error',
+		),
+		'9' => array(
+			__( 'Deleted the selected cron events.', 'wp-crontrol' ),
+			'success',
+		),
 	);
 
 	if ( isset( $_GET['crontrol_name'] ) && isset( $_GET['crontrol_message'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
 		$hook    = wp_unslash( $_GET['crontrol_name'] );
 		$message = wp_unslash( $_GET['crontrol_message'] );
-		$msg     = sprintf( esc_html( $messages[ $message ] ), '<strong>' . esc_html( $hook ) . '</strong>' );
 
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		printf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>', $msg );
+		printf(
+			'<div id="crontrol-message" class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>',
+			esc_attr( $messages[ $message ][1] ),
+			sprintf(
+				esc_html( $messages[ $message ][0] ),
+				'<strong>' . esc_html( $hook ) . '</strong>'
+			)
+		);
 	}
 
 	require_once __DIR__ . '/src/event-list-table.php';
