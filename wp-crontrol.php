@@ -513,13 +513,19 @@ function test_cron_spawn( $cache = true ) {
 	}
 
 	if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
-		/* translators: 1: The name of the PHP constant that is set. */
-		return new WP_Error( 'crontrol_info', sprintf( __( 'The %s constant is set to true. WP-Cron spawning is disabled.', 'wp-crontrol' ), 'DISABLE_WP_CRON' ) );
+		return new WP_Error( 'crontrol_info', sprintf(
+			/* translators: 1: The name of the PHP constant that is set. */
+			__( 'The %s constant is set to true. WP-Cron spawning is disabled.', 'wp-crontrol' ),
+			'DISABLE_WP_CRON'
+		) );
 	}
 
 	if ( defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON ) {
-		/* translators: 1: The name of the PHP constant that is set. */
-		return new WP_Error( 'crontrol_info', sprintf( __( 'The %s constant is set to true.', 'wp-crontrol' ), 'ALTERNATE_WP_CRON' ) );
+		return new WP_Error( 'crontrol_info', sprintf(
+			/* translators: 1: The name of the PHP constant that is set. */
+			__( 'The %s constant is set to true.', 'wp-crontrol' ),
+			'ALTERNATE_WP_CRON'
+		) );
 	}
 
 	$cached_status = get_transient( 'crontrol-cron-test-ok' );
