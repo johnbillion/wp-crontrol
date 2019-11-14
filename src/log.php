@@ -59,6 +59,8 @@ class Log {
 		add_filter( 'display_post_states',                       array( $this, 'filter_post_state' ), 20, 2 );
 		add_action( 'load-edit.php',                             array( $this, 'default_sort' ) );
 
+		register_setting( 'crontrol_group', 'crontrol_log' );
+
 		// WordPress.com VIP specific functionality:
 		add_filter( 'wpcom_async_transition_post_status_schedule_async', array( $this, 'filter_wpcom_async_transition' ), 10, 2 );
 
@@ -139,11 +141,13 @@ class Log {
 	 * Sets up the hooks needed to log cront events as they run.
 	 */
 	public function setup_hooks() {
-		$exclude = apply_filters( 'crontrol/log/exclude', array() );
-		$hooks   = array_keys( Event\count_by_hook() );
-		$hooks   = array_diff( $hooks, $exclude );
+		$logged = get_option( 'crontrol_log', array() );
 
-		array_map( array( $this, 'observe' ), $hooks );
+		if ( empty( $logged ) ) {
+			return;
+		}
+
+		array_map( array( $this, 'observe' ), $logged );
 	}
 
 	/**
@@ -559,6 +563,45 @@ class Log {
 		}
 
 		wp_set_post_terms( $post_id, array( $this->data['hook'] ), self::$taxonomy, true );
+	}
+
+	/**
+	 * Shows the event log related options panel.
+	 */
+	public static function show_options() {
+		$events = array_keys( Event\count_by_hook() );
+		$logged = get_option( 'crontrol_log', array() );
+
+		if ( empty( $logged ) ) {
+			$logged = array();
+		}
+
+		$all = array_unique( array_merge( $events, $logged ) );
+
+		sort( $all );
+
+		?>
+		<form action="options.php" method="POST" class="crontrol-log-form">
+			<fieldset>
+				<legend><?php esc_html_e( 'Enabled Logging For:', 'wp-crontrol' ); ?></legend>
+				<div class="crontrol-log-options">
+					<?php
+					settings_fields( 'crontrol_group' );
+
+					foreach ( $all as $hook ) {
+						printf(
+							'<label><input type="checkbox" name="crontrol_log[]" value="%1$s" %2$s />%3$s</label>',
+							esc_attr( $hook ),
+							checked( in_array( $hook, $logged, true ), true, false ),
+							esc_html( $hook )
+						);
+					}
+					?>
+				</div>
+			</fieldset>
+			<p><input type="submit" value="<?php esc_attr_e( 'Save', 'wp-crontrol' ); ?>" class="button button-primary"></p>
+		</form>
+		<?php
 	}
 
 	/**

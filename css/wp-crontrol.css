@@ -25,3 +25,33 @@ table.wp-list-table {
 .row-actions .in-use {
 	color: #777;
 }
+
+.crontrol-log-form {
+	background: #fff;
+	padding: 20px 20px 0 20px;
+	border: 1px solid #ccd0d4;
+	border-top: none;
+	margin-right: 20px;
+}
+
+.crontrol-log-form legend {
+	margin: 0;
+	padding: 5px 0 15px;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.crontrol-log-options {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	column-gap: 20px;
+	row-gap: 7px;
+}
+
+.crontrol-log-options label {
+	white-space: nowrap;
+}
+
+.nav-tab-wrapper {
+	margin-right: 20px;
+}

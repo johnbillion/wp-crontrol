@@ -60,7 +60,6 @@ function init_hooks() {
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_styles' );
-	add_filter( 'crontrol/log/exclude',  __NAMESPACE__ . '\get_all_core_hooks' );
 
 	add_action( 'init', array( Log::get_instance(), 'init' ) );
 }
@@ -1025,6 +1024,11 @@ function do_tabs() {
 		?>
 	</nav>
 	<?php
+
+	if ( $tab['logs'] ) {
+		Log::show_options();
+	}
+
 	show_cron_status();
 }
 
@@ -1257,15 +1261,9 @@ function enqueue_code_editor() {
  * @param string $hook_suffix The admin screen ID.
  */
 function enqueue_styles( $hook_suffix ) {
-	$screens = array(
-		'edit-crontrol_log',
-		'tools_page_crontrol_admin_manage_page',
-		'settings_page_crontrol_admin_options_page',
-	);
+	$tab = get_tab_states();
 
-	$screen = get_current_screen();
-
-	if ( ! $screen || ! in_array( $screen->id, $screens, true ) ) {
+	if ( ! array_filter( $tab ) ) {
 		return;
 	}
 
