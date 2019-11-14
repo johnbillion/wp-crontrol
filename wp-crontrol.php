@@ -1028,10 +1028,10 @@ function do_tabs() {
 		if ( $tab['logs'] ) {
 			Log::show_options();
 		}
+		show_cron_status();
 		?>
 	</div>
 	<?php
-	show_cron_status();
 }
 
 /**
