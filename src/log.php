@@ -51,7 +51,7 @@ class Log {
 		add_filter( 'disable_months_dropdown',                 array( $this, 'filter_disable_months_dropdown' ), 10, 2 );
 		add_filter( 'manage_crontrol_log_posts_columns',       array( $this, 'columns' ) );
 		add_action( 'manage_crontrol_log_posts_custom_column', array( $this, 'column' ), 10, 2 );
-		add_filter( 'post_row_actions',                        array( $this, 'remove_quick_edit_action' ), 10, 2 );
+		add_filter( 'page_row_actions',                        array( $this, 'remove_quick_edit_action' ), 10, 2 );
 		add_filter( 'bulk_actions-edit-' . self::$post_type,   array( $this, 'remove_quick_edit_menu' ) );
 		add_filter( 'display_post_states',                     array( $this, 'filter_post_state' ), 20, 2 );
 
