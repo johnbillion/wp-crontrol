@@ -41,7 +41,7 @@ function run( $hookname, $sig ) {
  * @param string $schedule The recurrence of the cron event.
  * @param string $hookname The name of the hook to execute.
  * @param array  $args     Arguments to add to the cron event.
- * @return bool Whether the additon was successful.
+ * @return bool|null Whether the addition was successful (WordPress 5.1+ only) or null.
  */
 function add( $next_run, $schedule, $hookname, array $args ) {
 	$next_run = strtotime( $next_run );
