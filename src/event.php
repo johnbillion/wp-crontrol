@@ -9,6 +9,7 @@ namespace Crontrol\Event;
 
 use stdClass;
 use Crontrol\Schedule;
+use WP_Error;
 
 /**
  * Executes a cron event immediately.
