@@ -95,7 +95,7 @@ class Log {
 			'map_meta_cap'      => true,
 			'capabilities'      => array(
 				'edit_posts'             => 'manage_options',
-				'edit_others_posts'      => 'do_not_allow',
+				'edit_others_posts'      => 'manage_options',
 				'publish_posts'          => 'do_not_allow',
 				'read_private_posts'     => 'do_not_allow',
 				'read'                   => 'manage_options',
@@ -104,7 +104,7 @@ class Log {
 				'delete_published_posts' => 'manage_options',
 				'delete_others_posts'    => 'manage_options',
 				'edit_private_posts'     => 'do_not_allow',
-				'edit_published_posts'   => 'do_not_allow',
+				'edit_published_posts'   => 'manage_options',
 				'create_posts'           => 'do_not_allow',
 			),
 		) );
