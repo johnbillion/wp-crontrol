@@ -1,15 +1,15 @@
 <?php
 /**
- * Plugin Name: WP Crontrol
- * Plugin URI:  https://wordpress.org/plugins/wp-crontrol/
- * Description: WP Crontrol lets you view and control what's happening in the WP-Cron system.
- * Author:      John Blackbourn & crontributors
- * Author URI:  https://github.com/johnbillion/wp-crontrol/graphs/contributors
- * Version:     1.7.1
- * Text Domain: wp-crontrol
- * Domain Path: /languages/
+ * Plugin Name:  WP Crontrol
+ * Plugin URI:   https://wordpress.org/plugins/wp-crontrol/
+ * Description:  WP Crontrol lets you view, control, and log what's happening in the WP-Cron system.
+ * Author:       John Blackbourn & crontributors
+ * Author URI:   https://github.com/johnbillion/wp-crontrol/graphs/contributors
+ * Version:      2.0.0-beta1
+ * Text Domain:  wp-crontrol
+ * Domain Path:  /languages/
  * Requires PHP: 5.3.6
- * License:     GPL v2 or later
+ * License:      GPL v2 or later
  *
  * LICENSE
  * This file is part of WP Crontrol.
@@ -25,7 +25,7 @@
  * GNU General Public License for more details.
  *
  * @package    WP Crontrol
- * @author     Edward Dale <scompt@scompt.com> & John Blackbourn <john@johnblackbourn.com>
+ * @author     John Blackbourn <john@johnblackbourn.com> & Edward Dale <scompt@scompt.com>
  * @copyright  Copyright 2008 Edward Dale, 2012-2019 John Blackbourn
  * @license    http://www.gnu.org/licenses/gpl.txt GPL 2.0
  * @link       https://wordpress.org/plugins/wp-crontrol/
