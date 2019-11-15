@@ -95,10 +95,13 @@ class Schedule_List_Table extends \WP_List_Table {
 		}
 
 		$links = array();
+		$new_scheds = get_option( 'crontrol_schedules', array() );
 
 		if ( ! in_array( $schedule['name'], self::$core_schedules, true ) ) {
 			if ( in_array( $schedule['name'], self::$used_schedules, true ) ) {
 				$links[] = "<span class='in-use'>" . esc_html__( 'This custom schedule is in use and cannot be deleted', 'wp-crontrol' ) . '</span>';
+			} elseif ( ! isset( $new_scheds[ $schedule['name'] ] ) ) {
+				$links[] = "<span class='in-use'>" . esc_html__( 'This schedule is added by another plugin and cannot be deleted', 'wp-crontrol' ) . '</span>';
 			} else {
 				$link = add_query_arg( array(
 					'page'   => 'crontrol_admin_options_page',
