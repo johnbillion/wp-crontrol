@@ -140,10 +140,10 @@ class Event_List_Table extends \WP_List_Table {
 
 		if ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) {
 			$link = array(
-				'page'     => 'crontrol_admin_manage_page',
-				'action'   => 'edit-cron',
-				'id'       => rawurlencode( $event->hook ),
-				'sig'      => rawurlencode( $event->sig ),
+				'page'         => 'crontrol_admin_manage_page',
+				'action'       => 'edit-cron',
+				'id'           => rawurlencode( $event->hook ),
+				'sig'          => rawurlencode( $event->sig ),
 				'next_run_utc' => rawurlencode( $event->time ),
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
@@ -152,10 +152,10 @@ class Event_List_Table extends \WP_List_Table {
 		}
 
 		$link = array(
-			'page'     => 'crontrol_admin_manage_page',
-			'action'   => 'run-cron',
-			'id'       => rawurlencode( $event->hook ),
-			'sig'      => rawurlencode( $event->sig ),
+			'page'         => 'crontrol_admin_manage_page',
+			'action'       => 'run-cron',
+			'id'           => rawurlencode( $event->hook ),
+			'sig'          => rawurlencode( $event->sig ),
 			'next_run_utc' => rawurlencode( $event->time ),
 		);
 		$link = add_query_arg( $link, admin_url( 'tools.php' ) );
@@ -172,10 +172,10 @@ class Event_List_Table extends \WP_List_Table {
 
 		if ( ! in_array( $event->hook, self::$persistent_core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) ) {
 			$link = array(
-				'page'     => 'crontrol_admin_manage_page',
-				'action'   => 'delete-cron',
-				'id'       => rawurlencode( $event->hook ),
-				'sig'      => rawurlencode( $event->sig ),
+				'page'         => 'crontrol_admin_manage_page',
+				'action'       => 'delete-cron',
+				'id'           => rawurlencode( $event->hook ),
+				'sig'          => rawurlencode( $event->sig ),
 				'next_run_utc' => rawurlencode( $event->time ),
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
