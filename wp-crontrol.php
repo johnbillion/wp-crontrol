@@ -648,23 +648,19 @@ function get_timezone_name() {
 		return 'UTC';
 	}
 
-	if ( $gmt_offset > 0 ) {
-		$gmt_offset = '+' . $gmt_offset;
-	} elseif ( empty( $gmt_offset ) ) {
-		$gmt_offset = '';
-	}
-
 	if ( '' === $timezone_string ) {
-		$name = sprintf( 'UTC%s', $gmt_offset );
-	} else {
-		$name = sprintf( '%s, UTC%s', str_replace( '_', ' ', $timezone_string ), $gmt_offset );
+		return get_utc_offset();
 	}
 
-	return $name;
+	return sprintf(
+		'%s, %s',
+		str_replace( '_', ' ', $timezone_string ),
+		get_utc_offset()
+	);
 }
 
 /**
- * Returns a display value for a GMT offset.
+ * Returns a display value for a UTC offset.
  *
  * Examples:
  *   - UTC
@@ -673,7 +669,7 @@ function get_timezone_name() {
  *
  * @return string The UTC offset display value.
  */
-function get_gmt_offset() {
+function get_utc_offset() {
 	$offset = get_option( 'gmt_offset', 0 );
 
 	if ( empty( $offset ) ) {

@@ -94,7 +94,7 @@ class Event_List_Table extends \WP_List_Table {
 			'crontrol_next'       => sprintf(
 				/* translators: %s: UTC offset */
 				__( 'Next Run (%s)', 'wp-crontrol' ),
-				get_gmt_offset()
+				get_utc_offset()
 			),
 			'crontrol_recurrence' => __( 'Recurrence', 'wp-crontrol' ),
 		);

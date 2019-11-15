@@ -286,7 +286,7 @@ class Log {
 		$ran = sprintf(
 			/* translators: %s: UTC offset */
 			__( 'Date (%s)', 'wp-crontrol' ),
-			get_gmt_offset()
+			get_utc_offset()
 		);
 
 		$columns['hook']    = esc_html__( 'Hook', 'wp-crontrol' );
