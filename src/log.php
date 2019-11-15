@@ -360,11 +360,18 @@ class Log {
 				$date_local = get_date_from_gmt( $post->post_date_gmt, 'Y-m-d H:i:s' );
 
 				printf(
-					'<time datetime="%1$s">%2$s</time>',
-					esc_attr( $date_utc ),
-					esc_html( $date_local )
+					'%s<br>%s',
+					sprintf(
+						'<time datetime="%1$s">%2$s</time>',
+						esc_attr( $date_utc ),
+						esc_html( $date_local )
+					),
+					sprintf(
+						/* translators: %s: Time period */
+						esc_html__( '%s ago', 'wp-crontrol' ),
+						esc_html( time_since( strtotime( $post->post_date_gmt ), time() ) )
+					)
 				);
-
 				break;
 
 			case 'time':

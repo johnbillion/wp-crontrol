@@ -347,7 +347,7 @@ class Event_List_Table extends \WP_List_Table {
 		);
 
 		return sprintf(
-			'%s (%s)',
+			'%s<br>%s',
 			$time,
 			esc_html( time_since( time(), $event->time ) )
 		);
