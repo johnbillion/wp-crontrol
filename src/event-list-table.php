@@ -91,7 +91,11 @@ class Event_List_Table extends \WP_List_Table {
 			'crontrol_hook'       => __( 'Hook Name', 'wp-crontrol' ),
 			'crontrol_args'       => __( 'Arguments', 'wp-crontrol' ),
 			'crontrol_actions'    => __( 'Actions', 'wp-crontrol' ),
-			'crontrol_next'       => __( 'Next Run', 'wp-crontrol' ),
+			'crontrol_next'       => sprintf(
+				/* translators: %s: UTC offset */
+				__( 'Next Run (%s)', 'wp-crontrol' ),
+				get_gmt_offset()
+			),
 			'crontrol_recurrence' => __( 'Recurrence', 'wp-crontrol' ),
 		);
 	}
@@ -333,9 +337,18 @@ class Event_List_Table extends \WP_List_Table {
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_next( $event ) {
+		$date_utc   = gmdate( 'Y-m-d\TH:i:s+00:00', $event->time );
+		$date_local = get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), 'Y-m-d H:i:s' );
+
+		$time = sprintf(
+			'<time datetime="%1$s">%2$s</time>',
+			esc_attr( $date_utc ),
+			esc_html( $date_local )
+		);
+
 		return sprintf(
 			'%s (%s)',
-			esc_html( get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->time ), 'Y-m-d H:i:s' ) ),
+			$time,
 			esc_html( time_since( time(), $event->time ) )
 		);
 	}

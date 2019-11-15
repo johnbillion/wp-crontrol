@@ -664,6 +664,36 @@ function get_timezone_name() {
 }
 
 /**
+ * Returns a display value for a GMT offset.
+ *
+ * Examples:
+ *   - UTC
+ *   - UTC+4
+ *   - UTC-6
+ *
+ * @return string The UTC offset display value.
+ */
+function get_gmt_offset() {
+	$offset = get_option( 'gmt_offset', 0 );
+
+	if ( empty( $offset ) ) {
+		return 'UTC';
+	}
+
+	if ( 0 <= $offset ) {
+		$formatted_offset = '+' . (string) $offset;
+	} else {
+		$formatted_offset = (string) $offset;
+	}
+	$formatted_offset = str_replace(
+		array( '.25', '.5', '.75' ),
+		array( ':15', ':30', ':45' ),
+		$formatted_offset
+	);
+	return 'UTC' . $formatted_offset;
+}
+
+/**
  * Shows the form used to add/edit cron events.
  *
  * @param array $events  The cron event list.

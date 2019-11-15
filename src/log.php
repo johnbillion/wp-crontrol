@@ -283,8 +283,14 @@ class Log {
 	public function columns( array $columns ) {
 		unset( $columns['date'], $columns['title'] );
 
+		$ran = sprintf(
+			/* translators: %s: UTC offset */
+			__( 'Date (%s)', 'wp-crontrol' ),
+			get_gmt_offset()
+		);
+
 		$columns['hook']    = esc_html__( 'Hook', 'wp-crontrol' );
-		$columns['ran']     = esc_html__( 'Date', 'wp-crontrol' );
+		$columns['ran']     = esc_html( $ran );
 		$columns['args']    = esc_html__( 'Args', 'wp-crontrol' );
 		$columns['actions'] = esc_html__( 'Actions', 'wp-crontrol' );
 		$columns['time']    = esc_html__( 'Time (s)', 'wp-crontrol' );
@@ -350,7 +356,15 @@ class Log {
 				break;
 
 			case 'ran':
-				echo esc_html( mysql2date( 'Y-m-d H:i:s', $post->post_date ) );
+				$date_utc   = gmdate( 'Y-m-d\TH:i:s+00:00', strtotime( $post->post_date_gmt ) );
+				$date_local = get_date_from_gmt( $post->post_date_gmt, 'Y-m-d H:i:s' );
+
+				printf(
+					'<time datetime="%1$s">%2$s</time>',
+					esc_attr( $date_utc ),
+					esc_html( $date_local )
+				);
+
 				break;
 
 			case 'time':
