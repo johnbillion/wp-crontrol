@@ -12,6 +12,11 @@ table.wp-list-table {
 	margin: 0;
 }
 
+.wp-list-table code {
+	background: transparent;
+	padding: 0;
+}
+
 .column-time,
 .column-ran,
 .column-crontrol_next {
