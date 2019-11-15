@@ -144,7 +144,7 @@ class Event_List_Table extends \WP_List_Table {
 				'action'   => 'edit-cron',
 				'id'       => rawurlencode( $event->hook ),
 				'sig'      => rawurlencode( $event->sig ),
-				'next_run' => rawurlencode( $event->time ), // UTC
+				'next_run_utc' => rawurlencode( $event->time ),
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 
@@ -156,7 +156,7 @@ class Event_List_Table extends \WP_List_Table {
 			'action'   => 'run-cron',
 			'id'       => rawurlencode( $event->hook ),
 			'sig'      => rawurlencode( $event->sig ),
-			'next_run' => rawurlencode( $event->time ), // UTC
+			'next_run_utc' => rawurlencode( $event->time ),
 		);
 		$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 		$link = wp_nonce_url( $link, "run-cron_{$event->hook}_{$event->sig}" );
@@ -176,7 +176,7 @@ class Event_List_Table extends \WP_List_Table {
 				'action'   => 'delete-cron',
 				'id'       => rawurlencode( $event->hook ),
 				'sig'      => rawurlencode( $event->sig ),
-				'next_run' => rawurlencode( $event->time ), // UTC
+				'next_run_utc' => rawurlencode( $event->time ),
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 			$link = wp_nonce_url( $link, "delete-cron_{$event->hook}_{$event->sig}_{$event->time}" );
