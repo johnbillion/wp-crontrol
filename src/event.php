@@ -26,7 +26,7 @@ function run( $hookname, $sig ) {
 		if ( isset( $cron[ $hookname ][ $sig ] ) ) {
 			$args = $cron[ $hookname ][ $sig ]['args'];
 			delete_transient( 'doing_cron' );
-			$scheduled = wp_schedule_single_event( time() - 1, $hookname, $args );
+			$scheduled = wp_schedule_single_event( time() - 1, $hookname, $args ); // UTC
 
 			if ( false === $scheduled ) {
 				return $scheduled;
@@ -43,19 +43,21 @@ function run( $hookname, $sig ) {
 /**
  * Adds a new cron event.
  *
- * @param string $next_run A GMT time that the event should be run at.
- * @param string $schedule The recurrence of the cron event.
- * @param string $hookname The name of the hook to execute.
- * @param array  $args     Arguments to add to the cron event.
+ * @param string $next_run_local The time that the event should be run at, in the site's timezone.
+ * @param string $schedule       The recurrence of the cron event.
+ * @param string $hookname       The name of the hook to execute.
+ * @param array  $args           Arguments to add to the cron event.
  * @return bool Whether the addition was successful.
  */
-function add( $next_run, $schedule, $hookname, array $args ) {
-	$next_run = strtotime( $next_run );
-	if ( false === $next_run ) {
-		$next_run = time();
-	} else {
-		$next_run = get_gmt_from_date( date( 'Y-m-d H:i:s', $next_run ), 'U' );
+function add( $next_run_local, $schedule, $hookname, array $args ) {
+	$next_run_local = strtotime( $next_run_local, current_time( 'timestamp' ) );
+
+	if ( false === $next_run_local ) {
+		return false;
 	}
+
+	$next_run_utc = get_gmt_from_date( gmdate( 'Y-m-d H:i:s', $next_run_local ), 'U' );
+
 	if ( ! is_array( $args ) ) {
 		$args = array();
 	}
@@ -75,25 +77,30 @@ function add( $next_run, $schedule, $hookname, array $args ) {
 	}
 
 	if ( '_oneoff' === $schedule ) {
-		return ( false !== wp_schedule_single_event( $next_run, $hookname, $args ) );
+		return ( false !== wp_schedule_single_event( $next_run_utc, $hookname, $args ) );
 	} else {
-		return ( false !== wp_schedule_event( $next_run, $schedule, $hookname, $args ) );
+		return ( false !== wp_schedule_event( $next_run_utc, $schedule, $hookname, $args ) );
 	}
 }
 
 /**
  * Deletes a cron event.
  *
- * @param string $to_delete The hook name of the event to delete.
- * @param string $sig       The cron event signature.
- * @param string $next_run  The GMT time that the event would be run at.
+ * @param string $to_delete    The hook name of the event to delete.
+ * @param string $sig          The cron event signature.
+ * @param string $next_run_utc The UTC time that the event would be run at.
  * @return bool Whether the deletion was successful.
  */
-function delete( $to_delete, $sig, $next_run ) {
+function delete( $to_delete, $sig, $next_run_utc ) {
 	$crons = _get_cron_array();
-	if ( isset( $crons[ $next_run ][ $to_delete ][ $sig ] ) ) {
-		$args = $crons[ $next_run ][ $to_delete ][ $sig ]['args'];
-		wp_unschedule_event( $next_run, $to_delete, $args );
+	if ( isset( $crons[ $next_run_utc ][ $to_delete ][ $sig ] ) ) {
+		$args        = $crons[ $next_run_utc ][ $to_delete ][ $sig ]['args'];
+		$unscheduled = wp_unschedule_event( $next_run_utc, $to_delete, $args );
+
+		if ( false === $unscheduled ) {
+			return $unscheduled;
+		}
+
 		return true;
 	}
 	return false;
@@ -119,7 +126,7 @@ function get() {
 				// This is a prime candidate for a Crontrol_Event class but I'm not bothering currently.
 				$events[ "$hook-$sig-$time" ] = (object) array(
 					'hook'     => $hook,
-					'time'     => $time,
+					'time'     => $time, // UTC
 					'sig'      => $sig,
 					'args'     => $data['args'],
 					'schedule' => $data['schedule'],

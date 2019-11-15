@@ -140,7 +140,7 @@ class Event_List_Table extends \WP_List_Table {
 				'action'   => 'edit-cron',
 				'id'       => rawurlencode( $event->hook ),
 				'sig'      => rawurlencode( $event->sig ),
-				'next_run' => rawurlencode( $event->time ),
+				'next_run' => rawurlencode( $event->time ), // UTC
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 
@@ -152,7 +152,7 @@ class Event_List_Table extends \WP_List_Table {
 			'action'   => 'run-cron',
 			'id'       => rawurlencode( $event->hook ),
 			'sig'      => rawurlencode( $event->sig ),
-			'next_run' => rawurlencode( $event->time ),
+			'next_run' => rawurlencode( $event->time ), // UTC
 		);
 		$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 		$link = wp_nonce_url( $link, "run-cron_{$event->hook}_{$event->sig}" );
@@ -172,7 +172,7 @@ class Event_List_Table extends \WP_List_Table {
 				'action'   => 'delete-cron',
 				'id'       => rawurlencode( $event->hook ),
 				'sig'      => rawurlencode( $event->sig ),
-				'next_run' => rawurlencode( $event->time ),
+				'next_run' => rawurlencode( $event->time ), // UTC
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 			$link = wp_nonce_url( $link, "delete-cron_{$event->hook}_{$event->sig}_{$event->time}" );
@@ -335,7 +335,7 @@ class Event_List_Table extends \WP_List_Table {
 	protected function column_crontrol_next( $event ) {
 		return sprintf(
 			'%s (%s)',
-			esc_html( get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), 'Y-m-d H:i:s' ) ),
+			esc_html( get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->time ), 'Y-m-d H:i:s' ) ),
 			esc_html( time_since( time(), $event->time ) )
 		);
 	}
