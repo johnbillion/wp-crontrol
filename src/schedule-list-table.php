@@ -143,20 +143,11 @@ class Schedule_List_Table extends \WP_List_Table {
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_interval( array $schedule ) {
-		if ( $schedule['interval'] < 600 ) {
-			return sprintf(
-				'%s (%s)<br><span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span>%s</span>',
-				esc_html( $schedule['interval'] ),
-				esc_html( interval( $schedule['interval'] ) ),
-				esc_html__( 'An interval of less than 10 minutes may be unreliable.', 'wp-crontrol' )
-			);
-		} else {
-			return sprintf(
-				'%s (%s)',
-				esc_html( $schedule['interval'] ),
-				esc_html( interval( $schedule['interval'] ) )
-			);
-		}
+		return sprintf(
+			'%s (%s)',
+			esc_html( $schedule['interval'] ),
+			esc_html( interval( $schedule['interval'] ) )
+		);
 	}
 
 	/**
