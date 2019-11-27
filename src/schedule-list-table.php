@@ -97,22 +97,22 @@ class Schedule_List_Table extends \WP_List_Table {
 		$links = array();
 		$new_scheds = get_option( 'crontrol_schedules', array() );
 
-			if ( in_array( $schedule['name'], self::$core_schedules, true ) ) {
-				$links[] = "<span class='in-use'>" . esc_html__( 'This is a WordPress core schedule and cannot be deleted', 'wp-crontrol' ) . '</span>';
-			} elseif ( in_array( $schedule['name'], self::$used_schedules, true ) ) {
-				$links[] = "<span class='in-use'>" . esc_html__( 'This custom schedule is in use and cannot be deleted', 'wp-crontrol' ) . '</span>';
-			} elseif ( ! isset( $new_scheds[ $schedule['name'] ] ) ) {
-				$links[] = "<span class='in-use'>" . esc_html__( 'This schedule is added by another plugin and cannot be deleted', 'wp-crontrol' ) . '</span>';
-			} else {
-				$link = add_query_arg( array(
-					'page'   => 'crontrol_admin_options_page',
-					'action' => 'delete-sched',
-					'id'     => rawurlencode( $schedule['name'] ),
-				), admin_url( 'options-general.php' ) );
-				$link = wp_nonce_url( $link, 'delete-sched_' . $schedule['name'] );
+		if ( in_array( $schedule['name'], self::$core_schedules, true ) ) {
+			$links[] = "<span class='in-use'>" . esc_html__( 'This is a WordPress core schedule and cannot be deleted', 'wp-crontrol' ) . '</span>';
+		} elseif ( in_array( $schedule['name'], self::$used_schedules, true ) ) {
+			$links[] = "<span class='in-use'>" . esc_html__( 'This custom schedule is in use and cannot be deleted', 'wp-crontrol' ) . '</span>';
+		} elseif ( ! isset( $new_scheds[ $schedule['name'] ] ) ) {
+			$links[] = "<span class='in-use'>" . esc_html__( 'This schedule is added by another plugin and cannot be deleted', 'wp-crontrol' ) . '</span>';
+		} else {
+			$link = add_query_arg( array(
+				'page'   => 'crontrol_admin_options_page',
+				'action' => 'delete-sched',
+				'id'     => rawurlencode( $schedule['name'] ),
+			), admin_url( 'options-general.php' ) );
+			$link = wp_nonce_url( $link, 'delete-sched_' . $schedule['name'] );
 
-				$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
-			}
+			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
+		}
 
 		return $this->row_actions( $links );
 	}
