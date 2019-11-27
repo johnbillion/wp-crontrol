@@ -604,6 +604,11 @@ class Log {
 		$logged = array_fill_keys( $logged, true );
 		$all    = array_merge( $events, $logged );
 
+		// Ensure crontrol_cron_job is always present in the list of available events:
+		if ( ! isset( $all['crontrol_cron_job'] ) ) {
+			$all['crontrol_cron_job'] = false;
+		}
+
 		ksort( $all );
 
 		return $all;
