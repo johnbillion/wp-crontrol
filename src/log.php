@@ -257,7 +257,7 @@ class Log {
 
 		$error = get_post_meta( $post_id, 'crontrol_log_exception', true );
 		if ( ! empty( $error ) ) {
-			$classes[] = 'crontrol-log-error';
+			$classes[] = 'crontrol-error';
 		}
 
 		return $classes;

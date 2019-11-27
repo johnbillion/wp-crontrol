@@ -22,11 +22,11 @@ table.wp-list-table {
 	white-space: nowrap;
 }
 
-.wp-list-table tr.crontrol-log-error {
+.wp-list-table tr.crontrol-error {
 	background: #fdd;
 }
 
-.wp-list-table tr.crontrol-log-error td.column-status {
+.wp-list-table tr.crontrol-error td.column-status {
 	color: #c00;
 }
 

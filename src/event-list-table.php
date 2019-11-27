@@ -124,6 +124,33 @@ class Event_List_Table extends \WP_List_Table {
 	}
 
 	/**
+	 * Generates content for a single row of the table.
+	 *
+	 * @param object $event The current event.
+	 */
+	public function single_row( $event ) {
+		$classes = array();
+
+		if ( ( 'crontrol_cron_job' === $event->hook ) && ! empty( $event->args['syntax_error_message'] ) ) {
+			$classes[] = 'crontrol-error';
+		}
+
+		$schedule_name = Event\get_schedule_name( $event );
+
+		if ( is_wp_error( $schedule_name ) ) {
+			$classes[] = 'crontrol-error';
+		}
+
+		printf(
+			'<tr class="%s">',
+			esc_attr( implode( ' ', $classes ) )
+		);
+
+		$this->single_row_columns( $event );
+		echo '</tr>';
+	}
+
+	/**
 	 * Generates and displays row action links for the table.
 	 *
 	 * @param stdClass $event       The cron event for the current row.
@@ -364,7 +391,7 @@ class Event_List_Table extends \WP_List_Table {
 			$schedule_name = Event\get_schedule_name( $event );
 			if ( is_wp_error( $schedule_name ) ) {
 				return sprintf(
-					'<span class="dashicons dashicons-warning" style="color:#c00" aria-hidden="true"></span> %s',
+					'<span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
 					esc_html( $schedule_name->get_error_message() )
 				);
 			} else {
