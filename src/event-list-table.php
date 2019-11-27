@@ -164,8 +164,8 @@ class Event_List_Table extends \WP_List_Table {
 		$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
 
 		$link = add_query_arg( array(
-			'post_type'    => Log::$post_type,
-			Log::$taxonomy => rawurlencode( sanitize_title( $event->hook ) ),
+			'post_type'         => Log::$post_type,
+			Log::$taxonomy_hook => rawurlencode( sanitize_title( $event->hook ) ),
 		), admin_url( 'edit.php' ) );
 
 		$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'View Logs', 'wp-crontrol' ) . '</a>';

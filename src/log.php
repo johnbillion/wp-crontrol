@@ -42,7 +42,7 @@ class Log {
 	 *
 	 * @var string
 	 */
-	public static $taxonomy = 'crontrol_log_hook';
+	public static $taxonomy_hook = 'crontrol_log_hook';
 
 	/**
 	 * Sets up actions and filters for the cron event logging.
@@ -112,7 +112,7 @@ class Log {
 			),
 		) );
 
-		register_taxonomy( self::$taxonomy, self::$post_type, array(
+		register_taxonomy( self::$taxonomy_hook, self::$post_type, array(
 			'public'       => false,
 			'capabilities' => array(
 				'manage_terms' => 'do_not_allow',
@@ -452,7 +452,7 @@ class Log {
 			case 'actions':
 				$actions = get_post_meta( $post_id, 'crontrol_log_actions', true );
 				$hook    = '';
-				$terms   = get_the_terms( $post_id, self::$taxonomy );
+				$terms   = get_the_terms( $post_id, self::$taxonomy_hook );
 
 				if ( is_array( $terms ) ) {
 					$hooks = wp_list_pluck( $terms, 'slug' );
@@ -609,7 +609,7 @@ class Log {
 			add_post_meta( $post_id, $meta_key, wp_slash( $meta_value ), true );
 		}
 
-		wp_set_post_terms( $post_id, array( $this->data['hook'] ), self::$taxonomy, true );
+		wp_set_post_terms( $post_id, array( $this->data['hook'] ), self::$taxonomy_hook, true );
 	}
 
 	/**
