@@ -318,7 +318,7 @@ class Log {
 		$columns['time']    = esc_html__( 'Time (s)', 'wp-crontrol' );
 		$columns['queries'] = esc_html__( 'Database Queries', 'wp-crontrol' );
 		$columns['https']   = esc_html__( 'HTTP Requests', 'wp-crontrol' );
-		$columns['error']   = esc_html__( 'Fatal Errors', 'wp-crontrol' );
+		$columns['status']  = esc_html__( 'Status', 'wp-crontrol' );
 
 		return $columns;
 	}
@@ -418,33 +418,23 @@ class Log {
 				}
 				break;
 
-			case 'error':
+			case 'status':
 				$error = get_post_meta( $post->ID, 'crontrol_log_exception', true );
 				if ( ! empty( $error ) ) {
 					if ( 'Exception' === $error['type'] ) {
-						$message = sprintf(
-							/* translators: %s: PHP error message */
-							__( 'Uncaught Exception: %s', 'wp-crontrol' ),
-							$error['message']
-						);
+						$message = __( 'Uncaught Exception', 'wp-crontrol' );
 					} else {
-						$message = sprintf(
-							/* translators: %s: PHP error message */
-							__( 'Uncaught Error: %s', 'wp-crontrol' ),
-							$error['message']
-						);
+						$message = __( 'Fatal Error', 'wp-crontrol' );
 					}
 
 					printf(
-						'<span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %1$s</span><br>%2$s:%3$s',
-						esc_html( $message ),
-						esc_html( str_replace( array( WP_CONTENT_DIR . '/', ABSPATH . '/' ), '', $error['file'] ) ),
-						esc_html( $error['line'] )
+						'<span class="dashicons dashicons-warning" aria-hidden="true"></span> %s',
+						esc_html( $message )
 					);
 				} else {
 					printf(
-						'<em>%s</em>',
-						esc_html__( 'None', 'wp-crontrol' )
+						'<span class="dashicons dashicons-yes-alt" aria-hidden="true"></span> <span class="screen-reader-text">%s</span>',
+						esc_html__( 'Ok', 'wp-crontrol' )
 					);
 				}
 				break;
@@ -481,10 +471,7 @@ class Log {
 				if ( ! empty( $queries ) ) {
 					echo esc_html( number_format_i18n( $queries ) );
 				} else {
-					printf(
-						'<em>%s</em>',
-						esc_html__( 'None', 'wp-crontrol' )
-					);
+					echo '0';
 				}
 				break;
 
@@ -492,21 +479,9 @@ class Log {
 				$https = get_post_meta( $post_id, 'crontrol_log_https', true );
 
 				if ( ! empty( $https ) ) {
-					echo '<ol>';
-					foreach ( $https as $http ) {
-						printf(
-							'<li>%1$s %2$s<br>%3$s</li>',
-							esc_html( $http['method'] ),
-							esc_html( $http['url'] ),
-							esc_html( $http['response'] )
-						);
-					}
-					echo '</ol>';
+					echo esc_html( number_format_i18n( count( $https ) ) );
 				} else {
-					printf(
-						'<em>%s</em>',
-						esc_html__( 'None', 'wp-crontrol' )
-					);
+					echo '0';
 				}
 				break;
 

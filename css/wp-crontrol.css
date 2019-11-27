@@ -17,8 +17,16 @@ table.wp-list-table {
 	padding: 0;
 }
 
+.wp-list-table td.column-status {
+	color: #0a0;
+}
+
 .wp-list-table tr.crontrol-log-error {
 	background: #fdd;
+}
+
+.wp-list-table tr.crontrol-log-error td.column-status {
+	color: #c00;
 }
 
 .column-time,
