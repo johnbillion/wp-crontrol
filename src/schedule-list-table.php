@@ -97,8 +97,9 @@ class Schedule_List_Table extends \WP_List_Table {
 		$links = array();
 		$new_scheds = get_option( 'crontrol_schedules', array() );
 
-		if ( ! in_array( $schedule['name'], self::$core_schedules, true ) ) {
-			if ( in_array( $schedule['name'], self::$used_schedules, true ) ) {
+			if ( in_array( $schedule['name'], self::$core_schedules, true ) ) {
+				$links[] = "<span class='in-use'>" . esc_html__( 'This is a WordPress core schedule and cannot be deleted', 'wp-crontrol' ) . '</span>';
+			} elseif ( in_array( $schedule['name'], self::$used_schedules, true ) ) {
 				$links[] = "<span class='in-use'>" . esc_html__( 'This custom schedule is in use and cannot be deleted', 'wp-crontrol' ) . '</span>';
 			} elseif ( ! isset( $new_scheds[ $schedule['name'] ] ) ) {
 				$links[] = "<span class='in-use'>" . esc_html__( 'This schedule is added by another plugin and cannot be deleted', 'wp-crontrol' ) . '</span>';
@@ -112,7 +113,6 @@ class Schedule_List_Table extends \WP_List_Table {
 
 				$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
 			}
-		}
 
 		return $this->row_actions( $links );
 	}
@@ -124,16 +124,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_name( array $schedule ) {
-		$return = esc_html( $schedule['name'] );
-
-		if ( in_array( $schedule['name'], get_core_schedules(), true ) ) {
-			$return .= sprintf(
-				'<br><em>(%s)</em>',
-				esc_html__( 'WordPress core schedule', 'wp-crontrol' )
-			);
-		}
-
-		return $return;
+		return esc_html( $schedule['name'] );
 	}
 
 	/**
