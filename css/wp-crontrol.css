@@ -17,6 +17,10 @@ table.wp-list-table {
 	padding: 0;
 }
 
+.wp-list-table tr.crontrol-log-error {
+	background: #fdd;
+}
+
 .column-time,
 .column-ran,
 .column-crontrol_next {

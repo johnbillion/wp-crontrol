@@ -58,6 +58,7 @@ class Log {
 		add_filter( "bulk_actions-edit-{$post_type}",            array( $this, 'remove_quick_edit_menu' ) );
 		add_filter( 'display_post_states',                       array( $this, 'filter_post_state' ), 20, 2 );
 		add_action( 'load-edit.php',                             array( $this, 'default_sort' ) );
+		add_filter( 'post_class',                                array( $this, 'filter_post_class' ), 10, 3 );
 
 		register_setting( 'crontrol_group', 'crontrol_log' );
 
@@ -239,6 +240,27 @@ class Log {
 		unset( $actions['edit'] );
 
 		return $actions;
+	}
+
+	/**
+	 * Filters the post classes to add classes for errors and other states.
+	 *
+	 * @param string[] $classes An array of post class names.
+	 * @param string[] $class   An array of additional class names added to the post.
+	 * @param int      $post_id The post ID.
+	 * @return string[] The updated class names.
+	 */
+	public function filter_post_class( array $classes, $class, $post_id ) {
+		if ( get_post_type( $post_id ) !== self::$post_type ) {
+			return $classes;
+		}
+
+		$error = get_post_meta( $post_id, 'crontrol_log_exception', true );
+		if ( ! empty( $error ) ) {
+			$classes[] = 'crontrol-log-error';
+		}
+
+		return $classes;
 	}
 
 	/**
