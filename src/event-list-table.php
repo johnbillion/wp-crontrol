@@ -89,13 +89,13 @@ class Event_List_Table extends \WP_List_Table {
 		return array(
 			'cb'                  => '<input type="checkbox" />',
 			'crontrol_hook'       => __( 'Hook', 'wp-crontrol' ),
+			'crontrol_args'       => __( 'Arguments', 'wp-crontrol' ),
 			'crontrol_next'       => sprintf(
 				/* translators: %s: UTC offset */
 				__( 'Next Run (%s)', 'wp-crontrol' ),
 				get_utc_offset()
 			),
-			'crontrol_args'       => __( 'Arguments', 'wp-crontrol' ),
-			'crontrol_actions'    => __( 'Actions', 'wp-crontrol' ),
+			'crontrol_actions'    => __( 'Action', 'wp-crontrol' ),
 			'crontrol_recurrence' => __( 'Recurrence', 'wp-crontrol' ),
 		);
 	}

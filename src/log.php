@@ -312,9 +312,9 @@ class Log {
 		);
 
 		$columns['hook']    = esc_html__( 'Hook', 'wp-crontrol' );
-		$columns['ran']     = esc_html( $ran );
 		$columns['args']    = esc_html__( 'Arguments', 'wp-crontrol' );
-		$columns['actions'] = esc_html__( 'Actions', 'wp-crontrol' );
+		$columns['ran']     = esc_html( $ran );
+		$columns['actions'] = esc_html__( 'Action', 'wp-crontrol' );
 		$columns['time']    = esc_html__( 'Time (s)', 'wp-crontrol' );
 		$columns['queries'] = esc_html__( 'Database Queries', 'wp-crontrol' );
 		$columns['https']   = esc_html__( 'HTTP Requests', 'wp-crontrol' );
