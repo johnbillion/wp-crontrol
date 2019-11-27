@@ -19,6 +19,7 @@ table.wp-list-table {
 
 .wp-list-table td.column-status {
 	color: #0a0;
+	white-space: nowrap;
 }
 
 .wp-list-table tr.crontrol-log-error {
@@ -40,7 +41,7 @@ table.wp-list-table {
 }
 
 .row-actions .in-use {
-	color: #777;
+	color: #666;
 }
 
 .crontrol-log-form {
