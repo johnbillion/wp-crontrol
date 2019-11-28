@@ -588,7 +588,7 @@ class Log {
 	}
 
 	/**
-	 * Returns an array of all known cron event hooks. Hooks that are logged have a value or true, all others false.
+	 * Returns an array of all known cron event hooks. Hooks that are logged have a value of true, all others false.
 	 *
 	 * @return bool[] Array of logged status, keyed by hook name.
 	 */
@@ -604,7 +604,7 @@ class Log {
 		$logged = array_fill_keys( $logged, true );
 		$all    = array_merge( $events, $logged );
 
-		// Ensure crontrol_cron_job is always present in the list of available events:
+		// Ensure `crontrol_cron_job` is always present in the list of available events:
 		if ( ! isset( $all['crontrol_cron_job'] ) ) {
 			$all['crontrol_cron_job'] = false;
 		}
