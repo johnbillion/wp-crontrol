@@ -44,6 +44,12 @@ class Log {
 	 */
 	public static $taxonomy_hook = 'crontrol_log_hook';
 
+	public static $status_running = 'crontrol-running';
+
+	public static $status_complete = 'crontrol-complete';
+
+	public static $status_error = 'crontrol-error';
+
 	/**
 	 * Sets up actions and filters for the cron event logging.
 	 */
@@ -136,6 +142,57 @@ class Log {
 				'back_to_items'         => '&larr; Back to Hooks',
 			),
 		) );
+
+		$status_args = array(
+			'exclude_from_search'       => true,
+			'public'                    => false,
+			'internal'                  => true,
+			'protected'                 => false,
+			'private'                   => false,
+			'publicly_queryable'        => false,
+			'show_in_admin_status_list' => true,
+			'show_in_admin_all_list'    => true,
+			'date_floating'             => false,
+		);
+
+		register_post_status(
+			self::$status_running,
+			$status_args + array(
+				'label'       => __( 'Running', 'wp-crontrol' ),
+				/* translators: %s: Number of running cron logs. */
+				'label_count' => _n_noop(
+					'Running <span class="count">(%s)</span>',
+					'Running <span class="count">(%s)</span>',
+					'wp-crontrol'
+				),
+			)
+		);
+
+		register_post_status(
+			self::$status_complete,
+			$status_args + array(
+				'label'       => __( 'Complete', 'wp-crontrol' ),
+				/* translators: %s: Number of complete cron logs. */
+				'label_count' => _n_noop(
+					'Complete <span class="count">(%s)</span>',
+					'Complete <span class="count">(%s)</span>',
+					'wp-crontrol'
+				),
+			)
+		);
+
+		register_post_status(
+			self::$status_error,
+			$status_args + array(
+				'label'       => __( 'Error', 'wp-crontrol' ),
+				/* translators: %s: Number of error cron logs. */
+				'label_count' => _n_noop(
+					'Error <span class="count">(%s)</span>',
+					'Error <span class="count">(%s)</span>',
+					'wp-crontrol'
+				),
+			)
+		);
 	}
 
 	/**
