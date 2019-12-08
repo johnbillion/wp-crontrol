@@ -373,10 +373,21 @@ class Event_List_Table extends \WP_List_Table {
 			esc_html( $date_local )
 		);
 
+		$until = $event->time - time();
+
+		if ( $until < ( 0 - ( 10 * MINUTE_IN_SECONDS ) ) ) {
+			// Show a warning for events that have missed their schedule by more than 10 minutes:
+			return sprintf(
+				'%s<br><span style="color:#a00"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s ago</span>',
+				$time,
+				esc_html( interval( abs( $until ) ) )
+			);
+		}
+
 		return sprintf(
 			'%s<br>%s',
 			$time,
-			esc_html( time_since( time(), $event->time ) )
+			esc_html( interval( $until ) )
 		);
 	}
 
