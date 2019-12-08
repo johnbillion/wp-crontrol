@@ -36,15 +36,19 @@ table.wp-list-table {
 }
 
 .wp-list-table tr.crontrol-error {
-	background: #fdd;
+	background: #ffeeee;
+}
+
+.wp-list-table.striped > tbody > :nth-child(odd).crontrol-error {
+	background: #ffe7e7 !important;
 }
 
 .wp-list-table tr.crontrol-complete td.column-status {
-	color: #0a0;
+	color: #080;
 }
 
 .wp-list-table tr.crontrol-error td.column-status {
-	color: #c00;
+	color: #a00;
 }
 
 .column-time,
