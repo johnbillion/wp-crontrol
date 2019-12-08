@@ -291,7 +291,7 @@ class Log {
 	}
 
 	/**
-	 * Removes all actions from the post row actions. None of them are needed.
+	 * Adjusts the post row actions.
 	 *
 	 * @param string[] $actions Array of post actions.
 	 * @param WP_Post  $post    The current post object.
@@ -302,7 +302,17 @@ class Log {
 			return $actions;
 		}
 
-		return array();
+		// Remove quick edit:
+		unset( $actions['inline'], $actions['inline hide-if-no-js'] );
+
+		// Rename edit:
+		$actions['edit'] = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( get_edit_post_link( $post ) ),
+			esc_html__( 'Details', 'wp-crontrol' )
+		);
+
+		return $actions;
 	}
 
 	/**
@@ -375,7 +385,7 @@ class Log {
 	 * @return string[] Updated array of columns.
 	 */
 	public function columns( array $columns ) {
-		unset( $columns['date'], $columns['title'] );
+		unset( $columns['date'] );
 
 		$ran = sprintf(
 			/* translators: %s: GMT timezone offset */
@@ -383,7 +393,7 @@ class Log {
 			get_utc_offset()
 		);
 
-		$columns['hook']    = esc_html__( 'Hook', 'wp-crontrol' );
+		$columns['title']   = esc_html__( 'Hook', 'wp-crontrol' );
 		$columns['args']    = esc_html__( 'Arguments', 'wp-crontrol' );
 		$columns['ran']     = esc_html( $ran );
 		$columns['actions'] = esc_html__( 'Action', 'wp-crontrol' );
@@ -403,8 +413,8 @@ class Log {
 	 */
 	public function sortable_columns( array $columns ) {
 		return array(
-			'hook' => 'title',
-			'ran'  => array( 'date', true ),
+			'title' => 'title',
+			'ran'   => array( 'date', true ),
 		);
 	}
 
@@ -444,10 +454,6 @@ class Log {
 		$post = get_post( $post_id );
 
 		switch ( $name ) {
-
-			case 'hook':
-				the_title();
-				break;
 
 			case 'ran':
 				$date_utc   = gmdate( 'Y-m-d\TH:i:s+00:00', strtotime( $post->post_date_gmt ) );
