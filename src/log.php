@@ -10,6 +10,7 @@ namespace Crontrol;
 use Throwable;
 use Exception;
 use WP_Post;
+use WP_Query;
 
 /**
  * Main class which encapsulates cron event logging functionality.
@@ -65,6 +66,7 @@ class Log {
 		add_filter( 'display_post_states',                       array( $this, 'filter_post_state' ), 20, 2 );
 		add_action( 'load-edit.php',                             array( $this, 'default_sort' ) );
 		add_filter( 'post_class',                                array( $this, 'filter_post_class' ), 10, 3 );
+		add_action( 'pre_get_posts',                             array( $this, 'action_pre_get_posts' ) );
 
 		register_setting( 'crontrol_group', 'crontrol_log' );
 
@@ -193,6 +195,22 @@ class Log {
 				),
 			)
 		);
+	}
+
+	public function action_pre_get_posts( WP_Query $wp_query ) {
+		if ( $wp_query->get( 'post_type' ) !== self::$post_type ) {
+			return;
+		}
+
+		if ( $wp_query->get( 'post_status' ) ) {
+			return;
+		}
+
+		$wp_query->set( 'post_status', array(
+			self::$status_running,
+			self::$status_complete,
+			self::$status_error,
+		) );
 	}
 
 	/**
