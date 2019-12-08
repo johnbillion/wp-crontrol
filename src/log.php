@@ -387,10 +387,10 @@ class Log {
 		$columns['args']    = esc_html__( 'Arguments', 'wp-crontrol' );
 		$columns['ran']     = esc_html( $ran );
 		$columns['actions'] = esc_html__( 'Action', 'wp-crontrol' );
+		$columns['status']  = esc_html__( 'Status', 'wp-crontrol' );
 		$columns['time']    = esc_html__( 'Time (s)', 'wp-crontrol' );
 		$columns['queries'] = esc_html__( 'Database Queries', 'wp-crontrol' );
 		$columns['https']   = esc_html__( 'HTTP Requests', 'wp-crontrol' );
-		$columns['status']  = esc_html__( 'Status', 'wp-crontrol' );
 
 		return $columns;
 	}
@@ -471,7 +471,9 @@ class Log {
 			case 'time':
 				$time = get_post_meta( $post_id, 'crontrol_log_time', true );
 
-				echo esc_html( number_format_i18n( $time, 4 ) );
+				if ( '' !== $time ) {
+					echo esc_html( number_format_i18n( floatval( $time ), 4 ) );
+				}
 				break;
 
 			case 'args':
@@ -555,7 +557,7 @@ class Log {
 
 				if ( ! empty( $queries ) ) {
 					echo esc_html( number_format_i18n( $queries ) );
-				} else {
+				} elseif ( '' !== $queries ) {
 					echo '0';
 				}
 				break;
@@ -565,7 +567,7 @@ class Log {
 
 				if ( ! empty( $https ) ) {
 					echo esc_html( number_format_i18n( count( $https ) ) );
-				} else {
+				} elseif ( '' !== $https ) {
 					echo '0';
 				}
 				break;
