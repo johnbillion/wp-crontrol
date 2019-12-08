@@ -272,16 +272,7 @@ class Event_List_Table extends \WP_List_Table {
 			}
 		}
 
-		$return = esc_html( $event->hook );
-
-		if ( in_array( $event->hook, get_all_core_hooks(), true ) ) {
-			$return .= sprintf(
-				'<br><em>(%s)</em>',
-				esc_html__( 'WordPress core hook', 'wp-crontrol' )
-			);
-		}
-
-		return $return;
+		return esc_html( $event->hook );
 	}
 
 	/**
@@ -344,16 +335,20 @@ class Event_List_Table extends \WP_List_Table {
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_actions( $event ) {
+		$hook_callbacks = get_hook_callbacks( $event->hook );
+
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			return '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
-		} else {
+		} elseif ( ! empty( $hook_callbacks ) ) {
 			$callbacks = array();
 
-			foreach ( get_hook_callbacks( $event->hook ) as $callback ) {
+			foreach ( $hook_callbacks as $callback ) {
 				$callbacks[] = output_callback( $callback );
 			}
 
 			return implode( '<br>', $callbacks ); // WPCS:: XSS ok.
+		} else {
+			return '<em>' . __( 'None', 'wp-crontrol' ) . '</em>';
 		}
 	}
 
