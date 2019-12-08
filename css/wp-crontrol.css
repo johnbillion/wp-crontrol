@@ -1,3 +1,17 @@
+
+@keyframes crontrol-rotating {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.crontrol-rotating {
+	animation: crontrol-rotating 5s linear infinite;
+}
+
 table.wp-list-table {
 	width: 100%;
 	max-width: 100%;
@@ -18,12 +32,15 @@ table.wp-list-table {
 }
 
 .wp-list-table td.column-status {
-	color: #0a0;
 	white-space: nowrap;
 }
 
 .wp-list-table tr.crontrol-error {
 	background: #fdd;
+}
+
+.wp-list-table tr.crontrol-complete td.column-status {
+	color: #0a0;
 }
 
 .wp-list-table tr.crontrol-error td.column-status {

@@ -318,7 +318,7 @@ class Log {
 	}
 
 	/**
-	 * Filters the post classes to add classes for errors and other states.
+	 * Filters the post classes to add a class for the log status.
 	 *
 	 * @param string[] $classes An array of post class names.
 	 * @param string[] $class   An array of additional class names added to the post.
@@ -330,10 +330,7 @@ class Log {
 			return $classes;
 		}
 
-		$error = get_post_meta( $post_id, 'crontrol_log_exception', true );
-		if ( ! empty( $error ) ) {
-			$classes[] = 'crontrol-error';
-		}
+		$classes[] = get_post_status( $post_id );
 
 		return $classes;
 	}
@@ -381,8 +378,8 @@ class Log {
 		unset( $columns['date'], $columns['title'] );
 
 		$ran = sprintf(
-			/* translators: %s: UTC offset */
-			__( 'Date (%s)', 'wp-crontrol' ),
+			/* translators: %s: GMT timezone offset */
+			__( 'Started (%s)', 'wp-crontrol' ),
 			get_utc_offset()
 		);
 
@@ -494,24 +491,37 @@ class Log {
 				break;
 
 			case 'status':
-				$error = get_post_meta( $post->ID, 'crontrol_log_exception', true );
-				if ( ! empty( $error ) ) {
-					if ( 'Exception' === $error['type'] ) {
-						$message = __( 'Uncaught Exception', 'wp-crontrol' );
-					} else {
-						$message = __( 'Fatal Error', 'wp-crontrol' );
-					}
+				$status = get_post_status( $post );
 
-					printf(
-						'<span class="dashicons dashicons-warning" aria-hidden="true"></span> %s',
-						esc_html( $message )
-					);
-				} else {
-					printf(
-						'<span class="dashicons dashicons-yes-alt" aria-hidden="true"></span> <span class="screen-reader-text">%s</span>',
-						esc_html__( 'Ok', 'wp-crontrol' )
-					);
+				switch ( $status ) {
+					case self::$status_running:
+						printf(
+							'<span class="dashicons dashicons-clock crontrol-rotating" aria-hidden="true"></span> %s',
+							esc_html__( 'Running', 'wp-crontrol' )
+						);
+						break;
+					case self::$status_complete:
+						printf(
+							'<span class="dashicons dashicons-yes-alt" aria-hidden="true"></span> %s',
+							esc_html__( 'Complete', 'wp-crontrol' )
+						);
+						break;
+					case self::$status_error:
+						$error = get_post_meta( $post->ID, 'crontrol_log_exception', true );
+
+						if ( 'Exception' === $error['type'] ) {
+							$message = __( 'Uncaught Exception', 'wp-crontrol' );
+						} else {
+							$message = __( 'Fatal Error', 'wp-crontrol' );
+						}
+
+						printf(
+							'<span class="dashicons dashicons-warning" aria-hidden="true"></span> %s',
+							esc_html( $message )
+						);
+						break;
 				}
+
 				break;
 
 			case 'actions':
