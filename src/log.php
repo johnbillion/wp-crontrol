@@ -590,6 +590,21 @@ class Log {
 		$this->data['start_memory']  = memory_get_usage();
 		$this->data['start_time']    = microtime( true );
 		$this->data['start_queries'] = $wpdb->num_queries;
+
+		$post_id = wp_insert_post( wp_slash( array(
+			'post_type'    => self::$post_type,
+			'post_title'   => $this->data['hook'],
+			'post_date'    => get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $this->data['start_time'] ), 'Y-m-d H:i:s' ),
+			'post_status'  => self::$status_running,
+			'post_content' => wp_json_encode( $this->data['args'] ),
+			'post_name'    => uniqid(),
+		) ), true );
+
+		if ( is_wp_error( $post_id ) ) {
+			return; // ¯\_(ツ)_/¯
+		}
+
+		$this->data['log_id'] = $post_id;
 	}
 
 	/**
@@ -607,19 +622,6 @@ class Log {
 
 		set_exception_handler( $this->old_exception_handler );
 
-		$post_id = wp_insert_post( wp_slash( array(
-			'post_type'    => self::$post_type,
-			'post_title'   => $this->data['hook'],
-			'post_date'    => get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $this->data['start_time'] ), 'Y-m-d H:i:s' ),
-			'post_status'  => 'publish',
-			'post_content' => wp_json_encode( $this->data['args'] ),
-			'post_name'    => uniqid(),
-		) ), true );
-
-		if ( is_wp_error( $post_id ) ) {
-			return; // ¯\_(ツ)_/¯
-		}
-
 		$metas = array(
 			'crontrol_log_memory'  => ( $this->data['end_memory'] - $this->data['start_memory'] ),
 			'crontrol_log_time'    => ( $this->data['end_time'] - $this->data['start_time'] ),
@@ -628,6 +630,8 @@ class Log {
 			'crontrol_log_https'   => $this->data['https'],
 		);
 
+		$status = self::$status_complete;
+
 		if ( ! empty( $this->data['exception'] ) ) {
 			$metas['crontrol_log_exception'] = array(
 				'message' => $this->data['exception']->getMessage(),
@@ -635,6 +639,16 @@ class Log {
 				'line'    => $this->data['exception']->getLine(),
 				'type'    => is_a( $this->data['exception'], 'Exception' ) ? 'Exception' : 'Throwable',
 			);
+			$status = self::$status_error;
+		}
+
+		$post_id = wp_update_post( wp_slash( array(
+			'ID'          => $this->data['log_id'],
+			'post_status' => $status,
+		) ), true );
+
+		if ( is_wp_error( $post_id ) ) {
+			return; // ¯\_(ツ)_/¯
 		}
 
 		foreach ( $metas as $meta_key => $meta_value ) {
