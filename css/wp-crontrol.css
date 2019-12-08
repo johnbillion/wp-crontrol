@@ -57,10 +57,6 @@ table.wp-list-table {
 	white-space: nowrap;
 }
 
-.column-https ol {
-	margin: 0 0 0 1.5em;
-}
-
 .row-actions .in-use {
 	color: #666;
 }
