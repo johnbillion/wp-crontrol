@@ -621,6 +621,10 @@ class Log {
 		$this->data['start_time']    = microtime( true );
 		$this->data['start_queries'] = $wpdb->num_queries;
 
+		$metas = array(
+			'crontrol_log_actions' => $this->data['actions'],
+		);
+
 		$post_id = wp_insert_post( wp_slash( array(
 			'post_type'    => self::$post_type,
 			'post_title'   => $this->data['hook'],
@@ -635,6 +639,12 @@ class Log {
 		}
 
 		$this->data['log_id'] = $post_id;
+
+		foreach ( $metas as $meta_key => $meta_value ) {
+			add_post_meta( $post_id, $meta_key, wp_slash( $meta_value ), true );
+		}
+
+		wp_set_post_terms( $post_id, array( $this->data['hook'] ), self::$taxonomy_hook, true );
 	}
 
 	/**
@@ -656,7 +666,6 @@ class Log {
 			'crontrol_log_memory'  => ( $this->data['end_memory'] - $this->data['start_memory'] ),
 			'crontrol_log_time'    => ( $this->data['end_time'] - $this->data['start_time'] ),
 			'crontrol_log_queries' => $this->data['num_queries'],
-			'crontrol_log_actions' => $this->data['actions'],
 			'crontrol_log_https'   => $this->data['https'],
 		);
 
@@ -684,8 +693,6 @@ class Log {
 		foreach ( $metas as $meta_key => $meta_value ) {
 			add_post_meta( $post_id, $meta_key, wp_slash( $meta_value ), true );
 		}
-
-		wp_set_post_terms( $post_id, array( $this->data['hook'] ), self::$taxonomy_hook, true );
 	}
 
 	/**
