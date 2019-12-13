@@ -354,21 +354,10 @@ class Log {
 			return;
 		}
 
-		if ( is_wp_error( $response ) ) {
-			$response = $response->get_error_message();
-		} elseif ( ! $args['blocking'] ) {
-			/* translators: A non-blocking HTTP API request */
-			$response = __( 'Non-blocking', 'wp-crontrol' );
-		} else {
-			$code = wp_remote_retrieve_response_code( $response );
-			$msg  = wp_remote_retrieve_response_message( $response );
-
-			$response = $code . ' ' . $msg;
-		}
-
 		$this->data['https'][] = array(
 			'method'   => $args['method'],
 			'url'      => $url,
+			'args'     => $args,
 			'response' => $response,
 		);
 	}
@@ -673,14 +662,35 @@ class Log {
 
 		set_exception_handler( $this->old_exception_handler );
 
+		$status = self::$status_complete;
+
+		foreach ( $this->data['https'] as $i => $http ) {
+			if ( is_wp_error( $http['response'] ) ) {
+				$response = $http['response']->get_error_message();
+				$status   = self::$status_warning;
+			} elseif ( ! $http['args']['blocking'] ) {
+				/* translators: A non-blocking HTTP API request */
+				$response = __( 'Non-blocking', 'wp-crontrol' );
+			} else {
+				$code = intval( wp_remote_retrieve_response_code( $http['response'] ) );
+				$msg  = wp_remote_retrieve_response_message( $http['response'] );
+
+				$response = $code . ' ' . $msg;
+
+				if ( $code >= 400 ) {
+					$status = self::$status_warning;
+				}
+			}
+
+			$this->data['https'][ $i ]['response'] = $response;
+		}
+
 		$metas = array(
 			'crontrol_log_memory'  => ( $this->data['end_memory'] - $this->data['start_memory'] ),
 			'crontrol_log_time'    => ( $this->data['end_time'] - $this->data['start_time'] ),
 			'crontrol_log_queries' => $this->data['num_queries'],
 			'crontrol_log_https'   => $this->data['https'],
 		);
-
-		$status = self::$status_complete;
 
 		if ( ! empty( $this->data['exception'] ) ) {
 			$metas['crontrol_log_exception'] = array(
