@@ -49,6 +49,8 @@ class Log {
 
 	public static $status_complete = 'crontrol-complete';
 
+	public static $status_warning = 'crontrol-warning';
+
 	public static $status_error = 'crontrol-error';
 
 	/**
@@ -135,6 +137,7 @@ class Log {
 		register_post_status(
 			self::$status_running,
 			$status_args + array(
+				/* translators: Label for a cron log status */
 				'label'       => __( 'Running', 'wp-crontrol' ),
 				/* translators: %s: Number of running cron logs. */
 				'label_count' => _n_noop(
@@ -148,6 +151,7 @@ class Log {
 		register_post_status(
 			self::$status_complete,
 			$status_args + array(
+				/* translators: Label for a cron log status */
 				'label'       => __( 'Complete', 'wp-crontrol' ),
 				/* translators: %s: Number of complete cron logs. */
 				'label_count' => _n_noop(
@@ -159,10 +163,25 @@ class Log {
 		);
 
 		register_post_status(
+			self::$status_warning,
+			$status_args + array(
+				/* translators: Label for a cron log status */
+				'label'       => __( 'Warning', 'wp-crontrol' ),
+				/* translators: %s: Number of cron logs with warnings. */
+				'label_count' => _n_noop(
+					'Warning <span class="count">(%s)</span>',
+					'Warning <span class="count">(%s)</span>',
+					'wp-crontrol'
+				),
+			)
+		);
+
+		register_post_status(
 			self::$status_error,
 			$status_args + array(
+				/* translators: Label for a cron log status */
 				'label'       => __( 'Error', 'wp-crontrol' ),
-				/* translators: %s: Number of error cron logs. */
+				/* translators: %s: Number of cron logs with errors. */
 				'label_count' => _n_noop(
 					'Error <span class="count">(%s)</span>',
 					'Error <span class="count">(%s)</span>',
@@ -184,6 +203,7 @@ class Log {
 		$wp_query->set( 'post_status', array(
 			self::$status_running,
 			self::$status_complete,
+			self::$status_warning,
 			self::$status_error,
 		) );
 	}
@@ -491,6 +511,12 @@ class Log {
 						printf(
 							'<span class="dashicons dashicons-yes-alt" aria-hidden="true"></span> %s',
 							esc_html__( 'Complete', 'wp-crontrol' )
+						);
+						break;
+					case self::$status_warning:
+						printf(
+							'<span class="dashicons dashicons-warning" aria-hidden="true"></span> %s',
+							esc_html__( 'Warning', 'wp-crontrol' )
 						);
 						break;
 					case self::$status_error:
