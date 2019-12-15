@@ -2,7 +2,7 @@
 /**
  * Functions related to logging cron events.
  *
- * @package WP Crontrol
+ * @package wp-crontrol
  */
 
 namespace Crontrol;

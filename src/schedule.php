@@ -2,7 +2,7 @@
 /**
  * Functions related to schedules.
  *
- * @package WP Crontrol
+ * @package wp-crontrol
  */
 
 namespace Crontrol\Schedule;

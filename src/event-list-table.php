@@ -2,7 +2,7 @@
 /**
  * List table for cron events.
  *
- * @package WP Crontrol
+ * @package wp-crontrol
  */
 
 namespace Crontrol;
