@@ -716,12 +716,6 @@ class Log {
 			$this->data['actions'][] = $action['callback']['name'];
 		}
 
-		add_action( 'http_api_debug', array( $this, 'action_http_api_debug' ), 9999, 5 );
-
-		$this->data['start_memory']  = memory_get_usage();
-		$this->data['start_time']    = microtime( true );
-		$this->data['start_queries'] = $wpdb->num_queries;
-
 		$metas = array(
 			'crontrol_log_actions' => $this->data['actions'],
 		);
@@ -729,7 +723,6 @@ class Log {
 		$post_id = wp_insert_post( wp_slash( array(
 			'post_type'    => self::$post_type,
 			'post_title'   => $this->data['hook'],
-			'post_date'    => get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $this->data['start_time'] ), 'Y-m-d H:i:s' ),
 			'post_status'  => self::$status_running,
 			'post_content' => wp_json_encode( $this->data['args'] ),
 			'post_name'    => uniqid(),
@@ -746,6 +739,12 @@ class Log {
 		}
 
 		wp_set_post_terms( $post_id, array( $this->data['hook'] ), self::$taxonomy_hook, true );
+
+		add_action( 'http_api_debug', array( $this, 'action_http_api_debug' ), 9999, 5 );
+
+		$this->data['start_memory']  = memory_get_usage();
+		$this->data['start_time']    = microtime( true );
+		$this->data['start_queries'] = $wpdb->num_queries;
 	}
 
 	/**
