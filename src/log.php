@@ -74,6 +74,15 @@ class Log {
 	public static $status_error = 'crontrol-error';
 
 	/**
+	 * The name for the status when an event has stalled.
+	 *
+	 * This is a psuedo-status only shown in the UI.
+	 *
+	 * @var string
+	 */
+	public static $status_stalled = 'crontrol-stalled';
+
+	/**
 	 * Sets up actions and filters for the cron event logging.
 	 */
 	public function init() {
@@ -361,9 +370,38 @@ class Log {
 			return $classes;
 		}
 
-		$classes[] = get_post_status( $post_id );
+		$post   = get_post( $post_id );
+		$status = get_post_status( $post->ID );
+
+		$classes[] = $status;
+
+		if ( self::has_stalled( $post ) ) {
+			$classes[] = self::$status_stalled;
+		}
 
 		return $classes;
+	}
+
+	/**
+	 * Determines whether a running job has stalled.
+	 *
+	 * A job which has been running for longer than thirty minutes is considered stalled.
+	 *
+	 * @param WP_Post $log The event log.
+	 */
+	public static function has_stalled( WP_Post $log ) {
+		if ( get_post_status( $log ) !== self::$status_running ) {
+			return false;
+		}
+
+		$log_date_utc = strtotime( $log->post_date_gmt );
+		$now_date_utc = time();
+
+		if ( ( $now_date_utc - $log_date_utc ) > ( HOUR_IN_SECONDS / 2 ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -517,10 +555,17 @@ class Log {
 
 				switch ( $status ) {
 					case self::$status_running:
-						printf(
-							'<span class="dashicons dashicons-clock crontrol-rotating" aria-hidden="true"></span> %s',
-							esc_html__( 'Running', 'wp-crontrol' )
-						);
+						if ( self::has_stalled( $post ) ) {
+							printf(
+								'<span class="dashicons dashicons-clock crontrol-rotating" aria-hidden="true"></span> %s',
+								esc_html__( 'Running - Stalled?', 'wp-crontrol' )
+							);
+						} else {
+							printf(
+								'<span class="dashicons dashicons-clock crontrol-rotating" aria-hidden="true"></span> %s',
+								esc_html__( 'Running', 'wp-crontrol' )
+							);
+						}
 						break;
 					case self::$status_complete:
 						printf(
