@@ -47,7 +47,10 @@ table.wp-list-table {
 	color: #080;
 }
 
-.wp-list-table tr.crontrol-warning td.column-status,
+.wp-list-table tr.crontrol-warning td.column-status {
+	color: #c60;
+}
+
 .wp-list-table tr.crontrol-error td.column-status {
 	color: #a00;
 }
