@@ -135,7 +135,7 @@ class Event_List_Table extends \WP_List_Table {
 			$classes[] = 'crontrol-error';
 		}
 
-		$schedule_name = Event\get_schedule_name( $event );
+		$schedule_name = ( $event->interval ? Event\get_schedule_name( $event ) : false );
 
 		if ( is_wp_error( $schedule_name ) ) {
 			$classes[] = 'crontrol-error';
