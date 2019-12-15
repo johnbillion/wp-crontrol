@@ -46,6 +46,13 @@ class Log {
 	public static $taxonomy_hook = 'crontrol_log_hook';
 
 	/**
+	 * The name for the status when a logged event had no action.
+	 *
+	 * @var string
+	 */
+	public static $status_no_action = 'crontrol-no-action';
+
+	/**
 	 * The name for the status when an event log is running.
 	 *
 	 * @var string
@@ -164,6 +171,20 @@ class Log {
 		);
 
 		register_post_status(
+			self::$status_no_action,
+			$status_args + array(
+				/* translators: Label for a cron log status */
+				'label'       => __( 'No Action', 'wp-crontrol' ),
+				/* translators: %s: Number of running cron logs. */
+				'label_count' => _n_noop(
+					'No Action <span class="count">(%s)</span>',
+					'No Action <span class="count">(%s)</span>',
+					'wp-crontrol'
+				),
+			)
+		);
+
+		register_post_status(
 			self::$status_running,
 			$status_args + array(
 				/* translators: Label for a cron log status */
@@ -236,6 +257,7 @@ class Log {
 
 		// Show all WP Crontrol statuses by default.
 		$wp_query->set( 'post_status', array(
+			self::$status_no_action,
 			self::$status_running,
 			self::$status_complete,
 			self::$status_warning,
@@ -555,6 +577,12 @@ class Log {
 				$status = get_post_status( $post );
 
 				switch ( $status ) {
+					case self::$status_no_action:
+						printf(
+							'<span class="dashicons dashicons-yes-alt" aria-hidden="true"></span> %s',
+							esc_html__( 'No Action', 'wp-crontrol' )
+						);
+						break;
 					case self::$status_running:
 						if ( self::has_stalled( $post ) ) {
 							printf(
@@ -740,6 +768,10 @@ class Log {
 		}
 
 		$status = self::$status_complete;
+
+		if ( empty( $this->data['actions'] ) ) {
+			$status = self::$status_no_action;
+		}
 
 		foreach ( $this->data['https'] as $i => $http ) {
 			if ( is_wp_error( $http['response'] ) ) {
