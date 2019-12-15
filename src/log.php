@@ -735,6 +735,10 @@ class Log {
 
 		set_exception_handler( $this->old_exception_handler );
 
+		if ( empty( $this->data['log_id'] ) ) {
+			return; // ¯\_(ツ)_/¯
+		}
+
 		$status = self::$status_complete;
 
 		foreach ( $this->data['https'] as $i => $http ) {
