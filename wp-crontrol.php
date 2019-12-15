@@ -41,6 +41,7 @@ defined( 'ABSPATH' ) || die();
 require_once __DIR__ . '/src/event.php';
 require_once __DIR__ . '/src/schedule.php';
 require_once __DIR__ . '/src/log.php';
+require_once __DIR__ . '/src/logger.php';
 
 /**
  * Hook onto all of the actions and filters needed by the plugin.

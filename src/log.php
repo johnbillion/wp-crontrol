@@ -32,6 +32,13 @@ class Log {
 	protected $old_exception_handler = null;
 
 	/**
+	 * PSR-3 compatible logger instance.
+	 *
+	 * @var Logger
+	 */
+	protected $logger = null;
+
+	/**
 	 * The post type name for the cron event log.
 	 *
 	 * @var string
@@ -742,6 +749,8 @@ class Log {
 
 		add_action( 'http_api_debug', array( $this, 'action_http_api_debug' ), 9999, 5 );
 
+		$this->logger = new Logger();
+
 		$this->data['start_memory']  = memory_get_usage();
 		$this->data['start_time']    = microtime( true );
 		$this->data['start_queries'] = $wpdb->num_queries;
@@ -808,6 +817,19 @@ class Log {
 				'type'    => is_a( $this->data['exception'], 'Exception' ) ? 'Exception' : 'Throwable',
 			);
 			$status = self::$status_error;
+		}
+
+		foreach ( $this->logger->get_logs() as $log ) {
+			$key = sprintf(
+				'crontrol_log_logger_%s',
+				$log['level']
+			);
+
+			if ( empty( $metas[ $key ] ) ) {
+				$metas[ $key ] = array();
+			}
+
+			$metas[ $key ][] = $log['message'];
 		}
 
 		$post_id = wp_update_post( wp_slash( array(
