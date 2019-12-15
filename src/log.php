@@ -45,12 +45,32 @@ class Log {
 	 */
 	public static $taxonomy_hook = 'crontrol_log_hook';
 
+	/**
+	 * The name for the status when an event log is running.
+	 *
+	 * @var string
+	 */
 	public static $status_running = 'crontrol-running';
 
+	/**
+	 * The name for the status when an event log is complete.
+	 *
+	 * @var string
+	 */
 	public static $status_complete = 'crontrol-complete';
 
+	/**
+	 * The name for the status when an event log contains a warning.
+	 *
+	 * @var string
+	 */
 	public static $status_warning = 'crontrol-warning';
 
+	/**
+	 * The name for the status when an event log contains an error.
+	 *
+	 * @var string
+	 */
 	public static $status_error = 'crontrol-error';
 
 	/**
@@ -191,6 +211,11 @@ class Log {
 		);
 	}
 
+	/**
+	 * Sets the status parameter for the event logs query. Mainly for the 'All' view on the list table.
+	 *
+	 * @param WP_Query $wp_query The current query.
+	 */
 	public function action_pre_get_posts( WP_Query $wp_query ) {
 		if ( $wp_query->get( 'post_type' ) !== self::$post_type ) {
 			return;
@@ -200,6 +225,7 @@ class Log {
 			return;
 		}
 
+		// Show all WP Crontrol statuses by default.
 		$wp_query->set( 'post_status', array(
 			self::$status_running,
 			self::$status_complete,
