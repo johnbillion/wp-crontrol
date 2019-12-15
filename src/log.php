@@ -388,6 +388,7 @@ class Log {
 	 * A job which has been running for longer than thirty minutes is considered stalled.
 	 *
 	 * @param WP_Post $log The event log.
+	 * @return bool Whether the event has stalled.
 	 */
 	public static function has_stalled( WP_Post $log ) {
 		if ( get_post_status( $log ) !== self::$status_running ) {
@@ -649,8 +650,9 @@ class Log {
 	/**
 	 * Exception handler.
 	 *
-	 * In PHP >= 7 this will catch Throwable objects.
-	 * In PHP < 7 it will catch Exception objects.
+	 * In PHP >= 7 this will catch Throwable objects, which are fatals and uncaught exceptions.
+	 * In PHP < 7 it will catch Exception objects, which are uncaight exceptions.
+	 * This doesn't catch fatal errors in PHP < 7.
 	 *
 	 * @param Throwable|Exception $e The error or exception.
 	 * @throws Exception Re-thrown when necessary.
