@@ -112,6 +112,7 @@ class Log {
 		add_action( 'load-edit.php',                             array( $this, 'default_sort' ) );
 		add_filter( 'post_class',                                array( $this, 'filter_post_class' ), 10, 3 );
 		add_action( 'pre_get_posts',                             array( $this, 'action_pre_get_posts' ) );
+		add_action( 'add_meta_boxes',                            array( $this, 'action_meta_boxes' ), 10, 2 );
 
 		register_setting( 'crontrol_group', 'crontrol_log' );
 
@@ -123,6 +124,7 @@ class Log {
 		register_post_type( self::$post_type, array(
 			'public'            => false,
 			'show_ui'           => true,
+			'supports'          => false,
 			'show_in_admin_bar' => false,
 			'hierarchical'      => true,
 			'labels'            => array(
@@ -270,6 +272,263 @@ class Log {
 			self::$status_warning,
 			self::$status_error,
 		) );
+	}
+
+	/**
+	 * Adds our custom meta box.
+	 *
+	 * @param string $object_type The object type (eg. the post type).
+	 * @param mixed  $object      The object (eg. a WP_Post object).
+	 */
+	public function action_meta_boxes( $object_type, $object ) {
+		add_meta_box(
+			'crontrol-log-details',
+			esc_html__( 'Details', 'wp-crontrol' ),
+			array( $this, 'do_meta_box_details' ),
+			self::$post_type,
+			'normal',
+			'high'
+		);
+
+		add_meta_box(
+			'crontrol-log-logging',
+			esc_html__( 'Extra Logging', 'wp-crontrol' ),
+			array( $this, 'do_meta_box_logging' ),
+			self::$post_type,
+			'normal',
+			'high'
+		);
+
+		remove_meta_box(
+			'slugdiv',
+			self::$post_type,
+			'normal'
+		);
+	}
+
+	/**
+	 * Displays the Details meta box on the post editing screen.
+	 *
+	 * @param WP_Post $post     The post object.
+	 * @param array   $meta_box The meta box arguments.
+	 */
+	public function do_meta_box_details( WP_Post $post, array $meta_box ) {
+		?>
+		<dl>
+			<dt>Hook</dt>
+			<dd><?php echo esc_html( get_the_title() ); ?></dd>
+			<dt>Arguments</dt>
+			<dd>
+				<?php
+				$args = $post->post_content;
+
+				if ( '[]' === $args ) {
+					printf(
+						'<em>%s</em>',
+						esc_html__( 'None', 'wp-crontrol' )
+					);
+				} else {
+					printf(
+						'<pre>%s</pre>',
+						esc_html( json_output( json_decode( $args ) ) )
+					);
+				}
+
+				?>
+			</dd>
+			<dt>Started</dt>
+			<dd>
+				<?php
+					$date_utc   = gmdate( 'Y-m-d\TH:i:s+00:00', strtotime( $post->post_date_gmt ) );
+					$date_local = get_date_from_gmt( $post->post_date_gmt, 'Y-m-d H:i:s' );
+
+					printf(
+						'%s<br>%s',
+						sprintf(
+							'<time datetime="%1$s">%2$s</time>',
+							esc_attr( $date_utc ),
+							esc_html( $date_local )
+						),
+						sprintf(
+							/* translators: %s: Time period */
+							esc_html__( '%s ago', 'wp-crontrol' ),
+							esc_html( time_since( strtotime( $post->post_date_gmt ), time() ) )
+						)
+					);
+				?>
+			</dd>
+			<dt>Action</dt>
+			<dd>
+				<?php
+				$actions = get_post_meta( $post->ID, 'crontrol_log_actions', true );
+				$hook    = '';
+				$terms   = get_the_terms( $post->ID, self::$taxonomy_hook );
+
+				if ( is_array( $terms ) ) {
+					$hooks = wp_list_pluck( $terms, 'slug' );
+					if ( $hooks ) {
+						$hook = $hooks[0];
+					}
+				}
+
+				if ( 'crontrol_cron_job' === $hook ) {
+					echo '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
+				} elseif ( ! empty( $actions ) ) {
+					echo '<code>';
+					echo implode( '</code><br><code>', array_map( 'esc_html', $actions ) );
+					echo '</code>';
+				} else {
+					printf(
+						'<em>%s</em>',
+						esc_html__( 'None', 'wp-crontrol' )
+					);
+				}
+				?>
+			</dd>
+			<dt>Status</dt>
+			<dd>
+				<?php
+				$status = get_post_status( $post );
+
+				switch ( $status ) {
+					case self::$status_no_action:
+						printf(
+							'<span class="dashicons dashicons-yes-alt" aria-hidden="true"></span> %s',
+							esc_html__( 'No Action', 'wp-crontrol' )
+						);
+						break;
+					case self::$status_running:
+						if ( self::has_stalled( $post ) ) {
+							printf(
+								'<span class="dashicons dashicons-clock crontrol-rotating" aria-hidden="true"></span> %s',
+								esc_html__( 'Running - Stalled?', 'wp-crontrol' )
+							);
+						} else {
+							printf(
+								'<span class="dashicons dashicons-clock crontrol-rotating" aria-hidden="true"></span> %s',
+								esc_html__( 'Running', 'wp-crontrol' )
+							);
+						}
+						break;
+					case self::$status_complete:
+						printf(
+							'<span class="dashicons dashicons-yes-alt" aria-hidden="true"></span> %s',
+							esc_html__( 'Complete', 'wp-crontrol' )
+						);
+						break;
+					case self::$status_warning:
+						printf(
+							'<span class="dashicons dashicons-warning" aria-hidden="true"></span> %s',
+							esc_html__( 'Warning', 'wp-crontrol' )
+						);
+						break;
+					case self::$status_error:
+						$error = get_post_meta( $post->ID, 'crontrol_log_exception', true );
+
+						if ( empty( $error ) ) {
+							$message = __( 'Error', 'wp-crontrol' );
+						} elseif ( 'Exception' === $error['type'] ) {
+							$message = sprintf(
+								/* translators: %s: Error message */
+								__( 'Uncaught Exception: %s', 'wp-crontrol' ),
+								$error['message']
+							);
+						} else {
+							$message = sprintf(
+								/* translators: %s: Error message */
+								__( 'Fatal Error: %s', 'wp-crontrol' ),
+								$error['message']
+							);
+						}
+
+						printf(
+							'<span class="dashicons dashicons-warning" aria-hidden="true"></span> %s',
+							esc_html( $message )
+						);
+						break;
+				}
+
+				?>
+			</dd>
+			<dt>Time</dt>
+			<dd>
+				<?php
+				$time = get_post_meta( $post->ID, 'crontrol_log_time', true );
+
+				if ( '' !== $time ) {
+					echo esc_html( number_format_i18n( floatval( $time ), 4 ) );
+				}
+				?>
+			</dd>
+			<dt>Queries</dt>
+			<dd>
+				<?php
+				$queries = get_post_meta( $post->ID, 'crontrol_log_queries', true );
+
+				if ( ! empty( $queries ) ) {
+					echo esc_html( number_format_i18n( $queries ) );
+				} elseif ( '' !== $queries ) {
+					printf(
+						'<em>%s</em>',
+						esc_html__( 'None', 'wp-crontrol' )
+					);
+				}
+				?>
+			</dd>
+			<dt>HTTP API Requests</dt>
+			<dd>
+				<?php
+				$https = get_post_meta( $post->ID, 'crontrol_log_https', true );
+
+				if ( ! empty( $https ) ) {
+					echo '<ol>';
+					foreach ( $https as $http ) {
+						printf(
+							'<li>%1$s %2$s<br>%3$s</li>',
+							esc_html( $http['method'] ),
+							esc_html( $http['url'] ),
+							esc_html( $http['response'] )
+						);
+					}
+					echo '</ol>';
+				} else {
+					printf(
+						'<em>%s</em>',
+						esc_html__( 'None', 'wp-crontrol' )
+					);
+				}
+				?>
+			</dd>
+		</dl>
+		<?php
+	}
+
+	/**
+	 * Displays the Logging meta box on the post editing screen.
+	 *
+	 * @param WP_Post $post     The post object.
+	 * @param array   $meta_box The meta box arguments.
+	 */
+	public function do_meta_box_logging( WP_Post $post, array $meta_box ) {
+		$logging = get_post_meta( $post->ID, 'crontrol_log_logs', true );
+
+		if ( ! empty( $logging ) ) {
+			echo '<ul>';
+			foreach ( $logging as $log ) {
+				printf(
+					'<li>%s: %s</li>',
+					esc_html( $log['level'] ),
+					esc_html( $log['message'] )
+				);
+			}
+			echo '</ul>';
+		} else {
+			printf(
+				'<em>%s</em>',
+				esc_html__( 'None', 'wp-crontrol' )
+			);
+		}
+
 	}
 
 	/**

@@ -1128,7 +1128,7 @@ function do_tabs() {
 			?>
 		</nav>
 		<?php
-		if ( $tab['logs'] ) {
+		if ( $tab['logs'] && empty( $_GET['post'] ) ) {
 			Log::show_options();
 		}
 		show_cron_status();
