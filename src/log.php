@@ -618,7 +618,9 @@ class Log {
 					case self::$status_error:
 						$error = get_post_meta( $post->ID, 'crontrol_log_exception', true );
 
-						if ( 'Exception' === $error['type'] ) {
+						if ( empty( $error ) ) {
+							$message = __( 'Error', 'wp-crontrol' );
+						} elseif ( 'Exception' === $error['type'] ) {
 							$message = __( 'Uncaught Exception', 'wp-crontrol' );
 						} else {
 							$message = __( 'Fatal Error', 'wp-crontrol' );
@@ -809,6 +811,20 @@ class Log {
 			'crontrol_log_https'   => $this->data['https'],
 		);
 
+		$logs = $this->logger->get_logs();
+
+		if ( ! empty( $logs ) ) {
+			$metas['crontrol_log_logs'] = $logs;
+		}
+
+		if ( $this->logger->has_warning() ) {
+			$status = self::$status_warning;
+		}
+
+		if ( $this->logger->has_error() ) {
+			$status = self::$status_error;
+		}
+
 		if ( ! empty( $this->data['exception'] ) ) {
 			$metas['crontrol_log_exception'] = array(
 				'message' => $this->data['exception']->getMessage(),
@@ -817,19 +833,6 @@ class Log {
 				'type'    => is_a( $this->data['exception'], 'Exception' ) ? 'Exception' : 'Throwable',
 			);
 			$status = self::$status_error;
-		}
-
-		foreach ( $this->logger->get_logs() as $log ) {
-			$key = sprintf(
-				'crontrol_log_logger_%s',
-				$log['level']
-			);
-
-			if ( empty( $metas[ $key ] ) ) {
-				$metas[ $key ] = array();
-			}
-
-			$metas[ $key ][] = $log['message'];
 		}
 
 		$post_id = wp_update_post( wp_slash( array(

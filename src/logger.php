@@ -78,6 +78,30 @@ class Logger {
 		return $this->logs;
 	}
 
+	public function has_warning() {
+		$warnings = self::get_warning_levels();
+
+		foreach ( $this->get_logs() as $log ) {
+			if ( in_array( $log['level'], $warnings, true ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public function has_error() {
+		$errors = self::get_error_levels();
+
+		foreach ( $this->get_logs() as $log ) {
+			if ( in_array( $log['level'], $errors, true ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	protected function store( $level, $message, array $context = array() ) {
 		if ( is_wp_error( $message ) ) {
 			$message = sprintf(
@@ -134,11 +158,16 @@ class Logger {
 
 	public static function get_warning_levels() {
 		return array(
+			self::WARNING,
+		);
+	}
+
+	public static function get_error_levels() {
+		return array(
 			self::EMERGENCY,
 			self::ALERT,
 			self::CRITICAL,
 			self::ERROR,
-			self::WARNING,
 		);
 	}
 
