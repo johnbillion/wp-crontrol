@@ -884,7 +884,7 @@ class Log {
 		?>
 		<form action="options.php" method="POST" class="crontrol-log-form">
 			<fieldset>
-				<legend><?php esc_html_e( 'Enabled Logging For:', 'wp-crontrol' ); ?></legend>
+				<legend><?php esc_html_e( 'Enable Logging For:', 'wp-crontrol' ); ?></legend>
 				<div class="crontrol-log-options">
 					<?php
 					settings_fields( 'crontrol_group' );
