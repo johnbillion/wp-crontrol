@@ -22,9 +22,9 @@ class Logger {
 	const WARNING   = 'warning';
 	const NOTICE    = 'notice';
 	const INFO      = 'info';
-    const DEBUG     = 'debug';
+	const DEBUG     = 'debug';
 
-    protected $logs = array();
+	protected $logs = array();
 
 	public function __construct() {
 		foreach ( self::get_levels() as $level ) {
@@ -72,11 +72,11 @@ class Logger {
 		}
 
 		$this->store( $level, $message, $context );
-    }
+	}
 
-    public function get_logs() {
-        return $this->logs;
-    }
+	public function get_logs() {
+		return $this->logs;
+	}
 
 	protected function store( $level, $message, array $context = array() ) {
 		if ( is_wp_error( $message ) ) {
