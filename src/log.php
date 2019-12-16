@@ -557,7 +557,7 @@ class Log {
 				break;
 
 			case 'time':
-				$time = get_post_meta( $post_id, 'crontrol_log_time', true );
+				$time = get_post_meta( $post->ID, 'crontrol_log_time', true );
 
 				if ( '' !== $time ) {
 					echo esc_html( number_format_i18n( floatval( $time ), 4 ) );
@@ -636,9 +636,9 @@ class Log {
 				break;
 
 			case 'actions':
-				$actions = get_post_meta( $post_id, 'crontrol_log_actions', true );
+				$actions = get_post_meta( $post->ID, 'crontrol_log_actions', true );
 				$hook    = '';
-				$terms   = get_the_terms( $post_id, self::$taxonomy_hook );
+				$terms   = get_the_terms( $post->ID, self::$taxonomy_hook );
 
 				if ( is_array( $terms ) ) {
 					$hooks = wp_list_pluck( $terms, 'slug' );
@@ -662,7 +662,7 @@ class Log {
 				break;
 
 			case 'queries':
-				$queries = get_post_meta( $post_id, 'crontrol_log_queries', true );
+				$queries = get_post_meta( $post->ID, 'crontrol_log_queries', true );
 
 				if ( ! empty( $queries ) ) {
 					echo esc_html( number_format_i18n( $queries ) );
@@ -672,7 +672,7 @@ class Log {
 				break;
 
 			case 'https':
-				$https = get_post_meta( $post_id, 'crontrol_log_https', true );
+				$https = get_post_meta( $post->ID, 'crontrol_log_https', true );
 
 				if ( ! empty( $https ) ) {
 					echo esc_html( number_format_i18n( count( $https ) ) );
