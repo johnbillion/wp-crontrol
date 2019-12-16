@@ -6,11 +6,11 @@ Tested up to: 5.3
 Stable tag: 1.7.1
 Requires PHP: 5.3
 
-WP Crontrol lets you view and control what's happening in the WP-Cron system.
+WP Crontrol lets you view, control, and log what's happening in the WP-Cron system.
 
 == Description ==
 
-WP Crontrol lets you view and control what's happening in the WP-Cron system. From the admin screens you can:
+WP Crontrol lets you view, control, and log what's happening in the WP-Cron system. From the admin screens you can:
 
  * View all cron events along with their arguments, recurrence, callback functions, and when they are next due.
  * Edit, delete, and immediately run any cron events.
