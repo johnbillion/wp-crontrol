@@ -997,6 +997,7 @@ class Log {
 		) ), true );
 
 		if ( is_wp_error( $post_id ) ) {
+			// @TODO Trigger PHP warning.
 			return; // ¯\_(ツ)_/¯
 		}
 
@@ -1033,6 +1034,7 @@ class Log {
 		set_exception_handler( $this->old_exception_handler );
 
 		if ( empty( $this->data['log_id'] ) ) {
+			// @TODO Trigger PHP warning.
 			return; // ¯\_(ツ)_/¯
 		}
 
@@ -1100,6 +1102,7 @@ class Log {
 		) ), true );
 
 		if ( is_wp_error( $post_id ) ) {
+			// @TODO Trigger PHP warning.
 			return; // ¯\_(ツ)_/¯
 		}
 
