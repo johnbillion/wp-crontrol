@@ -9,6 +9,7 @@ namespace Crontrol;
 
 use Throwable;
 use Exception;
+use WP_Error;
 use WP_Post;
 use WP_Query;
 
@@ -501,12 +502,13 @@ class Log {
 						}
 
 						printf(
-							'<li class="%1$s">%2$s %3$s<br><span class="dashicons dashicons-%4$s" aria-hidden="true"></span> %5$s</li>',
+							'<li class="%1$s">%2$s %3$s<br><span class="dashicons dashicons-%4$s" aria-hidden="true"></span> %5$s<br>%6$s</li>',
 							esc_attr( $class ),
-							esc_html( $http['method'] ),
+							esc_html( $http['args']['method'] ),
 							esc_html( $http['url'] ),
 							esc_attr( $dashicon ),
-							esc_html( $http['response'] )
+							esc_html( $http['response'] ),
+							esc_html( number_format_i18n( $http['end'] - $http['start'], 4 ) )
 						);
 					}
 					echo '</ol>';
@@ -722,6 +724,30 @@ class Log {
 	}
 
 	/**
+	 * Filter the arguments used in an HTTP request.
+	 *
+	 * Used to log the request, and to add the logging key to the arguments array.
+	 *
+	 * @param  array  $args HTTP request arguments.
+	 * @param  string $url  The request URL.
+	 * @return array        HTTP request arguments.
+	 */
+	public function filter_http_request_args( array $args, $url ) {
+		$start = microtime( true );
+		$key   = microtime( true ) . $url;
+
+		$this->data['https'][ $key ] = array(
+			'url'      => $url,
+			'args'     => $args,
+			'start'    => $start,
+			'response' => new WP_Error( 'crontrol_who_knows', __( 'Request failed', 'wp-crontrol' ) ),
+		);
+		$args['_crontrol_key'] = $key;
+
+		return $args;
+	}
+
+	/**
 	 * Debugging action for the HTTP API.
 	 *
 	 * @param mixed  $response A parameter which varies depending on $action.
@@ -735,12 +761,8 @@ class Log {
 			return;
 		}
 
-		$this->data['https'][] = array(
-			'method'   => $args['method'],
-			'url'      => $url,
-			'args'     => $args,
-			'response' => $response,
-		);
+		$this->data['https'][ $args['_crontrol_key'] ]['end']      = microtime( true );
+		$this->data['https'][ $args['_crontrol_key'] ]['response'] = $response;
 	}
 
 	/**
@@ -1040,6 +1062,7 @@ class Log {
 
 		wp_set_post_terms( $post_id, array( $this->data['hook'] ), self::$taxonomy_hook, true );
 
+		add_filter( 'http_request_args', array( $this, 'filter_http_request_args' ), 9999, 2 );
 		add_action( 'http_api_debug', array( $this, 'action_http_api_debug' ), 9999, 5 );
 
 		$this->logger = new Logger();
