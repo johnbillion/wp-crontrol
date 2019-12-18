@@ -9,6 +9,7 @@ namespace Crontrol;
 
 use Exception;
 use InvalidArgumentException;
+use Throwable;
 
 /**
  * PSR-3 compatible logger which encapsulates the extra logging functionality during events.
@@ -113,7 +114,7 @@ class Logger {
 			);
 		}
 
-		if ( $message instanceof Exception ) {
+		if ( ( $message instanceof Exception ) || ( $message instanceof Throwable ) ) {
 			$message = get_class( $message ) . ': ' . $message->getMessage();
 		}
 
