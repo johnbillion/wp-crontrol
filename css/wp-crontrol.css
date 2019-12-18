@@ -35,12 +35,20 @@ table.wp-list-table {
 	white-space: nowrap;
 }
 
+.wp-list-table tr.crontrol-warning {
+	background: #fff5ef;
+}
+
+.wp-list-table.striped > tbody > :nth-child(odd).crontrol-warning {
+	background: #fff0e9 !important;
+}
+
 .wp-list-table tr.crontrol-error {
-	background: #ffeeee;
+	background: #fff3f3;
 }
 
 .wp-list-table.striped > tbody > :nth-child(odd).crontrol-error {
-	background: #ffe7e7 !important;
+	background: #fdebeb !important;
 }
 
 .wp-list-table tr.crontrol-complete td.column-status {
