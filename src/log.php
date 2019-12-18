@@ -119,6 +119,7 @@ class Log {
 
 		// WordPress.com VIP specific functionality:
 		add_filter( 'wpcom_async_transition_post_status_schedule_async', array( $this, 'filter_wpcom_async_transition' ), 10, 2 );
+		add_action( 'a8c_cron_control_event_threw_catchable_error', array( $this, 'action_cron_control_error', 10, 2 ) );
 
 		$this->setup_hooks();
 
@@ -604,6 +605,16 @@ class Log {
 		}
 
 		return $schedule;
+	}
+
+	/**
+	 * The Cron Control runner catches fatal errors and uncaught exceptions itself, so this logs them in the Crontrol log.
+	 *
+	 * @param object              $event The Cron Control event.
+	 * @param Throwable|Exception $error The exception or error.
+	 */
+	public function action_cron_control_error( $event, $error ) {
+		do_action( 'crontrol/error', $error );
 	}
 
 	/**
