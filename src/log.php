@@ -313,6 +313,8 @@ class Log {
 	 * @param array   $meta_box The meta box arguments.
 	 */
 	public function do_meta_box_details( WP_Post $post, array $meta_box ) {
+		$status = get_post_status( $post );
+
 		?>
 		<dl>
 			<dt>Hook</dt>
@@ -386,9 +388,8 @@ class Log {
 				?>
 			</dd>
 			<dt>Status</dt>
-			<dd>
+			<dd class="status-<?php echo esc_attr( $status ); ?>">
 				<?php
-				$status = get_post_status( $post );
 
 				switch ( $status ) {
 					case self::$status_no_action:
@@ -483,10 +484,20 @@ class Log {
 				if ( ! empty( $https ) ) {
 					echo '<ol>';
 					foreach ( $https as $http ) {
+						$class    = '';
+						$dashicon = 'yes-alt';
+
+						if ( ! empty( $http['warning'] ) ) {
+							$class = 'status-crontrol-warning';
+							$dashicon = 'warning';
+						}
+
 						printf(
-							'<li>%1$s %2$s<br>%3$s</li>',
+							'<li class="%1$s">%2$s %3$s<br><span class="dashicons dashicons-%4$s" aria-hidden="true"></span> %5$s</li>',
+							esc_attr( $class ),
 							esc_html( $http['method'] ),
 							esc_html( $http['url'] ),
+							esc_attr( $dashicon ),
 							esc_html( $http['response'] )
 						);
 					}
@@ -515,8 +526,17 @@ class Log {
 		if ( ! empty( $logging ) ) {
 			echo '<ul>';
 			foreach ( $logging as $log ) {
+				$class    = 'status-crontrol-' . $log['level'];
+				$dashicon = 'marker';
+
+				if ( in_array( $log['level'], Logger::get_error_levels(), true ) || in_array( $log['level'], Logger::get_warning_levels(), true ) ) {
+					$dashicon = 'warning';
+				}
+
 				printf(
-					'<li>%s: %s</li>',
+					'<li class="%1$s"><span class="dashicons dashicons-%2$s" aria-hidden="true"></span> %3$s: %4$s</li>',
+					esc_attr( $class ),
+					esc_attr( $dashicon ),
 					esc_html( $log['level'] ),
 					esc_html( $log['message'] )
 				);
@@ -1048,9 +1068,12 @@ class Log {
 		}
 
 		foreach ( $this->data['https'] as $i => $http ) {
+			$warning = false;
+
 			if ( is_wp_error( $http['response'] ) ) {
 				$response = $http['response']->get_error_message();
 				$status   = self::$status_warning;
+				$warning  = true;
 			} elseif ( ! $http['args']['blocking'] ) {
 				/* translators: A non-blocking HTTP API request */
 				$response = __( 'Non-blocking', 'wp-crontrol' );
@@ -1061,11 +1084,13 @@ class Log {
 				$response = $code . ' ' . $msg;
 
 				if ( $code >= 400 ) {
-					$status = self::$status_warning;
+					$status  = self::$status_warning;
+					$warning = true;
 				}
 			}
 
 			$this->data['https'][ $i ]['response'] = $response;
+			$this->data['https'][ $i ]['warning']  = $warning;
 		}
 
 		$metas = array(

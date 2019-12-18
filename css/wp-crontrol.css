@@ -51,15 +51,21 @@ table.wp-list-table {
 	background: #fdebeb !important;
 }
 
+.status-crontrol-complete,
 .wp-list-table tr.crontrol-complete td.column-status {
 	color: #080;
 }
 
+.status-crontrol-warning,
 .wp-list-table tr.crontrol-stalled td.column-status,
 .wp-list-table tr.crontrol-warning td.column-status {
 	color: #c60;
 }
 
+.status-crontrol-emergency,
+.status-crontrol-alert,
+.status-crontrol-critical,
+.status-crontrol-error,
 .wp-list-table tr.crontrol-error td.column-status {
 	color: #a00;
 }
