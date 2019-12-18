@@ -29,9 +29,11 @@ class Logger {
 	public function __construct() {
 		foreach ( self::get_levels() as $level ) {
 			add_action( "crontrol/{$level}", array( $this, $level ), 10, 2 );
+			add_action( "qm/{$level}", array( $this, $level ), 10, 2 );
 		}
 
 		add_action( 'crontrol/log', array( $this, 'log' ), 10, 3 );
+		add_action( 'qm/log', array( $this, 'log' ), 10, 3 );
 	}
 
 	public function emergency( $message, array $context = array() ) {
