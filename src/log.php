@@ -1070,6 +1070,17 @@ class Log {
 		$this->data['start_memory']  = memory_get_usage();
 		$this->data['start_time']    = microtime( true );
 		$this->data['start_queries'] = $wpdb->num_queries;
+
+		if ( defined( 'CAVALCADE_JOB_ID' ) ) {
+			$message = sprintf(
+				/* translators: %s: Job ID */
+				__( 'Cavalcade job ID: %s', 'wp-crontrol' ),
+				'{id}'
+			);
+			do_action( 'crontrol/debug', $message, array(
+				'id' => constant( 'CAVALCADE_JOB_ID' ),
+			) );
+		}
 	}
 
 	/**
