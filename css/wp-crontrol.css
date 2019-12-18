@@ -35,20 +35,17 @@ table.wp-list-table {
 	white-space: nowrap;
 }
 
-.wp-list-table tr.crontrol-warning {
-	background: #fff5ef;
+.wp-list-table td.column-cb,
+.wp-list-table tbody th {
+	border-left: 3px solid transparent;
 }
 
-.wp-list-table.striped > tbody > :nth-child(odd).crontrol-warning {
-	background: #fff0e9 !important;
+.wp-list-table tr.crontrol-warning th {
+	border-color: #ffb900;
 }
 
-.wp-list-table tr.crontrol-error {
-	background: #fff3f3;
-}
-
-.wp-list-table.striped > tbody > :nth-child(odd).crontrol-error {
-	background: #fdebeb !important;
+.wp-list-table tr.crontrol-error th {
+	border-color: #dc3232;
 }
 
 .status-crontrol-complete,
@@ -68,6 +65,12 @@ table.wp-list-table {
 .status-crontrol-error,
 .wp-list-table tr.crontrol-error td.column-status {
 	color: #a00;
+}
+
+.column-https,
+.column-queries,
+.column-time {
+	text-align: end;
 }
 
 .column-time,
