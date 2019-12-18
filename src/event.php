@@ -137,6 +137,16 @@ function get() {
 		}
 	}
 
+	// Ensure events are always returned in date descending order.
+	// External cron runners such as Cavalcade don't guarantee events are returned in order of time.
+	uasort( $events, function( $a, $b ) {
+		if ( $a->time === $b->time ) {
+			return 0;
+		} else {
+			return ( $a->time > $b->time ) ? 1 : -1;
+		}
+	} );
+
 	return $events;
 }
 
