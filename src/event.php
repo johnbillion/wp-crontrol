@@ -195,3 +195,17 @@ function get_schedule_name( stdClass $event ) {
 		$event->schedule
 	) );
 }
+
+/**
+ * Determines whether an event is late.
+ *
+ * An event which has missed its schedule by more than 10 minutes is considered late.
+ *
+ * @param stdClass $event The event.
+ * @return bool Whether the event is late.
+ */
+function is_late( $event ) {
+	$until = $event->time - time();
+
+	return ( $until < ( 0 - ( 10 * MINUTE_IN_SECONDS ) ) );
+}

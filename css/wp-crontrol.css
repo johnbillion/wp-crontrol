@@ -37,7 +37,7 @@ table.wp-list-table {
 
 .wp-list-table td.column-cb,
 .wp-list-table tbody th {
-	border-left: 3px solid transparent;
+	border-left: 4px solid transparent;
 }
 
 .wp-list-table tr.crontrol-warning th {
@@ -67,9 +67,9 @@ table.wp-list-table {
 	color: #a00;
 }
 
-.column-https,
-.column-queries,
-.column-time {
+.wp-list-table .column-https,
+.wp-list-table .column-queries,
+.wp-list-table .column-time {
 	text-align: end;
 }
 

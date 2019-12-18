@@ -9,6 +9,8 @@ namespace Crontrol;
 
 use stdClass;
 
+use function Crontrol\Event\is_late;
+
 require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 
 /**
@@ -139,6 +141,14 @@ class Event_List_Table extends \WP_List_Table {
 
 		if ( is_wp_error( $schedule_name ) ) {
 			$classes[] = 'crontrol-error';
+		}
+
+		if ( ! get_hook_callbacks( $event->hook ) ) {
+			$classes[] = 'crontrol-warning';
+		}
+
+		if ( is_late( $event ) ) {
+			$classes[] = 'crontrol-warning';
 		}
 
 		printf(
@@ -290,7 +300,7 @@ class Event_List_Table extends \WP_List_Table {
 			$return = '<em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em>';
 
 			if ( ! empty( $event->args['syntax_error_message'] ) ) {
-				$return .= '<br><span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
+				$return .= '<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
 				$return .= sprintf(
 					/* translators: 1: Line number, 2: Error message text */
 					esc_html__( 'Line %1$s: %2$s', 'wp-crontrol' ),
@@ -348,7 +358,10 @@ class Event_List_Table extends \WP_List_Table {
 
 			return implode( '<br>', $callbacks ); // WPCS:: XSS ok.
 		} else {
-			return '<em>' . __( 'None', 'wp-crontrol' ) . '</em>';
+			return sprintf(
+				'<span class="status-crontrol-warning"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
+				esc_html__( 'None', 'wp-crontrol' )
+			);
 		}
 	}
 
@@ -369,11 +382,12 @@ class Event_List_Table extends \WP_List_Table {
 		);
 
 		$until = $event->time - time();
+		$late  = is_late( $event );
 
-		if ( $until < ( 0 - ( 10 * MINUTE_IN_SECONDS ) ) ) {
-			// Show a warning for events that have missed their schedule by more than 10 minutes:
+		if ( $late ) {
+			// Show a warning for events that are late.
 			return sprintf(
-				'%s<br><span style="color:#a00"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s ago</span>',
+				'%s<br><span class="status-crontrol-warning"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s ago</span>',
 				$time,
 				esc_html( interval( abs( $until ) ) )
 			);
@@ -397,7 +411,7 @@ class Event_List_Table extends \WP_List_Table {
 			$schedule_name = Event\get_schedule_name( $event );
 			if ( is_wp_error( $schedule_name ) ) {
 				return sprintf(
-					'<span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
+					'<span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
 					esc_html( $schedule_name->get_error_message() )
 				);
 			} else {
