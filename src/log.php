@@ -317,9 +317,9 @@ class Log {
 
 		?>
 		<dl>
-			<dt>Hook</dt>
+			<dt><?php esc_html_e( 'Hook', 'wp-crontrol' ); ?></dt>
 			<dd><?php echo esc_html( get_the_title() ); ?></dd>
-			<dt>Arguments</dt>
+			<dt><?php esc_html_e( 'Arguments', 'wp-crontrol' ); ?></dt>
 			<dd>
 				<?php
 				$args = $post->post_content;
@@ -338,7 +338,15 @@ class Log {
 
 				?>
 			</dd>
-			<dt>Started</dt>
+			<dt>
+				<?php
+				echo esc_html( sprintf(
+					/* translators: %s: GMT timezone offset */
+					__( 'Started (%s)', 'wp-crontrol' ),
+					get_utc_offset()
+				) );
+				?>
+			</dt>
 			<dd>
 				<?php
 					$date_utc   = gmdate( 'Y-m-d\TH:i:s+00:00', strtotime( $post->post_date_gmt ) );
@@ -359,7 +367,7 @@ class Log {
 					);
 				?>
 			</dd>
-			<dt>Action</dt>
+			<dt><?php esc_html_e( 'Action', 'wp-crontrol' ); ?></dt>
 			<dd>
 				<?php
 				$actions = get_post_meta( $post->ID, 'crontrol_log_actions', true );
@@ -387,7 +395,7 @@ class Log {
 				}
 				?>
 			</dd>
-			<dt>Status</dt>
+			<dt><?php esc_html_e( 'Status', 'wp-crontrol' ); ?></dt>
 			<dd class="status-<?php echo esc_attr( $status ); ?>">
 				<?php
 
@@ -451,7 +459,7 @@ class Log {
 
 				?>
 			</dd>
-			<dt>Time</dt>
+			<dt><?php esc_html_e( 'Time (s)', 'wp-crontrol' ); ?></dt>
 			<dd>
 				<?php
 				$time = get_post_meta( $post->ID, 'crontrol_log_time', true );
@@ -461,7 +469,7 @@ class Log {
 				}
 				?>
 			</dd>
-			<dt>Queries</dt>
+			<dt><?php esc_html_e( 'Database Queries', 'wp-crontrol' ); ?></dt>
 			<dd>
 				<?php
 				$queries = get_post_meta( $post->ID, 'crontrol_log_queries', true );
@@ -476,7 +484,7 @@ class Log {
 				}
 				?>
 			</dd>
-			<dt>HTTP API Requests</dt>
+			<dt><?php esc_html_e( 'HTTP Requests', 'wp-crontrol' ); ?></dt>
 			<dd>
 				<?php
 				$https = get_post_meta( $post->ID, 'crontrol_log_https', true );
@@ -537,7 +545,7 @@ class Log {
 					'<li class="%1$s"><span class="dashicons dashicons-%2$s" aria-hidden="true"></span> %3$s: %4$s</li>',
 					esc_attr( $class ),
 					esc_attr( $dashicon ),
-					esc_html( $log['level'] ),
+					esc_html( ucwords( $log['level'] ) ),
 					esc_html( $log['message'] )
 				);
 			}
