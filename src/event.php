@@ -109,7 +109,7 @@ function delete( $to_delete, $sig, $next_run_utc ) {
 /**
  * Returns a flattened array of cron events.
  *
- * @return array[] An array of cron event arrays.
+ * @return object[] An array of cron event objects.
  */
 function get() {
 	$crons  = _get_cron_array();
