@@ -438,7 +438,7 @@ class Log {
 
 						if ( empty( $error ) ) {
 							$message = __( 'Error', 'wp-crontrol' );
-						} elseif ( 'Exception' === $error['type'] ) {
+						} elseif ( 'exception' === $error['type'] ) {
 							$message = sprintf(
 								/* translators: %s: Error message */
 								__( 'Uncaught Exception: %s', 'wp-crontrol' ),
@@ -953,7 +953,7 @@ class Log {
 
 						if ( empty( $error ) ) {
 							$message = __( 'Error', 'wp-crontrol' );
-						} elseif ( 'Exception' === $error['type'] ) {
+						} elseif ( 'exception' === $error['type'] ) {
 							$message = __( 'Uncaught Exception', 'wp-crontrol' );
 						} else {
 							$message = __( 'Fatal Error', 'wp-crontrol' );
@@ -1031,7 +1031,13 @@ class Log {
 	 * @throws Exception Re-thrown when necessary.
 	 */
 	public function exception_handler( $e ) {
-		$this->data['exception'] = $e;
+		$this->data['exception'] = array(
+			'message' => $e->getMessage(),
+			'file'    => $e->getFile(),
+			'line'    => $e->getLine(),
+			'code'    => $e->getCode(),
+			'type'    => is_a( $e, 'Exception' ) ? 'exception' : 'throwable',
+		);
 
 		$this->log_end();
 
@@ -1192,12 +1198,7 @@ class Log {
 		}
 
 		if ( ! empty( $this->data['exception'] ) ) {
-			$metas['crontrol_log_exception'] = array(
-				'message' => $this->data['exception']->getMessage(),
-				'file'    => $this->data['exception']->getFile(),
-				'line'    => $this->data['exception']->getLine(),
-				'type'    => is_a( $this->data['exception'], 'Exception' ) ? 'Exception' : 'Throwable',
-			);
+			$metas['crontrol_log_exception'] = $this->data['exception'];
 			$status = self::$status_error;
 		}
 
