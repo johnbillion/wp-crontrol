@@ -404,7 +404,7 @@ class Log {
 				switch ( $status ) {
 					case self::$status_no_action:
 						printf(
-							'<span class="dashicons dashicons-marker" aria-hidden="true"></span> %s',
+							'<span class="dashicons dashicons-warning" aria-hidden="true"></span> %s',
 							esc_html__( 'No Action', 'wp-crontrol' )
 						);
 						break;
@@ -906,7 +906,7 @@ class Log {
 				switch ( $status ) {
 					case self::$status_no_action:
 						printf(
-							'<span class="dashicons dashicons-marker" aria-hidden="true"></span> %s',
+							'<span class="dashicons dashicons-warning" aria-hidden="true"></span> %s',
 							esc_html__( 'No Action', 'wp-crontrol' )
 						);
 						break;
