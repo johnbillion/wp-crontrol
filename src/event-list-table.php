@@ -9,8 +9,6 @@ namespace Crontrol;
 
 use stdClass;
 
-use function Crontrol\Event\is_late;
-
 require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 
 /**
@@ -147,7 +145,7 @@ class Event_List_Table extends \WP_List_Table {
 			$classes[] = 'crontrol-warning';
 		}
 
-		if ( is_late( $event ) ) {
+		if ( Event\is_late( $event ) ) {
 			$classes[] = 'crontrol-warning';
 		}
 
@@ -382,7 +380,7 @@ class Event_List_Table extends \WP_List_Table {
 		);
 
 		$until = $event->time - time();
-		$late  = is_late( $event );
+		$late  = Event\is_late( $event );
 
 		if ( $late ) {
 			// Show a warning for events that are late.
