@@ -456,6 +456,16 @@ class Log {
 							'<span class="dashicons dashicons-warning" aria-hidden="true"></span> %s',
 							esc_html( $message )
 						);
+
+						if ( ! empty( $error ) && ! empty( $error['file'] ) && ! empty( $error['line'] ) ) {
+							$file = str_replace( ABSPATH, '', $error['file'] );
+							printf(
+								'<br>%s:%s',
+								esc_html( $file ),
+								esc_html( $error['line'] )
+							);
+						}
+
 						break;
 				}
 
