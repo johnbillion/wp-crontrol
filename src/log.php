@@ -104,7 +104,7 @@ class Log {
 		$post_type = self::$post_type;
 
 		add_filter( 'disable_months_dropdown',                   array( $this, 'filter_disable_months_dropdown' ), 10, 2 );
-		add_filter( "manage_{$post_type}_posts_columns",         array( $this, 'columns' ) );
+		add_filter( "manage_{$post_type}_posts_columns",         array( $this, 'columns' ), 999 );
 		add_filter( "manage_edit-{$post_type}_sortable_columns", array( $this, 'sortable_columns' ), 10, 2 );
 		add_action( "manage_{$post_type}_posts_custom_column",   array( $this, 'column' ), 10, 2 );
 		add_filter( 'page_row_actions',                          array( $this, 'remove_actions' ), 10, 2 );
@@ -783,14 +783,15 @@ class Log {
 	 * @return string[] Updated array of columns.
 	 */
 	public function columns( array $columns ) {
-		unset( $columns['date'], $columns['title'] );
-
 		$ran = sprintf(
 			/* translators: %s: GMT timezone offset */
 			__( 'Started (%s)', 'wp-crontrol' ),
 			get_utc_offset()
 		);
 
+		$columns = array();
+
+		$columns['cb']      = '<input type="checkbox" />';
 		$columns['hook']    = esc_html__( 'Hook', 'wp-crontrol' );
 		$columns['args']    = esc_html__( 'Arguments', 'wp-crontrol' );
 		$columns['ran']     = esc_html( $ran );
