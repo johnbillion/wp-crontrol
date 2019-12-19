@@ -1074,8 +1074,14 @@ class Log {
 		) ), true );
 
 		if ( is_wp_error( $post_id ) ) {
-			// @TODO Trigger PHP warning.
-			return; // ¯\_(ツ)_/¯
+			$message = sprintf(
+				/* translators: 1: Hook name, 2: Error message */
+				__( 'Crontrol event log for %1$s: %2$s', 'wp-crontrol' ),
+				$this->data['hook'],
+				$post_id->get_error_message()
+			);
+			trigger_error( esc_html( $message ), E_USER_WARNING );
+			return;
 		}
 
 		$this->data['log_id'] = $post_id;
@@ -1123,8 +1129,13 @@ class Log {
 		set_exception_handler( $this->old_exception_handler );
 
 		if ( empty( $this->data['log_id'] ) ) {
-			// @TODO Trigger PHP warning.
-			return; // ¯\_(ツ)_/¯
+			$message = sprintf(
+				/* translators: 1: Hook name, 2: Error message */
+				__( 'Crontrol event log for %1$s: %2$s', 'wp-crontrol' ),
+				$this->data['hook'],
+				__( 'No event log ID present', 'wp-crontrol' )
+			);
+			trigger_error( esc_html( $message ), E_USER_WARNING );
 		}
 
 		$status = self::$status_complete;
@@ -1196,8 +1207,14 @@ class Log {
 		) ), true );
 
 		if ( is_wp_error( $post_id ) ) {
-			// @TODO Trigger PHP warning.
-			return; // ¯\_(ツ)_/¯
+			$message = sprintf(
+				/* translators: 1: Hook name, 2: Error message */
+				__( 'Crontrol event log for %1$s: %2$s', 'wp-crontrol' ),
+				$this->data['hook'],
+				$post_id->get_error_message()
+			);
+			trigger_error( esc_html( $message ), E_USER_WARNING );
+			return;
 		}
 
 		foreach ( $metas as $meta_key => $meta_value ) {
