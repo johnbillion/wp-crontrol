@@ -664,12 +664,14 @@ class Log {
 		// Remove quick edit:
 		unset( $actions['inline'], $actions['inline hide-if-no-js'] );
 
-		// Rename edit:
-		$actions['edit'] = sprintf(
-			'<a href="%s">%s</a>',
-			esc_url( get_edit_post_link( $post ) ),
-			esc_html__( 'Details', 'wp-crontrol' )
-		);
+		if ( isset( $actions['edit'] ) ) {
+			// Rename edit:
+			$actions['edit'] = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( get_edit_post_link( $post ) ),
+				esc_html__( 'Details', 'wp-crontrol' )
+			);
+		}
 
 		return $actions;
 	}
