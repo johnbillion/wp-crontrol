@@ -384,10 +384,15 @@ class Event_List_Table extends \WP_List_Table {
 
 		if ( $late ) {
 			// Show a warning for events that are late.
+			$ago = sprintf(
+				/* translators: %s: Time period, for example "8 minutes" */
+				__( '%s ago', 'wp-crontrol' ),
+				interval( abs( $until ) )
+			);
 			return sprintf(
-				'%s<br><span class="status-crontrol-warning"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s ago</span>',
+				'%s<br><span class="status-crontrol-warning"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
 				$time,
-				esc_html( interval( abs( $until ) ) )
+				esc_html( $ago )
 			);
 		}
 
