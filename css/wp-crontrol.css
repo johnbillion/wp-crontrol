@@ -41,6 +41,7 @@ table.wp-list-table {
 }
 
 .wp-list-table tr.crontrol-no-action th,
+.wp-list-table tr.crontrol-stalled th,
 .wp-list-table tr.crontrol-warning th {
 	border-color: #ffb900;
 }
@@ -55,6 +56,7 @@ table.wp-list-table {
 }
 
 .status-crontrol-no-action,
+.status-crontrol-stalled,
 .status-crontrol-warning,
 .wp-list-table tr.crontrol-no-action td.column-status,
 .wp-list-table tr.crontrol-stalled td.column-status,

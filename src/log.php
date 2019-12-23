@@ -411,7 +411,7 @@ class Log {
 					case self::$status_running:
 						if ( self::has_stalled( $post ) ) {
 							printf(
-								'<span class="dashicons dashicons-clock crontrol-rotating" aria-hidden="true"></span> %s',
+								'<span class="status-crontrol-stalled"><span class="dashicons dashicons-clock crontrol-rotating" aria-hidden="true"></span> %s</span>',
 								esc_html__( 'Running - Stalled?', 'wp-crontrol' )
 							);
 						} else {
