@@ -301,6 +301,15 @@ class Log {
 			'high'
 		);
 
+		add_meta_box(
+			'crontrol-log-output',
+			esc_html__( 'Output', 'wp-crontrol' ),
+			array( $this, 'do_meta_box_output' ),
+			self::$post_type,
+			'normal',
+			'high'
+		);
+
 		remove_meta_box(
 			'slugdiv',
 			self::$post_type,
@@ -570,6 +579,28 @@ class Log {
 			);
 		}
 
+	}
+
+	/**
+	 * Displays the Output meta box on the post editing screen.
+	 *
+	 * @param WP_Post $post     The post object.
+	 * @param array   $meta_box The meta box arguments.
+	 */
+	public function do_meta_box_output( WP_Post $post, array $meta_box ) {
+		$output = $post->post_content;
+
+		if ( ! empty( $output ) ) {
+			printf(
+				'<pre>%s</pre>',
+				esc_html( $output )
+			);
+		} else {
+			printf(
+				'<em>%s</em>',
+				esc_html__( 'None', 'wp-crontrol' )
+			);
+		}
 	}
 
 	/**
@@ -1117,6 +1148,8 @@ class Log {
 				'id' => constant( 'CAVALCADE_JOB_ID' ),
 			) );
 		}
+
+		$this->buffered = ob_start();
 	}
 
 	/**
@@ -1124,6 +1157,12 @@ class Log {
 	 */
 	public function log_end() {
 		global $wpdb;
+
+		$output = '';
+
+		if ( $this->buffered ) {
+			$output = ob_get_flush();
+		}
 
 		$this->data['end_memory']  = memory_get_usage();
 		$this->data['end_time']    = microtime( true );
@@ -1205,6 +1244,7 @@ class Log {
 		$post_id = wp_update_post( wp_slash( array(
 			'ID'          => $this->data['log_id'],
 			'post_status' => $status,
+			'post_content' => $output,
 		) ), true );
 
 		if ( is_wp_error( $post_id ) ) {
