@@ -454,7 +454,7 @@ class Log {
 
 						printf(
 							'<span class="dashicons dashicons-warning" aria-hidden="true"></span> %s',
-							esc_html( $message )
+							nl2br( esc_html( $message ) )
 						);
 
 						if ( ! empty( $error ) && ! empty( $error['file'] ) && ! empty( $error['line'] ) ) {
