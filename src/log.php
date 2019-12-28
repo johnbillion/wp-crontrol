@@ -324,9 +324,9 @@ class Log {
 			<dt><?php esc_html_e( 'Arguments', 'wp-crontrol' ); ?></dt>
 			<dd>
 				<?php
-				$args = $post->post_content;
+				$args = get_post_meta( $post->ID, 'crontrol_log_args', true );
 
-				if ( '[]' === $args ) {
+				if ( empty( $args ) ) {
 					printf(
 						'<em>%s</em>',
 						esc_html__( 'None', 'wp-crontrol' )
@@ -334,7 +334,7 @@ class Log {
 				} else {
 					printf(
 						'<pre>%s</pre>',
-						esc_html( json_output( json_decode( $args ) ) )
+						esc_html( json_output( $args ) )
 					);
 				}
 
@@ -898,9 +898,9 @@ class Log {
 				break;
 
 			case 'args':
-				$args = $post->post_content;
+				$args = get_post_meta( $post->ID, 'crontrol_log_args', true );
 
-				if ( '[]' === $args ) {
+				if ( empty( $args ) ) {
 					printf(
 						'<em>%s</em>',
 						esc_html__( 'None', 'wp-crontrol' )
@@ -908,7 +908,7 @@ class Log {
 				} else {
 					printf(
 						'<pre>%s</pre>',
-						esc_html( json_output( json_decode( $args ) ) )
+						esc_html( json_output( $args ) )
 					);
 				}
 				break;
@@ -1069,13 +1069,13 @@ class Log {
 
 		$metas = array(
 			'crontrol_log_actions' => $this->data['actions'],
+			'crontrol_log_args'    => $this->data['args'],
 		);
 
 		$post_id = wp_insert_post( wp_slash( array(
 			'post_type'    => self::$post_type,
 			'post_title'   => $this->data['hook'],
 			'post_status'  => self::$status_running,
-			'post_content' => wp_json_encode( $this->data['args'] ),
 			'post_name'    => uniqid(),
 		) ), true );
 
