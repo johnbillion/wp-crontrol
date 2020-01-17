@@ -1075,6 +1075,28 @@ class Log {
 		}
 	}
 
+	public function shutdown_handler() {
+		if ( ! empty( $this->data['end_time'] ) ) {
+			return;
+		}
+
+		$e = error_get_last();
+
+		$fatals = ( E_ERROR | E_PARSE | E_COMPILE_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR );
+
+		if ( $e && ( $e['type'] & $fatals ) ) {
+			$this->data['exception'] = array(
+				'message' => $e['message'],
+				'file'    => $e['file'],
+				'line'    => $e['line'],
+				'code'    => $e['type'],
+				'type'    => 'error',
+			);
+		}
+
+		$this->log_end();
+	}
+
 	/**
 	 * Starts the logging for the current cron event.
 	 */
@@ -1084,6 +1106,8 @@ class Log {
 		$this->data = array();
 
 		$this->old_exception_handler = set_exception_handler( array( $this, 'exception_handler' ) );
+
+		register_shutdown_function( array( $this, 'shutdown_handler' ) );
 
 		$this->data['actions'] = array();
 		$this->data['args']    = func_get_args();
