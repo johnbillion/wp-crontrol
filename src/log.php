@@ -590,7 +590,7 @@ class Log {
 	public function do_meta_box_output( WP_Post $post, array $meta_box ) {
 		$output = $post->post_content;
 
-		if ( ! empty( $output ) ) {
+		if ( '' !== trim( $output ) ) {
 			printf(
 				'<pre>%s</pre>',
 				esc_html( $output )
