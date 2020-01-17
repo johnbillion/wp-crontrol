@@ -34,6 +34,8 @@ function run( $hookname, $sig ) {
 
 			spawn_cron();
 
+			sleep( 1 );
+
 			return true;
 		}
 	}
