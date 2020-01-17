@@ -1031,20 +1031,16 @@ class Log {
 			case 'queries':
 				$queries = get_post_meta( $post->ID, 'crontrol_log_queries', true );
 
-				if ( ! empty( $queries ) ) {
+				if ( '' !== $queries ) {
 					echo esc_html( number_format_i18n( $queries ) );
-				} elseif ( '' !== $queries ) {
-					echo '0';
 				}
 				break;
 
 			case 'https':
 				$https = get_post_meta( $post->ID, 'crontrol_log_https', true );
 
-				if ( ! empty( $https ) ) {
+				if ( '' !== $https ) {
 					echo esc_html( number_format_i18n( count( $https ) ) );
-				} elseif ( '' !== $https ) {
-					echo '0';
 				}
 				break;
 
