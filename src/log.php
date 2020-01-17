@@ -325,30 +325,71 @@ class Log {
 	 */
 	public function do_meta_box_details( WP_Post $post, array $meta_box ) {
 		$status = get_post_status( $post );
+		$args   = get_post_meta( $post->ID, 'crontrol_log_args', true );
+		$hook   = $post->post_title;
 
 		?>
 		<dl>
 			<dt><?php esc_html_e( 'Hook', 'wp-crontrol' ); ?></dt>
-			<dd><?php echo esc_html( get_the_title() ); ?></dd>
-			<dt><?php esc_html_e( 'Arguments', 'wp-crontrol' ); ?></dt>
-			<dd>
-				<?php
-				$args = get_post_meta( $post->ID, 'crontrol_log_args', true );
-
-				if ( empty( $args ) ) {
+			<?php
+			if ( 'crontrol_cron_job' === $hook ) {
+				if ( ! empty( $args[1] ) ) {
 					printf(
-						'<em>%s</em>',
+						'<dd><em>%s</em></dd>',
+						esc_html( sprintf(
+							/* translators: 1: The name of the PHP cron event. */
+							__( 'PHP Cron (%s)', 'wp-crontrol' ),
+							$args[1]
+						) )
+					);
+				} else {
+					printf(
+						'<dd><em>%s</em></dd>',
+						esc_html__( 'PHP Cron', 'wp-crontrol' )
+					);
+				}
+
+				printf(
+					'<dt>%s</dt>',
+					esc_html__( 'PHP Code', 'wp-crontrol' )
+				);
+
+				if ( empty( $args[0] ) ) {
+					printf(
+						'<dd><em>%s</em></dd>',
 						esc_html__( 'None', 'wp-crontrol' )
 					);
 				} else {
 					printf(
-						'<pre>%s</pre>',
-						esc_html( json_output( $args ) )
+						'<dd><pre><code>%s</code></pre></dd>',
+						esc_html( $args[0] )
 					);
 				}
 
-				?>
-			</dd>
+			} else {
+				printf(
+					'<dd>%s</dd>',
+					esc_html( $hook )
+				);
+				printf(
+					'<dt>%s</dt>',
+					esc_html__( 'Arguments', 'wp-crontrol' )
+				);
+
+				if ( empty( $args ) ) {
+					printf(
+						'<dd><em>%s</em></dd>',
+						esc_html__( 'None', 'wp-crontrol' )
+					);
+				} else {
+					printf(
+						'<dd><pre>%s</pre></dd>',
+						esc_html( json_output( $args ) )
+					);
+				}
+			}
+			?>
+
 			<dt>
 				<?php
 				echo esc_html( sprintf(
@@ -894,11 +935,31 @@ class Log {
 	 */
 	public function column( $name, $post_id ) {
 		$post = get_post( $post_id );
+		$args = get_post_meta( $post->ID, 'crontrol_log_args', true );
+		$hook = $post->post_title;
 
 		switch ( $name ) {
 
 			case 'hook':
-				the_title();
+				if ( 'crontrol_cron_job' === $hook ) {
+					if ( ! empty( $args[1] ) ) {
+						printf(
+							'<em>%s</em>',
+							esc_html( sprintf(
+								/* translators: 1: The name of the PHP cron event. */
+								__( 'PHP Cron (%s)', 'wp-crontrol' ),
+								$args[1]
+							) )
+						);
+					} else {
+						printf(
+							'<em>%s</em>',
+							esc_html__( 'PHP Cron', 'wp-crontrol' )
+						);
+					}
+				} else {
+					echo esc_html( $hook );
+				}
 				break;
 
 			case 'ran':
@@ -929,9 +990,23 @@ class Log {
 				break;
 
 			case 'args':
-				$args = get_post_meta( $post->ID, 'crontrol_log_args', true );
+				if ( 'crontrol_cron_job' === $hook ) {
+					printf(
+						'<em>%s</em>',
+						esc_html__( 'PHP Code', 'wp-crontrol' )
+					);
 
-				if ( empty( $args ) ) {
+					if ( ! empty( $args[0] ) ) {
+						$lines = explode( "\n", trim( $args[0] ) );
+						$code  = reset( $lines );
+						$code  = substr( $code, 0, 50 );
+
+						printf(
+							'<br><code>%s</code>&hellip;',
+							esc_html( $code )
+						);
+					}
+				} elseif ( empty( $args ) ) {
 					printf(
 						'<em>%s</em>',
 						esc_html__( 'None', 'wp-crontrol' )
@@ -1004,15 +1079,7 @@ class Log {
 
 			case 'actions':
 				$actions = get_post_meta( $post->ID, 'crontrol_log_actions', true );
-				$hook    = '';
-				$terms   = get_the_terms( $post->ID, self::$taxonomy_hook );
-
-				if ( is_array( $terms ) ) {
-					$hooks = wp_list_pluck( $terms, 'slug' );
-					if ( $hooks ) {
-						$hook = $hooks[0];
-					}
-				}
+				$hook    = $post->post_title;
 
 				if ( 'crontrol_cron_job' === $hook ) {
 					echo '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
