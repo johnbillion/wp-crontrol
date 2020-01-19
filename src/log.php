@@ -674,13 +674,13 @@ class Log {
 	 * Sets up the hooks needed to log cront events as they run.
 	 */
 	public function setup_hooks() {
-		$logged = get_option( 'crontrol_log', array() );
+		$logged = array_filter( self::get_logged_hooks() );
 
 		if ( empty( $logged ) ) {
 			return;
 		}
 
-		array_map( array( $this, 'observe' ), $logged );
+		array_map( array( $this, 'observe' ), array_keys( $logged ) );
 	}
 
 	/**
