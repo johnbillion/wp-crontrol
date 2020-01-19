@@ -118,6 +118,7 @@ class Log {
 		add_filter( 'screen_layout_columns',                     array( $this, 'filter_layout_columns' ) );
 		add_filter( "get_user_option_screen_layout_{$post_type}", array( $this, 'filter_layout_option' ) );
 		add_action( 'do_meta_boxes',                             array( $this, 'remove_publish_meta_box' ) );
+		add_action( 'restrict_manage_posts',                     array( $this, 'action_restrict_manage_posts' ), 10, 2 );
 
 		register_setting( 'crontrol_group', 'crontrol_log' );
 
@@ -170,6 +171,9 @@ class Log {
 				'edit_terms'   => 'do_not_allow',
 				'delete_terms' => 'do_not_allow',
 				'assign_terms' => 'do_not_allow',
+			),
+			'labels'       => array(
+				'all_items' => __( 'All Hooks', 'wp-crontrol' ),
 			),
 		) );
 
@@ -292,6 +296,43 @@ class Log {
 
 	function remove_publish_meta_box() {
 		remove_meta_box( 'submitdiv', self::$post_type, 'side' );
+	}
+
+	function action_restrict_manage_posts( $post_type, $which ) {
+		global $wp_query;
+
+		if ( self::$post_type !== $post_type ) {
+			return;
+		}
+
+		$tax_obj = get_taxonomy( self::$taxonomy_hook );
+
+		$options[] = sprintf(
+			'<option>%s</option>',
+			esc_html( $tax_obj->labels->all_items )
+		);
+
+		$term_args = array(
+			'taxonomy'   => self::$taxonomy_hook,
+			'hide_empty' => false,
+		);
+
+		foreach ( get_terms( $term_args ) as $term ) {
+			$options[] = sprintf(
+				'<option value="%1$s" %2$s>%3$s</option>',
+				esc_attr( $term->slug ),
+				selected( $term->name, $wp_query->get( self::$taxonomy_hook ), false ),
+				esc_html( $term->name )
+			);
+		}
+
+		// Can't use wp_dropdown_categories() here because it outputs term IDs, not slugs
+		printf(
+			'<select name="%1$s" class="postform">%2$s</select>',
+			esc_attr( sanitize_title( self::$taxonomy_hook ) ),
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			implode( '', $options )
+		);
 	}
 
 	/**
