@@ -115,6 +115,9 @@ class Log {
 		add_action( 'pre_get_posts',                             array( $this, 'action_pre_get_posts' ) );
 		add_action( 'add_meta_boxes',                            array( $this, 'action_meta_boxes' ), 10, 2 );
 		add_action( 'admin_notices',                             array( $this, 'action_admin_notices' ) );
+		add_filter( 'screen_layout_columns',                     array( $this, 'filter_layout_columns' ) );
+		add_filter( "get_user_option_screen_layout_{$post_type}", array( $this, 'filter_layout_option' ) );
+		add_action( 'do_meta_boxes',                             array( $this, 'remove_publish_meta_box' ) );
 
 		register_setting( 'crontrol_group', 'crontrol_log' );
 
@@ -275,6 +278,20 @@ class Log {
 			self::$status_warning,
 			self::$status_error,
 		) );
+	}
+
+	function filter_layout_columns( array $columns ) {
+		$columns[ self::$post_type ] = 1;
+
+		return $columns;
+	}
+
+	function filter_layout_option() {
+		return 1;
+	}
+
+	function remove_publish_meta_box() {
+		remove_meta_box( 'submitdiv', self::$post_type, 'side' );
 	}
 
 	/**
