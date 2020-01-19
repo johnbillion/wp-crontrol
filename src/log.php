@@ -619,10 +619,15 @@ class Log {
 					foreach ( $https as $http ) {
 						$class    = '';
 						$dashicon = 'yes-alt';
+						$end      = '';
 
 						if ( ! empty( $http['warning'] ) ) {
 							$class = 'status-crontrol-warning';
 							$dashicon = 'warning';
+						}
+
+						if ( isset( $http['end'] ) ) {
+							$end = number_format_i18n( $http['end'] - $http['start'], 4 );
 						}
 
 						printf(
@@ -632,7 +637,7 @@ class Log {
 							esc_html( $http['url'] ),
 							esc_attr( $dashicon ),
 							esc_html( $http['response'] ),
-							esc_html( number_format_i18n( $http['end'] - $http['start'], 4 ) )
+							esc_html( $end )
 						);
 					}
 					echo '</ol>';
