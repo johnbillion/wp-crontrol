@@ -1220,6 +1220,7 @@ class Log {
 		add_action( 'http_api_debug', array( $this, 'action_http_api_debug' ), 9999, 5 );
 
 		$this->logger = new Logger();
+		$this->logger->init();
 
 		$this->data['start_memory']  = memory_get_usage();
 		$this->data['start_time']    = microtime( true );

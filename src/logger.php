@@ -27,7 +27,7 @@ class Logger {
 
 	protected $logs = array();
 
-	public function __construct() {
+	public function init() {
 		foreach ( self::get_levels() as $level ) {
 			add_action( "crontrol/{$level}", array( $this, $level ), 10, 2 );
 			add_action( "qm/{$level}", array( $this, $level ), 10, 2 );
