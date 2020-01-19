@@ -1248,7 +1248,6 @@ class Log {
 		$this->logger = new Logger();
 		$this->logger->init();
 
-		$this->data['start_memory']  = memory_get_usage();
 		$this->data['start_time']    = microtime( true );
 		$this->data['start_queries'] = $wpdb->num_queries;
 
@@ -1278,7 +1277,6 @@ class Log {
 			$output = ob_get_flush();
 		}
 
-		$this->data['end_memory']  = memory_get_usage();
 		$this->data['end_time']    = microtime( true );
 		$this->data['end_queries'] = $wpdb->num_queries;
 		$this->data['num_queries'] = ( $this->data['end_queries'] - $this->data['start_queries'] );
@@ -1330,7 +1328,6 @@ class Log {
 		}
 
 		$metas = array(
-			'crontrol_log_memory'  => ( $this->data['end_memory'] - $this->data['start_memory'] ),
 			'crontrol_log_time'    => ( $this->data['end_time'] - $this->data['start_time'] ),
 			'crontrol_log_queries' => $this->data['num_queries'],
 			'crontrol_log_https'   => $this->data['https'],
