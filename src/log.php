@@ -312,12 +312,16 @@ class Log {
 			esc_html( $tax_obj->labels->all_items )
 		);
 
-		$term_args = array(
+		$terms = get_terms( array(
 			'taxonomy'   => self::$taxonomy_hook,
 			'hide_empty' => false,
-		);
+		) );
 
-		foreach ( get_terms( $term_args ) as $term ) {
+		if ( empty( $terms ) ) {
+			return;
+		}
+
+		foreach ( $terms as $term ) {
 			$options[] = sprintf(
 				'<option value="%1$s" %2$s>%3$s</option>',
 				esc_attr( $term->slug ),
