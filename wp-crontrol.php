@@ -942,64 +942,90 @@ function admin_manage_page() {
 			/* translators: 1: The name of the cron event. */
 			__( 'Scheduled the cron event %s to run now.', 'wp-crontrol' ),
 			'success',
+			true,
 		),
 		'2'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Deleted all %s cron events.', 'wp-crontrol' ),
 			'success',
+			false,
 		),
 		'3'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'There are no %s cron events to delete.', 'wp-crontrol' ),
 			'info',
+			false,
 		),
 		'4'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Saved the cron event %s.', 'wp-crontrol' ),
 			'success',
+			false,
 		),
 		'5'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Created the cron event %s.', 'wp-crontrol' ),
 			'success',
+			false,
 		),
 		'6'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Deleted the cron event %s.', 'wp-crontrol' ),
 			'success',
+			false,
 		),
 		'7'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Failed to the delete the cron event %s.', 'wp-crontrol' ),
 			'error',
+			false,
 		),
 		'8'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Failed to the execute the cron event %s.', 'wp-crontrol' ),
 			'error',
+			false,
 		),
 		'9'  => array(
 			__( 'Deleted the selected cron events.', 'wp-crontrol' ),
 			'success',
+			false,
 		),
 		'10' => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Failed to save the cron event %s.', 'wp-crontrol' ),
 			'error',
+			false,
 		),
 	);
 
 	if ( isset( $_GET['crontrol_name'] ) && isset( $_GET['crontrol_message'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
 		$hook    = wp_unslash( $_GET['crontrol_name'] );
 		$message = wp_unslash( $_GET['crontrol_message'] );
+		$link    = '';
+
+		if ( $messages[ $message ][2] && Log::is_hook_logged( $hook ) ) {
+			$link = add_query_arg( array(
+				'post_type'         => Log::$post_type,
+				Log::$taxonomy_hook => rawurlencode( sanitize_title( $hook ) ),
+			), admin_url( 'edit.php' ) );
+
+			$link = sprintf(
+				' <a href="%1$s">%2$s</a>.',
+				esc_url( $link ),
+				esc_html__( 'View logs', 'wp-crontrol' )
+			);
+		}
 
 		printf(
-			'<div id="crontrol-message" class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>',
+			'<div id="crontrol-message" class="notice notice-%1$s is-dismissible"><p>%2$s%3$s</p></div>',
 			esc_attr( $messages[ $message ][1] ),
 			sprintf(
 				esc_html( $messages[ $message ][0] ),
 				'<strong>' . esc_html( $hook ) . '</strong>'
-			)
+			),
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$link
 		);
 	}
 
