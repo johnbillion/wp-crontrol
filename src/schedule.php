@@ -69,7 +69,7 @@ function dropdown( $current = false ) {
 			printf(
 				'%s (%s)',
 				esc_html( $sched_data['display'] ),
-				esc_html( \Crontrol\interval( $sched_data['interval'] ) )
+				esc_html( $sched_name )
 			);
 			?>
 		</option>
