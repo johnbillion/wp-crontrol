@@ -114,6 +114,7 @@ class Log {
 		add_filter( 'post_class',                                array( $this, 'filter_post_class' ), 10, 3 );
 		add_action( 'pre_get_posts',                             array( $this, 'action_pre_get_posts' ) );
 		add_action( 'add_meta_boxes',                            array( $this, 'action_meta_boxes' ), 10, 2 );
+		add_action( 'admin_notices',                             array( $this, 'action_admin_notices' ) );
 
 		register_setting( 'crontrol_group', 'crontrol_log' );
 
@@ -642,6 +643,31 @@ class Log {
 				esc_html__( 'None', 'wp-crontrol' )
 			);
 		}
+	}
+
+	public function action_admin_notices() {
+		global $wp_query;
+
+		$screen = get_current_screen();
+
+		if ( self::$post_type !== $screen->post_type ) {
+			return;
+		}
+
+		$hook = $wp_query->get( self::$taxonomy_hook );
+
+		if ( ! $hook || self::is_hook_logged( $hook ) ) {
+			return;
+		}
+
+		printf(
+			'<div id="cron-hook-notice" class="notice notice-info"><p>%s</p></div>',
+			sprintf(
+				/* translators: %s: The event name */
+				esc_html__( 'The %s event is not currently being logged.', 'wp-crontrol' ),
+				'<strong>' . esc_html( $hook ) . '</strong>'
+			)
+		);
 	}
 
 	/**
