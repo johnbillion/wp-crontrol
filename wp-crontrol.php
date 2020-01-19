@@ -1020,7 +1020,7 @@ function admin_manage_page() {
 
 				<form id="posts-filter" method="get" action="tools.php">
 					<input type="hidden" name="page" value="crontrol_admin_manage_page" />
-					<?php $table->search_box( __( 'Search Hooks', 'wp-crontrol' ), 'cron-event' ); ?>
+					<?php $table->search_box( __( 'Search Hook Names', 'wp-crontrol' ), 'cron-event' ); ?>
 				</form>
 
 				<form method="post" action="tools.php?page=crontrol_admin_manage_page">
