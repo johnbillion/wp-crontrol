@@ -839,7 +839,7 @@ function show_cron_form( array $events, $editing, $is_php = null ) {
 					<tr>
 						<th valign="top" scope="row"><label for="hookname"><?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?></label></th>
 						<td>
-							<input type="text" class="regular-text" id="hookname" name="hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>" required />
+							<input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" class="regular-text" id="hookname" name="hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>" required />
 							<br>
 							<label><input type="checkbox" name="loghook" value="1" <?php checked( $logged ); ?>> <?php esc_html_e( 'Log all events that occur with this hook name', 'wp-crontrol' ); ?></label>
 						</td>
@@ -847,7 +847,7 @@ function show_cron_form( array $events, $editing, $is_php = null ) {
 					<tr>
 						<th valign="top" scope="row"><label for="args"><?php esc_html_e( 'Arguments (optional)', 'wp-crontrol' ); ?></label></th>
 						<td>
-							<input type="text" class="regular-text" id="args" name="args" value="<?php echo esc_attr( $display_args ); ?>"/>
+							<input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" class="regular-text" id="args" name="args" value="<?php echo esc_attr( $display_args ); ?>"/>
 							<p class="description">
 								<?php
 									printf(
@@ -886,7 +886,7 @@ function show_cron_form( array $events, $editing, $is_php = null ) {
 										/* translators: %s: An input field for specifying a date and time */
 										esc_html__( 'At: %s', 'wp-crontrol' ),
 										sprintf(
-											'<br><input type="text" name="next_run_date_local_custom" value="%s" class="regular-text" onfocus="jQuery(\'#next_run_date_local_custom\').prop(\'checked\',true);" />',
+											'<br><input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" name="next_run_date_local_custom" value="%s" class="regular-text" onfocus="jQuery(\'#next_run_date_local_custom\').prop(\'checked\',true);" />',
 											esc_attr( $next_run_date_local )
 										)
 									);
