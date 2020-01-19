@@ -1378,6 +1378,27 @@ class Log {
 		return $all;
 	}
 
+	public static function is_hook_logged( $hook ) {
+		$logged = array_filter( self::get_logged_hooks() );
+
+		return isset( $logged[ $hook ] );
+	}
+
+	public static function set_logging_for_hook( $hook, $log = true ) {
+		$logged = get_option( 'crontrol_log', array() );
+
+		if ( $log ) {
+			$logged[] = $hook;
+		} else {
+			$i = array_search( $hook, $logged, true );
+			if ( false !== $i ) {
+				unset( $logged[ $i ] );
+			}
+		}
+
+		update_option( 'crontrol_log', array_unique( $logged ) );
+	}
+
 	/**
 	 * Shows the event log related options panel.
 	 */

@@ -103,6 +103,8 @@ function action_handle_posts() {
 
 		if ( false === $added ) {
 			$redirect['crontrol_message'] = '10';
+		} else {
+			Log::set_logging_for_hook( $in_hookname, ! empty( $in_loghook ) );
 		}
 
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
@@ -168,6 +170,8 @@ function action_handle_posts() {
 
 		if ( false === $added ) {
 			$redirect['crontrol_message'] = '10';
+		} else {
+			Log::set_logging_for_hook( $in_hookname, ! empty( $in_loghook ) );
 		}
 
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
@@ -702,6 +706,7 @@ function show_cron_form( array $events, $editing, $is_php = null ) {
 	$display_args = '';
 	$edit_id      = null;
 	$existing     = false;
+	$logged       = true;
 
 	if ( ! empty( $_GET['id'] ) ) {
 		$edit_id = wp_unslash( $_GET['id'] );
@@ -748,6 +753,7 @@ function show_cron_form( array $events, $editing, $is_php = null ) {
 		if ( ! empty( $existing['args'] ) ) {
 			$display_args = wp_json_encode( $existing['args'] );
 		}
+		$logged        = Log::is_hook_logged( $existing['hookname'] );
 		$action        = $is_php ? 'edit_php_cron' : 'edit_cron';
 		$button        = __( 'Update Event', 'wp-crontrol' );
 		$next_run_date_local = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $existing['next_run'] ), 'Y-m-d H:i:s' );
@@ -832,7 +838,11 @@ function show_cron_form( array $events, $editing, $is_php = null ) {
 				<?php else : ?>
 					<tr>
 						<th valign="top" scope="row"><label for="hookname"><?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?></label></th>
-						<td><input type="text" class="regular-text" id="hookname" name="hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>" required /></td>
+						<td>
+							<input type="text" class="regular-text" id="hookname" name="hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>" required />
+							<br>
+							<label><input type="checkbox" name="loghook" value="1" <?php checked( $logged ); ?>> <?php esc_html_e( 'Log all events that occur with this hook name', 'wp-crontrol' ); ?></label>
+						</td>
 					</tr>
 					<tr>
 						<th valign="top" scope="row"><label for="args"><?php esc_html_e( 'Arguments (optional)', 'wp-crontrol' ); ?></label></th>
