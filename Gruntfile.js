@@ -22,7 +22,7 @@ module.exports = function (grunt) {
 				prefix: 'Stable tag:[\\s]+'
 			},
 			src: [
-				'readme.txt'
+				'readme.md'
 			]
 		},
 		pkg: {
