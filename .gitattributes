@@ -6,7 +6,6 @@
 
 /.gitattributes export-ignore
 /.gitignore export-ignore
-/COPYING
 /Gruntfile.js export-ignore
 /package.json export-ignore
 /phpcs.xml.dist export-ignore
