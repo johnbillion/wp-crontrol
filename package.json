@@ -8,7 +8,6 @@
   "repository": "johnbillion/wp-crontrol",
   "homepage": "https://github.com/johnbillion/wp-crontrol",
   "devDependencies": {
-    "@actions/core": "^1",
     "@actions/github": "^2",
     "grunt": "^1",
     "grunt-version": "^1",

@@ -1,5 +1,4 @@
 const github = require('@actions/github');
-const core = require('@actions/core');
 const semver = require('semver');
 const replace = require('replace-in-file');
 
