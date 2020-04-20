@@ -1,17 +1,17 @@
-name: "Assets"
+name: Deploy Assets
 on:
   push:
     branches:
       - master
 jobs:
-  master:
-    name: "build"
-    runs-on: ubuntu-latest
+  wordpress:
+    name: WordPress.org
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@master
-      - name: WordPress.org plugin asset/readme update
-        uses: 10up/action-wordpress-plugin-asset-update@master
+      - name: WordPress Plugin Deploy
+        uses: 10up/action-wordpress-plugin-asset-update@1.4.1
         env:
           SVN_USERNAME: ${{ secrets.WPORG_SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.WPORG_SVN_PASSWORD }}
-          README_NAME: "readme.md"
+          README_NAME: readme.md
