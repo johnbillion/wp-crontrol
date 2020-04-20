@@ -1,10 +1,7 @@
 name: Deploy Tag
 on:
-  push:
-    tags-ignore:
-      - '*alpha*'
-      - '*beta*'
-      - '*rc*'
+  release:
+    types: [published]
 
 jobs:
   wordpress:
