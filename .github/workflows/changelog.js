@@ -4,9 +4,9 @@ const semver = require('semver');
 const replace = require('replace-in-file');
 
 const filename = process.argv[2] || 'readme.md';
+const myToken = process.argv[3] || core.getInput( 'GITHUB_TOKEN' );
 
 async function run() {
-	const myToken = '';
 	const api = new github.GitHub(myToken);
 
 	const { data: releases } = await api.repos.listReleases( {
