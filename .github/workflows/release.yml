@@ -1,4 +1,4 @@
-name: Deploy to WordPress.org
+name: Deploy
 on:
   push:
     tags-ignore:
@@ -6,13 +6,13 @@ on:
       - '*beta*'
       - '*rc*'
 jobs:
-  tag:
-    name: New tag
-    runs-on: ubuntu-latest
+  wordpress:
+    name: WordPress.org
+    runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@master
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@1.4.1
       env:
-        SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        SVN_USERNAME: ${{ secrets.WPORG_SVN_USERNAME }}
+        SVN_PASSWORD: ${{ secrets.WPORG_SVN_PASSWORD }}
