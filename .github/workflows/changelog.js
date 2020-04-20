@@ -9,10 +9,7 @@ const myToken = process.argv[3] || core.getInput( 'GITHUB_TOKEN' );
 async function run() {
 	const api = new github.GitHub(myToken);
 
-	const { data: releases } = await api.repos.listReleases( {
-		owner: 'johnbillion',
-		repo: 'wp-crontrol',
-	} );
+	const { data: releases } = await api.repos.listReleases( github.context.repo );
 
 	let published = releases.filter( release =>
 		! release.draft && ! release.prerelease
