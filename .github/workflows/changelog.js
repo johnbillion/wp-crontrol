@@ -1,6 +1,7 @@
 const github = require('@actions/github');
 const core = require('@actions/core');
 const semver = require('semver');
+const replace = require('replace-in-file');
 
 const filename = process.argv[2] || 'readme.md';
 
@@ -29,7 +30,11 @@ async function run() {
 ${release.body}`
 	, '## Changelog ##' );
 
-	console.log(changelog);
+	const results = await replace( {
+		files: filename,
+		from: '<!-- changelog -->',
+		to: changelog,
+	} );
 }
 
 run();

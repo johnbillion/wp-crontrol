@@ -74,6 +74,4 @@ The cron commands which were previously included in WP Crontrol are now part of 
 
 2. New cron schedules can be added, giving plugin developers more options when scheduling events<br>![](.wordpress-org/screenshot-2.png)
 
-## Changelog ##
-
-For WP Crontrol's changelog, please see [the Releases page on GitHub](https://github.com/johnbillion/wp-crontrol/releases).
+<!-- changelog -->
