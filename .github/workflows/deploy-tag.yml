@@ -11,6 +11,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v1
 
+    - name: Install Dependencies
+      run: npm install
+
     - name: Populate Changelog
       run: node .github/workflows/changelog.js readme.md
       env:
