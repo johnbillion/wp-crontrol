@@ -881,19 +881,19 @@ function show_cron_form( array $events, $editing, $is_php = null ) {
 						<p class="description">
 							<?php
 								printf(
-									/* translators: 1: Date/time format for an input field, 2: PHP function name. */
-									esc_html__( 'Format: %1$s or anything accepted by %2$s', 'wp-crontrol' ),
-									'<code>YYYY-MM-DD HH:MM:SS</code>',
-									'<a href="https://www.php.net/manual/function.strtotime.php"><code>strtotime()</code></a>'
+									/* translators: %s Timezone name. */
+									esc_html__( 'Timezone: %s', 'wp-crontrol' ),
+									esc_html( get_timezone_name() )
 								);
 							?>
 						</p>
 						<p class="description">
 							<?php
 								printf(
-									/* translators: %s Timezone name. */
-									esc_html__( 'Timezone: %s', 'wp-crontrol' ),
-									esc_html( get_timezone_name() )
+									/* translators: 1: Date/time format for an input field, 2: PHP function name. */
+									esc_html__( 'Format: %1$s or anything accepted by %2$s', 'wp-crontrol' ),
+									'<code>YYYY-MM-DD HH:MM:SS</code>',
+									'<a href="https://www.php.net/manual/function.strtotime.php"><code>strtotime()</code></a>'
 								);
 							?>
 						</p>
