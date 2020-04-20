@@ -259,7 +259,7 @@ function action_handle_posts() {
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 		exit;
 
-	} elseif ( isset( $_POST['action'] ) && 'delete_crons' === $_POST['action'] ) {
+	} elseif ( ( isset( $_POST['action'] ) && 'delete_crons' === $_POST['action'] ) || ( isset( $_POST['action2'] ) && 'delete_crons' === $_POST['action2'] ) ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
 		}
