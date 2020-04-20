@@ -5,12 +5,15 @@ on:
       - '*alpha*'
       - '*beta*'
       - '*rc*'
+
 jobs:
   wordpress:
     name: WordPress.org
     runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@master
+    - name: Checkout repository
+      uses: actions/checkout@v1
+
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@1.4.1
       env:
