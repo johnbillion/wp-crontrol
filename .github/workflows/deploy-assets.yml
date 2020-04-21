@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - release-1x
 
 jobs:
   wordpress:
@@ -11,6 +12,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
+
+      # @TODO need to cache the npm dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Populate Changelog
+        run: node .github/workflows/changelog.js readme.md
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: WordPress Plugin Deploy
         uses: 10up/action-wordpress-plugin-asset-update@1.4.1

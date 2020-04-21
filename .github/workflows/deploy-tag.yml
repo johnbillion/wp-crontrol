@@ -17,7 +17,7 @@ jobs:
     - name: Populate Changelog
       run: node .github/workflows/changelog.js readme.md
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@1.4.1
