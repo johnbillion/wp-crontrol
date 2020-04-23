@@ -1451,7 +1451,7 @@ class Log {
 		$events = array_fill_keys( array_keys( $events ), false );
 		$logged = get_option( 'crontrol_log', array() );
 
-		if ( empty( $logged ) ) {
+		if ( empty( $logged ) || ! is_array( $logged ) ) {
 			$logged = array();
 		}
 
@@ -1476,6 +1476,10 @@ class Log {
 
 	public static function set_logging_for_hook( $hook, $log = true ) {
 		$logged = get_option( 'crontrol_log', array() );
+
+		if ( empty( $logged ) || ! is_array( $logged ) ) {
+			$logged = array();
+		}
 
 		if ( $log ) {
 			$logged[] = $hook;
