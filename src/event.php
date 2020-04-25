@@ -26,7 +26,7 @@ function run( $hookname, $sig ) {
 		if ( isset( $cron[ $hookname ][ $sig ] ) ) {
 			$args = $cron[ $hookname ][ $sig ]['args'];
 			delete_transient( 'doing_cron' );
-			$scheduled = wp_schedule_single_event( time() - 1, $hookname, $args ); // UTC
+			$scheduled = force_schedule_single_event( $hookname, $args ); // UTC
 
 			if ( false === $scheduled ) {
 				return $scheduled;
@@ -40,6 +40,34 @@ function run( $hookname, $sig ) {
 		}
 	}
 	return false;
+}
+
+/**
+ * Forcibly schedules a single event for the purpose of manually running it.
+ *
+ * This is used instead of `wp_schedule_single_event()` to avoid the duplicate check that's otherwise performed.
+ *
+ * @param string $hook Action hook to execute when the event is run.
+ * @param array  $args Optional. Array containing each separate argument to pass to the hook's callback function.
+ * @return bool True if event successfully scheduled. False for failure.
+ */
+function force_schedule_single_event( $hook, $args = array() ) {
+	$event = (object) array(
+		'hook'      => $hook,
+		'timestamp' => 1,
+		'schedule'  => false,
+		'args'      => $args,
+	);
+	$crons = (array) _get_cron_array();
+	$key   = md5( serialize( $event->args ) );
+
+	$crons[ $event->timestamp ][ $event->hook ][ $key ] = array(
+		'schedule' => $event->schedule,
+		'args'     => $event->args,
+	);
+	uksort( $crons, 'strnatcasecmp' );
+
+	return _set_cron_array( $crons );
 }
 
 /**
