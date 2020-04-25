@@ -1524,6 +1524,8 @@ function json_output( $input ) {
  * Security: A user can only add or edit a PHP cron event if they have the `edit_files` capability. This means if a user
  * cannot edit files on the site (eg. through the plugin or theme editor) then they cannot edit or add a PHP cron event.
  *
+ * Therefore, the user access level required to execute arbitrary PHP code does not change with WP Crontrol activated.
+ *
  * @param string $code The PHP code to evaluate.
  */
 function action_php_cron_event( $code ) {
