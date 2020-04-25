@@ -604,7 +604,7 @@ function test_cron_spawn( $cache = true ) {
 	$doing_wp_cron = sprintf( '%.22F', microtime( true ) );
 
 	$cron_request = apply_filters( 'cron_request', array(
-		'url'  => site_url( 'wp-cron.php?doing_wp_cron=' . $doing_wp_cron ),
+		'url'  => add_query_arg( 'doing_wp_cron', $doing_wp_cron, site_url( 'wp-cron.php' ) ),
 		'key'  => $doing_wp_cron,
 		'args' => array(
 			'timeout'   => 3,
