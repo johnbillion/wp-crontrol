@@ -5,7 +5,7 @@
  * @package wp-crontrol
  */
 
-namespace Crontrol;
+namespace Crontrol\Event;
 
 use stdClass;
 
@@ -14,7 +14,7 @@ require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 /**
  * Cron event list table class.
  */
-class Event_List_Table extends \WP_List_Table {
+class Table extends \WP_List_Table {
 
 	/**
 	 * Array of cron event hooks that are persistently added by WordPress core.
@@ -53,11 +53,11 @@ class Event_List_Table extends \WP_List_Table {
 	 * Prepares the list table items and arguments.
 	 */
 	public function prepare_items() {
-		self::$persistent_core_hooks = get_persistent_core_hooks();
+		self::$persistent_core_hooks = \Crontrol\get_persistent_core_hooks();
 		self::$can_edit_files        = current_user_can( 'edit_files' );
-		self::$count_by_hook         = Event\count_by_hook();
+		self::$count_by_hook         = count_by_hook();
 
-		$events = Event\get();
+		$events = get();
 
 		if ( ! empty( $_GET['s'] ) ) {
 			$s = sanitize_text_field( wp_unslash( $_GET['s'] ) );
@@ -93,7 +93,7 @@ class Event_List_Table extends \WP_List_Table {
 			'crontrol_next'       => sprintf(
 				/* translators: %s: UTC offset */
 				__( 'Next Run (%s)', 'wp-crontrol' ),
-				get_utc_offset()
+				\Crontrol\get_utc_offset()
 			),
 			'crontrol_actions'    => __( 'Action', 'wp-crontrol' ),
 			'crontrol_recurrence' => __( 'Recurrence', 'wp-crontrol' ),
@@ -135,17 +135,17 @@ class Event_List_Table extends \WP_List_Table {
 			$classes[] = 'crontrol-error';
 		}
 
-		$schedule_name = ( $event->interval ? Event\get_schedule_name( $event ) : false );
+		$schedule_name = ( $event->interval ? get_schedule_name( $event ) : false );
 
 		if ( is_wp_error( $schedule_name ) ) {
 			$classes[] = 'crontrol-error';
 		}
 
-		if ( ! get_hook_callbacks( $event->hook ) ) {
+		if ( ! \Crontrol\get_hook_callbacks( $event->hook ) ) {
 			$classes[] = 'crontrol-warning';
 		}
 
-		if ( Event\is_late( $event ) ) {
+		if ( is_late( $event ) ) {
 			$classes[] = 'crontrol-warning';
 		}
 
@@ -284,7 +284,7 @@ class Event_List_Table extends \WP_List_Table {
 	 */
 	protected function column_crontrol_args( $event ) {
 		if ( ! empty( $event->args ) ) {
-			$args = json_output( $event->args );
+			$args = \Crontrol\json_output( $event->args );
 		}
 
 		if ( 'crontrol_cron_job' === $event->hook ) {
@@ -336,7 +336,7 @@ class Event_List_Table extends \WP_List_Table {
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_actions( $event ) {
-		$hook_callbacks = get_hook_callbacks( $event->hook );
+		$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
 
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			return '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
@@ -344,7 +344,7 @@ class Event_List_Table extends \WP_List_Table {
 			$callbacks = array();
 
 			foreach ( $hook_callbacks as $callback ) {
-				$callbacks[] = output_callback( $callback );
+				$callbacks[] = \Crontrol\output_callback( $callback );
 			}
 
 			return implode( '<br>', $callbacks ); // WPCS:: XSS ok.
@@ -373,14 +373,14 @@ class Event_List_Table extends \WP_List_Table {
 		);
 
 		$until = $event->time - time();
-		$late  = Event\is_late( $event );
+		$late  = is_late( $event );
 
 		if ( $late ) {
 			// Show a warning for events that are late.
 			$ago = sprintf(
 				/* translators: %s: Time period, for example "8 minutes" */
 				__( '%s ago', 'wp-crontrol' ),
-				interval( abs( $until ) )
+				\Crontrol\interval( abs( $until ) )
 			);
 			return sprintf(
 				'%s<br><span class="status-crontrol-warning"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
@@ -392,7 +392,7 @@ class Event_List_Table extends \WP_List_Table {
 		return sprintf(
 			'%s<br>%s',
 			$time,
-			esc_html( interval( $until ) )
+			esc_html( \Crontrol\interval( $until ) )
 		);
 	}
 
@@ -404,7 +404,7 @@ class Event_List_Table extends \WP_List_Table {
 	 */
 	protected function column_crontrol_recurrence( $event ) {
 		if ( $event->schedule ) {
-			$schedule_name = Event\get_schedule_name( $event );
+			$schedule_name = get_schedule_name( $event );
 			if ( is_wp_error( $schedule_name ) ) {
 				return sprintf(
 					'<span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',

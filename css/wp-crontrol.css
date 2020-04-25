@@ -50,6 +50,10 @@ table.wp-list-table {
 	border-color: #dc3232;
 }
 
+#crontrol-hash-message {
+	display: none;
+}
+
 .status-crontrol-complete,
 .wp-list-table tr.crontrol-complete td.column-status {
 	color: #080;

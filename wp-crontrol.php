@@ -50,12 +50,13 @@ function init_hooks() {
 	add_action( 'init',                               __NAMESPACE__ . '\action_init' );
 	add_action( 'init',                               __NAMESPACE__ . '\action_handle_posts' );
 	add_action( 'admin_menu',                         __NAMESPACE__ . '\action_admin_menu' );
+	add_action( 'wp_ajax_crontrol_checkhash',         __NAMESPACE__ . '\ajax_check_events_hash' );
 	add_filter( "plugin_action_links_{$plugin_file}", __NAMESPACE__ . '\plugin_action_links', 10, 4 );
 	add_filter( 'removable_query_args',               __NAMESPACE__ . '\filter_removable_query_args' );
 	add_filter( 'in_admin_header',                    __NAMESPACE__ . '\do_tabs' );
 	add_filter( 'pre_unschedule_event',               __NAMESPACE__ . '\maybe_clear_doing_cron' );
 
-	add_action( 'load-tools_page_crontrol_admin_manage_page', __NAMESPACE__ . '\enqueue_code_editor' );
+	add_action( 'load-tools_page_crontrol_admin_manage_page', __NAMESPACE__ . '\setup_manage_page' );
 
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
@@ -555,6 +556,17 @@ function maybe_clear_doing_cron( $pre ) {
 }
 
 /**
+ * Ajax handler which outputs a hash of the current list of scheduled events.
+ */
+function ajax_check_events_hash() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( null, 403 );
+	}
+
+	wp_send_json_success( md5( json_encode( Event\get_list_table()->items ) ) );
+}
+
+/**
  * Gets the status of WP-Cron functionality on the site by performing a test spawn if necessary. Cached for one hour when all is well.
  *
  * @param bool $cache Whether to use the cached result from previous calls.
@@ -1035,12 +1047,8 @@ function admin_manage_page() {
 		);
 	}
 
-	require_once __DIR__ . '/src/event-list-table.php';
-
 	$tabs  = get_tab_states();
-	$table = new Event_List_Table();
-
-	$table->prepare_items();
+	$table = Event\get_list_table();
 
 	switch ( true ) {
 		case $tabs['events']:
@@ -1360,9 +1368,20 @@ function interval( $since ) {
 }
 
 /**
- * Enqueues the editor UI that's used for the PHP cron event code editor.
+ * Sets up the Events listing screen.
  */
-function enqueue_code_editor() {
+function setup_manage_page() {
+	// Initialise the list table
+	Event\get_list_table();
+
+	// Add the initially hidden admin notice about the out of date events list
+	add_action( 'admin_notices', function() {
+		printf(
+			'<div id="crontrol-hash-message" class="notice notice-warning"><p>%s</p></div>',
+			esc_html__( 'The scheduled cron events have changed since you first opened this page. Reload the page to see the up to date list.', 'wp-crontrol' )
+		);
+	} );
+
 	if ( ! function_exists( 'wp_enqueue_code_editor' ) ) {
 		return;
 	}
@@ -1404,7 +1423,14 @@ function enqueue_assets( $hook_suffix ) {
 	wp_enqueue_style( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'css/wp-crontrol.css', array(), $ver );
 
 	$ver = filemtime( plugin_dir_path( __FILE__ ) . 'js/wp-crontrol.js' );
-	wp_enqueue_script( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'js/wp-crontrol.js', array(), $ver, true );
+	wp_enqueue_script( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'js/wp-crontrol.js', array( 'jquery' ), $ver, true );
+
+	if ( ! empty( $tab['events'] ) ) {
+		wp_localize_script( 'wp-crontrol', 'wpCrontrol', array(
+			'eventsHash'         => md5( json_encode( Event\get_list_table()->items ) ),
+			'eventsHashInterval' => 20,
+		) );
+	}
 }
 
 /**

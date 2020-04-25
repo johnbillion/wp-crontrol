@@ -244,3 +244,22 @@ function is_late( stdClass $event ) {
 
 	return ( $until < ( 0 - ( 10 * MINUTE_IN_SECONDS ) ) );
 }
+
+/**
+ * Initialises and returns the list table for events.
+ *
+ * @return Table The list table.
+ */
+function get_list_table() {
+	static $table = null;
+
+	if ( ! $table ) {
+		require_once __DIR__ . '/event-list-table.php';
+
+		$table = new Table();
+		$table->prepare_items();
+
+	}
+
+	return $table;
+}
