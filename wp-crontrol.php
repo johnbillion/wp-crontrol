@@ -1433,6 +1433,7 @@ function get_persistent_core_hooks() {
 		'wp_privacy_delete_old_export_files',
 		'wp_scheduled_auto_draft_delete',
 		'wp_scheduled_delete',
+		'wp_site_health_scheduled_check',
 		'wp_update_plugins',
 		'wp_update_themes',
 		'wp_version_check',
