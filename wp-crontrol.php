@@ -53,6 +53,7 @@ function init_hooks() {
 	add_filter( "plugin_action_links_{$plugin_file}", __NAMESPACE__ . '\plugin_action_links', 10, 4 );
 	add_filter( 'removable_query_args',               __NAMESPACE__ . '\filter_removable_query_args' );
 	add_filter( 'in_admin_header',                    __NAMESPACE__ . '\do_tabs' );
+	add_filter( 'pre_unschedule_event',               __NAMESPACE__ . '\maybe_clear_doing_cron' );
 
 	add_action( 'load-tools_page_crontrol_admin_manage_page', __NAMESPACE__ . '\enqueue_code_editor' );
 
@@ -516,6 +517,41 @@ function admin_options_page() {
 		</form>
 	</div>
 	<?php
+}
+
+/**
+ * Clears the doing cron status when an event is unscheduled.
+ *
+ * What on earth does this function do, and why?
+ *
+ * Good question. The purpose of this function is to prevent other overdue cron events from firing when an event is run
+ * manually with the "Run Now" action. WP Crontrol works very hard to ensure that when cron event runs manually that it
+ * runs in the exact same way it would run as part of its schedule - via a properly spawned cron with a queued event in
+ * place. It does this by queueing an event at time `1` (1 second into 1st January 1970) and then immediately spawning
+ * cron (see the `Event\run()` function).
+ *
+ * The problem this causes is if other events are due then they will all run too, and this isn't desirable because if a
+ * site has a large number of stuck events due to a problem with the cron runner then it's not desirable for all those
+ * events to run when another is manually run. This happens because WordPress core will attempt to run all due events
+ * whenever cron is spawned.
+ *
+ * The code in this function prevents multiple events from running by changing the value of the `doing_cron` transient
+ * when an event gets unscheduled during a manual run, which prevents wp-cron.php from iterating more than one event.
+ *
+ * The `pre_unschedule_event` filter is used for this because it's just about the only hook available within this loop.
+ *
+ * Refs:
+ * - https://core.trac.wordpress.org/browser/trunk/src/wp-cron.php?rev=47198&marks=127,141#L122
+ *
+ * @param mixed $pre The pre-flight value of the event unschedule short-circuit. Not used.
+ * @return mixed Thee unaltered pre-flight value.
+ */
+function maybe_clear_doing_cron( $pre ) {
+	if ( defined( 'DOING_CRON' ) && DOING_CRON && isset( $_GET['crontrol-single-event'] ) ) {
+		delete_transient( 'doing_cron' );
+	}
+
+	return $pre;
 }
 
 /**
