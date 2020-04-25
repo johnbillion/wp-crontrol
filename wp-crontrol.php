@@ -1007,7 +1007,6 @@ function admin_manage_page() {
 		if ( $messages[ $message ][2] && Log::is_hook_logged( $hook ) ) {
 			$link = add_query_arg( array(
 				'post_type'         => Log::$post_type,
-				Log::$taxonomy_hook => rawurlencode( sanitize_title( $hook ) ),
 			), admin_url( 'edit.php' ) );
 
 			$link = sprintf(
