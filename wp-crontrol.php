@@ -1472,12 +1472,16 @@ function admin_manage_page() {
  * @return bool[] Array of states keyed by tab name.
  */
 function get_tab_states() {
-	return array(
+	$tabs = array(
 		'events'        => ( ! empty( $_GET['page'] ) && 'crontrol_admin_manage_page' === $_GET['page'] && empty( $_GET['action'] ) ),
 		'schedules'     => ( ! empty( $_GET['page'] ) && 'crontrol_admin_options_page' === $_GET['page'] ),
 		'add-event'     => ( ! empty( $_GET['action'] ) && 'new-cron' === $_GET['action'] ),
 		'edit-event'    => ( ! empty( $_GET['action'] ) && 'edit-cron' === $_GET['action'] ),
 	);
+
+	$tabs = apply_filters( 'crontrol/tabs', $tabs );
+
+	return $tabs;
 }
 
 /**
