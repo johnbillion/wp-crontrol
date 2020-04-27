@@ -830,7 +830,7 @@ function ajax_check_events_hash() {
 		wp_send_json_error( null, 403 );
 	}
 
-	wp_send_json_success( md5( json_encode( Event\get_list_table()->items ) ) );
+	wp_send_json_success( md5( json_encode( Event\get() ) ) );
 }
 
 /**
@@ -1769,7 +1769,7 @@ function enqueue_assets( $hook_suffix ) {
 	$vars = array();
 
 	if ( ! empty( $tab['events'] ) ) {
-		$vars['eventsHash'] = md5( json_encode( Event\get_list_table()->items ) );
+		$vars['eventsHash'] = md5( json_encode( Event\get() ) );
 		$vars['eventsHashInterval'] = 20;
 	}
 
