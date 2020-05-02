@@ -732,12 +732,11 @@ function get_utc_offset() {
 /**
  * Shows the form used to add/edit cron events.
  *
- * @param array $events  The cron event list.
- * @param bool  $editing Whether the form is for the event editor.
- * @param bool  $is_php  Whether the form is for a PHP event.
+ * @param bool $editing Whether the form is for the event editor.
+ * @param bool $is_php  Whether the form is for a PHP event.
  * @return void
  */
-function show_cron_form( array $events, $editing, $is_php = null ) {
+function show_cron_form( $editing, $is_php = null ) {
 	$display_args = '';
 	$edit_id      = null;
 	$existing     = false;
@@ -746,7 +745,7 @@ function show_cron_form( array $events, $editing, $is_php = null ) {
 		$edit_id = wp_unslash( $_GET['id'] );
 	}
 
-	foreach ( $events as $event ) {
+	foreach ( Event\get() as $event ) {
 		if ( $edit_id === $event->hook && intval( $_GET['next_run_utc'] ) === $event->time && $event->sig === $_GET['sig'] ) {
 			$existing = array(
 				'hookname' => $event->hook,
@@ -1085,15 +1084,15 @@ function admin_manage_page() {
 			break;
 
 		case $tabs['add-event']:
-			show_cron_form( $table->items, false );
+			show_cron_form( false );
 			break;
 
 		case $tabs['add-php-event']:
-			show_cron_form( $table->items, false, true );
+			show_cron_form( false, true );
 			break;
 
 		case $tabs['edit-event']:
-			show_cron_form( $table->items, true );
+			show_cron_form( true );
 			break;
 
 	}
