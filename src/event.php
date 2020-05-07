@@ -266,9 +266,9 @@ function get_list_table() {
  */
 function uasort_order_events( $a, $b ) {
 
-	$orderby = ( ! empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : 'crontrol_next';
+	$orderby = ( ! empty( $_GET['orderby'] ) ) ? sanitize_text_field( $_GET['orderby'] ) : 'crontrol_next';
 
-	$order = ( ! empty($_GET['order'] ) ) ? $_GET['order'] : 'desc';
+	$order = ( ! empty($_GET['order'] ) ) ? sanitize_text_field( $_GET['order'] ) : 'desc';
 
 	switch ($orderby) {
 		case 'crontrol_hook':
