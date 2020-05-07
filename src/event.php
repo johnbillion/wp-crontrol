@@ -174,13 +174,7 @@ function get() {
 
 	// Ensure events are always returned in date descending order.
 	// External cron runners such as Cavalcade don't guarantee events are returned in order of time.
-	uasort( $events, function( $a, $b ) {
-		if ( $a->time === $b->time ) {
-			return 0;
-		} else {
-			return ( $a->time > $b->time ) ? 1 : -1;
-		}
-	} );
+	uasort( $events, 'Crontrol\Event\uasort_order_events' );
 
 	return $events;
 }
@@ -262,4 +256,39 @@ function get_list_table() {
 	}
 
 	return $table;
+}
+
+/**
+ * Order events function.
+ * The comparison function returns an integer less than, equal to, or greater than zero if the first argument is considered to be respectively less than, equal to, or greater than the second.
+ *
+ * @return int
+ */
+function uasort_order_events( $a, $b ) {
+
+	$orderby = ( ! empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : 'crontrol_next';
+
+	$order = ( ! empty($_GET['order'] ) ) ? $_GET['order'] : 'desc';
+
+	switch ($orderby) {
+		case 'crontrol_hook':
+			if ( $order == 'desc' ) {
+				return strcmp($a->hook, $b->hook);
+			} else {
+				return strcmp($b->hook, $a->hook);
+			}
+			break;
+		default:
+			if ( $a->time === $b->time ) {
+				return 0;
+			} else {
+				if ( $order == 'desc' ) {
+					return ( $a->time > $b->time ) ? 1 : -1;
+				} else {
+					return ( $a->time < $b->time ) ? 1 : -1;
+				}
+
+			}
+	}
+
 }

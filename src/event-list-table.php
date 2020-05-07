@@ -101,6 +101,20 @@ class Table extends \WP_List_Table {
 	}
 
 	/**
+	 * Columns to make sortable.
+	 *
+	 * @return array
+	 */
+	public function get_sortable_columns() {
+		$sortable_columns = array(
+			'crontrol_hook' => array( 'crontrol_hook', true ),
+			'crontrol_next' => array( 'crontrol_next', false )
+		);
+
+		return $sortable_columns;
+	}
+
+	/**
 	 * Returns an array of CSS class names for the table.
 	 *
 	 * @return string[] Array of class names.
