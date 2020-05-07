@@ -67,6 +67,32 @@ class Table extends \WP_List_Table {
 			} );
 		}
 
+		if ( ! empty( $_GET['hooks_type'] ) ) {
+
+			$hooks_type = sanitize_text_field( $_GET['hooks_type'] );
+
+			switch ($hooks_type) {
+				case 'persistent':
+					$allowed_hooks = \Crontrol\get_persistent_core_hooks();
+					$events = array_filter( $events, function( $event ) use ( $allowed_hooks ) {
+						return ( in_array( $event->hook, $allowed_hooks, true ) );
+					} );
+					break;
+				case 'core':
+					$allowed_hooks = \Crontrol\get_all_core_hooks();
+					$events = array_filter( $events, function( $event ) use ( $allowed_hooks ) {
+						return ( in_array( $event->hook, $allowed_hooks, true ) );
+					} );
+					break;
+				case 'custom':
+					$disallowed_hooks = \Crontrol\get_all_core_hooks();
+					$events = array_filter( $events, function( $event ) use ( $disallowed_hooks ) {
+						return ( !in_array( $event->hook, $disallowed_hooks, true ) );
+					} );
+					break;
+			}
+		}
+
 		$count    = count( $events );
 		$per_page = 50;
 		$offset   = ( $this->get_pagenum() - 1 ) * $per_page;
@@ -135,6 +161,33 @@ class Table extends \WP_List_Table {
 		return array(
 			'delete_crons' => esc_html__( 'Delete', 'wp-crontrol' ),
 		);
+	}
+
+	/**
+	 * Display the list of hooks type.
+	 * @return array
+	 */
+	function get_views(){
+		$views = array();
+		$hooks_type = ( !empty($_GET['hooks_type']) ? $_GET['hooks_type'] : 'all');
+
+		$types = array(
+			'all' => __( 'All hooks', 'wp-crontrol'  ),
+			'persistent' => __( 'Persistent core hooks', 'wp-crontrol'  ),
+			'core' => __( 'All core hooks', 'wp-crontrol'  ),
+			'custom' => __( 'All except core hooks', 'wp-crontrol'  )
+		);
+
+		foreach ( $types as $key => $type ) {
+			$views[$key] = sprintf(
+				'<a href="%s"%s>%s</a>',
+				$key == 'all' ? remove_query_arg('hooks_type') : add_query_arg('hooks_type', $key ),
+				$hooks_type == $key ? ' class="current"' : '',
+				$type
+			);
+		}
+
+		return $views;
 	}
 
 	/**
