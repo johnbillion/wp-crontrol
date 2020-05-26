@@ -61,6 +61,7 @@ function init_hooks() {
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_assets' );
+	add_action( 'crontrol/tab-header',   __NAMESPACE__ . '\show_cron_status', 20 );
 }
 
 /**
@@ -1162,12 +1163,15 @@ function get_tab_states() {
  * Output the cron-related tabs if we're on a cron-related admin screen.
  */
 function do_tabs() {
-	$tab = get_tab_states();
+	$tabs = get_tab_states();
+	$tab  = array_filter( $tabs );
 
-	if ( ! array_filter( $tab ) ) {
+	if ( ! $tab ) {
 		return;
 	}
 
+	$tab   = array_keys( $tab );
+	$tab   = reset( $tab );
 	$links = array(
 		'events'        => array(
 			'tools.php?page=crontrol_admin_manage_page',
@@ -1192,7 +1196,7 @@ function do_tabs() {
 		<nav class="nav-tab-wrapper">
 			<?php
 			foreach ( $links as $id => $link ) {
-				if ( $tab[ $id ] ) {
+				if ( $tabs[ $id ] ) {
 					printf(
 						'<a href="%s" class="nav-tab nav-tab-active">%s</a>',
 						esc_url( $link[0] ),
@@ -1207,7 +1211,7 @@ function do_tabs() {
 				}
 			}
 
-			if ( $tab['edit-event'] ) {
+			if ( $tabs['edit-event'] ) {
 				printf(
 					'<span class="nav-tab nav-tab-active">%s</span>',
 					esc_html__( 'Edit Cron Event', 'wp-crontrol' )
@@ -1216,7 +1220,7 @@ function do_tabs() {
 			?>
 		</nav>
 		<?php
-		show_cron_status();
+		do_action( 'crontrol/tab-header', $tab, $tabs );
 		?>
 	</div>
 	<?php
