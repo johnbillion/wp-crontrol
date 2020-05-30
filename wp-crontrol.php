@@ -645,9 +645,53 @@ function test_cron_spawn( $cache = true ) {
 }
 
 /**
- * Shows the status of WP-Cron functionality on the site. Only displays a message when there's a problem.
+ * Determines whether the given feature is enabled.
+ *
+ * The feature directly corresponds to one of WP Crontrol's tabs. Currently the only feature
+ * that's not enabled by default is "logs" which are provided by WP Crontrol Pro.
+ *
+ * @param string $feature The feature name.
+ * @return bool Whether the specified tab is active.
  */
-function show_cron_status() {
+function is_feature_enabled( $feature ) {
+	$enabled = ( 'logs' !== $feature );
+	return apply_filters( "crontrol/enabled/{$feature}", $enabled );
+}
+
+/**
+ * Shows the status of WP-Cron functionality on the site. Only displays a message when there's a problem.
+ *
+ * @param string $tab The tab name.
+ */
+function show_cron_status( $tab ) {
+	if ( ! is_feature_enabled( $tab ) ) {
+		return;
+	}
+
+	if ( 'UTC' !== date_default_timezone_get() ) {
+		$string = sprintf(
+			/* translators: %s: Help page URL. */
+			__( 'PHP default timezone is not set to UTC. This may cause issues with cron event timings. <a href="%s">More information</a>.', 'wp-crontrol' ),
+			'https://github.com/johnbillion/wp-crontrol/wiki/PHP-default-timezone-is-not-set-to-UTC'
+		);
+		?>
+		<div id="crontrol-timezone-warning" class="notice notice-warning">
+			<p>
+				<?php
+				echo wp_kses(
+					$string,
+					array(
+						'a' => array(
+							'href' => true,
+						),
+					)
+				);
+				?>
+			</p>
+		</div>
+		<?php
+	}
+
 	$status = test_cron_spawn();
 
 	if ( is_wp_error( $status ) ) {
