@@ -898,7 +898,7 @@ function show_cron_form( $editing, $is_php = null ) {
 						<ul>
 							<li>
 								<label>
-									<input type="radio" name="next_run_date_local" value="now()" checked>
+									<input type="radio" name="next_run_date_local" value="now" checked>
 									<?php esc_html_e( 'Now', 'wp-crontrol' ); ?>
 								</label>
 							</li>
