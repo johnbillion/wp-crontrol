@@ -32,17 +32,13 @@ The admin screen will show you a warning message if your cron system doesn't app
 
 Cron schedules are used by WordPress and plugins for scheduling events to be executed at regular intervals. Intervals must be provided by the WordPress core or a plugin in order to be used. As an example, many backup plugins provide support for periodic backups. In order to do a weekly backup, a weekly cron schedule must be entered into WP Crontrol first and then a backup plugin can take advantage of it as an interval.
 
-### How do I create a new PHP cron event? ###
-
-In the Tools → Cron Events admin panel, click on the "Add PHP Cron Event" tab underneath the cron event table. In the form that appears, enter the schedule and next run time in the boxes. The event schedule is how often your event will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel. In the "Hook code" area, enter the PHP code that should be run when your cron event is executed. You don't need to provide the PHP opening tag (`<?php`).
-
-### How do I create a new regular cron event? ###
+### How do I create a new cron event? ###
 
 There are two steps to getting a functioning cron event that executes regularly. The first step is telling WordPress about the hook. This is the part that WP Crontrol was created to provide. The second step is calling a function when your hook is executed.
 
 *Step One: Adding the hook*
 
-In the Tools → Cron Events admin panel, enter the details of the hook. You're best off having a hookname that conforms to normal PHP variable naming conventions. The event schedule is how often your hook will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel.
+In the Tools → Cron Events admin panel, click on the "Add Cron Event" tab and enter the details of the hook. You're best off having a hookname that conforms to normal PHP variable naming conventions. The event schedule is how often your hook will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel.
 
 *Step Two: Writing the function*
 
@@ -55,6 +51,10 @@ The next step is to write your function. Here's a simple example:
 	function my_function() {
 		wp_mail( 'hello@example.com', 'WP Crontrol', 'WP Crontrol rocks!' );
 	}
+
+### How do I create a new PHP cron event? ###
+
+In the Tools → Cron Events admin panel, click on the "Add PHP Cron Event" tab. In the form that appears, enter the schedule and next run time in the boxes. The event schedule is how often your event will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel. In the "Hook code" area, enter the PHP code that should be run when your cron event is executed. You don't need to provide the PHP opening tag (`<?php`).
 
 ### Which users can manage cron events and schedules? ###
 
