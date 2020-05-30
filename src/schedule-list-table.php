@@ -134,11 +134,25 @@ class Schedule_List_Table extends \WP_List_Table {
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_interval( array $schedule ) {
-		return sprintf(
+		$interval = sprintf(
 			'%s (%s)',
 			esc_html( $schedule['interval'] ),
 			esc_html( interval( $schedule['interval'] ) )
 		);
+
+		if ( $schedule['interval'] < WP_CRON_LOCK_TIMEOUT ) {
+			$interval .= sprintf(
+				'<span class="status-crontrol-warning"><br><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
+				sprintf(
+					/* translators: 1: The name of the configuration constant, 2: The value of the configuration constant */
+					esc_html__( 'This interval is less than the %1$s constant which is set to %2$s. Events that use it may not run on time.', 'wp-crontrol' ),
+					'<code>WP_CRON_LOCK_TIMEOUT</code>',
+					intval( WP_CRON_LOCK_TIMEOUT )
+				)
+			);
+		}
+
+		return $interval;
 	}
 
 	/**

@@ -1,0 +1,17 @@
+# Directories
+.git
+.github
+.wordpress-org
+node_modules
+tests
+vendor
+
+# Files
+.distignore
+.gitignore
+composer.json
+composer.lock
+Gruntfile.js
+package-lock.json
+package.json
+phpcs.xml.dist

@@ -26,11 +26,16 @@ function run( $hookname, $sig ) {
 		if ( isset( $cron[ $hookname ][ $sig ] ) ) {
 			$args = $cron[ $hookname ][ $sig ]['args'];
 			delete_transient( 'doing_cron' );
-			$scheduled = wp_schedule_single_event( time() - 1, $hookname, $args ); // UTC
+			$scheduled = force_schedule_single_event( $hookname, $args ); // UTC
 
 			if ( false === $scheduled ) {
 				return $scheduled;
 			}
+
+			add_filter( 'cron_request', function( array $cron_request_array ) {
+				$cron_request_array['url'] = add_query_arg( 'crontrol-single-event', 1, $cron_request_array['url'] );
+				return $cron_request_array;
+			} );
 
 			spawn_cron();
 
@@ -40,6 +45,34 @@ function run( $hookname, $sig ) {
 		}
 	}
 	return false;
+}
+
+/**
+ * Forcibly schedules a single event for the purpose of manually running it.
+ *
+ * This is used instead of `wp_schedule_single_event()` to avoid the duplicate check that's otherwise performed.
+ *
+ * @param string $hook Action hook to execute when the event is run.
+ * @param array  $args Optional. Array containing each separate argument to pass to the hook's callback function.
+ * @return bool True if event successfully scheduled. False for failure.
+ */
+function force_schedule_single_event( $hook, $args = array() ) {
+	$event = (object) array(
+		'hook'      => $hook,
+		'timestamp' => 1,
+		'schedule'  => false,
+		'args'      => $args,
+	);
+	$crons = (array) _get_cron_array();
+	$key   = md5( serialize( $event->args ) );
+
+	$crons[ $event->timestamp ][ $event->hook ][ $key ] = array(
+		'schedule' => $event->schedule,
+		'args'     => $event->args,
+	);
+	uksort( $crons, 'strnatcasecmp' );
+
+	return _set_cron_array( $crons );
 }
 
 /**
@@ -206,8 +239,27 @@ function get_schedule_name( stdClass $event ) {
  * @param stdClass $event The event.
  * @return bool Whether the event is late.
  */
-function is_late( $event ) {
+function is_late( stdClass $event ) {
 	$until = $event->time - time();
 
 	return ( $until < ( 0 - ( 10 * MINUTE_IN_SECONDS ) ) );
+}
+
+/**
+ * Initialises and returns the list table for events.
+ *
+ * @return Table The list table.
+ */
+function get_list_table() {
+	static $table = null;
+
+	if ( ! $table ) {
+		require_once __DIR__ . '/event-list-table.php';
+
+		$table = new Table();
+		$table->prepare_items();
+
+	}
+
+	return $table;
 }
