@@ -36,6 +36,54 @@ I maintain several other plugins for developers. Check them out:
 
 ## Frequently Asked Questions ##
 
+### I get the error "There was a problem spawning a call to the WP-Cron system on your site". How do I fix this? ###
+
+If this error is persistent then you should contact your web host for advice. This may indicate a problem with the networking on your site.
+
+### Why do some cron events miss their schedule? ###
+
+[You can read all about cron events that miss their schedule here](https://github.com/johnbillion/wp-crontrol/wiki/Cron-events-that-have-missed-their-schedule).
+
+### Why do some cron events reappear shortly after I delete them? ###
+
+If the event is added by a plugin then the plugin most likely rescheduled the event as soon as it saw that the event was missing. Unfortunately there's nothing that WP Crontrol can do about this - you should contact the author of the related plugin and ask for advice.
+
+### Is it safe to delete cron events? ###
+
+This depends entirely on the event. You can use your favourite search engine to search for the event name in order to find out which plugin it belongs to, and then decide whether or not to delete it.
+
+If the event shows "None" as its action then it's usually safe to delete. Please see the other FAQs for more information about events with no action.
+
+### Why can't I delete some cron events? ###
+
+The WordPress core software uses cron events for some of its functionality and removing these events is not possible because WordPress would immediately reschedule them if you did delete them. For this reason, WP Crontrol doesn't let you delete these persistent events from WordPress core in the first place.
+
+### What does it mean when "None" is shown for the Action of a cron event? ###
+
+This means the cron event is scheduled to run at the specified time but there is no corresponding functionality that will be triggered when the event runs, therefore the event is useless.
+
+This is often caused by plugins that don't clean up their cron events when you deactivate them. You can use your favourite search engine to search for the event name in order to find out which plugin it belongs to, and then decide whether or not to delete it.
+
+### How do I change the next run time or the recurrence of a cron event? ###
+
+You can change the time and recurrence of a cron event by clicking the "Edit" link next to the event.
+
+### How can I create a cron event that requests a URL? ###
+
+From the "Add PHP Cron Event" tab, create a cron event that includes PHP that fetches the URL using the WordPress HTTP API. For example:
+
+	wp_remote_get( 'http://example.com' );
+
+### Why do changes that I make to some cron events not get saved? ###
+
+Unfortunately WordPress core doesn't expose all the errors that can occur in its cron event system, so a plugin such as WP Crontrol can't always tell you if or what went wrong when saving cron events.
+
+You should try deactivating your other plugins one by one to see if one is causing a problem. Otherwise, I'm afraid I don't have much useful information for you. Hopefully a future version of WordPress will provide better error handling for its cron event system.
+
+### Can I see a historical log of all the cron events that ran on my site? ###
+
+Not yet, but I hope to add this functionality soon.
+
 ### What's the use of adding new cron schedules? ###
 
 Cron schedules are used by WordPress and plugins for scheduling events to be executed at regular intervals. Intervals must be provided by the WordPress core or a plugin in order to be used. As an example, many backup plugins provide support for periodic backups. In order to do a weekly backup, a weekly cron schedule must be entered into WP Crontrol first and then a backup plugin can take advantage of it as an interval.
