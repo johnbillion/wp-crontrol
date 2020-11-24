@@ -6,6 +6,7 @@ Requires at least: 4.1
 Tested up to: 5.5  
 Stable tag: 1.8.5  
 Requires PHP: 5.3  
+Donate link: https://johnblackbourn.com/donations/
 
 WP Crontrol lets you view and control what's happening in the WP-Cron system.
 
@@ -25,6 +26,13 @@ The admin screen will show you a warning message if your cron system doesn't app
 
 1. Go to the `Tools → Cron Events` menu to manage cron events.
 2. Go to the `Settings → Cron Schedules` menu to manage cron schedules.
+
+### Other Plugins ###
+
+I maintain several other plugins for developers. Check them out:
+
+* [Query Monitor](https://wordpress.org/plugins/query-monitor/) is the developer tools panel for WordPress
+* [User Switching](https://wordpress.org/plugins/user-switching/) provides instant switching between user accounts in WordPress.
 
 ## Frequently Asked Questions ##
 
