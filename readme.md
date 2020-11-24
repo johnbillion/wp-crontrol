@@ -3,7 +3,7 @@
 Contributors: johnbillion, scompt  
 Tags: cron, wp-cron, crontrol, debug  
 Requires at least: 4.1  
-Tested up to: 5.5  
+Tested up to: 5.6  
 Stable tag: 1.8.5  
 Requires PHP: 5.3  
 Donate link: https://johnblackbourn.com/donations/
