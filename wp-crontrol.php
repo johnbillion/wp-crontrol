@@ -1314,7 +1314,7 @@ function output_callback( array $callback ) {
 		if ( class_exists( '\QM_Output_Html' ) ) {
 			if ( ! empty( $callback['callback']['error'] ) ) {
 				$return  = '<code>' . $callback['callback']['name'] . '</code>';
-				$return .= '<br><span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
+				$return .= '<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
 				$return .= esc_html( $callback['callback']['error']->get_error_message() );
 				$return .= '</span>';
 				return $return;

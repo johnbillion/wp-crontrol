@@ -141,8 +141,17 @@ class Table extends \WP_List_Table {
 			$classes[] = 'crontrol-error';
 		}
 
-		if ( ! \Crontrol\get_hook_callbacks( $event->hook ) ) {
+		$callbacks = \Crontrol\get_hook_callbacks( $event->hook );
+
+		if ( ! $callbacks ) {
 			$classes[] = 'crontrol-warning';
+		} else {
+			foreach ( $callbacks as $callback ) {
+				if ( ! empty( $callback['callback']['error'] ) ) {
+					$classes[] = 'crontrol-error';
+					break;
+				}
+			}
 		}
 
 		if ( is_late( $event ) ) {
