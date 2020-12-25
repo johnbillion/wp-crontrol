@@ -73,7 +73,7 @@ class Table extends \WP_List_Table {
 
 		$this->items = array_slice( $events, $offset, $per_page );
 
-		$has_late = !! array_filter( array_map( __NAMESPACE__ . '\\is_late', $this->items ) );
+		$has_late = (bool) array_filter( array_map( __NAMESPACE__ . '\\is_late', $this->items ) );
 
 		if ( $has_late ) {
 			add_action( 'admin_notices', function() {
@@ -82,18 +82,17 @@ class Table extends \WP_List_Table {
 					__( 'One or more cron events have missed their schedule. <a href="%s">Read about missed schedules here</a>.', 'wp-crontrol' ),
 					'https://github.com/johnbillion/wp-crontrol/wiki/Cron-events-that-have-missed-their-schedule'
 				);
-				$message = wp_kses(
-					$message,
-					array(
-						'a' => array(
-							'href' => true,
-						),
-					)
-				);
 
 				printf(
 					'<div id="crontrol-late-message" class="notice notice-warning"><p>%s</p></div>',
-					$message
+					wp_kses(
+						$message,
+						array(
+							'a' => array(
+								'href' => true,
+							),
+						)
+					)
 				);
 			} );
 		}
