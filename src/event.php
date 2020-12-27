@@ -260,35 +260,36 @@ function get_list_table() {
 
 /**
  * Order events function.
- * The comparison function returns an integer less than, equal to, or greater than zero if the first argument is considered to be respectively less than, equal to, or greater than the second.
  *
+ * The comparison function returns an integer less than, equal to, or greater than zero if the first argument is
+ * considered to be respectively less than, equal to, or greater than the second.
+ *
+ * @param object $a The first event to compare.
+ * @param object $b The second event to compare.
  * @return int
  */
 function uasort_order_events( $a, $b ) {
-
 	$orderby = ( ! empty( $_GET['orderby'] ) ) ? sanitize_text_field( $_GET['orderby'] ) : 'crontrol_next';
+	$order   = ( ! empty( $_GET['order'] ) ) ? sanitize_text_field( $_GET['order'] ) : 'desc';
 
-	$order = ( ! empty($_GET['order'] ) ) ? sanitize_text_field( $_GET['order'] ) : 'desc';
-
-	switch ($orderby) {
+	switch ( $orderby ) {
 		case 'crontrol_hook':
-			if ( $order == 'desc' ) {
-				return strcmp($a->hook, $b->hook);
+			if ( 'desc' === $order ) {
+				return strcmp( $a->hook, $b->hook );
 			} else {
-				return strcmp($b->hook, $a->hook);
+				return strcmp( $b->hook, $a->hook );
 			}
 			break;
 		default:
 			if ( $a->time === $b->time ) {
 				return 0;
 			} else {
-				if ( $order == 'desc' ) {
+				if ( 'desc' === $order ) {
 					return ( $a->time > $b->time ) ? 1 : -1;
 				} else {
 					return ( $a->time < $b->time ) ? 1 : -1;
 				}
-
 			}
+			break;
 	}
-
 }

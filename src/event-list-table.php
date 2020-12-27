@@ -68,10 +68,9 @@ class Table extends \WP_List_Table {
 		}
 
 		if ( ! empty( $_GET['hooks_type'] ) ) {
-
 			$hooks_type = sanitize_text_field( $_GET['hooks_type'] );
 
-			switch ($hooks_type) {
+			switch ( $hooks_type ) {
 				case 'persistent':
 					$allowed_hooks = \Crontrol\get_persistent_core_hooks();
 					$events = array_filter( $events, function( $event ) use ( $allowed_hooks ) {
@@ -87,7 +86,7 @@ class Table extends \WP_List_Table {
 				case 'custom':
 					$disallowed_hooks = \Crontrol\get_all_core_hooks();
 					$events = array_filter( $events, function( $event ) use ( $disallowed_hooks ) {
-						return ( !in_array( $event->hook, $disallowed_hooks, true ) );
+						return ( ! in_array( $event->hook, $disallowed_hooks, true ) );
 					} );
 					break;
 			}
@@ -156,12 +155,10 @@ class Table extends \WP_List_Table {
 	 * @return array
 	 */
 	public function get_sortable_columns() {
-		$sortable_columns = array(
+		return array(
 			'crontrol_hook' => array( 'crontrol_hook', true ),
-			'crontrol_next' => array( 'crontrol_next', false )
+			'crontrol_next' => array( 'crontrol_next', false ),
 		);
-
-		return $sortable_columns;
 	}
 
 	/**
@@ -189,24 +186,25 @@ class Table extends \WP_List_Table {
 
 	/**
 	 * Display the list of hooks type.
+	 *
 	 * @return array
 	 */
-	function get_views(){
+	public function get_views() {
 		$views = array();
-		$hooks_type = ( !empty($_GET['hooks_type']) ? $_GET['hooks_type'] : 'all');
+		$hooks_type = ( ! empty( $_GET['hooks_type'] ) ? $_GET['hooks_type'] : 'all' );
 
 		$types = array(
-			'all' => __( 'All hooks', 'wp-crontrol'  ),
-			'persistent' => __( 'Persistent core hooks', 'wp-crontrol'  ),
-			'core' => __( 'All core hooks', 'wp-crontrol'  ),
-			'custom' => __( 'All except core hooks', 'wp-crontrol'  )
+			'all'        => __( 'All hooks', 'wp-crontrol' ),
+			'persistent' => __( 'Persistent core hooks', 'wp-crontrol' ),
+			'core'       => __( 'All core hooks', 'wp-crontrol' ),
+			'custom'     => __( 'All except core hooks', 'wp-crontrol' ),
 		);
 
 		foreach ( $types as $key => $type ) {
-			$views[$key] = sprintf(
+			$views[ $key ] = sprintf(
 				'<a href="%s"%s>%s</a>',
-				$key == 'all' ? remove_query_arg('hooks_type') : add_query_arg('hooks_type', $key ),
-				$hooks_type == $key ? ' class="current"' : '',
+				'all' === $key ? remove_query_arg( 'hooks_type' ) : add_query_arg( 'hooks_type', $key ),
+				$hooks_type === $key ? ' class="current"' : '',
 				$type
 			);
 		}
