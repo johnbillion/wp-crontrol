@@ -90,7 +90,7 @@ function action_handle_posts() {
 			$in_args = array();
 		}
 
-		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom : $in_next_run_date_local;
+		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
 
 		$added = Event\add( $next_run_local, $in_schedule, $in_hookname, $in_args );
 
@@ -113,7 +113,7 @@ function action_handle_posts() {
 		}
 		check_admin_referer( 'new-cron' );
 		extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
-		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom : $in_next_run_date_local;
+		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
 		$args           = array(
 			'code' => $in_hookcode,
 			'name' => $in_eventname,
@@ -155,7 +155,7 @@ function action_handle_posts() {
 
 		Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
 
-		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom : $in_next_run_date_local;
+		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
 
 		$added = Event\add( $next_run_local, $in_schedule, $in_hookname, $in_args );
 
@@ -186,7 +186,7 @@ function action_handle_posts() {
 
 		Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
 
-		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom : $in_next_run_date_local;
+		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
 
 		$added = Event\add( $next_run_local, $in_schedule, 'crontrol_cron_job', $args );
 
@@ -828,7 +828,9 @@ function show_cron_form( $editing, $is_php = null ) {
 		}
 		$action        = $is_php ? 'edit_php_cron' : 'edit_cron';
 		$button        = __( 'Update Event', 'wp-crontrol' );
-		$next_run_date_local = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $existing['next_run'] ), 'Y-m-d H:i:s' );
+		$next_run_gmt  = gmdate( 'Y-m-d H:i:s', $existing['next_run'] );
+		$next_run_date_local = get_date_from_gmt( $next_run_gmt, 'Y-m-d' );
+		$next_run_time_local = get_date_from_gmt( $next_run_gmt, 'H:i:s' );
 	} else {
 		$other_fields = wp_nonce_field( 'new-cron', '_wpnonce', true, false );
 		$existing     = array(
@@ -841,6 +843,7 @@ function show_cron_form( $editing, $is_php = null ) {
 		$action        = $is_php ? 'new_php_cron' : 'new_cron';
 		$button        = __( 'Add Event', 'wp-crontrol' );
 		$next_run_date_local = '';
+		$next_run_time_local = '';
 	}
 
 	if ( $is_php ) {
@@ -956,8 +959,11 @@ function show_cron_form( $editing, $is_php = null ) {
 										/* translators: %s: An input field for specifying a date and time */
 										esc_html__( 'At: %s', 'wp-crontrol' ),
 										sprintf(
-											'<br><input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" name="next_run_date_local_custom" value="%s" class="regular-text" onfocus="jQuery(\'#next_run_date_local_custom\').prop(\'checked\',true);" />',
-											esc_attr( $next_run_date_local )
+											'<br>
+											<input type="date" autocorrect="off" autocapitalize="off" spellcheck="false" name="next_run_date_local_custom_date" id="next_run_date_local_custom_date" value="%1$s" placeholder="yyyy-mm-dd" pattern="\d{4}-\d{2}-\d{2}" />
+											<input type="time" autocorrect="off" autocapitalize="off" spellcheck="false" name="next_run_date_local_custom_time" id="next_run_date_local_custom_time" value="%2$s" step="1" placeholder="hh:mm:ss" pattern="\d{2}:\d{2}:\d{2}" />',
+											esc_attr( $next_run_date_local ),
+											esc_attr( $next_run_time_local )
 										)
 									);
 									?>
@@ -971,16 +977,6 @@ function show_cron_form( $editing, $is_php = null ) {
 									/* translators: %s Timezone name. */
 									esc_html__( 'Timezone: %s', 'wp-crontrol' ),
 									esc_html( get_timezone_name() )
-								);
-							?>
-						</p>
-						<p class="description">
-							<?php
-								printf(
-									/* translators: 1: Date/time format for an input field, 2: PHP function name. */
-									esc_html__( 'Format: %1$s or anything accepted by %2$s', 'wp-crontrol' ),
-									'<code>YYYY-MM-DD HH:MM:SS</code>',
-									'<a href="https://www.php.net/manual/function.strtotime.php"><code>strtotime()</code></a>'
 								);
 							?>
 						</p>
