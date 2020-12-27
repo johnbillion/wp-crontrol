@@ -530,7 +530,11 @@ class Table extends \WP_List_Table {
 	 * Outputs a message when there are no items to show in the table.
 	 */
 	public function no_items() {
-		esc_html_e( 'There are currently no scheduled cron events.', 'wp-crontrol' );
+		if ( empty( $_GET['s'] ) && empty( $_GET['hooks_type'] ) ) {
+			esc_html_e( 'There are currently no scheduled cron events.', 'wp-crontrol' );
+		} else {
+			esc_html_e( 'No matching cron events.', 'wp-crontrol' );
+		}
 	}
 
 }
