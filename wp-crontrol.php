@@ -670,25 +670,17 @@ function show_cron_status( $tab ) {
 	}
 
 	if ( 'UTC' !== date_default_timezone_get() ) {
-		$string = sprintf(
-			/* translators: %s: Help page URL. */
-			__( 'PHP default timezone is not set to UTC. This may cause issues with cron event timings. <a href="%s">More information</a>.', 'wp-crontrol' ),
-			'https://github.com/johnbillion/wp-crontrol/wiki/PHP-default-timezone-is-not-set-to-UTC'
-		);
 		?>
 		<div id="crontrol-timezone-warning" class="notice notice-warning">
-			<p>
-				<?php
-				echo wp_kses(
-					$string,
-					array(
-						'a' => array(
-							'href' => true,
-						),
-					)
+			<?php
+				printf(
+					'<p>%1$s</p><p><a href="%2$s">%3$s</a></p>',
+					/* translators: %s: Help page URL. */
+					esc_html__( 'PHP default timezone is not set to UTC. This may cause issues with cron event timings.', 'wp-crontrol' ),
+					'https://github.com/johnbillion/wp-crontrol/wiki/PHP-default-timezone-is-not-set-to-UTC',
+					esc_html__( 'More information', 'wp-crontrol' )
 				);
-				?>
-			</p>
+			?>
 		</div>
 		<?php
 	}
@@ -705,15 +697,18 @@ function show_cron_status( $tab ) {
 		} else {
 			?>
 			<div id="cron-status-error" class="error">
-				<p>
-					<?php
-					printf(
+				<?php
+				printf(
+					'<p>%1$s</p><p><a href="%2$s">%3$s</a></p>',
+					sprintf(
 						/* translators: 1: Error message text. */
 						esc_html__( 'There was a problem spawning a call to the WP-Cron system on your site. This means WP-Cron events on your site may not work. The problem was: %s', 'wp-crontrol' ),
-						'<br><strong>' . esc_html( $status->get_error_message() ) . '</strong>'
-					);
-					?>
-				</p>
+						'</p><p><strong>' . esc_html( $status->get_error_message() ) . '</strong>'
+					),
+					'https://github.com/johnbillion/wp-crontrol/wiki/Problems-with-spawning-a-call-to-the-WP-Cron-system',
+					esc_html__( 'More information', 'wp-crontrol' )
+				);
+				?>
 			</div>
 			<?php
 		}
