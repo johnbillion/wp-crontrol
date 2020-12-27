@@ -6,6 +6,7 @@
 	<exclude-pattern>*/build/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/.github/*</exclude-pattern>
 	<exclude-pattern>Gruntfile.js</exclude-pattern>
 
 	<rule ref="WordPress-Extra">
