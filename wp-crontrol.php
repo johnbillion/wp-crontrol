@@ -5,7 +5,7 @@
  * Description:  WP Crontrol lets you view and control what's happening in the WP-Cron system.
  * Author:       John Blackbourn & crontributors
  * Author URI:   https://github.com/johnbillion/wp-crontrol/graphs/contributors
- * Version:      1.8.3
+ * Version:      1.8.5
  * Text Domain:  wp-crontrol
  * Domain Path:  /languages/
  * Requires PHP: 5.3.6
@@ -61,6 +61,7 @@ function init_hooks() {
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_assets' );
+	add_action( 'crontrol/tab-header',   __NAMESPACE__ . '\show_cron_status', 20 );
 }
 
 /**
@@ -645,9 +646,53 @@ function test_cron_spawn( $cache = true ) {
 }
 
 /**
- * Shows the status of WP-Cron functionality on the site. Only displays a message when there's a problem.
+ * Determines whether the given feature is enabled.
+ *
+ * The feature directly corresponds to one of WP Crontrol's tabs. Currently the only feature
+ * that's not enabled by default is "logs" which are provided by WP Crontrol Pro.
+ *
+ * @param string $feature The feature name.
+ * @return bool Whether the specified tab is active.
  */
-function show_cron_status() {
+function is_feature_enabled( $feature ) {
+	$enabled = ( 'logs' !== $feature );
+	return apply_filters( "crontrol/enabled/{$feature}", $enabled );
+}
+
+/**
+ * Shows the status of WP-Cron functionality on the site. Only displays a message when there's a problem.
+ *
+ * @param string $tab The tab name.
+ */
+function show_cron_status( $tab ) {
+	if ( ! is_feature_enabled( $tab ) ) {
+		return;
+	}
+
+	if ( 'UTC' !== date_default_timezone_get() ) {
+		$string = sprintf(
+			/* translators: %s: Help page URL. */
+			__( 'PHP default timezone is not set to UTC. This may cause issues with cron event timings. <a href="%s">More information</a>.', 'wp-crontrol' ),
+			'https://github.com/johnbillion/wp-crontrol/wiki/PHP-default-timezone-is-not-set-to-UTC'
+		);
+		?>
+		<div id="crontrol-timezone-warning" class="notice notice-warning">
+			<p>
+				<?php
+				echo wp_kses(
+					$string,
+					array(
+						'a' => array(
+							'href' => true,
+						),
+					)
+				);
+				?>
+			</p>
+		</div>
+		<?php
+	}
+
 	$status = test_cron_spawn();
 
 	if ( is_wp_error( $status ) ) {
@@ -898,7 +943,7 @@ function show_cron_form( $editing, $is_php = null ) {
 						<ul>
 							<li>
 								<label>
-									<input type="radio" name="next_run_date_local" value="now()" checked>
+									<input type="radio" name="next_run_date_local" value="now" checked>
 									<?php esc_html_e( 'Now', 'wp-crontrol' ); ?>
 								</label>
 							</li>
@@ -1118,12 +1163,15 @@ function get_tab_states() {
  * Output the cron-related tabs if we're on a cron-related admin screen.
  */
 function do_tabs() {
-	$tab = get_tab_states();
+	$tabs = get_tab_states();
+	$tab  = array_filter( $tabs );
 
-	if ( ! array_filter( $tab ) ) {
+	if ( ! $tab ) {
 		return;
 	}
 
+	$tab   = array_keys( $tab );
+	$tab   = reset( $tab );
 	$links = array(
 		'events'        => array(
 			'tools.php?page=crontrol_admin_manage_page',
@@ -1148,7 +1196,7 @@ function do_tabs() {
 		<nav class="nav-tab-wrapper">
 			<?php
 			foreach ( $links as $id => $link ) {
-				if ( $tab[ $id ] ) {
+				if ( $tabs[ $id ] ) {
 					printf(
 						'<a href="%s" class="nav-tab nav-tab-active">%s</a>',
 						esc_url( $link[0] ),
@@ -1163,7 +1211,7 @@ function do_tabs() {
 				}
 			}
 
-			if ( $tab['edit-event'] ) {
+			if ( $tabs['edit-event'] ) {
 				printf(
 					'<span class="nav-tab nav-tab-active">%s</span>',
 					esc_html__( 'Edit Cron Event', 'wp-crontrol' )
@@ -1172,7 +1220,7 @@ function do_tabs() {
 			?>
 		</nav>
 		<?php
-		show_cron_status();
+		do_action( 'crontrol/tab-header', $tab, $tabs );
 		?>
 	</div>
 	<?php
@@ -1266,7 +1314,7 @@ function output_callback( array $callback ) {
 		if ( class_exists( '\QM_Output_Html' ) ) {
 			if ( ! empty( $callback['callback']['error'] ) ) {
 				$return  = '<code>' . $callback['callback']['name'] . '</code>';
-				$return .= '<br><span style="color:#c00"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
+				$return .= '<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
 				$return .= esc_html( $callback['callback']['error']->get_error_message() );
 				$return .= '</span>';
 				return $return;
@@ -1419,7 +1467,7 @@ function enqueue_assets( $hook_suffix ) {
 	}
 
 	$ver = filemtime( plugin_dir_path( __FILE__ ) . 'css/wp-crontrol.css' );
-	wp_enqueue_style( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'css/wp-crontrol.css', array(), $ver );
+	wp_enqueue_style( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'css/wp-crontrol.css', array( 'dashicons' ), $ver );
 
 	$ver = filemtime( plugin_dir_path( __FILE__ ) . 'js/wp-crontrol.js' );
 	wp_enqueue_script( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'js/wp-crontrol.js', array( 'jquery' ), $ver, true );
@@ -1480,6 +1528,7 @@ function get_all_core_hooks() {
 			'upgrader_scheduled_cleanup',
 			'wp_maybe_auto_update',
 			'wp_split_shared_term_batch',
+			'wp_update_comment_type_batch',
 		)
 	);
 }
@@ -1520,8 +1569,12 @@ function json_output( $input ) {
 /**
  * Evaluates the code in a PHP cron event using eval.
  *
- * Security: A user can only add or edit a PHP cron event if they have the `edit_files` capability. This means if a user
- * cannot edit files on the site (eg. through the plugin or theme editor) then they cannot edit or add a PHP cron event.
+ * Security: Only users with the `edit_files` capability can manage PHP cron events. This means if a user cannot edit
+ * files on the site (eg. through the Plugin Editor or Theme Editor) then they cannot edit or add a PHP cron event. By
+ * default, only Administrators have this capability, and with Multisite enabled only Super Admins have this capability.
+ *
+ * If file editing has been disabled via the `DISALLOW_FILE_MODS` or `DISALLOW_FILE_EDIT` configuration constants then
+ * no user will have the `edit_files` capability, which means editing or adding a PHP cron event will not be permitted.
  *
  * Therefore, the user access level required to execute arbitrary PHP code does not change with WP Crontrol activated.
  *
