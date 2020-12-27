@@ -71,6 +71,12 @@ class Table extends \WP_List_Table {
 			$hooks_type = sanitize_text_field( $_GET['hooks_type'] );
 
 			switch ( $hooks_type ) {
+				case 'noaction':
+					$events = array_filter( $events, function( $event ) {
+						$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
+						return empty( $hook_callbacks );
+					} );
+					break;
 				case 'persistent':
 					$allowed_hooks = \Crontrol\get_persistent_core_hooks();
 					$events = array_filter( $events, function( $event ) use ( $allowed_hooks ) {
@@ -195,6 +201,7 @@ class Table extends \WP_List_Table {
 
 		$types = array(
 			'all'        => __( 'All hooks', 'wp-crontrol' ),
+			'noaction'   => __( 'Hooks with no action', 'wp-crontrol' ),
 			'persistent' => __( 'Persistent core hooks', 'wp-crontrol' ),
 			'core'       => __( 'All core hooks', 'wp-crontrol' ),
 			'custom'     => __( 'All except core hooks', 'wp-crontrol' ),
