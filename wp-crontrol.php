@@ -904,7 +904,11 @@ function show_cron_form( $editing, $is_php = null ) {
 			<table class="form-table"><tbody>
 				<?php if ( $is_php ) : ?>
 					<tr>
-						<th valign="top" scope="row"><label for="hookcode"><?php esc_html_e( 'PHP Code', 'wp-crontrol' ); ?></label></th>
+						<th valign="top" scope="row">
+							<label for="hookcode">
+								<?php esc_html_e( 'PHP Code', 'wp-crontrol' ); ?>
+							</label>
+						</th>
 						<td>
 							<p class="description">
 								<?php
@@ -919,18 +923,32 @@ function show_cron_form( $editing, $is_php = null ) {
 						</td>
 					</tr>
 					<tr>
-						<th valign="top" scope="row"><label for="eventname"><?php esc_html_e( 'Event Name (optional)', 'wp-crontrol' ); ?></label></th>
-						<td><input type="text" class="regular-text" id="eventname" name="eventname" value="<?php echo esc_attr( $existing['args']['name'] ); ?>"/></td>
+						<th valign="top" scope="row">
+							<label for="eventname">
+								<?php esc_html_e( 'Event Name (optional)', 'wp-crontrol' ); ?>
+							</label>
+						</th>
+						<td>
+							<input type="text" class="regular-text" id="eventname" name="eventname" value="<?php echo esc_attr( $existing['args']['name'] ); ?>"/>
+						</td>
 					</tr>
 				<?php else : ?>
 					<tr>
-						<th valign="top" scope="row"><label for="hookname"><?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?></label></th>
+						<th valign="top" scope="row">
+							<label for="hookname">
+								<?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?>
+							</label>
+						</th>
 						<td>
 							<input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" class="regular-text" id="hookname" name="hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>" required />
 						</td>
 					</tr>
 					<tr>
-						<th valign="top" scope="row"><label for="args"><?php esc_html_e( 'Arguments (optional)', 'wp-crontrol' ); ?></label></th>
+						<th valign="top" scope="row">
+							<label for="args">
+								<?php esc_html_e( 'Arguments (optional)', 'wp-crontrol' ); ?>
+							</label>
+						</th>
 						<td>
 							<input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" class="regular-text code" id="args" name="args" value="<?php echo esc_attr( $display_args ); ?>"/>
 							<p class="description">
@@ -948,7 +966,11 @@ function show_cron_form( $editing, $is_php = null ) {
 					</tr>
 				<?php endif; ?>
 				<tr>
-					<th valign="top" scope="row"><label for="next_run_date_local"><?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?></label></th>
+					<th valign="top" scope="row">
+						<label for="next_run_date_local">
+							<?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?>
+						</label>
+					</th>
 					<td>
 						<ul>
 							<li>
@@ -993,8 +1015,13 @@ function show_cron_form( $editing, $is_php = null ) {
 							?>
 						</p>
 					</td>
-				</tr><tr>
-					<th valign="top" scope="row"><label for="schedule"><?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?></label></th>
+				</tr>
+				<tr>
+					<th valign="top" scope="row">
+						<label for="schedule">
+							<?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?>
+						</label>
+					</th>
 					<td>
 						<?php Schedule\dropdown( $existing['schedule'] ); ?>
 					</td>
