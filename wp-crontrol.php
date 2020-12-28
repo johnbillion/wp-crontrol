@@ -492,42 +492,44 @@ function admin_options_page() {
 	<?php $table->views(); ?>
 
 	<div id="col-container" class="wp-clearfix">
-	<div id="col-right">
-
-	<div class="col-wrap">
-		<?php $table->display(); ?>
-	</div>
-
-	</div>
-
-	<div id="col-left">
-	<div class="col-wrap">
-	<div class="form-wrap">
-		<h2><?php esc_html_e( 'Add Cron Schedule', 'wp-crontrol' ); ?></h2>
-		<p><?php esc_html_e( 'Adding a new cron schedule will allow you to schedule events that re-occur at the given interval.', 'wp-crontrol' ); ?></p>
-		<form method="post" action="options-general.php?page=crontrol_admin_options_page">
-			<div class="form-field form-required">
-				<label for="cron_internal_name"><?php esc_html_e( 'Internal Name', 'wp-crontrol' ); ?></label>
-				<input type="text" class="regular-text" value="" id="cron_internal_name" name="internal_name" required/>
+		<div id="col-left">
+			<div class="col-wrap">
+				<div class="form-wrap">
+					<h2><?php esc_html_e( 'Add Cron Schedule', 'wp-crontrol' ); ?></h2>
+					<p><?php esc_html_e( 'Adding a new cron schedule will allow you to schedule events that re-occur at the given interval.', 'wp-crontrol' ); ?></p>
+					<form method="post" action="options-general.php?page=crontrol_admin_options_page">
+						<div class="form-field form-required">
+							<label for="cron_internal_name">
+								<?php esc_html_e( 'Internal Name', 'wp-crontrol' ); ?>
+							</label>
+							<input type="text" class="regular-text" value="" id="cron_internal_name" name="internal_name" required/>
+						</div>
+						<div class="form-field form-required">
+							<label for="cron_interval">
+								<?php esc_html_e( 'Interval (seconds)', 'wp-crontrol' ); ?>
+							</label>
+							<input type="number" class="regular-text" value="" id="cron_interval" name="interval" min="1" step="1" required/>
+						</div>
+						<div class="form-field form-required">
+							<label for="cron_display_name">
+								<?php esc_html_e( 'Display Name', 'wp-crontrol' ); ?>
+							</label>
+							<input type="text" class="regular-text" value="" id="cron_display_name" name="display_name" required/>
+						</div>
+						<p class="submit">
+							<input id="schedadd-submit" type="submit" class="button button-primary" value="<?php esc_attr_e( 'Add Cron Schedule', 'wp-crontrol' ); ?>" name="new_schedule"/>
+						</p>
+						<?php wp_nonce_field( 'new-sched' ); ?>
+					</form>
+				</div>
 			</div>
-			<div class="form-field form-required">
-				<label for="cron_interval"><?php esc_html_e( 'Interval (seconds)', 'wp-crontrol' ); ?></label>
-				<input type="number" class="regular-text" value="" id="cron_interval" name="interval" min="1" step="1" required/>
+		</div>
+		<div id="col-right">
+			<div class="col-wrap">
+				<?php $table->display(); ?>
 			</div>
-			<div class="form-field form-required">
-				<label for="cron_display_name"><?php esc_html_e( 'Display Name', 'wp-crontrol' ); ?></label>
-				<input type="text" class="regular-text" value="" id="cron_display_name" name="display_name" required/>
-			</div>
-			<p class="submit">
-				<input id="schedadd-submit" type="submit" class="button button-primary" value="<?php esc_attr_e( 'Add Cron Schedule', 'wp-crontrol' ); ?>" name="new_schedule"/>
-			</p>
-			<?php wp_nonce_field( 'new-sched' ); ?>
-		</form>
+		</div>
 	</div>
-	</div>
-	</div>
-	</div>
-
 	<?php
 }
 

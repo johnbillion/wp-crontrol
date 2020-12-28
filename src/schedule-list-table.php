@@ -66,7 +66,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'crontrol_name'     => __( 'Name', 'wp-crontrol' ),
+			'crontrol_name'     => __( 'Internal Name', 'wp-crontrol' ),
 			'crontrol_interval' => __( 'Interval', 'wp-crontrol' ),
 			'crontrol_display'  => __( 'Display Name', 'wp-crontrol' ),
 		);
