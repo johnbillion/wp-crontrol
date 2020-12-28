@@ -795,18 +795,18 @@ function show_cron_form( $editing, $is_php = null ) {
 
 	if ( ! empty( $_GET['id'] ) ) {
 		$edit_id = wp_unslash( $_GET['id'] );
-	}
 
-	foreach ( Event\get() as $event ) {
-		if ( $edit_id === $event->hook && intval( $_GET['next_run_utc'] ) === $event->time && $event->sig === $_GET['sig'] ) {
-			$existing = array(
-				'hookname' => $event->hook,
-				'next_run' => $event->time, // UTC
-				'schedule' => ( $event->schedule ? $event->schedule : '_oneoff' ),
-				'sig'      => $event->sig,
-				'args'     => $event->args,
-			);
-			break;
+		foreach ( Event\get() as $event ) {
+			if ( $edit_id === $event->hook && intval( $_GET['next_run_utc'] ) === $event->time && $event->sig === $_GET['sig'] ) {
+				$existing = array(
+					'hookname' => $event->hook,
+					'next_run' => $event->time, // UTC
+					'schedule' => ( $event->schedule ? $event->schedule : '_oneoff' ),
+					'sig'      => $event->sig,
+					'args'     => $event->args,
+				);
+				break;
+			}
 		}
 	}
 
