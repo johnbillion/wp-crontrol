@@ -34,3 +34,9 @@ function crontrolCheckHash() {
 		}
 	} );
 }
+
+jQuery(function($){
+	$('#next_run_date_local_custom_date,#next_run_date_local_custom_time').on('change', function() {
+		$('#next_run_date_local_custom').prop('checked',true);
+	});
+});
