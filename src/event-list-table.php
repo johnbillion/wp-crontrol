@@ -200,11 +200,10 @@ class Table extends \WP_List_Table {
 		$hooks_type = ( ! empty( $_GET['hooks_type'] ) ? $_GET['hooks_type'] : 'all' );
 
 		$types = array(
-			'all'        => __( 'All hooks', 'wp-crontrol' ),
-			'noaction'   => __( 'Hooks with no action', 'wp-crontrol' ),
-			'persistent' => __( 'Persistent core hooks', 'wp-crontrol' ),
-			'core'       => __( 'All core hooks', 'wp-crontrol' ),
-			'custom'     => __( 'All except core hooks', 'wp-crontrol' ),
+			'all'      => __( 'All hooks', 'wp-crontrol' ),
+			'noaction' => __( 'Hooks with no action', 'wp-crontrol' ),
+			'core'     => __( 'WordPress core hooks', 'wp-crontrol' ),
+			'custom'   => __( 'Custom hooks', 'wp-crontrol' ),
 		);
 
 		$remove = function_exists( 'wp_removable_query_args' ) ? wp_removable_query_args() : array();
