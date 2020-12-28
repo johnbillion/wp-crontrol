@@ -90,3 +90,7 @@ table.wp-list-table {
 .row-actions .in-use {
 	color: #666;
 }
+
+.form-field input[type="number"] {
+	width: 100px;
+}

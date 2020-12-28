@@ -502,19 +502,19 @@ function admin_options_page() {
 							<label for="cron_internal_name">
 								<?php esc_html_e( 'Internal Name', 'wp-crontrol' ); ?>
 							</label>
-							<input type="text" class="regular-text" value="" id="cron_internal_name" name="internal_name" required/>
+							<input type="text" value="" id="cron_internal_name" name="internal_name" required/>
 						</div>
 						<div class="form-field form-required">
 							<label for="cron_interval">
 								<?php esc_html_e( 'Interval (seconds)', 'wp-crontrol' ); ?>
 							</label>
-							<input type="number" class="regular-text" value="" id="cron_interval" name="interval" min="1" step="1" required/>
+							<input type="number" value="" id="cron_interval" name="interval" min="1" step="1" required/>
 						</div>
 						<div class="form-field form-required">
 							<label for="cron_display_name">
 								<?php esc_html_e( 'Display Name', 'wp-crontrol' ); ?>
 							</label>
-							<input type="text" class="regular-text" value="" id="cron_display_name" name="display_name" required/>
+							<input type="text" value="" id="cron_display_name" name="display_name" required/>
 						</div>
 						<p class="submit">
 							<input id="schedadd-submit" type="submit" class="button button-primary" value="<?php esc_attr_e( 'Add Cron Schedule', 'wp-crontrol' ); ?>" name="new_schedule"/>
