@@ -78,7 +78,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 * @return string[] Array of class names.
 	 */
 	protected function get_table_classes() {
-		return array( 'widefat', 'striped', $this->_args['plural'] );
+		return array( 'widefat', 'fixed', 'striped', 'table-view-list', $this->_args['plural'] );
 	}
 
 	/**
