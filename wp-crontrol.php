@@ -891,7 +891,28 @@ function show_cron_form( $editing ) {
 				echo $other_fields;
 			?>
 			<table class="form-table"><tbody>
-				<?php if ( $is_php ) : ?>
+				<?php
+				if ( $editing ) {
+					printf(
+						'<input type="hidden" name="action" value="%s"/>',
+						esc_attr( $action )
+					);
+				} elseif ( $can_add_php ) {
+					?>
+					<tr>
+						<th valign="top" scope="row">
+							<?php esc_html_e( 'Event Type', 'wp-crontrol' ); ?>
+						</th>
+						<td>
+							<p><label><input type="radio" name="action" value="new-cron" checked>Standard cron event</label></p>
+							<p><label><input type="radio" name="action" value="new-php-cron">PHP cron event</label></p>
+						</td>
+					</tr>
+					<?php
+				}
+
+				if ( $is_editing_php || $can_add_php ) {
+					?>
 					<tr>
 						<th valign="top" scope="row">
 							<label for="hookcode">
@@ -908,7 +929,7 @@ function show_cron_form( $editing ) {
 									);
 								?>
 							</p>
-							<p><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode"><?php echo esc_textarea( $existing['args']['code'] ); ?></textarea></p>
+							<p><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode"><?php echo esc_textarea( $editing ? $existing['args']['code'] : '' ); ?></textarea></p>
 						</td>
 					</tr>
 					<tr>
@@ -918,10 +939,14 @@ function show_cron_form( $editing ) {
 							</label>
 						</th>
 						<td>
-							<input type="text" class="regular-text" id="eventname" name="eventname" value="<?php echo esc_attr( $existing['args']['name'] ); ?>"/>
+							<input type="text" class="regular-text" id="eventname" name="eventname" value="<?php echo esc_attr( $editing ? $existing['args']['name'] : '' ); ?>"/>
 						</td>
 					</tr>
-				<?php else : ?>
+					<?php
+				}
+
+				if ( ! $is_editing_php ) {
+					?>
 					<tr>
 						<th valign="top" scope="row">
 							<label for="hookname">
@@ -953,7 +978,9 @@ function show_cron_form( $editing ) {
 							</p>
 						</td>
 					</tr>
-				<?php endif; ?>
+					<?php
+				}
+				?>
 				<tr>
 					<th valign="top" scope="row">
 						<label for="next_run_date_local">
@@ -1016,7 +1043,9 @@ function show_cron_form( $editing ) {
 					</td>
 				</tr>
 			</tbody></table>
-			<p class="submit"><input type="submit" class="button button-primary" value="<?php echo esc_attr( $button ); ?>" name="<?php echo esc_attr( $action ); ?>"/></p>
+			<p class="submit">
+				<input type="submit" class="button button-primary" value="<?php echo esc_attr( $button ); ?>"/>
+			</p>
 		</form>
 		<?php } else { ?>
 			<div class="error inline">
