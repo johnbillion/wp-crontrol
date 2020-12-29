@@ -785,10 +785,9 @@ function get_utc_offset() {
  * Shows the form used to add/edit cron events.
  *
  * @param bool $editing Whether the form is for the event editor.
- * @param bool $is_php  Whether the form is for a PHP event.
  * @return void
  */
-function show_cron_form( $editing, $is_php = null ) {
+function show_cron_form( $editing ) {
 	$display_args = '';
 	$edit_id      = null;
 	$existing     = false;
@@ -810,11 +809,9 @@ function show_cron_form( $editing, $is_php = null ) {
 		}
 	}
 
-	if ( null === $is_php ) {
-		$is_php = ( $existing && 'crontrol_cron_job' === $existing['hookname'] );
-	}
+	$is_editing_php = ( $existing && 'crontrol_cron_job' === $existing['hookname'] );
 
-	if ( $is_php ) {
+	if ( $is_editing_php ) {
 		$helper_text = esc_html__( 'Cron events trigger actions in your code. Enter the schedule of the event, as well as the PHP code to execute when the action is triggered.', 'wp-crontrol' );
 	} else {
 		$helper_text = sprintf(
@@ -838,7 +835,7 @@ function show_cron_form( $editing, $is_php = null ) {
 		if ( ! empty( $existing['args'] ) ) {
 			$display_args = wp_json_encode( $existing['args'] );
 		}
-		$action        = $is_php ? 'edit_php_cron' : 'edit_cron';
+		$action        = $is_editing_php ? 'edit_php_cron' : 'edit_cron';
 		$button        = __( 'Update Event', 'wp-crontrol' );
 		$next_run_gmt  = gmdate( 'Y-m-d H:i:s', $existing['next_run'] );
 		$next_run_date_local = get_date_from_gmt( $next_run_gmt, 'Y-m-d' );
@@ -852,13 +849,12 @@ function show_cron_form( $editing, $is_php = null ) {
 			'schedule' => false,
 		);
 
-		$action        = $is_php ? 'new_php_cron' : 'new_cron';
 		$button        = __( 'Add Event', 'wp-crontrol' );
 		$next_run_date_local = '';
 		$next_run_time_local = '';
 	}
 
-	if ( $is_php ) {
+	if ( $is_editing_php ) {
 		if ( ! isset( $existing['args']['code'] ) ) {
 			$existing['args']['code'] = '';
 		}
@@ -867,23 +863,16 @@ function show_cron_form( $editing, $is_php = null ) {
 		}
 	}
 
-	$allowed = ( ! $is_php || current_user_can( 'edit_files' ) );
+	$can_add_php = current_user_can( 'edit_files' ) && ! $editing;
+	$allowed = ( ! $is_editing_php || current_user_can( 'edit_files' ) );
 	?>
 	<div id="crontrol_form" class="wrap narrow">
 		<?php
 		if ( $allowed ) {
 			if ( $editing ) {
-				if ( $is_php ) {
-					$heading = __( 'Edit PHP Cron Event', 'wp-crontrol' );
-				} else {
-					$heading = __( 'Edit Cron Event', 'wp-crontrol' );
-				}
+				$heading = __( 'Edit Cron Event', 'wp-crontrol' );
 			} else {
-				if ( $is_php ) {
-					$heading = __( 'Add PHP Cron Event', 'wp-crontrol' );
-				} else {
-					$heading = __( 'Add Cron Event', 'wp-crontrol' );
-				}
+				$heading = __( 'Add Cron Event', 'wp-crontrol' );
 			}
 
 			printf(
