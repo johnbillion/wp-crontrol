@@ -1220,11 +1220,11 @@ function do_tabs() {
 	$tab   = array_keys( $tab );
 	$tab   = reset( $tab );
 	$links = array(
-		'events'        => array(
+		'events'    => array(
 			'tools.php?page=crontrol_admin_manage_page',
 			__( 'Cron Events', 'wp-crontrol' ),
 		),
-		'schedules'     => array(
+		'schedules' => array(
 			'options-general.php?page=crontrol_admin_options_page',
 			__( 'Cron Schedules', 'wp-crontrol' ),
 		),
