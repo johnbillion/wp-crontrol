@@ -1250,7 +1250,12 @@ function do_tabs() {
 				}
 			}
 
-			if ( $tabs['edit-event'] ) {
+			if ( $tabs['add-event'] ) {
+				printf(
+					'<span class="nav-tab nav-tab-active">%s</span>',
+					esc_html__( 'Add Cron Event', 'wp-crontrol' )
+				);
+			} elseif ( $tabs['edit-event'] ) {
 				printf(
 					'<span class="nav-tab nav-tab-active">%s</span>',
 					esc_html__( 'Edit Cron Event', 'wp-crontrol' )
