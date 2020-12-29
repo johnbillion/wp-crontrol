@@ -1128,7 +1128,11 @@ function admin_manage_page() {
 		case $tabs['events']:
 			?>
 			<div class="wrap">
-				<h1><?php esc_html_e( 'Cron Events', 'wp-crontrol' ); ?></h1>
+				<h1 class="wp-heading-inline"><?php esc_html_e( 'Cron Events', 'wp-crontrol' ); ?></h1>
+
+				<?php echo '<a href="' . esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page&action=new-cron' ) ) . '" class="page-title-action">' . esc_html__( 'Add New', 'wp-crontrol' ) . '</a>'; ?>
+
+				<hr class="wp-header-end">
 
 				<?php $table->views(); ?>
 
@@ -1162,10 +1166,6 @@ function admin_manage_page() {
 			show_cron_form( false );
 			break;
 
-		case $tabs['add-php-event']:
-			show_cron_form( false, true );
-			break;
-
 		case $tabs['edit-event']:
 			show_cron_form( true );
 			break;
@@ -1184,7 +1184,6 @@ function get_tab_states() {
 		'events'        => ( ! empty( $_GET['page'] ) && 'crontrol_admin_manage_page' === $_GET['page'] && empty( $_GET['action'] ) ),
 		'schedules'     => ( ! empty( $_GET['page'] ) && 'crontrol_admin_options_page' === $_GET['page'] ),
 		'add-event'     => ( ! empty( $_GET['action'] ) && 'new-cron' === $_GET['action'] ),
-		'add-php-event' => ( ! empty( $_GET['action'] ) && 'new-php-cron' === $_GET['action'] ),
 		'edit-event'    => ( ! empty( $_GET['action'] ) && 'edit-cron' === $_GET['action'] ),
 	);
 }
@@ -1210,14 +1209,6 @@ function do_tabs() {
 		'schedules'     => array(
 			'options-general.php?page=crontrol_admin_options_page',
 			__( 'Cron Schedules', 'wp-crontrol' ),
-		),
-		'add-event'     => array(
-			'tools.php?page=crontrol_admin_manage_page&action=new-cron',
-			__( 'Add Cron Event', 'wp-crontrol' ),
-		),
-		'add-php-event' => array(
-			'tools.php?page=crontrol_admin_manage_page&action=new-php-cron',
-			__( 'Add PHP Cron Event', 'wp-crontrol' ),
 		),
 	);
 
