@@ -792,7 +792,7 @@ function show_cron_form( $editing ) {
 	$edit_id      = null;
 	$existing     = false;
 
-	if ( ! empty( $_GET['id'] ) ) {
+	if ( $editing && ! empty( $_GET['id'] ) ) {
 		$edit_id = wp_unslash( $_GET['id'] );
 
 		foreach ( Event\get() as $event ) {
