@@ -40,16 +40,20 @@ jQuery(function($){
 		$('#next_run_date_local_custom').prop('checked',true);
 	});
 
-	$('input[value="new-cron"]').on('click',function(){
-		$('.crontrol-edit-event').removeClass('crontrol-edit-event-php').addClass('crontrol-edit-event-standard');
-		$('#hookname').attr('required',true);
-	});
-	$('input[value="new-php-cron"]').on('click',function(){
-		$('.crontrol-edit-event').removeClass('crontrol-edit-event-standard').addClass('crontrol-edit-event-php');
-		$('#hookname').attr('required',false);
-		if ( ! $('#hookcode').hasClass('crontrol-editor-initialized') ) {
-			wp.codeEditor.initialize( 'hookcode', window.wpCrontrol.codeEditor );
-		}
-		$('#hookcode').addClass('crontrol-editor-initialized');
-	});
+	if ( $('input[value="new-php-cron"]').length ) {
+		$('input[value="new-cron"]').on('click',function(){
+			$('.crontrol-edit-event').removeClass('crontrol-edit-event-php').addClass('crontrol-edit-event-standard');
+			$('#hookname').attr('required',true);
+		});
+		$('input[value="new-php-cron"]').on('click',function(){
+			$('.crontrol-edit-event').removeClass('crontrol-edit-event-standard').addClass('crontrol-edit-event-php');
+			$('#hookname').attr('required',false);
+			if ( ! $('#hookcode').hasClass('crontrol-editor-initialized') ) {
+				wp.codeEditor.initialize( 'hookcode', window.wpCrontrol.codeEditor );
+			}
+			$('#hookcode').addClass('crontrol-editor-initialized');
+		});
+	} else if ( $('#hookcode').length ) {
+		wp.codeEditor.initialize( 'hookcode', window.wpCrontrol.codeEditor );
+	}
 });
