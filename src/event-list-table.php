@@ -196,13 +196,12 @@ class Table extends \WP_List_Table {
 			'custom'   => __( 'Custom hooks', 'wp-crontrol' ),
 		);
 
-		$remove = function_exists( 'wp_removable_query_args' ) ? wp_removable_query_args() : array();
-		$url = remove_query_arg( $remove );
+		$url = admin_url( 'tools.php?page=crontrol_admin_manage_page' );
 
 		foreach ( $types as $key => $type ) {
 			$views[ $key ] = sprintf(
 				'<a href="%s"%s>%s</a>',
-				'all' === $key ? remove_query_arg( 'hooks_type', $url ) : add_query_arg( 'hooks_type', $key, $url ),
+				'all' === $key ? $url : add_query_arg( 'hooks_type', $key, $url ),
 				$hooks_type === $key ? ' class="current"' : '',
 				$type
 			);
