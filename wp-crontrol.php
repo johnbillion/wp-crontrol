@@ -1499,13 +1499,15 @@ function enqueue_assets( $hook_suffix ) {
 		$vars['eventsHashInterval'] = 20;
 	}
 
-	if ( function_exists( 'wp_enqueue_code_editor' ) && current_user_can( 'edit_files' ) ) {
-		$settings = wp_enqueue_code_editor( array(
-			'type' => 'text/x-php',
-		) );
+	if ( ! empty( $tab['add-event'] ) || ! empty( $tab['edit-event'] ) ) {
+		if ( function_exists( 'wp_enqueue_code_editor' ) && current_user_can( 'edit_files' ) ) {
+			$settings = wp_enqueue_code_editor( array(
+				'type' => 'text/x-php',
+			) );
 
-		if ( false !== $settings ) {
-			$vars['codeEditor'] = $settings;
+			if ( false !== $settings ) {
+				$vars['codeEditor'] = $settings;
+			}
 		}
 	}
 
