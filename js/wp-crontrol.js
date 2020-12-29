@@ -40,12 +40,12 @@ jQuery(function($){
 		$('#next_run_date_local_custom').prop('checked',true);
 	});
 
-	if ( $('input[value="new-php-cron"]').length ) {
-		$('input[value="new-cron"]').on('click',function(){
+	if ( $('input[value="new_php_cron"]').length ) {
+		$('input[value="new_cron"]').on('click',function(){
 			$('.crontrol-edit-event').removeClass('crontrol-edit-event-php').addClass('crontrol-edit-event-standard');
 			$('#hookname').attr('required',true);
 		});
-		$('input[value="new-php-cron"]').on('click',function(){
+		$('input[value="new_php_cron"]').on('click',function(){
 			$('.crontrol-edit-event').removeClass('crontrol-edit-event-standard').addClass('crontrol-edit-event-php');
 			$('#hookname').attr('required',false);
 			if ( ! $('#hookcode').hasClass('crontrol-editor-initialized') ) {
