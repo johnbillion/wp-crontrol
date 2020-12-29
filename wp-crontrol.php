@@ -807,6 +807,20 @@ function show_cron_form( $editing ) {
 				break;
 			}
 		}
+
+		if ( empty( $existing ) ) {
+			?>
+			<div id="crontrol-event-not-found" class="notice notice-error">
+				<?php
+				printf(
+					'<p>%1$s</p>',
+					esc_html__( 'The event you are trying to edit does not exist.', 'wp-crontrol' )
+				);
+				?>
+			</div>
+			<?php
+			return;
+		}
 	}
 
 	$is_editing_php = ( $existing && 'crontrol_cron_job' === $existing['hookname'] );
