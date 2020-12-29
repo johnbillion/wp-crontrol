@@ -94,3 +94,8 @@ table.wp-list-table {
 .form-field input[type="number"] {
 	width: 100px;
 }
+
+.crontrol-edit-event-standard .crontrol-event-php,
+.crontrol-edit-event-php .crontrol-event-standard {
+	display: none;
+}

@@ -75,7 +75,7 @@ function action_init() {
  * Handles any POSTs made by the plugin. Run using the 'init' action.
  */
 function action_handle_posts() {
-	if ( isset( $_POST['new_cron'] ) ) {
+	if ( isset( $_POST['action'] ) && ( 'new_cron' === $_POST['action'] ) ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ), 401 );
 		}
@@ -107,7 +107,7 @@ function action_handle_posts() {
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 
-	} elseif ( isset( $_POST['new_php_cron'] ) ) {
+	} elseif ( isset( $_POST['action'] ) && ( 'new_php_cron' === $_POST['action'] ) ) {
 		if ( ! current_user_can( 'edit_files' ) ) {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
 		}
@@ -135,7 +135,7 @@ function action_handle_posts() {
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 
-	} elseif ( isset( $_POST['edit_cron'] ) ) {
+	} elseif ( isset( $_POST['action'] ) && ( 'edit_cron' === $_POST['action'] ) ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ), 401 );
 		}
@@ -172,7 +172,7 @@ function action_handle_posts() {
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 
-	} elseif ( isset( $_POST['edit_php_cron'] ) ) {
+	} elseif ( isset( $_POST['action'] ) && ( 'edit_php_cron' === $_POST['action'] ) ) {
 		if ( ! current_user_can( 'edit_files' ) ) {
 			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 401 );
 		}
@@ -885,7 +885,7 @@ function show_cron_form( $editing ) {
 				$helper_text
 			);
 			?>
-		<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ); ?>">
+		<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ); ?>" class="crontrol-edit-event crontrol-edit-event-<?php echo ( $is_editing_php ) ? 'php' : 'standard'; ?>">
 			<?php
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo $other_fields;
@@ -899,13 +899,13 @@ function show_cron_form( $editing ) {
 					);
 				} elseif ( $can_add_php ) {
 					?>
-					<tr>
+					<tr class="hide-if-no-js">
 						<th valign="top" scope="row">
 							<?php esc_html_e( 'Event Type', 'wp-crontrol' ); ?>
 						</th>
 						<td>
-							<p><label><input type="radio" name="action" value="new-cron" checked>Standard cron event</label></p>
-							<p><label><input type="radio" name="action" value="new-php-cron">PHP cron event</label></p>
+							<p><label><input type="radio" name="action" value="new_cron" checked>Standard cron event</label></p>
+							<p><label><input type="radio" name="action" value="new_php_cron">PHP cron event</label></p>
 						</td>
 					</tr>
 					<?php
@@ -913,7 +913,7 @@ function show_cron_form( $editing ) {
 
 				if ( $is_editing_php || $can_add_php ) {
 					?>
-					<tr>
+					<tr class="crontrol-event-php">
 						<th valign="top" scope="row">
 							<label for="hookcode">
 								<?php esc_html_e( 'PHP Code', 'wp-crontrol' ); ?>
@@ -932,7 +932,7 @@ function show_cron_form( $editing ) {
 							<p><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode"><?php echo esc_textarea( $editing ? $existing['args']['code'] : '' ); ?></textarea></p>
 						</td>
 					</tr>
-					<tr>
+					<tr class="crontrol-event-php">
 						<th valign="top" scope="row">
 							<label for="eventname">
 								<?php esc_html_e( 'Event Name (optional)', 'wp-crontrol' ); ?>
@@ -947,7 +947,7 @@ function show_cron_form( $editing ) {
 
 				if ( ! $is_editing_php ) {
 					?>
-					<tr>
+					<tr class="crontrol-event-standard">
 						<th valign="top" scope="row">
 							<label for="hookname">
 								<?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?>
@@ -957,7 +957,7 @@ function show_cron_form( $editing ) {
 							<input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" class="regular-text" id="hookname" name="hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>" required />
 						</td>
 					</tr>
-					<tr>
+					<tr class="crontrol-event-standard">
 						<th valign="top" scope="row">
 							<label for="args">
 								<?php esc_html_e( 'Arguments (optional)', 'wp-crontrol' ); ?>
@@ -1472,30 +1472,6 @@ function setup_manage_page() {
 			esc_html__( 'The scheduled cron events have changed since you first opened this page. Reload the page to see the up to date list.', 'wp-crontrol' )
 		);
 	} );
-
-	if ( ! function_exists( 'wp_enqueue_code_editor' ) ) {
-		return;
-	}
-	if ( ! current_user_can( 'edit_files' ) ) {
-		return;
-	}
-
-	$settings = wp_enqueue_code_editor( array(
-		'type' => 'text/x-php',
-	) );
-
-	if ( false === $settings ) {
-		return;
-	}
-
-	wp_add_inline_script( 'code-editor', sprintf(
-		'jQuery( function( $ ) {
-			if ( $( "#hookcode" ).length ) {
-				wp.codeEditor.initialize( "hookcode", %s );
-			}
-		} );',
-		wp_json_encode( $settings )
-	) );
 }
 
 /**
@@ -1516,12 +1492,24 @@ function enqueue_assets( $hook_suffix ) {
 	$ver = filemtime( plugin_dir_path( __FILE__ ) . 'js/wp-crontrol.js' );
 	wp_enqueue_script( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'js/wp-crontrol.js', array( 'jquery' ), $ver, true );
 
+	$vars = array();
+
 	if ( ! empty( $tab['events'] ) ) {
-		wp_localize_script( 'wp-crontrol', 'wpCrontrol', array(
-			'eventsHash'         => md5( json_encode( Event\get_list_table()->items ) ),
-			'eventsHashInterval' => 20,
-		) );
+		$vars['eventsHash'] = md5( json_encode( Event\get_list_table()->items ) );
+		$vars['eventsHashInterval'] = 20;
 	}
+
+	if ( function_exists( 'wp_enqueue_code_editor' ) && current_user_can( 'edit_files' ) ) {
+		$settings = wp_enqueue_code_editor( array(
+			'type' => 'text/x-php',
+		) );
+
+		if ( false !== $settings ) {
+			$vars['codeEditor'] = $settings;
+		}
+	}
+
+	wp_localize_script( 'wp-crontrol', 'wpCrontrol', $vars );
 }
 
 /**
