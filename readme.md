@@ -98,7 +98,7 @@ There are two steps to getting a functioning cron event that executes regularly.
 
 *Step One: Adding the hook*
 
-In the Tools → Cron Events admin panel, click on the "Add Cron Event" tab and enter the details of the hook. You're best off having a hookname that conforms to normal PHP variable naming conventions. The event schedule is how often your hook will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel.
+In the Tools → Cron Events admin panel, click on "Add New" and enter the details of the hook. You're best off using a hook name that conforms to normal PHP variable naming conventions. The event schedule is how often your hook will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel.
 
 *Step Two: Writing the function*
 
@@ -114,7 +114,7 @@ The next step is to write your function. Here's a simple example:
 
 ### How do I create a new PHP cron event?
 
-In the Tools → Cron Events admin panel, click on the "Add PHP Cron Event" tab. In the form that appears, enter the schedule and next run time in the boxes. The event schedule is how often your event will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel. In the "Hook code" area, enter the PHP code that should be run when your cron event is executed. You don't need to provide the PHP opening tag (`<?php`).
+In the Tools → Cron Events admin panel, click on "Add New". In the form that appears, select "PHP Cron Event" and enter the schedule and next run time. The event schedule is how often your event will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel. In the "Hook code" area, enter the PHP code that should be run when your cron event is executed. You don't need to provide the PHP opening tag (`<?php`).
 
 ### Which users can manage cron events and schedules?
 
