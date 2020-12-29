@@ -307,24 +307,20 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 
-		if ( Event\delete( $id, $sig, $next_run_utc ) ) {
-			$redirect = array(
-				'page'             => 'crontrol_admin_manage_page',
-				'crontrol_message' => '6',
-				'crontrol_name'    => rawurlencode( $id ),
-			);
-			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
-			exit;
-		} else {
-			$redirect = array(
-				'page'             => 'crontrol_admin_manage_page',
-				'crontrol_message' => '7',
-				'crontrol_name'    => rawurlencode( $id ),
-			);
-			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
-			exit;
+		$deleted = Event\delete( $id, $sig, $next_run_utc );
 
-		};
+		$redirect = array(
+			'page'             => 'crontrol_admin_manage_page',
+			'crontrol_message' => '6',
+			'crontrol_name'    => rawurlencode( $id ),
+		);
+
+		if ( false === $deleted ) {
+			$redirect['crontrol_message'] = '7';
+		}
+
+		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+		exit;
 
 	} elseif ( isset( $_GET['action'] ) && 'delete-hook' === $_GET['action'] ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -374,23 +370,21 @@ function action_handle_posts() {
 		$id  = wp_unslash( $_GET['id'] );
 		$sig = wp_unslash( $_GET['sig'] );
 		check_admin_referer( "run-cron_{$id}_{$sig}" );
-		if ( Event\run( $id, $sig ) ) {
-			$redirect = array(
-				'page'             => 'crontrol_admin_manage_page',
-				'crontrol_message' => '1',
-				'crontrol_name'    => rawurlencode( $id ),
-			);
-			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
-			exit;
-		} else {
-			$redirect = array(
-				'page'             => 'crontrol_admin_manage_page',
-				'crontrol_message' => '8',
-				'crontrol_name'    => rawurlencode( $id ),
-			);
-			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
-			exit;
+
+		$ran = Event\run( $id, $sig );
+
+		$redirect = array(
+			'page'             => 'crontrol_admin_manage_page',
+			'crontrol_message' => '1',
+			'crontrol_name'    => rawurlencode( $id ),
+		);
+
+		if ( false === $ran ) {
+			$redirect['crontrol_message'] = '8';
 		}
+
+		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+		exit;
 	}
 }
 
