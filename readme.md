@@ -6,7 +6,7 @@ Requires at least: 4.1
 Tested up to: 5.6  
 Stable tag: 1.8.5  
 Requires PHP: 5.3  
-Donate link: https://johnblackbourn.com/donations/
+Donate link: https://github.com/sponsors/johnbillion
 
 WP Crontrol lets you view and control what's happening in the WP-Cron system.
 

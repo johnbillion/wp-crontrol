@@ -55,6 +55,7 @@ function init_hooks() {
 	add_filter( 'removable_query_args',               __NAMESPACE__ . '\filter_removable_query_args' );
 	add_filter( 'in_admin_header',                    __NAMESPACE__ . '\do_tabs' );
 	add_filter( 'pre_unschedule_event',               __NAMESPACE__ . '\maybe_clear_doing_cron' );
+	add_filter( 'plugin_row_meta',                    __NAMESPACE__ . '\filter_plugin_row_meta', 10, 4 );
 
 	add_action( 'load-tools_page_crontrol_admin_manage_page', __NAMESPACE__ . '\setup_manage_page' );
 
@@ -62,6 +63,27 @@ function init_hooks() {
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_assets' );
 	add_action( 'crontrol/tab-header',   __NAMESPACE__ . '\show_cron_status', 20 );
+}
+
+/**
+ * Filters the array of row meta for each plugin in the Plugins list table.
+ *
+ * @param string[] $plugin_meta An array of the plugin's metadata.
+ * @param string   $plugin_file Path to the plugin file relative to the plugins directory.
+ * @return string[] An array of the plugin's metadata.
+ */
+function filter_plugin_row_meta( array $plugin_meta, $plugin_file ) {
+	if ( 'wp-crontrol/wp-crontrol.php' !== $plugin_file ) {
+		return $plugin_meta;
+	}
+
+	$plugin_meta[] = sprintf(
+		'<a href="%1$s"><span class="dashicons dashicons-star-filled" aria-hidden="true" style="font-size:14px;line-height:1.3"></span>%2$s</a>',
+		'https://github.com/sponsors/johnbillion',
+		esc_html_x( 'Sponsor', 'verb', 'wp-crontrol' )
+	);
+
+	return $plugin_meta;
 }
 
 /**
