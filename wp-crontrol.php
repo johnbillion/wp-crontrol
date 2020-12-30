@@ -297,13 +297,13 @@ function action_handle_posts() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete cron schedules.', 'wp-crontrol' ), 401 );
 		}
-		$id = wp_unslash( $_GET['id'] );
-		check_admin_referer( "delete-sched_{$id}" );
-		Schedule\delete( $id );
+		$schedule = wp_unslash( $_GET['id'] );
+		check_admin_referer( "delete-sched_{$schedule}" );
+		Schedule\delete( $schedule );
 		$redirect = array(
 			'page'             => 'crontrol_admin_options_page',
 			'crontrol_message' => '2',
-			'crontrol_name'    => rawurlencode( $id ),
+			'crontrol_name'    => rawurlencode( $schedule ),
 		);
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 		exit;
@@ -322,14 +322,14 @@ function action_handle_posts() {
 		$deleted = 0;
 
 		foreach ( $delete as $next_run_utc => $events ) {
-			foreach ( $events as $id => $sig ) {
-				if ( 'crontrol_cron_job' === $id && ! current_user_can( 'edit_files' ) ) {
+			foreach ( $events as $hook => $sig ) {
+				if ( 'crontrol_cron_job' === $hook && ! current_user_can( 'edit_files' ) ) {
 					continue;
 				}
 
-				$event = Event\get_single( urldecode( $id ), $sig, $next_run_utc );
+				$event = Event\get_single( urldecode( $hook ), $sig, $next_run_utc );
 
-				if ( Event\delete( urldecode( $id ), $sig, $next_run_utc ) ) {
+				if ( Event\delete( urldecode( $hook ), $sig, $next_run_utc ) ) {
 					$deleted++;
 
 					/** This action is documented in wp-crontrol.php */
@@ -350,21 +350,21 @@ function action_handle_posts() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
 		}
-		$id           = wp_unslash( $_GET['id'] );
+		$hook         = wp_unslash( $_GET['id'] );
 		$sig          = wp_unslash( $_GET['sig'] );
 		$next_run_utc = intval( $_GET['next_run_utc'] );
-		check_admin_referer( "delete-cron_{$id}_{$sig}_{$next_run_utc}" );
+		check_admin_referer( "delete-cron_{$hook}_{$sig}_{$next_run_utc}" );
 
-		if ( 'crontrol_cron_job' === $id && ! current_user_can( 'edit_files' ) ) {
+		if ( 'crontrol_cron_job' === $hook && ! current_user_can( 'edit_files' ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 
-		$event = Event\get_single( $id, $sig, $next_run_utc );
-		$deleted = Event\delete( $id, $sig, $next_run_utc );
+		$event = Event\get_single( $hook, $sig, $next_run_utc );
+		$deleted = Event\delete( $hook, $sig, $next_run_utc );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '6',
-			'crontrol_name'    => rawurlencode( $id ),
+			'crontrol_name'    => rawurlencode( $hook ),
 		);
 
 		if ( false === $deleted ) {
@@ -393,23 +393,23 @@ function action_handle_posts() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
 		}
-		$id      = wp_unslash( $_GET['id'] );
+		$hook    = wp_unslash( $_GET['id'] );
 		$deleted = false;
-		check_admin_referer( "delete-hook_{$id}" );
+		check_admin_referer( "delete-hook_{$hook}" );
 
-		if ( 'crontrol_cron_job' === $id ) {
+		if ( 'crontrol_cron_job' === $hook ) {
 			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 
 		if ( function_exists( 'wp_unschedule_hook' ) ) {
-			$deleted = wp_unschedule_hook( $id );
+			$deleted = wp_unschedule_hook( $hook );
 		}
 
 		if ( 0 === $deleted ) {
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '3',
-				'crontrol_name'    => rawurlencode( $id ),
+				'crontrol_name'    => rawurlencode( $hook ),
 			);
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
@@ -417,7 +417,7 @@ function action_handle_posts() {
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '2',
-				'crontrol_name'    => rawurlencode( $id ),
+				'crontrol_name'    => rawurlencode( $hook ),
 			);
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
@@ -425,7 +425,7 @@ function action_handle_posts() {
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '7',
-				'crontrol_name'    => rawurlencode( $id ),
+				'crontrol_name'    => rawurlencode( $hook ),
 			);
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
@@ -434,16 +434,16 @@ function action_handle_posts() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 401 );
 		}
-		$id  = wp_unslash( $_GET['id'] );
+		$hook = wp_unslash( $_GET['id'] );
 		$sig = wp_unslash( $_GET['sig'] );
-		check_admin_referer( "run-cron_{$id}_{$sig}" );
+		check_admin_referer( "run-cron_{$hook}_{$sig}" );
 
-		$ran = Event\run( $id, $sig );
+		$ran = Event\run( $hook, $sig );
 
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '1',
-			'crontrol_name'    => rawurlencode( $id ),
+			'crontrol_name'    => rawurlencode( $hook ),
 		);
 
 		if ( false === $ran ) {

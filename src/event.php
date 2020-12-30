@@ -101,11 +101,11 @@ function force_schedule_single_event( $hook, $args = array() ) {
  *
  * @param string $next_run_local The time that the event should be run at, in the site's timezone.
  * @param string $schedule       The recurrence of the cron event.
- * @param string $hookname       The name of the hook to execute.
+ * @param string $hook           The name of the hook to execute.
  * @param array  $args           Arguments to add to the cron event.
  * @return bool Whether the addition was successful.
  */
-function add( $next_run_local, $schedule, $hookname, array $args ) {
+function add( $next_run_local, $schedule, $hook, array $args ) {
 	$next_run_local = strtotime( $next_run_local, current_time( 'timestamp' ) );
 
 	if ( false === $next_run_local ) {
@@ -118,7 +118,7 @@ function add( $next_run_local, $schedule, $hookname, array $args ) {
 		$args = array();
 	}
 
-	if ( 'crontrol_cron_job' === $hookname && ! empty( $args['code'] ) && class_exists( '\ParseError' ) ) {
+	if ( 'crontrol_cron_job' === $hook && ! empty( $args['code'] ) && class_exists( '\ParseError' ) ) {
 		try {
 			// phpcs:ignore Squiz.PHP.Eval.Discouraged
 			eval( sprintf(
@@ -133,22 +133,22 @@ function add( $next_run_local, $schedule, $hookname, array $args ) {
 	}
 
 	if ( '_oneoff' === $schedule ) {
-		return ( false !== wp_schedule_single_event( $next_run_utc, $hookname, $args ) );
+		return ( false !== wp_schedule_single_event( $next_run_utc, $hook, $args ) );
 	} else {
-		return ( false !== wp_schedule_event( $next_run_utc, $schedule, $hookname, $args ) );
+		return ( false !== wp_schedule_event( $next_run_utc, $schedule, $hook, $args ) );
 	}
 }
 
 /**
  * Deletes a cron event.
  *
- * @param string $to_delete    The hook name of the event to delete.
+ * @param string $hook         The hook name of the event to delete.
  * @param string $sig          The cron event signature.
  * @param string $next_run_utc The UTC time that the event would be run at.
  * @return bool Whether the deletion was successful.
  */
-function delete( $to_delete, $sig, $next_run_utc ) {
-	$event = get_single( $to_delete, $sig, $next_run_utc );
+function delete( $hook, $sig, $next_run_utc ) {
+	$event = get_single( $hook, $sig, $next_run_utc );
 
 	if ( ! $event ) {
 		return false;
@@ -204,16 +204,16 @@ function get() {
 /**
  * Gets a single cron event.
  *
- * @param string $id           The hook name of the event.
+ * @param string $hook           The hook name of the event.
  * @param string $sig          The event signature.
  * @param string $next_run_utc The UTC time that the event would be run at.
  */
-function get_single( $id, $sig, $next_run_utc ) {
+function get_single( $hook, $sig, $next_run_utc ) {
 	$crons = _get_cron_array();
-	if ( isset( $crons[ $next_run_utc ][ $id ][ $sig ] ) ) {
-		$event = $crons[ $next_run_utc ][ $id ][ $sig ];
+	if ( isset( $crons[ $next_run_utc ][ $hook ][ $sig ] ) ) {
+		$event = $crons[ $next_run_utc ][ $hook ][ $sig ];
 
-		$event['hook'] = $id;
+		$event['hook'] = $hook;
 		$event['timestamp'] = $next_run_utc;
 
 		$event = (object) $event;
