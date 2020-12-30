@@ -37,6 +37,8 @@ class Table extends \WP_List_Table {
 	 */
 	protected static $count_by_hook;
 
+	protected $all_events = array();
+
 	/**
 	 * Constructor.
 	 */
@@ -58,6 +60,7 @@ class Table extends \WP_List_Table {
 		self::$count_by_hook         = count_by_hook();
 
 		$events = get();
+		$this->all_events = $events;
 
 		if ( ! empty( $_GET['s'] ) ) {
 			$s = sanitize_text_field( wp_unslash( $_GET['s'] ) );
@@ -69,32 +72,10 @@ class Table extends \WP_List_Table {
 
 		if ( ! empty( $_GET['hooks_type'] ) ) {
 			$hooks_type = sanitize_text_field( $_GET['hooks_type'] );
+			$filtered = $this->get_filtered_events( $events );
 
-			switch ( $hooks_type ) {
-				case 'noaction':
-					$events = array_filter( $events, function( $event ) {
-						$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
-						return empty( $hook_callbacks );
-					} );
-					break;
-				case 'persistent':
-					$allowed_hooks = \Crontrol\get_persistent_core_hooks();
-					$events = array_filter( $events, function( $event ) use ( $allowed_hooks ) {
-						return ( in_array( $event->hook, $allowed_hooks, true ) );
-					} );
-					break;
-				case 'core':
-					$allowed_hooks = \Crontrol\get_all_core_hooks();
-					$events = array_filter( $events, function( $event ) use ( $allowed_hooks ) {
-						return ( in_array( $event->hook, $allowed_hooks, true ) );
-					} );
-					break;
-				case 'custom':
-					$disallowed_hooks = \Crontrol\get_all_core_hooks();
-					$events = array_filter( $events, function( $event ) use ( $disallowed_hooks ) {
-						return ( ! in_array( $event->hook, $disallowed_hooks, true ) );
-					} );
-					break;
+			if ( isset( $filtered[ $hooks_type ] ) ) {
+				$events = $filtered[ $hooks_type ];
 			}
 		}
 
@@ -123,6 +104,34 @@ class Table extends \WP_List_Table {
 			'per_page'    => $per_page,
 			'total_pages' => ceil( $count / $per_page ),
 		) );
+	}
+
+	/**
+	 * Returns events filtered by various parameters
+	 *
+	 * @param array $events The list of all events.
+	 * @return array Array of filtered events keyed by parameter.
+	 */
+	protected function get_filtered_events( array $events ) {
+		$all_core_hooks = \Crontrol\get_all_core_hooks();
+		$filtered = array(
+			'all' => $events,
+		);
+
+		$filtered['noaction'] = array_filter( $events, function( $event ) {
+			$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
+			return empty( $hook_callbacks );
+		} );
+
+		$filtered['core'] = array_filter( $events, function( $event ) use ( $all_core_hooks ) {
+			return ( in_array( $event->hook, $all_core_hooks, true ) );
+		} );
+
+		$filtered['custom'] = array_filter( $events, function( $event ) use ( $all_core_hooks ) {
+			return ( ! in_array( $event->hook, $all_core_hooks, true ) );
+		} );
+
+		return $filtered;
 	}
 
 	/**
@@ -181,11 +190,13 @@ class Table extends \WP_List_Table {
 	}
 
 	/**
-	 * Display the list of hooks type.
+	 * Display the list of hook types.
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public function get_views() {
+		$filtered = $this->get_filtered_events( $this->all_events );
+
 		$views = array();
 		$hooks_type = ( ! empty( $_GET['hooks_type'] ) ? $_GET['hooks_type'] : 'all' );
 
@@ -200,10 +211,11 @@ class Table extends \WP_List_Table {
 
 		foreach ( $types as $key => $type ) {
 			$views[ $key ] = sprintf(
-				'<a href="%s"%s>%s</a>',
+				'<a href="%1$s"%2$s>%3$s <span class="count">(%4$s)</span></a>',
 				'all' === $key ? $url : add_query_arg( 'hooks_type', $key, $url ),
 				$hooks_type === $key ? ' class="current"' : '',
-				$type
+				$type,
+				count( $filtered[ $key ] )
 			);
 		}
 
