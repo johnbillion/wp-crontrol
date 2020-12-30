@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  WP Crontrol
  * Plugin URI:   https://wordpress.org/plugins/wp-crontrol/
- * Description:  WP Crontrol lets you view and control what's happening in the WP-Cron system.
+ * Description:  WP Crontrol enables you to view and control what's happening in the WP-Cron system.
  * Author:       John Blackbourn & crontributors
  * Author URI:   https://github.com/johnbillion/wp-crontrol/graphs/contributors
  * Version:      1.8.5
