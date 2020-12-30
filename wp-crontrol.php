@@ -326,8 +326,14 @@ function action_handle_posts() {
 				if ( 'crontrol_cron_job' === $id && ! current_user_can( 'edit_files' ) ) {
 					continue;
 				}
+
+				$event = Event\get_single( urldecode( $id ), $sig, $next_run_utc );
+
 				if ( Event\delete( urldecode( $id ), $sig, $next_run_utc ) ) {
 					$deleted++;
+
+					/** This action is documented in wp-crontrol.php */
+					do_action( 'crontrol/deleted_event', $event );
 				}
 			}
 		}
