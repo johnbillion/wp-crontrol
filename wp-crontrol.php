@@ -92,6 +92,29 @@ function action_handle_posts() {
 
 		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
 
+		add_filter( 'schedule_event', function( $event ) {
+			if ( ! $event ) {
+				return $event;
+			}
+
+			/**
+			 * Fires when a new cron event is added.
+			 *
+			 * @param object $event {
+			 *     An object containing an event's data.
+			 *
+			 *     @type string       $hook      Action hook to execute when the event is run.
+			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
+			 *     @type string|false $schedule  How often the event should subsequently recur.
+			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
+			 * }
+			 */
+			do_action( 'crontrol/added_new_event', $event );
+
+			return $event;
+		}, 99 );
+
 		$added = Event\add( $next_run_local, $in_schedule, $in_hookname, $in_args );
 
 		$redirect = array(
@@ -118,6 +141,29 @@ function action_handle_posts() {
 			'code' => $in_hookcode,
 			'name' => $in_eventname,
 		);
+
+		add_filter( 'schedule_event', function( $event ) {
+			if ( ! $event ) {
+				return $event;
+			}
+
+			/**
+			 * Fires when a new PHP cron event is added.
+			 *
+			 * @param object $event {
+			 *     An object containing an event's data.
+			 *
+			 *     @type string       $hook      Action hook to execute when the event is run.
+			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
+			 *     @type string|false $schedule  How often the event should subsequently recur.
+			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
+			 * }
+			 */
+			do_action( 'crontrol/added_new_php_event', $event );
+
+			return $event;
+		}, 99 );
 
 		$added = Event\add( $next_run_local, $in_schedule, 'crontrol_cron_job', $args );
 
