@@ -101,7 +101,7 @@ function action_handle_posts() {
 			 * Fires when a new cron event is added.
 			 *
 			 * @param object $event {
-			 *     An object containing an event's data.
+			 *     An object containing the event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
 			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
@@ -151,7 +151,7 @@ function action_handle_posts() {
 			 * Fires when a new PHP cron event is added.
 			 *
 			 * @param object $event {
-			 *     An object containing an event's data.
+			 *     An object containing the event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
 			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
