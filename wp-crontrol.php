@@ -371,7 +371,7 @@ function action_handle_posts() {
 			$redirect['crontrol_message'] = '7';
 		} else {
 			/**
-			 * Fires when a cron event is deleted.
+			 * Fires after a cron event is deleted.
 			 *
 			 * @param object $event {
 			 *     An object containing the event's data.
@@ -414,6 +414,14 @@ function action_handle_posts() {
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
 		} elseif ( $deleted ) {
+			/**
+			 * Fires after all cron events with the given hook are deleted.
+			 *
+			 * @param string $hook    The hook name.
+			 * @param int    $deleted The number of events that were deleted.
+			 */
+			do_action( 'crontrol/deleted_all_with_hook', $hook, $deleted );
+
 			$redirect = array(
 				'page'             => 'crontrol_admin_manage_page',
 				'crontrol_message' => '2',
