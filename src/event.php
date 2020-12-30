@@ -24,9 +24,15 @@ function run( $hookname, $sig ) {
 	$crons = _get_cron_array();
 	foreach ( $crons as $time => $cron ) {
 		if ( isset( $cron[ $hookname ][ $sig ] ) ) {
-			$args = $cron[ $hookname ][ $sig ]['args'];
+			$event = $cron[ $hookname ][ $sig ];
+
+			$event['hook'] = $hookname;
+			$event['timestamp'] = $time;
+
+			$event = (object) $event;
+
 			delete_transient( 'doing_cron' );
-			$scheduled = force_schedule_single_event( $hookname, $args ); // UTC
+			$scheduled = force_schedule_single_event( $hookname, $event->args ); // UTC
 
 			if ( false === $scheduled ) {
 				return $scheduled;
@@ -40,6 +46,21 @@ function run( $hookname, $sig ) {
 			spawn_cron();
 
 			sleep( 1 );
+
+			/**
+			 * Fires when a cron event is ran manually.
+			 *
+			 * @param object $event {
+			 *     An object containing the event's data.
+			 *
+			 *     @type string       $hook      Action hook to execute when the event is run.
+			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
+			 *     @type string|false $schedule  How often the event should subsequently recur.
+			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
+			 * }
+			 */
+			do_action( 'crontrol/ran_event', $event );
 
 			return true;
 		}
