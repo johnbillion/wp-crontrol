@@ -98,7 +98,7 @@ function action_handle_posts() {
 			}
 
 			/**
-			 * Fires when a new cron event is added.
+			 * Fires after a new cron event is added.
 			 *
 			 * @param object $event {
 			 *     An object containing the event's data.
@@ -148,7 +148,7 @@ function action_handle_posts() {
 			}
 
 			/**
-			 * Fires when a new PHP cron event is added.
+			 * Fires after a new PHP cron event is added.
 			 *
 			 * @param object $event {
 			 *     An object containing the event's data.
@@ -199,9 +199,42 @@ function action_handle_posts() {
 			$in_args = array();
 		}
 
+		$original = Event\get_single( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
 		Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
 
 		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
+
+		add_filter( 'schedule_event', function( $event ) use ( $original ) {
+			if ( ! $event || ! $original ) {
+				return $event;
+			}
+
+			/**
+			 * Fires after a cron event is edited.
+			 *
+			 * @param object $event {
+			 *     An object containing the new event's data.
+			 *
+			 *     @type string       $hook      Action hook to execute when the event is run.
+			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
+			 *     @type string|false $schedule  How often the event should subsequently recur.
+			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
+			 * }
+			 * @param object $original {
+			 *     An object containing the original event's data.
+			 *
+			 *     @type string       $hook      Action hook to execute when the event is run.
+			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
+			 *     @type string|false $schedule  How often the event should subsequently recur.
+			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
+			 * }
+			 */
+			do_action( 'crontrol/edited_event', $event, $original );
+
+			return $event;
+		}, 99 );
 
 		$added = Event\add( $next_run_local, $in_schedule, $in_hookname, $in_args );
 
