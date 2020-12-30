@@ -1748,6 +1748,7 @@ function get_core_schedules() {
 		'hourly',
 		'twicedaily',
 		'daily',
+		'weekly',
 	);
 }
 
