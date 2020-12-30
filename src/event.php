@@ -148,18 +148,19 @@ function add( $next_run_local, $schedule, $hookname, array $args ) {
  * @return bool Whether the deletion was successful.
  */
 function delete( $to_delete, $sig, $next_run_utc ) {
-	$crons = _get_cron_array();
-	if ( isset( $crons[ $next_run_utc ][ $to_delete ][ $sig ] ) ) {
-		$args        = $crons[ $next_run_utc ][ $to_delete ][ $sig ]['args'];
-		$unscheduled = wp_unschedule_event( $next_run_utc, $to_delete, $args );
+	$event = get_single( $to_delete, $sig, $next_run_utc );
 
-		if ( false === $unscheduled ) {
-			return $unscheduled;
-		}
-
-		return true;
+	if ( ! $event ) {
+		return false;
 	}
-	return false;
+
+	$unscheduled = wp_unschedule_event( $event->timestamp, $event->hook, $event->args );
+
+	if ( false === $unscheduled ) {
+		return $unscheduled;
+	}
+
+	return true;
 }
 
 /**
@@ -198,6 +199,29 @@ function get() {
 	uasort( $events, 'Crontrol\Event\uasort_order_events' );
 
 	return $events;
+}
+
+/**
+ * Gets a single cron event.
+ *
+ * @param string $id           The hook name of the event.
+ * @param string $sig          The event signature.
+ * @param string $next_run_utc The UTC time that the event would be run at.
+ */
+function get_single( $id, $sig, $next_run_utc ) {
+	$crons = _get_cron_array();
+	if ( isset( $crons[ $next_run_utc ][ $id ][ $sig ] ) ) {
+		$event = $crons[ $next_run_utc ][ $id ][ $sig ];
+
+		$event['hook'] = $id;
+		$event['timestamp'] = $next_run_utc;
+
+		$event = (object) $event;
+
+		return $event;
+	}
+
+	return null;
 }
 
 /**
