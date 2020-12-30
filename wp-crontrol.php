@@ -353,8 +353,8 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 
+		$event = Event\get_single( $id, $sig, $next_run_utc );
 		$deleted = Event\delete( $id, $sig, $next_run_utc );
-
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '6',
@@ -363,6 +363,21 @@ function action_handle_posts() {
 
 		if ( false === $deleted ) {
 			$redirect['crontrol_message'] = '7';
+		} else {
+			/**
+			 * Fires when a cron event is deleted.
+			 *
+			 * @param object $event {
+			 *     An object containing the event's data.
+			 *
+			 *     @type string       $hook      Action hook to execute when the event is run.
+			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
+			 *     @type string|false $schedule  How often the event should subsequently recur.
+			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
+			 * }
+			 */
+			do_action( 'crontrol/deleted_event', $event );
 		}
 
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
