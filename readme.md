@@ -18,9 +18,9 @@ WP Crontrol enables you to view and control what's happening in the WP-Cron syst
  * Edit, delete, and immediately run any cron events.
  * Add new cron events.
  * Bulk delete cron events.
- * Add, edit, and remove custom cron schedules.
+ * Add and remove custom cron schedules.
 
-The admin screen will show you a warning message if your cron system doesn't appear to be working (for example if your server can't connect to itself to fire scheduled cron events).
+WP Crontrol is aware of timezones, will alert you to events that have no actions or that have missed their schedule, and will show you a warning message if your cron system doesn't appear to be working (for example if your server can't connect to itself to fire scheduled cron events).
 
 ### Usage
 
@@ -31,7 +31,7 @@ The admin screen will show you a warning message if your cron system doesn't app
 
 I maintain several other plugins for developers. Check them out:
 
-* [Query Monitor](https://wordpress.org/plugins/query-monitor/) is the developer tools panel for WordPress
+* [Query Monitor](https://wordpress.org/plugins/query-monitor/) is the developer tools panel for WordPress.
 * [User Switching](https://wordpress.org/plugins/user-switching/) provides instant switching between user accounts in WordPress.
 
 ## Frequently Asked Questions
