@@ -134,8 +134,10 @@ The cron commands which were previously included in WP Crontrol are now part of 
 
 ## Screenshots
 
-1. New cron events can be added, modified, deleted, and executed<br>![](.wordpress-org/screenshot-1.png)
+1. Cron events can be modified, deleted, and executed<br>![](.wordpress-org/screenshot-1.png)
 
-2. New cron schedules can be added, giving plugin developers more options when scheduling events<br>![](.wordpress-org/screenshot-2.png)
+2. New cron events can be added<br>![](.wordpress-org/screenshot-2.png)
+
+3. New cron schedules can be added, giving plugin developers more options when scheduling events<br>![](.wordpress-org/screenshot-2.png)
 
 <!-- changelog -->
