@@ -1708,6 +1708,7 @@ function get_persistent_core_hooks() {
 		'delete_expired_transients',
 		'recovery_mode_clean_expired_keys',
 		'update_network_counts',
+		'wp_https_detection',
 		'wp_privacy_delete_old_export_files',
 		'wp_scheduled_auto_draft_delete',
 		'wp_scheduled_delete',
