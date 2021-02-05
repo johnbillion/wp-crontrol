@@ -1661,7 +1661,7 @@ function enqueue_assets( $hook_suffix ) {
 	wp_enqueue_style( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'css/wp-crontrol.css', array( 'dashicons' ), $ver );
 
 	$ver = filemtime( plugin_dir_path( __FILE__ ) . 'js/wp-crontrol.js' );
-	wp_enqueue_script( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'js/wp-crontrol.js', array( 'jquery' ), $ver, true );
+	wp_enqueue_script( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'js/wp-crontrol.js', array( 'jquery', 'wp-a11y' ), $ver, true );
 
 	$vars = array();
 

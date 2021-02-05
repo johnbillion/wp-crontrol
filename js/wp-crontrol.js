@@ -28,6 +28,10 @@ function crontrolCheckHash() {
 		if ( response.success && response.data && response.data !== window.wpCrontrol.eventsHash ) {
 			jQuery( '#crontrol-hash-message' ).slideDown();
 
+			if ( wp && wp.a11y && wp.a11y.speak ) {
+				wp.a11y.speak( jQuery( '#crontrol-hash-message' ).text() );
+			}
+
 			if ( hashtimer ) {
 				clearInterval( hashtimer );
 			}
