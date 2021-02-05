@@ -1639,7 +1639,7 @@ function setup_manage_page() {
 	// Add the initially hidden admin notice about the out of date events list
 	add_action( 'admin_notices', function() {
 		printf(
-			'<div id="crontrol-hash-message" class="notice notice-warning"><p>%s</p></div>',
+			'<div id="crontrol-hash-message" class="notice notice-info"><p>%s</p></div>',
 			esc_html__( 'The scheduled cron events have changed since you first opened this page. Reload the page to see the up to date list.', 'wp-crontrol' )
 		);
 	} );
