@@ -252,7 +252,20 @@ function action_handle_posts() {
 			$in_args = array();
 		}
 
+		$redirect = array(
+			'page'             => 'crontrol_admin_manage_page',
+			'crontrol_message' => '4',
+			'crontrol_name'    => rawurlencode( $in_hookname ),
+		);
+
 		$original = Event\get_single( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
+
+		if ( ! $original ) {
+			$redirect['crontrol_message'] = '11';
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			exit;
+		}
+
 		Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
 
 		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
@@ -291,12 +304,6 @@ function action_handle_posts() {
 
 		$added = Event\add( $next_run_local, $in_schedule, $in_hookname, $in_args );
 
-		$redirect = array(
-			'page'             => 'crontrol_admin_manage_page',
-			'crontrol_message' => '4',
-			'crontrol_name'    => rawurlencode( $in_hookname ),
-		);
-
 		if ( is_wp_error( $added ) ) {
 			set_message( $added->get_error_message() );
 			$redirect['crontrol_message'] = 'error';
@@ -316,8 +323,21 @@ function action_handle_posts() {
 			'code' => $in_hookcode,
 			'name' => $in_eventname,
 		);
+		$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
+		$redirect = array(
+			'page'             => 'crontrol_admin_manage_page',
+			'crontrol_message' => '4',
+			'crontrol_name'    => rawurlencode( $hookname ),
+		);
 
 		$original = Event\get_single( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
+
+		if ( ! $original ) {
+			$redirect['crontrol_message'] = '11';
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			exit;
+		}
+
 		Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
 
 		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
@@ -355,13 +375,6 @@ function action_handle_posts() {
 		}, 99 );
 
 		$added = Event\add( $next_run_local, $in_schedule, 'crontrol_cron_job', $args );
-
-		$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
-		$redirect = array(
-			'page'             => 'crontrol_admin_manage_page',
-			'crontrol_message' => '4',
-			'crontrol_name'    => rawurlencode( $hookname ),
-		);
 
 		if ( is_wp_error( $added ) ) {
 			set_message( $added->get_error_message() );
@@ -480,13 +493,21 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 
-		$event = Event\get_single( $hook, $sig, $next_run_utc );
-		$deleted = Event\delete( $hook, $sig, $next_run_utc );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '6',
 			'crontrol_name'    => rawurlencode( $hook ),
 		);
+
+		$event = Event\get_single( $hook, $sig, $next_run_utc );
+
+		if ( ! $event ) {
+			$redirect['crontrol_message'] = '11';
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			exit;
+		}
+
+		$deleted = Event\delete( $hook, $sig, $next_run_utc );
 
 		if ( false === $deleted ) {
 			$redirect['crontrol_message'] = '7';
@@ -1312,6 +1333,11 @@ function admin_manage_page() {
 		'10' => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Failed to save the cron event %s.', 'wp-crontrol' ),
+			'error',
+		),
+		'11' => array(
+			/* translators: 1: The name of the cron event. */
+			__( 'The cron event %s could not be found.', 'wp-crontrol' ),
 			'error',
 		),
 		'error' => array(),
