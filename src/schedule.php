@@ -73,7 +73,7 @@ function get() {
 /**
  * Displays a dropdown filled with the possible schedules, including non-repeating.
  *
- * @param bool $current The currently selected schedule.
+ * @param string|false $current The currently selected schedule, or false for none.
  */
 function dropdown( $current = false ) {
 	$schedules = get();
