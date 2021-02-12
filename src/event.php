@@ -229,9 +229,10 @@ function get() {
 /**
  * Gets a single cron event.
  *
- * @param string $hook           The hook name of the event.
+ * @param string $hook         The hook name of the event.
  * @param string $sig          The event signature.
  * @param string $next_run_utc The UTC time that the event would be run at.
+ * @return object|null A cron event object, or null if it's not found.
  */
 function get_single( $hook, $sig, $next_run_utc ) {
 	$crons = _get_cron_array();
