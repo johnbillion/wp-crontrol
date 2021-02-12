@@ -109,7 +109,10 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 	$next_run_local = strtotime( $next_run_local, current_time( 'timestamp' ) );
 
 	if ( false === $next_run_local ) {
-		return false;
+		return new WP_Error(
+			'invalid_timestamp',
+			__( 'Invalid timestamp provided.', 'wp-crontrol' )
+		);
 	}
 
 	$next_run_utc = get_gmt_from_date( gmdate( 'Y-m-d H:i:s', $next_run_local ), 'U' );
