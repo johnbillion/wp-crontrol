@@ -267,7 +267,14 @@ function action_handle_posts() {
 			exit;
 		}
 
-		Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
+		$deleted = Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
+
+		if ( is_wp_error( $deleted ) ) {
+			set_message( $deleted->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			exit;
+		}
 
 		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
 
@@ -340,7 +347,14 @@ function action_handle_posts() {
 			exit;
 		}
 
-		Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
+		$deleted = Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
+
+		if ( is_wp_error( $deleted ) ) {
+			set_message( $deleted->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			exit;
+		}
 
 		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
 
@@ -464,8 +478,9 @@ function action_handle_posts() {
 				}
 
 				$event = Event\get_single( urldecode( $hook ), $sig, $next_run_utc );
+				$deleted = Event\delete( urldecode( $hook ), $sig, $next_run_utc );
 
-				if ( Event\delete( urldecode( $hook ), $sig, $next_run_utc ) ) {
+				if ( ! is_wp_error( $deleted ) ) {
 					$deleted++;
 
 					/** This action is documented in wp-crontrol.php */
@@ -512,8 +527,9 @@ function action_handle_posts() {
 
 		$deleted = Event\delete( $hook, $sig, $next_run_utc );
 
-		if ( false === $deleted ) {
-			$redirect['crontrol_message'] = '7';
+		if ( is_wp_error( $deleted ) ) {
+			set_message( $deleted->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
 		} else {
 			/**
 			 * Fires after a cron event is deleted.
