@@ -645,6 +645,11 @@ function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
  */
 function filter_cron_schedules( array $scheds ) {
 	$new_scheds = get_option( 'crontrol_schedules', array() );
+
+	if ( ! is_array( $new_scheds ) ) {
+		return $scheds;
+	}
+
 	return array_merge( $new_scheds, $scheds );
 }
 
