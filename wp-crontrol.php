@@ -406,33 +406,8 @@ function action_handle_posts() {
 		}
 		check_admin_referer( 'new-sched' );
 		$name     = wp_unslash( $_POST['internal_name'] );
-		$interval = wp_unslash( $_POST['interval'] );
+		$interval = absint( $_POST['interval'] );
 		$display  = wp_unslash( $_POST['display_name'] );
-
-		// The user entered something that wasn't a number.
-		// Try to convert it with strtotime.
-		if ( ! is_numeric( $interval ) ) {
-			$now    = time();
-			$future = strtotime( $interval, $now );
-			if ( false === $future || $now > $future ) {
-				$redirect = array(
-					'page'             => 'crontrol_admin_options_page',
-					'crontrol_message' => '7',
-					'crontrol_name'    => rawurlencode( $interval ),
-				);
-				wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
-				exit;
-			}
-			$interval = $future - $now;
-		} elseif ( $interval <= 0 ) {
-			$redirect = array(
-				'page'             => 'crontrol_admin_options_page',
-				'crontrol_message' => '7',
-				'crontrol_name'    => rawurlencode( $interval ),
-			);
-			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
-			exit;
-		}
 
 		Schedule\add( $name, $interval, $display );
 		$redirect = array(
@@ -687,11 +662,6 @@ function admin_options_page() {
 			/* translators: 1: The name of the cron schedule. */
 			__( 'Added the cron schedule %s.', 'wp-crontrol' ),
 			'success',
-		),
-		'7' => array(
-			/* translators: 1: The name of the cron schedule. */
-			__( 'Cron schedule not added because there was a problem parsing %s.', 'wp-crontrol' ),
-			'error',
 		),
 	);
 	if ( isset( $_GET['crontrol_message'] ) && isset( $_GET['crontrol_name'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
