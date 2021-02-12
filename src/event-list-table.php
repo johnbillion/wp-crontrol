@@ -201,10 +201,10 @@ class Table extends \WP_List_Table {
 		$hooks_type = ( ! empty( $_GET['hooks_type'] ) ? $_GET['hooks_type'] : 'all' );
 
 		$types = array(
-			'all'      => __( 'All hooks', 'wp-crontrol' ),
-			'noaction' => __( 'Hooks with no action', 'wp-crontrol' ),
-			'core'     => __( 'WordPress core hooks', 'wp-crontrol' ),
-			'custom'   => __( 'Custom hooks', 'wp-crontrol' ),
+			'all'      => __( 'All events', 'wp-crontrol' ),
+			'noaction' => __( 'Events with no action', 'wp-crontrol' ),
+			'core'     => __( 'WordPress core events', 'wp-crontrol' ),
+			'custom'   => __( 'Custom events', 'wp-crontrol' ),
 		);
 
 		$url = admin_url( 'tools.php?page=crontrol_admin_manage_page' );
