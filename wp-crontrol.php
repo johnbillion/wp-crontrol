@@ -41,6 +41,8 @@ defined( 'ABSPATH' ) || die();
 require_once __DIR__ . '/src/event.php';
 require_once __DIR__ . '/src/schedule.php';
 
+const TRANSIENT = 'crontrol-message-%d';
+
 /**
  * Hook onto all of the actions and filters needed by the plugin.
  */
@@ -63,6 +65,22 @@ function init_hooks() {
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_assets' );
 	add_action( 'crontrol/tab-header',   __NAMESPACE__ . '\show_cron_status', 20 );
+}
+
+function set_message( $message ) {
+	$key = sprintf(
+		TRANSIENT,
+		get_current_user_id()
+	);
+	return set_transient( $key, $message, 60 );
+}
+
+function get_message() {
+	$key = sprintf(
+		TRANSIENT,
+		get_current_user_id()
+	);
+	return get_transient( $key );
 }
 
 /**
@@ -145,8 +163,9 @@ function action_handle_posts() {
 			'crontrol_name'    => rawurlencode( $in_hookname ),
 		);
 
-		if ( false === $added ) {
-			$redirect['crontrol_message'] = '10';
+		if ( is_wp_error( $added ) ) {
+			set_message( $added->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
 		}
 
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
@@ -196,8 +215,9 @@ function action_handle_posts() {
 			'crontrol_name'    => rawurlencode( $hookname ),
 		);
 
-		if ( false === $added ) {
-			$redirect['crontrol_message'] = '10';
+		if ( is_wp_error( $added ) ) {
+			set_message( $added->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
 		}
 
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
@@ -266,8 +286,9 @@ function action_handle_posts() {
 			'crontrol_name'    => rawurlencode( $in_hookname ),
 		);
 
-		if ( false === $added ) {
-			$redirect['crontrol_message'] = '10';
+		if ( is_wp_error( $added ) ) {
+			set_message( $added->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
 		}
 
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
@@ -331,8 +352,9 @@ function action_handle_posts() {
 			'crontrol_name'    => rawurlencode( $hookname ),
 		);
 
-		if ( false === $added ) {
-			$redirect['crontrol_message'] = '10';
+		if ( is_wp_error( $added ) ) {
+			set_message( $added->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
 		}
 
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
@@ -1291,12 +1313,20 @@ function admin_manage_page() {
 			'error',
 			false,
 		),
+		'error' => array(),
 	);
 
 	if ( isset( $_GET['crontrol_name'] ) && isset( $_GET['crontrol_message'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
 		$hook    = wp_unslash( $_GET['crontrol_name'] );
 		$message = wp_unslash( $_GET['crontrol_message'] );
 		$link    = '';
+
+		if ( 'error' === $message ) {
+			$messages['error'] = array(
+				get_message(),
+				'error',
+			);
+		}
 
 		printf(
 			'<div id="crontrol-message" class="notice notice-%1$s is-dismissible"><p>%2$s%3$s</p></div>',
