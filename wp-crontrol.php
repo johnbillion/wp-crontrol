@@ -67,6 +67,12 @@ function init_hooks() {
 	add_action( 'crontrol/tab-header',   __NAMESPACE__ . '\show_cron_status', 20 );
 }
 
+/**
+ * Sets an error message to show to the current user after a redirect.
+ *
+ * @param string $message The error message text.
+ * @return bool Whether the message was saved.
+ */
 function set_message( $message ) {
 	$key = sprintf(
 		TRANSIENT,
@@ -75,6 +81,11 @@ function set_message( $message ) {
 	return set_transient( $key, $message, 60 );
 }
 
+/**
+ * Gets the error message to show to the current user after a redirect.
+ *
+ * @return string The error message text.
+ */
 function get_message() {
 	$key = sprintf(
 		TRANSIENT,
