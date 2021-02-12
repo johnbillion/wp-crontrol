@@ -260,8 +260,9 @@ function action_handle_posts() {
 
 		$original = Event\get_single( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
 
-		if ( ! $original ) {
-			$redirect['crontrol_message'] = '11';
+		if ( is_wp_error( $original ) ) {
+			set_message( $original->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
 		}
@@ -332,8 +333,9 @@ function action_handle_posts() {
 
 		$original = Event\get_single( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
 
-		if ( ! $original ) {
-			$redirect['crontrol_message'] = '11';
+		if ( is_wp_error( $original ) ) {
+			set_message( $original->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
 		}
@@ -501,8 +503,9 @@ function action_handle_posts() {
 
 		$event = Event\get_single( $hook, $sig, $next_run_utc );
 
-		if ( ! $event ) {
-			$redirect['crontrol_message'] = '11';
+		if ( is_wp_error( $event ) ) {
+			set_message( $event->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
 			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 			exit;
 		}
@@ -1333,11 +1336,6 @@ function admin_manage_page() {
 		'10' => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Failed to save the cron event %s.', 'wp-crontrol' ),
-			'error',
-		),
-		'11' => array(
-			/* translators: 1: The name of the cron event. */
-			__( 'The cron event %s could not be found.', 'wp-crontrol' ),
 			'error',
 		),
 		'error' => array(),

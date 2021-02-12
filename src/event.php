@@ -232,7 +232,7 @@ function get() {
  * @param string $hook         The hook name of the event.
  * @param string $sig          The event signature.
  * @param string $next_run_utc The UTC time that the event would be run at.
- * @return object|null A cron event object, or null if it's not found.
+ * @return object|WP_Error A cron event object, or a WP_Error if it's not found.
  */
 function get_single( $hook, $sig, $next_run_utc ) {
 	$crons = _get_cron_array();
@@ -247,7 +247,14 @@ function get_single( $hook, $sig, $next_run_utc ) {
 		return $event;
 	}
 
-	return null;
+	return new WP_Error(
+		'not_found',
+		sprintf(
+			/* translators: 1: The name of the cron event. */
+			__( 'The cron event %s could not be found.', 'wp-crontrol' ),
+			$hook
+		)
+	);
 }
 
 /**
