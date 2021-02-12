@@ -253,7 +253,7 @@ class Table extends \WP_List_Table {
 			}
 		}
 
-		if ( is_late( $event ) ) {
+		if ( is_late( $event ) || is_too_frequent( $event ) ) {
 			$classes[] = 'crontrol-warning';
 		}
 
@@ -517,6 +517,17 @@ class Table extends \WP_List_Table {
 				return sprintf(
 					'<span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
 					esc_html( $schedule_name->get_error_message() )
+				);
+			} elseif ( is_too_frequent( $event ) ) {
+				return sprintf(
+					'%1$s<span class="status-crontrol-warning"><br><span class="dashicons dashicons-warning" aria-hidden="true"></span> %2$s</span>',
+					esc_html( $schedule_name ),
+					sprintf(
+						/* translators: 1: The name of the configuration constant, 2: The value of the configuration constant */
+						esc_html__( 'This interval is less than the %1$s constant which is set to %2$s seconds. Events that use it may not run on time.', 'wp-crontrol' ),
+						'<code>WP_CRON_LOCK_TIMEOUT</code>',
+						intval( WP_CRON_LOCK_TIMEOUT )
+					)
 				);
 			} else {
 				return esc_html( $schedule_name );

@@ -64,6 +64,7 @@ function get() {
 
 	array_walk( $schedules, function( array &$schedule, $name ) {
 		$schedule['name'] = $name;
+		$schedule['is_too_frequent'] = ( $schedule['interval'] < WP_CRON_LOCK_TIMEOUT );
 	} );
 
 	return $schedules;

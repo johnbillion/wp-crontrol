@@ -326,6 +326,22 @@ function get_schedule_name( stdClass $event ) {
 }
 
 /**
+ * Determines whether the schedule for an event means it runs too frequently to be reliable.
+ *
+ * @param stdClass $event A WP-Cron event.
+ * @return bool Whether the event scheduled is too frequent.
+ */
+function is_too_frequent( stdClass $event ) {
+	$schedules = Schedule\get();
+
+	if ( ! isset( $schedules[ $event->schedule ] ) ) {
+		return false;
+	}
+
+	return $schedules[ $event->schedule ]['is_too_frequent'];
+}
+
+/**
  * Determines whether an event is late.
  *
  * An event which has missed its schedule by more than 10 minutes is considered late.
