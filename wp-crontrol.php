@@ -1269,60 +1269,50 @@ function admin_manage_page() {
 			/* translators: 1: The name of the cron event. */
 			__( 'Scheduled the cron event %s to run now.', 'wp-crontrol' ),
 			'success',
-			true,
 		),
 		'2'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Deleted all %s cron events.', 'wp-crontrol' ),
 			'success',
-			false,
 		),
 		'3'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'There are no %s cron events to delete.', 'wp-crontrol' ),
 			'info',
-			false,
 		),
 		'4'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Saved the cron event %s.', 'wp-crontrol' ),
 			'success',
-			false,
 		),
 		'5'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Created the cron event %s.', 'wp-crontrol' ),
 			'success',
-			false,
 		),
 		'6'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Deleted the cron event %s.', 'wp-crontrol' ),
 			'success',
-			false,
 		),
 		'7'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Failed to the delete the cron event %s.', 'wp-crontrol' ),
 			'error',
-			false,
 		),
 		'8'  => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Failed to the execute the cron event %s.', 'wp-crontrol' ),
 			'error',
-			false,
 		),
 		'9'  => array(
 			__( 'Deleted the selected cron events.', 'wp-crontrol' ),
 			'success',
-			false,
 		),
 		'10' => array(
 			/* translators: 1: The name of the cron event. */
 			__( 'Failed to save the cron event %s.', 'wp-crontrol' ),
 			'error',
-			false,
 		),
 		'error' => array(),
 	);
