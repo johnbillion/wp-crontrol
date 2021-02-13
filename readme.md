@@ -140,6 +140,6 @@ The cron commands which were previously included in WP Crontrol are now part of 
 
 2. New cron events can be added<br>![](.wordpress-org/screenshot-2.png)
 
-3. New cron schedules can be added, giving plugin developers more options when scheduling events<br>![](.wordpress-org/screenshot-2.png)
+3. New cron schedules can be added, giving plugin developers more options when scheduling events<br>![](.wordpress-org/screenshot-3.png)
 
 <!-- changelog -->
