@@ -1128,6 +1128,10 @@ function show_cron_form( $editing ) {
 						</td>
 					</tr>
 					<?php
+				} else {
+					?>
+					<input type="hidden" name="action" value="new_cron"/>
+					<?php
 				}
 
 				if ( $is_editing_php || $can_add_php ) {
