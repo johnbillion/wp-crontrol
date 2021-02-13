@@ -18,7 +18,7 @@ use WP_Error;
  *
  * @param string $hookname The hook name of the cron event to run.
  * @param string $sig      The cron event signature.
- * @return bool Whether the execution was successful.
+ * @return true|WP_Error True if the execution was successful, WP_Error if not.
  */
 function run( $hookname, $sig ) {
 	$crons = _get_cron_array();
@@ -34,7 +34,7 @@ function run( $hookname, $sig ) {
 			delete_transient( 'doing_cron' );
 			$scheduled = force_schedule_single_event( $hookname, $event->args ); // UTC
 
-			if ( false === $scheduled ) {
+			if ( is_wp_error( $scheduled ) ) {
 				return $scheduled;
 			}
 
@@ -65,7 +65,15 @@ function run( $hookname, $sig ) {
 			return true;
 		}
 	}
-	return false;
+
+	return new WP_Error(
+		'not_found',
+		sprintf(
+			/* translators: 1: The name of the cron event. */
+			__( 'The cron event %s could not be found.', 'wp-crontrol' ),
+			$hookname
+		)
+	);
 }
 
 /**
@@ -75,7 +83,7 @@ function run( $hookname, $sig ) {
  *
  * @param string $hook Action hook to execute when the event is run.
  * @param array  $args Optional. Array containing each separate argument to pass to the hook's callback function.
- * @return bool True if event successfully scheduled. False for failure.
+ * @return true|WP_Error True if event successfully scheduled. WP_Error on failure.
  */
 function force_schedule_single_event( $hook, $args = array() ) {
 	$event = (object) array(
@@ -93,7 +101,21 @@ function force_schedule_single_event( $hook, $args = array() ) {
 	);
 	uksort( $crons, 'strnatcasecmp' );
 
-	return _set_cron_array( $crons );
+	$result = _set_cron_array( $crons );
+
+	// Not using the WP_Error from `_set_cron_array()` here so we can provide a more specific error message.
+	if ( false === $result ) {
+		return new WP_Error(
+			'could_not_add',
+			sprintf(
+				/* translators: 1: The name of the cron event. */
+				__( 'Failed to schedule the cron event %s.', 'wp-crontrol' ),
+				$hook
+			)
+		);
+	}
+
+	return true;
 }
 
 /**
@@ -158,7 +180,7 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 			'could_not_add',
 			sprintf(
 				/* translators: 1: The name of the cron event. */
-				__( 'Failed to save the cron event %s.', 'wp-crontrol' ),
+				__( 'Failed to schedule the cron event %s.', 'wp-crontrol' ),
 				$hook
 			)
 		);

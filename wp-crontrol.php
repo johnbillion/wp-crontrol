@@ -590,8 +590,9 @@ function action_handle_posts() {
 			'crontrol_name'    => rawurlencode( $hook ),
 		);
 
-		if ( false === $ran ) {
-			$redirect['crontrol_message'] = '8';
+		if ( is_wp_error( $ran ) ) {
+			set_message( $ran->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
 		}
 
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
