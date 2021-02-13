@@ -48,7 +48,7 @@ function run( $hookname, $sig ) {
 			sleep( 1 );
 
 			/**
-			 * Fires after a cron event is ran manually.
+			 * Fires after a cron event is scheduled to run manually.
 			 *
 			 * @param object $event {
 			 *     An object containing the event's data.
