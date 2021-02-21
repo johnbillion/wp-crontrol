@@ -348,17 +348,25 @@ class Table extends \WP_List_Table {
 	 * @param stdClass $event The cron event for the current row.
 	 */
 	protected function column_cb( $event ) {
+		$id = sprintf(
+			'wp-crontrol-delete-%1$s-%2$s-%3$s',
+			$event->time,
+			rawurlencode( $event->hook ),
+			$event->sig
+		);
+
 		if ( ! in_array( $event->hook, self::$persistent_core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) ) {
 			?>
-			<label class="screen-reader-text" for="">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $id ); ?>">
 				<?php printf( esc_html__( 'Select this row', 'wp-crontrol' ) ); ?>
 			</label>
 			<?php
 				printf(
-					'<input type="checkbox" name="delete[%1$s][%2$s]" value="%3$s">',
+					'<input type="checkbox" name="delete[%1$s][%2$s]" value="%3$s" id="%4$s">',
 					esc_attr( $event->time ),
 					esc_attr( rawurlencode( $event->hook ) ),
-					esc_attr( $event->sig )
+					esc_attr( $event->sig ),
+					esc_attr( $id )
 				);
 			?>
 			<?php
