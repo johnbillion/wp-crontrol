@@ -612,6 +612,9 @@ function action_admin_menu() {
 	add_action( "load-{$events}", __NAMESPACE__ . '\admin_help_tab' );
 }
 
+/**
+ * Adds a Help tab with links to help resources;
+ */
 function admin_help_tab() {
 	$screen = get_current_screen();
 
