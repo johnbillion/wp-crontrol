@@ -55,7 +55,6 @@ function init_hooks() {
 	add_action( 'wp_ajax_crontrol_checkhash',         __NAMESPACE__ . '\ajax_check_events_hash' );
 	add_filter( "plugin_action_links_{$plugin_file}", __NAMESPACE__ . '\plugin_action_links', 10, 4 );
 	add_filter( 'removable_query_args',               __NAMESPACE__ . '\filter_removable_query_args' );
-	add_filter( 'in_admin_header',                    __NAMESPACE__ . '\do_tabs' );
 	add_filter( 'pre_unschedule_event',               __NAMESPACE__ . '\maybe_clear_doing_cron' );
 	add_filter( 'plugin_row_meta',                    __NAMESPACE__ . '\filter_plugin_row_meta', 10, 4 );
 
@@ -697,6 +696,8 @@ function admin_options_page() {
 
 	?>
 	<div class="wrap">
+
+	<?php do_tabs(); ?>
 
 	<h1><?php esc_html_e( 'Cron Schedules', 'wp-crontrol' ); ?></h1>
 
@@ -1373,6 +1374,8 @@ function admin_manage_page() {
 		case $tabs['events']:
 			?>
 			<div class="wrap">
+				<?php do_tabs(); ?>
+
 				<h1 class="wp-heading-inline"><?php esc_html_e( 'Cron Events', 'wp-crontrol' ); ?></h1>
 
 				<?php echo '<a href="' . esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page&action=new-cron' ) ) . '" class="page-title-action">' . esc_html__( 'Add New', 'wp-crontrol' ) . '</a>'; ?>

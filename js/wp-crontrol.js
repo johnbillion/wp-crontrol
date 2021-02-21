@@ -4,13 +4,7 @@
  * @package wp-crontrol
  */
 
-const header = document.getElementById( 'crontrol-header' );
-const wpbody = document.getElementById( 'wpbody-content' );
 let hashtimer = null;
-
-if ( header && wpbody ) {
-	wpbody.prepend( header );
-}
 
 if ( window.wpCrontrol && window.wpCrontrol.eventsHash && window.wpCrontrol.eventsHashInterval ) {
 	hashtimer = setInterval( crontrolCheckHash, ( 1000 * window.wpCrontrol.eventsHashInterval ) );
