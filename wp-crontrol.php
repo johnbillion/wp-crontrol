@@ -605,8 +605,47 @@ function action_handle_posts() {
  * Run using the 'admin_menu' action.
  */
 function action_admin_menu() {
-	add_options_page( esc_html__( 'Cron Schedules', 'wp-crontrol' ), esc_html__( 'Cron Schedules', 'wp-crontrol' ), 'manage_options', 'crontrol_admin_options_page', __NAMESPACE__ . '\admin_options_page' );
-	add_management_page( esc_html__( 'Cron Events', 'wp-crontrol' ), esc_html__( 'Cron Events', 'wp-crontrol' ), 'manage_options', 'crontrol_admin_manage_page', __NAMESPACE__ . '\admin_manage_page' );
+	$schedules = add_options_page( esc_html__( 'Cron Schedules', 'wp-crontrol' ), esc_html__( 'Cron Schedules', 'wp-crontrol' ), 'manage_options', 'crontrol_admin_options_page', __NAMESPACE__ . '\admin_options_page' );
+	$events = add_management_page( esc_html__( 'Cron Events', 'wp-crontrol' ), esc_html__( 'Cron Events', 'wp-crontrol' ), 'manage_options', 'crontrol_admin_manage_page', __NAMESPACE__ . '\admin_manage_page' );
+
+	add_action( "load-{$schedules}", __NAMESPACE__ . '\admin_help_tab' );
+	add_action( "load-{$events}", __NAMESPACE__ . '\admin_help_tab' );
+}
+
+function admin_help_tab() {
+	$screen = get_current_screen();
+
+	$content = '<p>' . __( 'There are several places to get help with issues relating to WP-Cron:', 'wp-crontrol' ) . '</p>';
+	$content .= '<ul>';
+	$content .= '<li>';
+	$content .= sprintf(
+		/* translators: %s: URL to the documentation */
+		__( '<a href="%s">Read the WP Crontrol wiki</a> which contains information about events that have missed their schedule, problems with spawning a call to the WP-Cron system, and much more.', 'wp-crontrol' ),
+		'https://github.com/johnbillion/wp-crontrol/wiki'
+	);
+	$content .= '</li>';
+	$content .= '<li>';
+	$content .= sprintf(
+		/* translators: %s: URL to the documentation */
+		__( '<a href="%s">Read the Frequently Asked Questions (FAQ)</a> which cover many common questions and answers.', 'wp-crontrol' ),
+		'https://wordpress.org/plugins/wp-crontrol/faq/'
+	);
+	$content .= '</li>';
+	$content .= '<li>';
+	$content .= sprintf(
+		/* translators: %s: URL to the documentation */
+		__( '<a href="%s">Read the WordPress.org documentation on WP-Cron</a> for more technical details about the WP-Cron system for developers.', 'wp-crontrol' ),
+		'https://developer.wordpress.org/plugins/cron/'
+	);
+	$content .= '</ul>';
+
+	$screen->add_help_tab(
+		array(
+			'id'      => 'crontrol-help',
+			'title'   => __( 'Help', 'wp-crontrol' ),
+			'content' => $content,
+		)
+	);
 }
 
 /**
