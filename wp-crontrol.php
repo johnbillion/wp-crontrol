@@ -1140,6 +1140,8 @@ function show_cron_form( $editing ) {
 				$heading = __( 'Add Cron Event', 'wp-crontrol' );
 			}
 
+			do_tabs();
+
 			printf(
 				'<h1>%s</h1>',
 				esc_html( $heading )
