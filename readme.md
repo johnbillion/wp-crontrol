@@ -90,6 +90,10 @@ You should try deactivating your other plugins one by one to see if one is causi
 
 Not yet, but I hope to add this functionality soon.
 
+### Can I see a historical log of edits, additions, and deletions of cron events and schedules?
+
+Yes. The excellent <a href="https://wordpress.org/plugins/simple-history/">Simple History plugin</a> has built-in support for logging actions performed via WP Crontrol.
+
 ### What's the use of adding new cron schedules?
 
 Cron schedules are used by WordPress and plugins for scheduling events to be executed at regular intervals. Intervals must be provided by the WordPress core or a plugin in order to be used. As an example, many backup plugins provide support for periodic backups. In order to do a weekly backup, a weekly cron schedule must be entered into WP Crontrol first and then a backup plugin can take advantage of it as an interval.
@@ -117,6 +121,8 @@ The next step is to write your function. Here's a simple example:
 ### How do I create a new PHP cron event?
 
 In the Tools → Cron Events admin panel, click on "Add New". In the form that appears, select "PHP Cron Event" and enter the schedule and next run time. The event schedule is how often your event will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel. In the "Hook code" area, enter the PHP code that should be run when your cron event is executed. You don't need to provide the PHP opening tag (`<?php`).
+
+Please see the "Which users can manage PHP cron events?" FAQ for information about which users can create PHP cron events.
 
 ### Which users can manage cron events and schedules?
 
