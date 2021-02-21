@@ -49,6 +49,17 @@ table.wp-list-table {
 	border-color: #dc3232;
 }
 
+.wp-list-table .column-crontrol_icon .dashicons,
+.wp-list-table .check-column .dashicons {
+	margin-left: 6px;
+	font-size: 14px;
+	color: #aaa;
+}
+
+.wp-list-table .column-crontrol_icon .dashicons {
+	margin-top: 2px;
+}
+
 #crontrol-hash-message {
 	display: none;
 }

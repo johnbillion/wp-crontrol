@@ -40,6 +40,10 @@ class Schedule_List_Table extends \WP_List_Table {
 		) );
 	}
 
+	protected function get_primary_column_name() {
+		return 'crontrol_name';
+	}
+
 	/**
 	 * Prepares the list table items and arguments.
 	 */
@@ -66,6 +70,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
+			'crontrol_icon'     => '',
 			'crontrol_name'     => __( 'Internal Name', 'wp-crontrol' ),
 			'crontrol_interval' => __( 'Interval', 'wp-crontrol' ),
 			'crontrol_display'  => __( 'Display Name', 'wp-crontrol' ),
@@ -115,6 +120,24 @@ class Schedule_List_Table extends \WP_List_Table {
 		}
 
 		return $this->row_actions( $links );
+	}
+
+	/**
+	 * Returns the output for the icon cell of a table row.
+	 *
+	 * @param array $schedule The schedule for the current row.
+	 * @return string The cell output.
+	 */
+	protected function column_crontrol_icon( array $schedule ) {
+		if ( in_array( $schedule['name'], self::$core_schedules, true ) ) {
+			return sprintf(
+				'<span class="dashicons dashicons-wordpress" aria-hidden="true"></span>
+				<span class="screen-reader-text">%s</span>',
+				esc_html__( 'This is a WordPress core schedule and cannot be deleted', 'wp-crontrol' )
+			);
+		}
+
+		return '';
 	}
 
 	/**

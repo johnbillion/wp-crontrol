@@ -355,7 +355,14 @@ class Table extends \WP_List_Table {
 			$event->sig
 		);
 
-		if ( ! in_array( $event->hook, self::$persistent_core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) ) {
+		if ( in_array( $event->hook, self::$persistent_core_hooks, true ) ) {
+			?>
+			<span class="dashicons dashicons-wordpress" aria-hidden="true"></span>
+			<span class="screen-reader-text">
+				<?php esc_html_e( 'This is a WordPress core event and cannot be deleted', 'wp-crontrol' ); ?>
+			</span>
+			<?php
+		} elseif ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) {
 			?>
 			<label class="screen-reader-text" for="<?php echo esc_attr( $id ); ?>">
 				<?php printf( esc_html__( 'Select this row', 'wp-crontrol' ) ); ?>
