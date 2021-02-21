@@ -1292,7 +1292,7 @@ function admin_manage_page() {
 	$messages = array(
 		'1'  => array(
 			/* translators: 1: The name of the cron event. */
-			__( 'Scheduled the cron event %s to run now.', 'wp-crontrol' ),
+			__( 'Scheduled the cron event %s to run now. The original event will not be affected.', 'wp-crontrol' ),
 			'success',
 		),
 		'2'  => array(
