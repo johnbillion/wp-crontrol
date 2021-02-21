@@ -351,6 +351,7 @@ class Table extends \WP_List_Table {
 	 * Outputs the checkbox cell of a table row.
 	 *
 	 * @param stdClass $event The cron event for the current row.
+	 * @return string The cell output.
 	 */
 	protected function column_cb( $event ) {
 		$id = sprintf(
