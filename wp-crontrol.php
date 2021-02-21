@@ -631,6 +631,11 @@ function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
 			esc_url( admin_url( 'options-general.php?page=crontrol_admin_options_page' ) ),
 			esc_html__( 'Schedules', 'wp-crontrol' )
 		),
+		'crontrol-help' => sprintf(
+			'<a href="%s">%s</a>',
+			'https://github.com/johnbillion/wp-crontrol/wiki',
+			esc_html__( 'Help', 'wp-crontrol' )
+		),
 	);
 
 	return array_merge( $new, $actions );
