@@ -40,6 +40,11 @@ class Schedule_List_Table extends \WP_List_Table {
 		) );
 	}
 
+	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @return string The name of the primary column.
+	 */
 	protected function get_primary_column_name() {
 		return 'crontrol_name';
 	}

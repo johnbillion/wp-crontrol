@@ -37,6 +37,11 @@ class Table extends \WP_List_Table {
 	 */
 	protected static $count_by_hook;
 
+	/**
+	 * Array of all cron events.
+	 *
+	 * @var object[] Array of event objects.
+	 */
 	protected $all_events = array();
 
 	/**
