@@ -356,28 +356,24 @@ class Table extends \WP_List_Table {
 		);
 
 		if ( in_array( $event->hook, self::$persistent_core_hooks, true ) ) {
-			?>
-			<span class="dashicons dashicons-wordpress" aria-hidden="true"></span>
-			<span class="screen-reader-text">
-				<?php esc_html_e( 'This is a WordPress core event and cannot be deleted', 'wp-crontrol' ); ?>
-			</span>
-			<?php
+			return sprintf(
+				'<span class="dashicons dashicons-wordpress" aria-hidden="true"></span>
+				<span class="screen-reader-text">%s</span>',
+				esc_html__( 'This is a WordPress core event and cannot be deleted', 'wp-crontrol' )
+			);
 		} elseif ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) {
-			?>
-			<label class="screen-reader-text" for="<?php echo esc_attr( $id ); ?>">
-				<?php printf( esc_html__( 'Select this row', 'wp-crontrol' ) ); ?>
-			</label>
-			<?php
-				printf(
-					'<input type="checkbox" name="delete[%1$s][%2$s]" value="%3$s" id="%4$s">',
-					esc_attr( $event->time ),
-					esc_attr( rawurlencode( $event->hook ) ),
-					esc_attr( $event->sig ),
-					esc_attr( $id )
-				);
-			?>
-			<?php
+			return sprintf(
+				'<label class="screen-reader-text" for="%1$s">%2$s</label>
+				<input type="checkbox" name="delete[%3$s][%4$s]" value="%5$s" id="%1$s">',
+				esc_attr( $id ),
+				esc_html__( 'Select this row', 'wp-crontrol' ),
+				esc_attr( $event->time ),
+				esc_attr( rawurlencode( $event->hook ) ),
+				esc_attr( $event->sig )
+			);
 		}
+
+		return '';
 	}
 
 	/**
