@@ -912,29 +912,11 @@ function test_cron_spawn( $cache = true ) {
 }
 
 /**
- * Determines whether the given feature is enabled.
- *
- * The feature directly corresponds to one of WP Crontrol's tabs. Currently the only feature
- * that's not enabled by default is "logs" which are provided by WP Crontrol Pro.
- *
- * @param string $feature The feature name.
- * @return bool Whether the specified tab is active.
- */
-function is_feature_enabled( $feature ) {
-	$enabled = ( 'logs' !== $feature );
-	return apply_filters( "crontrol/enabled/{$feature}", $enabled );
-}
-
-/**
  * Shows the status of WP-Cron functionality on the site. Only displays a message when there's a problem.
  *
  * @param string $tab The tab name.
  */
 function show_cron_status( $tab ) {
-	if ( ! is_feature_enabled( $tab ) ) {
-		return;
-	}
-
 	if ( 'UTC' !== date_default_timezone_get() ) {
 		?>
 		<div id="crontrol-timezone-warning" class="notice notice-warning">
