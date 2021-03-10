@@ -605,8 +605,20 @@ function action_handle_posts() {
  * Run using the 'admin_menu' action.
  */
 function action_admin_menu() {
-	$schedules = add_options_page( esc_html__( 'Cron Schedules', 'wp-crontrol' ), esc_html__( 'Cron Schedules', 'wp-crontrol' ), 'manage_options', 'crontrol_admin_options_page', __NAMESPACE__ . '\admin_options_page' );
-	$events = add_management_page( esc_html__( 'Cron Events', 'wp-crontrol' ), esc_html__( 'Cron Events', 'wp-crontrol' ), 'manage_options', 'crontrol_admin_manage_page', __NAMESPACE__ . '\admin_manage_page' );
+	$schedules = add_options_page(
+		esc_html__( 'Cron Schedules', 'wp-crontrol' ),
+		esc_html__( 'Cron Schedules', 'wp-crontrol' ),
+		'manage_options',
+		'crontrol_admin_options_page',
+		__NAMESPACE__ . '\admin_options_page'
+	);
+	$events = add_management_page(
+		esc_html__( 'Cron Events', 'wp-crontrol' ),
+		esc_html__( 'Cron Events', 'wp-crontrol' ),
+		'manage_options',
+		'crontrol_admin_manage_page',
+		__NAMESPACE__ . '\admin_manage_page'
+	);
 
 	add_action( "load-{$schedules}", __NAMESPACE__ . '\admin_help_tab' );
 	add_action( "load-{$events}", __NAMESPACE__ . '\admin_help_tab' );
