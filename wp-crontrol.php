@@ -1186,6 +1186,7 @@ function show_cron_form( $editing ) {
 								?>
 							</p>
 							<p><textarea class="large-text code" rows="10" cols="50" id="hookcode" name="hookcode"><?php echo esc_textarea( $editing ? $existing['args']['code'] : '' ); ?></textarea></p>
+							<?php do_action( 'crontrol/manage/hookcode', $existing ); ?>
 						</td>
 					</tr>
 					<tr class="crontrol-event-php">
@@ -1196,6 +1197,7 @@ function show_cron_form( $editing ) {
 						</th>
 						<td>
 							<input type="text" class="regular-text" id="eventname" name="eventname" value="<?php echo esc_attr( $editing ? $existing['args']['name'] : '' ); ?>"/>
+							<?php do_action( 'crontrol/manage/eventname', $existing ); ?>
 						</td>
 					</tr>
 					<?php
@@ -1211,6 +1213,7 @@ function show_cron_form( $editing ) {
 						</th>
 						<td>
 							<input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" class="regular-text" id="hookname" name="hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>" required />
+							<?php do_action( 'crontrol/manage/hookname', $existing ); ?>
 						</td>
 					</tr>
 					<tr class="crontrol-event-standard">
@@ -1221,6 +1224,7 @@ function show_cron_form( $editing ) {
 						</th>
 						<td>
 							<input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" class="regular-text code" id="args" name="args" value="<?php echo esc_attr( $display_args ); ?>"/>
+							<?php do_action( 'crontrol/manage/args', $existing ); ?>
 							<p class="description">
 								<?php
 									printf(
@@ -1277,6 +1281,8 @@ function show_cron_form( $editing ) {
 							</li>
 						</ul>
 
+						<?php do_action( 'crontrol/manage/next_run', $existing ); ?>
+
 						<p class="description">
 							<?php
 								printf(
@@ -1296,6 +1302,7 @@ function show_cron_form( $editing ) {
 					</th>
 					<td>
 						<?php Schedule\dropdown( $existing['schedule'] ); ?>
+						<?php do_action( 'crontrol/manage/schedule', $existing ); ?>
 					</td>
 				</tr>
 			</tbody></table>
