@@ -42,7 +42,7 @@ Yes.
 
 ### I get the error "There was a problem spawning a call to the WP-Cron system on your site". How do I fix this?
 
-If this error is persistent then you should contact your web host for support. It usually means the HTTP connection that runs cron events on your site is failing for some reason.
+[You can read all about problems spwaning WP-Cron here](https://github.com/johnbillion/wp-crontrol/wiki/Problems-with-spawning-a-call-to-the-WP-Cron-system).
 
 ### Why do some cron events miss their schedule?
 
@@ -82,9 +82,7 @@ Please see the "Which users can manage PHP cron events?" FAQ for information abo
 
 ### Why do changes that I make to some cron events not get saved?
 
-Unfortunately WordPress core doesn't expose all the errors that can occur in its cron event system, so a plugin such as WP Crontrol can't always tell you if or what went wrong when saving cron events.
-
-You should try deactivating your other plugins one by one to see if one is causing a problem. Otherwise, I'm afraid I don't have much useful information for you. Hopefully a future version of WordPress will provide better error handling for its cron event system.
+[You can read all about problems with editing cron events here](https://github.com/johnbillion/wp-crontrol/wiki/Problems-adding-or-editing-WP-Cron-events).
 
 ### Can I see a historical log of all the cron events that ran on my site?
 
