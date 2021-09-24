@@ -215,11 +215,13 @@ class Table extends \WP_List_Table {
 		$url = admin_url( 'tools.php?page=crontrol_admin_manage_page' );
 
 		foreach ( $types as $key => $type ) {
+			$link = ( 'all' === $key ) ? $url : add_query_arg( 'hooks_type', $key, $url );
+
 			$views[ $key ] = sprintf(
 				'<a href="%1$s"%2$s>%3$s <span class="count">(%4$s)</span></a>',
-				'all' === $key ? $url : add_query_arg( 'hooks_type', $key, $url ),
+				esc_url( $link ),
 				$hooks_type === $key ? ' class="current"' : '',
-				$type,
+				esc_html( $type ),
 				count( $filtered[ $key ] )
 			);
 		}
