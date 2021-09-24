@@ -138,6 +138,10 @@ Therefore, the user access level required to execute arbitrary PHP code does not
 
 The cron commands which were previously included in WP Crontrol are now part of WP-CLI (since 0.16), so this plugin no longer provides any WP-CLI commands. See `wp help cron` for more info.
 
+### Who took the photo in the plugin header image?
+
+The photo was taken by <a href="https://www.flickr.com/photos/michaelpardo/21453119315">Michael Pardo</a> and is in the public domain.
+
 ## Screenshots
 
 1. Cron events can be modified, deleted, and executed<br>![](.wordpress-org/screenshot-1.png)
