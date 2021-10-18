@@ -222,7 +222,7 @@ class Table extends \WP_List_Table {
 				esc_url( $link ),
 				$hooks_type === $key ? ' class="current"' : '',
 				esc_html( $type ),
-				count( $filtered[ $key ] )
+				number_format_i18n( count( $filtered[ $key ] ) )
 			);
 		}
 
