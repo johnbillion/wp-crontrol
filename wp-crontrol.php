@@ -150,7 +150,7 @@ function action_handle_posts() {
 			/**
 			 * Fires after a new cron event is added.
 			 *
-			 * @param object $event {
+			 * @param stdClass $event {
 			 *     An object containing the event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
@@ -201,7 +201,7 @@ function action_handle_posts() {
 			/**
 			 * Fires after a new PHP cron event is added.
 			 *
-			 * @param object $event {
+			 * @param stdClass $event {
 			 *     An object containing the event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
@@ -285,7 +285,7 @@ function action_handle_posts() {
 			/**
 			 * Fires after a cron event is edited.
 			 *
-			 * @param object $event {
+			 * @param stdClass $event {
 			 *     An object containing the new event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
@@ -294,7 +294,7 @@ function action_handle_posts() {
 			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
 			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
 			 * }
-			 * @param object $original {
+			 * @param stdClass $original {
 			 *     An object containing the original event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
@@ -365,7 +365,7 @@ function action_handle_posts() {
 			/**
 			 * Fires after a PHP cron event is edited.
 			 *
-			 * @param object $event {
+			 * @param stdClass $event {
 			 *     An object containing the new event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
@@ -374,7 +374,7 @@ function action_handle_posts() {
 			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
 			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
 			 * }
-			 * @param object $original {
+			 * @param stdClass $original {
 			 *     An object containing the original event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
@@ -508,7 +508,7 @@ function action_handle_posts() {
 			/**
 			 * Fires after a cron event is deleted.
 			 *
-			 * @param object $event {
+			 * @param stdClass $event {
 			 *     An object containing the event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
