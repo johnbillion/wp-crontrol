@@ -136,6 +136,16 @@ class Table extends \WP_List_Table {
 			return ( ! in_array( $event->hook, $all_core_hooks, true ) );
 		} );
 
+		/**
+		 * Filters the available filtered events on the cron event listing screen.
+		 *
+		 * @since 1.11.0
+		 *
+		 * @param array[]    $filtered Array of filtered event arrays keyed by filter name.
+		 * @param stdClass[] $events   Array of all events.
+		 */
+		$filtered = apply_filters( 'crontrol/filtered-events', $filtered, $events );
+
 		return $filtered;
 	}
 
@@ -212,9 +222,23 @@ class Table extends \WP_List_Table {
 			'custom'   => __( 'Custom events', 'wp-crontrol' ),
 		);
 
+		/**
+		 * Filters the filter types on the cron event listing screen.
+		 *
+		 * @since 1.11.0
+		 *
+		 * @param string[] $types      Array of filter names keyed by filter name.
+		 * @param string   $hooks_type The current filter name.
+		 */
+		$types = apply_filters( 'crontrol/filter-types', $types, $hooks_type );
+
 		$url = admin_url( 'tools.php?page=crontrol_admin_manage_page' );
 
 		foreach ( $types as $key => $type ) {
+			if ( ! isset( $filtered[ $key ] ) ) {
+				continue;
+			}
+
 			$link = ( 'all' === $key ) ? $url : add_query_arg( 'hooks_type', $key, $url );
 
 			$views[ $key ] = sprintf(
