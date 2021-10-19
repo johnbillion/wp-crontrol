@@ -50,7 +50,7 @@ function run( $hookname, $sig ) {
 			/**
 			 * Fires after a cron event is scheduled to run manually.
 			 *
-			 * @param object $event {
+			 * @param stdClass $event {
 			 *     An object containing the event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
@@ -235,7 +235,7 @@ function delete( $hook, $sig, $next_run_utc ) {
 /**
  * Returns a flattened array of cron events.
  *
- * @return object[] An array of cron event objects.
+ * @return stdClass[] An array of cron event objects.
  */
 function get() {
 	$crons  = _get_cron_array();
@@ -276,7 +276,7 @@ function get() {
  * @param string $hook         The hook name of the event.
  * @param string $sig          The event signature.
  * @param string $next_run_utc The UTC time that the event would be run at.
- * @return object|WP_Error A cron event object, or a WP_Error if it's not found.
+ * @return stdClass|WP_Error A cron event object, or a WP_Error if it's not found.
  */
 function get_single( $hook, $sig, $next_run_utc ) {
 	$crons = _get_cron_array();
@@ -402,8 +402,8 @@ function get_list_table() {
  * The comparison function returns an integer less than, equal to, or greater than zero if the first argument is
  * considered to be respectively less than, equal to, or greater than the second.
  *
- * @param object $a The first event to compare.
- * @param object $b The second event to compare.
+ * @param stdClass $a The first event to compare.
+ * @param stdClass $b The second event to compare.
  * @return int
  */
 function uasort_order_events( $a, $b ) {

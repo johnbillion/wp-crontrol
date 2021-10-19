@@ -40,7 +40,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Array of all cron events.
 	 *
-	 * @var object[] Array of event objects.
+	 * @var stdClass[] Array of event objects.
 	 */
 	protected $all_events = array();
 
@@ -114,8 +114,8 @@ class Table extends \WP_List_Table {
 	/**
 	 * Returns events filtered by various parameters
 	 *
-	 * @param array $events The list of all events.
-	 * @return array Array of filtered events keyed by parameter.
+	 * @param stdClass[] $events The list of all events.
+	 * @return stdClass[][] Array of filtered events keyed by filter name.
 	 */
 	protected function get_filtered_events( array $events ) {
 		$all_core_hooks = \Crontrol\get_all_core_hooks();
@@ -256,7 +256,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Generates content for a single row of the table.
 	 *
-	 * @param object $event The current event.
+	 * @param stdClass $event The current event.
 	 */
 	public function single_row( $event ) {
 		$classes = array();
