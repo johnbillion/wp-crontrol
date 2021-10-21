@@ -522,7 +522,7 @@ class Table extends \WP_List_Table {
 			$date_local_format .= ' P';
 		}
 
-		$date_utc   = gmdate( 'Y-m-d\TH:i:s+00:00', $event->time );
+		$date_utc   = gmdate( 'c', $event->time );
 		$date_local = get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), $date_local_format );
 
 		$time = sprintf(
