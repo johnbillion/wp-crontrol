@@ -34,7 +34,11 @@
 
 namespace Crontrol;
 
+use Crontrol\Event\Table;
 use WP_Error;
+
+use function Crontrol\Event\get;
+use function Crontrol\Event\get_schedule_name;
 
 defined( 'ABSPATH' ) || die();
 
@@ -595,6 +599,90 @@ function action_handle_posts() {
 		}
 
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+		exit;
+	} elseif ( isset( $_POST['action'] ) && 'crontrol-export-event-csv' === $_POST['action'] ) {
+		// @TODO check_admin_referer
+
+		require_once __DIR__ . '/src/event-list-table.php';
+
+		$type = isset( $_POST['hooks_type'] ) ? $_POST['hooks_type'] : 'all';
+		$headers = array(
+			'hook',
+			'arguments',
+			'next_run',
+			'next_run_gmt',
+			'action',
+			'recurrence',
+			'interval',
+		);
+		$filename = sprintf(
+			'cron-events-%s-%s.csv',
+			$type,
+			gmdate( 'Y-m-d-H.i.s' )
+		);
+		$csv = fopen( 'php://output', 'w' );
+		$events = Table::get_filtered_events( get() );
+
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header(
+			sprintf(
+				'Content-Disposition: attachment; filename="%s"',
+				esc_attr( $filename )
+			)
+		);
+
+		fputcsv( $csv, $headers );
+
+		if ( isset( $events[ $type ] ) ) {
+			foreach ( $events[ $type ] as $event ) {
+				$next_run_local = get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), 'c' );
+				$next_run_utc = gmdate( 'c', $event->time );
+				$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
+
+				if ( 'crontrol_cron_job' === $event->hook ) {
+					$args = __( 'PHP Code', 'wp-crontrol' );
+				} elseif ( empty( $event->args ) ) {
+					$args = '';
+				} else {
+					$args = \Crontrol\json_output( $event->args, false );
+				}
+
+				if ( 'crontrol_cron_job' === $event->hook ) {
+					$action = __( 'WP Crontrol', 'wp-crontrol' );
+				} else {
+					$callbacks = array();
+
+					foreach ( $hook_callbacks as $callback ) {
+						$callbacks[] = $callback['callback']['name'];
+					}
+
+					$action = implode( ",", $callbacks );
+				}
+
+				if ( $event->schedule ) {
+					$recurrence = get_schedule_name( $event );
+					if ( is_wp_error( $recurrence ) ) {
+						$recurrence = $recurrence->get_error_message();
+					}
+				} else {
+					$recurrence = __( 'Non-repeating', 'wp-crontrol' );
+				}
+
+				$row = array(
+					$event->hook,
+					$args,
+					$next_run_local,
+					$next_run_utc,
+					$action,
+					$recurrence,
+					(int) $event->interval,
+				);
+				fputcsv( $csv, $row );
+			}
+		}
+
+		fclose( $csv );
+
 		exit;
 	}
 }

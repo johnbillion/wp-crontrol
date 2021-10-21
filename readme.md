@@ -19,6 +19,7 @@ WP Crontrol enables you to view and control what's happening in the WP-Cron syst
  * Add new cron events.
  * Bulk delete cron events.
  * Add and remove custom cron schedules.
+ * Export cron event lists as a CSV file.
 
 WP Crontrol is aware of timezones, will alert you to events that have no actions or that have missed their schedule, and will show you a warning message if your cron system doesn't appear to be working (for example if your server can't connect to itself to fire scheduled cron events).
 

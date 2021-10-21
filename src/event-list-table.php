@@ -254,6 +254,26 @@ class Table extends \WP_List_Table {
 	}
 
 	/**
+	 * Extra controls to be displayed between bulk actions and pagination.
+	 *
+	 * @param string $which
+	 */
+	protected function extra_tablenav( $which ) {
+		printf(
+			'<input type="hidden" name="hooks_type" value="%s"/>',
+			esc_attr( isset( $_GET['hooks_type'] ) ? sanitize_text_field( wp_unslash( $_GET['hooks_type'] ) ) : 'all' )
+		);
+		printf(
+			'<input type="hidden" name="s" value="%s"/>',
+			esc_attr( isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '' )
+		);
+		printf(
+			'<button class="button" type="submit" name="action" value="crontrol-export-event-csv">%s</button>',
+			esc_html__( 'Export', 'wp-crontrol' )
+		);
+	}
+
+	/**
 	 * Generates content for a single row of the table.
 	 *
 	 * @param stdClass $event The current event.
