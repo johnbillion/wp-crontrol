@@ -77,7 +77,7 @@ class Table extends \WP_List_Table {
 
 		if ( ! empty( $_GET['hooks_type'] ) ) {
 			$hooks_type = sanitize_text_field( $_GET['hooks_type'] );
-			$filtered = $this->get_filtered_events( $events );
+			$filtered = self::get_filtered_events( $events );
 
 			if ( isset( $filtered[ $hooks_type ] ) ) {
 				$events = $filtered[ $hooks_type ];
@@ -117,7 +117,7 @@ class Table extends \WP_List_Table {
 	 * @param stdClass[] $events The list of all events.
 	 * @return stdClass[][] Array of filtered events keyed by filter name.
 	 */
-	protected function get_filtered_events( array $events ) {
+	public static function get_filtered_events( array $events ) {
 		$all_core_hooks = \Crontrol\get_all_core_hooks();
 		$filtered = array(
 			'all' => $events,
@@ -210,7 +210,7 @@ class Table extends \WP_List_Table {
 	 * @return string[]
 	 */
 	public function get_views() {
-		$filtered = $this->get_filtered_events( $this->all_events );
+		$filtered = self::get_filtered_events( $this->all_events );
 
 		$views = array();
 		$hooks_type = ( ! empty( $_GET['hooks_type'] ) ? $_GET['hooks_type'] : 'all' );
