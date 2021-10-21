@@ -1864,17 +1864,19 @@ function get_core_schedules() {
 /**
  * Encodes some input as JSON for output.
  *
- * @param mixed $input The input.
+ * @param mixed $input  The input.
+ * @param bool  $pretty Whether to pretty print the output. Default true.
  * @return string The JSON-encoded output.
  */
-function json_output( $input ) {
+function json_output( $input, $pretty = true ) {
 	$json_options = 0;
 
 	if ( defined( 'JSON_UNESCAPED_SLASHES' ) ) {
 		// phpcs:ignore PHPCompatibility.Constants.NewConstants.json_unescaped_slashesFound
 		$json_options |= JSON_UNESCAPED_SLASHES;
 	}
-	if ( defined( 'JSON_PRETTY_PRINT' ) ) {
+
+	if ( $pretty && defined( 'JSON_PRETTY_PRINT' ) ) {
 		$json_options |= JSON_PRETTY_PRINT;
 	}
 
