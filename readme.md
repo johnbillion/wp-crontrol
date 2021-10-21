@@ -85,6 +85,10 @@ Please see the "Which users can manage PHP cron events?" FAQ for information abo
 
 [You can read all about problems with editing cron events here](https://github.com/johnbillion/wp-crontrol/wiki/Problems-adding-or-editing-WP-Cron-events).
 
+### Can I export a list of cron events?
+
+Yes, a CSV file of the event list can be exported via the "Export" button on the cron event listing screen. This file can be opened in any spreadsheet application.
+
 ### Can I see a historical log of all the cron events that ran on my site?
 
 Not yet, but I hope to add this functionality soon.
