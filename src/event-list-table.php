@@ -514,8 +514,16 @@ class Table extends \WP_List_Table {
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_next( $event ) {
+		$date_local_format = 'Y-m-d H:i:s';
+		$offset_site = get_date_from_gmt( 'now', 'P' );
+		$offset_event = get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), 'P' );
+
+		if ( $offset_site !== $offset_event ) {
+			$date_local_format .= ' P';
+		}
+
 		$date_utc   = gmdate( 'Y-m-d\TH:i:s+00:00', $event->time );
-		$date_local = get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), 'Y-m-d H:i:s' );
+		$date_local = get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), $date_local_format );
 
 		$time = sprintf(
 			'<time datetime="%1$s">%2$s</time>',
