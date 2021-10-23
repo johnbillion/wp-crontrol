@@ -454,6 +454,9 @@ function action_handle_posts() {
 			return;
 		}
 
+		/**
+		 * @var array<string,array<string,string>>
+		 */
 		$delete  = (array) wp_unslash( $_POST['delete'] );
 		$deleted = 0;
 
