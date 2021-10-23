@@ -503,7 +503,7 @@ function action_handle_posts() {
 		}
 		$hook         = wp_unslash( $_GET['id'] );
 		$sig          = wp_unslash( $_GET['sig'] );
-		$next_run_utc = intval( $_GET['next_run_utc'] );
+		$next_run_utc = wp_unslash( $_GET['next_run_utc'] );
 		check_admin_referer( "crontrol-delete-cron_{$hook}_{$sig}_{$next_run_utc}" );
 
 		if ( 'crontrol_cron_job' === $hook && ! current_user_can( 'edit_files' ) ) {
@@ -1001,7 +1001,7 @@ function test_cron_spawn( $cache = true ) {
 		return true;
 	}
 
-	$sslverify     = version_compare( $wp_version, 4.0, '<' );
+	$sslverify     = version_compare( $wp_version, '4.0', '<' );
 	$doing_wp_cron = sprintf( '%.22F', microtime( true ) );
 
 	$cron_request = apply_filters( 'cron_request', array(

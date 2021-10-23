@@ -137,7 +137,7 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 		);
 	}
 
-	$next_run_utc = get_gmt_from_date( gmdate( 'Y-m-d H:i:s', $next_run_local ), 'U' );
+	$next_run_utc = (int) get_gmt_from_date( gmdate( 'Y-m-d H:i:s', $next_run_local ), 'U' );
 
 	if ( ! is_array( $args ) ) {
 		$args = array();
