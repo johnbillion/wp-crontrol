@@ -1800,10 +1800,9 @@ function interval( $since ) {
 	 * x days, xx hours
 	 * so there's only two bits of calculation below:
 	 */
-	$j = count( $chunks );
 
 	// Step one: the first chunk.
-	for ( $i = 0; $i < $j; $i++ ) {
+	foreach ( array_keys( $chunks ) as $i ) {
 		$seconds = $chunks[ $i ][0];
 		$name    = $chunks[ $i ][1];
 
@@ -1818,7 +1817,7 @@ function interval( $since ) {
 	$output = sprintf( translate_nooped_plural( $name, $count, 'wp-crontrol' ), $count );
 
 	// Step two: the second chunk.
-	if ( $i + 1 < $j ) {
+	if ( $i + 1 < count( $chunks ) ) {
 		$seconds2 = $chunks[ $i + 1 ][0];
 		$name2    = $chunks[ $i + 1 ][1];
 		$count2   = floor( ( $since - ( $seconds * $count ) ) / $seconds2 );
