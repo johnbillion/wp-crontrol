@@ -157,7 +157,7 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 		}
 	}
 
-	if ( '_oneoff' === $schedule ) {
+	if ( '_oneoff' === $schedule || '' === $schedule ) {
 		$result = wp_schedule_single_event( $next_run_utc, $hook, $args, true );
 	} else {
 		$result = wp_schedule_event( $next_run_utc, $schedule, $hook, $args, true );
