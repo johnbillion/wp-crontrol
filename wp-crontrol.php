@@ -289,6 +289,11 @@ function action_handle_posts() {
 
 		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
 
+		/**
+		 * Modifies an event before it is scheduled.
+		 *
+		 * @param stdClass|false $event An object containing the new event's data, or boolean false.
+		 */
 		add_filter( 'schedule_event', function( $event ) use ( $original ) {
 			if ( ! $event ) {
 				return $event;
@@ -370,6 +375,11 @@ function action_handle_posts() {
 
 		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
 
+		/**
+		 * Modifies an event before it is scheduled.
+		 *
+		 * @param stdClass|false $event An object containing the new event's data, or boolean false.
+		 */
 		add_filter( 'schedule_event', function( $event ) use ( $original ) {
 			if ( ! $event ) {
 				return $event;
