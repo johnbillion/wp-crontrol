@@ -37,7 +37,9 @@ namespace Crontrol;
 use Crontrol\Event\Table;
 use WP_Error;
 
-defined( 'ABSPATH' ) || die();
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 require_once __DIR__ . '/src/event.php';
 require_once __DIR__ . '/src/request.php';
