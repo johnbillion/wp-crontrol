@@ -35,6 +35,7 @@
 namespace Crontrol;
 
 use Crontrol\Event\Table;
+use stdClass;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
