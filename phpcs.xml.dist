@@ -30,6 +30,8 @@
 		<!-- I'll fix this eventually: -->
 		<exclude name="WordPress.PHP.DontExtract.extract_extract" />
 
+		<!-- Exclude short description sniff so short `@var` notation can be used -->
+		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
 	</rule>
 
 	<rule ref="WordPress-Docs" />
