@@ -116,10 +116,10 @@ class Schedule_List_Table extends \WP_List_Table {
 		} else {
 			$link = add_query_arg( array(
 				'page'   => 'crontrol_admin_options_page',
-				'action' => 'delete-sched',
+				'action' => 'crontrol-delete-schedule',
 				'id'     => rawurlencode( $schedule['name'] ),
 			), admin_url( 'options-general.php' ) );
-			$link = wp_nonce_url( $link, 'delete-sched_' . $schedule['name'] );
+			$link = wp_nonce_url( $link, 'crontrol-delete-schedule_' . $schedule['name'] );
 
 			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
 		}

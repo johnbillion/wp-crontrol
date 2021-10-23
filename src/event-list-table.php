@@ -200,7 +200,7 @@ class Table extends \WP_List_Table {
 	 */
 	protected function get_bulk_actions() {
 		return array(
-			'delete_crons' => esc_html__( 'Delete', 'wp-crontrol' ),
+			'crontrol_delete_crons' => esc_html__( 'Delete', 'wp-crontrol' ),
 		);
 	}
 
@@ -336,7 +336,7 @@ class Table extends \WP_List_Table {
 		if ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) {
 			$link = array(
 				'page'         => 'crontrol_admin_manage_page',
-				'action'       => 'edit-cron',
+				'action'       => 'crontrol-edit-cron',
 				'id'           => rawurlencode( $event->hook ),
 				'sig'          => rawurlencode( $event->sig ),
 				'next_run_utc' => rawurlencode( $event->time ),
@@ -348,26 +348,26 @@ class Table extends \WP_List_Table {
 
 		$link = array(
 			'page'         => 'crontrol_admin_manage_page',
-			'action'       => 'run-cron',
+			'action'       => 'crontrol-run-cron',
 			'id'           => rawurlencode( $event->hook ),
 			'sig'          => rawurlencode( $event->sig ),
 			'next_run_utc' => rawurlencode( $event->time ),
 		);
 		$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-		$link = wp_nonce_url( $link, "run-cron_{$event->hook}_{$event->sig}" );
+		$link = wp_nonce_url( $link, "crontrol-run-cron_{$event->hook}_{$event->sig}" );
 
 		$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
 
 		if ( ! in_array( $event->hook, self::$persistent_core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) ) {
 			$link = array(
 				'page'         => 'crontrol_admin_manage_page',
-				'action'       => 'delete-cron',
+				'action'       => 'crontrol-delete-cron',
 				'id'           => rawurlencode( $event->hook ),
 				'sig'          => rawurlencode( $event->sig ),
 				'next_run_utc' => rawurlencode( $event->time ),
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-			$link = wp_nonce_url( $link, "delete-cron_{$event->hook}_{$event->sig}_{$event->time}" );
+			$link = wp_nonce_url( $link, "crontrol-delete-cron_{$event->hook}_{$event->sig}_{$event->time}" );
 
 			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
 		}
@@ -376,11 +376,11 @@ class Table extends \WP_List_Table {
 			if ( self::$count_by_hook[ $event->hook ] > 1 ) {
 				$link = array(
 					'page'   => 'crontrol_admin_manage_page',
-					'action' => 'delete-hook',
+					'action' => 'crontrol-delete-hook',
 					'id'     => rawurlencode( $event->hook ),
 				);
 				$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-				$link = wp_nonce_url( $link, "delete-hook_{$event->hook}" );
+				$link = wp_nonce_url( $link, "crontrol-delete-hook_{$event->hook}" );
 
 				$text = sprintf(
 					/* translators: %s: Number of events with a given name */
