@@ -1191,7 +1191,6 @@ function show_cron_form( $editing ) {
 		if ( ! empty( $existing['args'] ) ) {
 			$display_args = wp_json_encode( $existing['args'] );
 		}
-		$action        = $is_editing_php ? 'crontrol_edit_php_cron' : 'crontrol_edit_cron';
 		$button        = __( 'Update Event', 'wp-crontrol' );
 		$next_run_gmt  = gmdate( 'Y-m-d H:i:s', $existing['next_run'] );
 		$next_run_date_local = get_date_from_gmt( $next_run_gmt, 'Y-m-d' );
@@ -1251,6 +1250,7 @@ function show_cron_form( $editing ) {
 			<table class="form-table"><tbody>
 				<?php
 				if ( $editing ) {
+					$action = $is_editing_php ? 'crontrol_edit_php_cron' : 'crontrol_edit_cron';
 					printf(
 						'<input type="hidden" name="action" value="%s"/>',
 						esc_attr( $action )
