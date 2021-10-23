@@ -37,9 +37,6 @@ namespace Crontrol;
 use Crontrol\Event\Table;
 use WP_Error;
 
-use function Crontrol\Event\get;
-use function Crontrol\Event\get_schedule_name;
-
 defined( 'ABSPATH' ) || die();
 
 require_once __DIR__ . '/src/event.php';
@@ -621,7 +618,7 @@ function action_handle_posts() {
 			gmdate( 'Y-m-d-H.i.s' )
 		);
 		$csv = fopen( 'php://output', 'w' );
-		$events = Table::get_filtered_events( get() );
+		$events = Table::get_filtered_events( Event\get() );
 
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header(
@@ -660,7 +657,7 @@ function action_handle_posts() {
 				}
 
 				if ( $event->schedule ) {
-					$recurrence = get_schedule_name( $event );
+					$recurrence = Event\get_schedule_name( $event );
 					if ( is_wp_error( $recurrence ) ) {
 						$recurrence = $recurrence->get_error_message();
 					}
