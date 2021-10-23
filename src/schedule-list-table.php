@@ -17,14 +17,14 @@ class Schedule_List_Table extends \WP_List_Table {
 	/**
 	 * Array of cron event schedules that are added by WordPress core.
 	 *
-	 * @var string[] Array of schedule names.
+	 * @var array<int,string> Array of schedule names.
 	 */
 	protected static $core_schedules;
 
 	/**
 	 * Array of cron event schedule names that are in use by events.
 	 *
-	 * @var string[] Array of schedule names.
+	 * @var array<int,string> Array of schedule names.
 	 */
 	protected static $used_schedules;
 
@@ -51,6 +51,8 @@ class Schedule_List_Table extends \WP_List_Table {
 
 	/**
 	 * Prepares the list table items and arguments.
+	 *
+	 * @return void
 	 */
 	public function prepare_items() {
 		$schedules = Schedule\get();
@@ -71,7 +73,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	/**
 	 * Returns an array of column names for the table.
 	 *
-	 * @return string[] Array of column names keyed by their ID.
+	 * @return array<string,string> Array of column names keyed by their ID.
 	 */
 	public function get_columns() {
 		return array(
@@ -94,9 +96,9 @@ class Schedule_List_Table extends \WP_List_Table {
 	/**
 	 * Generates and displays row action links for the table.
 	 *
-	 * @param array  $schedule    The schedule for the current row.
-	 * @param string $column_name Current column name.
-	 * @param string $primary     Primary column name.
+	 * @param mixed[] $schedule    The schedule for the current row.
+	 * @param string  $column_name Current column name.
+	 * @param string  $primary     Primary column name.
 	 * @return string The row actions HTML.
 	 */
 	protected function handle_row_actions( $schedule, $column_name, $primary ) {
@@ -130,7 +132,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	/**
 	 * Returns the output for the icon cell of a table row.
 	 *
-	 * @param array $schedule The schedule for the current row.
+	 * @param mixed[] $schedule The schedule for the current row.
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_icon( array $schedule ) {
@@ -148,7 +150,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	/**
 	 * Returns the output for the schdule name cell of a table row.
 	 *
-	 * @param array $schedule The schedule for the current row.
+	 * @param mixed[] $schedule The schedule for the current row.
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_name( array $schedule ) {
@@ -158,7 +160,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	/**
 	 * Returns the output for the interval cell of a table row.
 	 *
-	 * @param array $schedule The schedule for the current row.
+	 * @param mixed[] $schedule The schedule for the current row.
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_interval( array $schedule ) {
@@ -186,7 +188,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	/**
 	 * Returns the output for the display name cell of a table row.
 	 *
-	 * @param array $schedule The schedule for the current row.
+	 * @param mixed[] $schedule The schedule for the current row.
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_display( array $schedule ) {
@@ -195,6 +197,8 @@ class Schedule_List_Table extends \WP_List_Table {
 
 	/**
 	 * Outputs a message when there are no items to show in the table.
+	 *
+	 * @return void
 	 */
 	public function no_items() {
 		esc_html_e( 'There are no schedules.', 'wp-crontrol' );

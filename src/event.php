@@ -81,8 +81,8 @@ function run( $hookname, $sig ) {
  *
  * This is used instead of `wp_schedule_single_event()` to avoid the duplicate check that's otherwise performed.
  *
- * @param string $hook Action hook to execute when the event is run.
- * @param array  $args Optional. Array containing each separate argument to pass to the hook's callback function.
+ * @param string  $hook Action hook to execute when the event is run.
+ * @param mixed[] $args Optional. Array containing each separate argument to pass to the hook's callback function.
  * @return true|WP_Error True if event successfully scheduled. WP_Error on failure.
  */
 function force_schedule_single_event( $hook, $args = array() ) {
@@ -121,10 +121,10 @@ function force_schedule_single_event( $hook, $args = array() ) {
 /**
  * Adds a new cron event.
  *
- * @param string $next_run_local The time that the event should be run at, in the site's timezone.
- * @param string $schedule       The recurrence of the cron event.
- * @param string $hook           The name of the hook to execute.
- * @param array  $args           Arguments to add to the cron event.
+ * @param string  $next_run_local The time that the event should be run at, in the site's timezone.
+ * @param string  $schedule       The recurrence of the cron event.
+ * @param string  $hook           The name of the hook to execute.
+ * @param mixed[] $args           Arguments to add to the cron event.
  * @return true|WP_error True if the addition was successful, WP_Error otherwise.
  */
 function add( $next_run_local, $schedule, $hook, array $args ) {
@@ -312,7 +312,7 @@ function get_single( $hook, $sig, $next_run_utc ) {
 /**
  * Returns an array of the number of events for each hook.
  *
- * @return int[] Array of number of events for each hook, keyed by the hook name.
+ * @return array<string,int> Array of number of events for each hook, keyed by the hook name.
  */
 function count_by_hook() {
 	$crons  = _get_cron_array();

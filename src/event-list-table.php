@@ -58,6 +58,8 @@ class Table extends \WP_List_Table {
 
 	/**
 	 * Prepares the list table items and arguments.
+	 *
+	 * @return void
 	 */
 	public function prepare_items() {
 		self::$persistent_core_hooks = \Crontrol\get_persistent_core_hooks();
@@ -172,7 +174,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Columns to make sortable.
 	 *
-	 * @return array
+	 * @return array<string,array<int,(string|bool)>>
 	 */
 	public function get_sortable_columns() {
 		return array(
@@ -184,7 +186,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Returns an array of CSS class names for the table.
 	 *
-	 * @return string[] Array of class names.
+	 * @return array<int,string> Array of class names.
 	 */
 	protected function get_table_classes() {
 		return array( 'widefat', 'striped', $this->_args['plural'] );
@@ -196,7 +198,7 @@ class Table extends \WP_List_Table {
 	 *
 	 * @since 3.1.0
 	 *
-	 * @return array
+	 * @return array<string,string>
 	 */
 	protected function get_bulk_actions() {
 		return array(
@@ -207,7 +209,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Display the list of hook types.
 	 *
-	 * @return string[]
+	 * @return array<string,string>
 	 */
 	public function get_views() {
 		$filtered = self::get_filtered_events( $this->all_events );
@@ -257,6 +259,8 @@ class Table extends \WP_List_Table {
 	 * Extra controls to be displayed between bulk actions and pagination.
 	 *
 	 * @param string $which One of 'top' or 'bottom' to indicate the position on the screen.
+	 *
+	 * @return void
 	 */
 	protected function extra_tablenav( $which ) {
 		wp_nonce_field( 'crontrol-export-event-csv', 'crontrol_nonce' );
@@ -278,6 +282,7 @@ class Table extends \WP_List_Table {
 	 * Generates content for a single row of the table.
 	 *
 	 * @param stdClass $event The current event.
+	 * @return void
 	 */
 	public function single_row( $event ) {
 		$classes = array();
@@ -607,6 +612,8 @@ class Table extends \WP_List_Table {
 
 	/**
 	 * Outputs a message when there are no items to show in the table.
+	 *
+	 * @return void
 	 */
 	public function no_items() {
 		if ( empty( $_GET['s'] ) && empty( $_GET['hooks_type'] ) ) {

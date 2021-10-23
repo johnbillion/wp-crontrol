@@ -50,6 +50,8 @@ const TRANSIENT = 'crontrol-message-%d';
 
 /**
  * Hook onto all of the actions and filters needed by the plugin.
+ *
+ * @return void
  */
 function init_hooks() {
 	$plugin_file = plugin_basename( __FILE__ );
@@ -101,9 +103,9 @@ function get_message() {
 /**
  * Filters the array of row meta for each plugin in the Plugins list table.
  *
- * @param string[] $plugin_meta An array of the plugin's metadata.
- * @param string   $plugin_file Path to the plugin file relative to the plugins directory.
- * @return string[] An array of the plugin's metadata.
+ * @param array<int,string> $plugin_meta An array of the plugin row's meta data.
+ * @param string            $plugin_file Path to the plugin file relative to the plugins directory.
+ * @return array<int,string> An array of the plugin row's meta data.
  */
 function filter_plugin_row_meta( array $plugin_meta, $plugin_file ) {
 	if ( 'wp-crontrol/wp-crontrol.php' !== $plugin_file ) {
@@ -121,6 +123,8 @@ function filter_plugin_row_meta( array $plugin_meta, $plugin_file ) {
 
 /**
  * Run using the 'init' action.
+ *
+ * @return void
  */
 function action_init() {
 	load_plugin_textdomain( 'wp-crontrol', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
@@ -128,6 +132,8 @@ function action_init() {
 
 /**
  * Handles any POSTs made by the plugin. Run using the 'init' action.
+ *
+ * @return void
  */
 function action_handle_posts() {
 	$request = new Request();
@@ -165,7 +171,7 @@ function action_handle_posts() {
 			 *     @type string       $hook      Action hook to execute when the event is run.
 			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
 			 *     @type string|false $schedule  How often the event should subsequently recur.
-			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
 			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
 			 * }
 			 */
@@ -218,7 +224,7 @@ function action_handle_posts() {
 			 *     @type string       $hook      Action hook to execute when the event is run.
 			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
 			 *     @type string|false $schedule  How often the event should subsequently recur.
-			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
 			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
 			 * }
 			 */
@@ -308,7 +314,7 @@ function action_handle_posts() {
 			 *     @type string       $hook      Action hook to execute when the event is run.
 			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
 			 *     @type string|false $schedule  How often the event should subsequently recur.
-			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
 			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
 			 * }
 			 * @param stdClass $original {
@@ -317,7 +323,7 @@ function action_handle_posts() {
 			 *     @type string       $hook      Action hook to execute when the event is run.
 			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
 			 *     @type string|false $schedule  How often the event should subsequently recur.
-			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
 			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
 			 * }
 			 */
@@ -394,7 +400,7 @@ function action_handle_posts() {
 			 *     @type string       $hook      Action hook to execute when the event is run.
 			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
 			 *     @type string|false $schedule  How often the event should subsequently recur.
-			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
 			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
 			 * }
 			 * @param stdClass $original {
@@ -403,7 +409,7 @@ function action_handle_posts() {
 			 *     @type string       $hook      Action hook to execute when the event is run.
 			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
 			 *     @type string|false $schedule  How often the event should subsequently recur.
-			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
 			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
 			 * }
 			 */
@@ -540,7 +546,7 @@ function action_handle_posts() {
 			 *     @type string       $hook      Action hook to execute when the event is run.
 			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
 			 *     @type string|false $schedule  How often the event should subsequently recur.
-			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
 			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
 			 * }
 			 */
@@ -713,6 +719,8 @@ function action_handle_posts() {
  * Adds options & management pages to the admin menu.
  *
  * Run using the 'admin_menu' action.
+ *
+ * @return void
  */
 function action_admin_menu() {
 	$schedules = add_options_page(
@@ -735,7 +743,9 @@ function action_admin_menu() {
 }
 
 /**
- * Adds a Help tab with links to help resources;
+ * Adds a Help tab with links to help resources.
+ *
+ * @return void
  */
 function admin_help_tab() {
 	$screen = get_current_screen();
@@ -776,11 +786,11 @@ function admin_help_tab() {
 /**
  * Adds items to the plugin's action links on the Plugins listing screen.
  *
- * @param string[] $actions     Array of action links.
- * @param string   $plugin_file Path to the plugin file relative to the plugins directory.
- * @param array    $plugin_data An array of plugin data.
- * @param string   $context     The plugin context.
- * @return string[] Array of action links.
+ * @param array<string,string> $actions     Array of action links.
+ * @param string               $plugin_file Path to the plugin file relative to the plugins directory.
+ * @param mixed[]              $plugin_data An array of plugin data.
+ * @param string               $context     The plugin context.
+ * @return array<string,string> Array of action links.
  */
 function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
 	$new = array(
@@ -824,6 +834,8 @@ function filter_cron_schedules( array $scheds ) {
 
 /**
  * Displays the options page for the plugin.
+ *
+ * @return void
  */
 function admin_options_page() {
 	$messages = array(
@@ -934,7 +946,7 @@ function admin_options_page() {
  * - https://core.trac.wordpress.org/browser/trunk/src/wp-cron.php?rev=47198&marks=127,141#L122
  *
  * @param mixed $pre The pre-flight value of the event unschedule short-circuit. Not used.
- * @return mixed Thee unaltered pre-flight value.
+ * @return mixed The unaltered pre-flight value.
  */
 function maybe_clear_doing_cron( $pre ) {
 	if ( defined( 'DOING_CRON' ) && DOING_CRON && isset( $_GET['crontrol-single-event'] ) ) {
@@ -946,6 +958,8 @@ function maybe_clear_doing_cron( $pre ) {
 
 /**
  * Ajax handler which outputs a hash of the current list of scheduled events.
+ *
+ * @return void
  */
 function ajax_check_events_hash() {
 	if ( ! current_user_can( 'manage_options' ) ) {
@@ -1037,6 +1051,7 @@ function test_cron_spawn( $cache = true ) {
  * Shows the status of WP-Cron functionality on the site. Only displays a message when there's a problem.
  *
  * @param string $tab The tab name.
+ * @return void
  */
 function show_cron_status( $tab ) {
 	if ( 'UTC' !== date_default_timezone_get() ) {
@@ -1443,6 +1458,8 @@ function show_cron_form( $editing ) {
 
 /**
  * Displays the manage page for the plugin.
+ *
+ * @return void
  */
 function admin_manage_page() {
 	$messages = array(
@@ -1580,7 +1597,7 @@ function admin_manage_page() {
 /**
  * Get the states of the various cron-related tabs.
  *
- * @return bool[] Array of states keyed by tab name.
+ * @return array<string,bool> Array of states keyed by tab name.
  */
 function get_tab_states() {
 	$tabs = array(
@@ -1597,6 +1614,8 @@ function get_tab_states() {
 
 /**
  * Output the cron-related tabs if we're on a cron-related admin screen.
+ *
+ * @return void
  */
 function do_tabs() {
 	$tabs = get_tab_states();
@@ -1663,7 +1682,11 @@ function do_tabs() {
  * Returns an array of the callback functions that are attached to the given hook name.
  *
  * @param string $name The hook name.
- * @return array[] Array of callbacks attached to the hook.
+ * @return array<int,array<string,mixed>> Array of callbacks attached to the hook.
+ * @phpstan-return array<int,array{
+ *   priority: int,
+ *   callback: array<string,mixed>,
+ * }>
  */
 function get_hook_callbacks( $name ) {
 	global $wp_filter;
@@ -1674,6 +1697,9 @@ function get_hook_callbacks( $name ) {
 		// See http://core.trac.wordpress.org/ticket/17817.
 		$action = $wp_filter[ $name ];
 
+		/**
+		 * @var int $priority
+		 */
 		foreach ( $action as $priority => $callbacks ) {
 			foreach ( $callbacks as $callback ) {
 				$callback = populate_callback( $callback );
@@ -1692,8 +1718,12 @@ function get_hook_callbacks( $name ) {
 /**
  * Populates the details of the given callback function.
  *
- * @param array $callback A callback entry.
- * @return array The updated callback entry.
+ * @param array<string,mixed> $callback A callback entry.
+ * @phpstan-param array{
+ *   function: string|array<int,mixed>|object,
+ *   accepted_args: int,
+ * } $callback
+ * @return array<string,mixed> The updated callback entry.
  */
 function populate_callback( array $callback ) {
 	// If Query Monitor is installed, use its rich callback analysis.
@@ -1733,7 +1763,7 @@ function populate_callback( array $callback ) {
 /**
  * Returns a user-friendly representation of the callback function.
  *
- * @param array $callback The callback entry.
+ * @param mixed[] $callback The callback entry.
  * @return string The displayable version of the callback name.
  */
 function output_callback( array $callback ) {
@@ -1848,6 +1878,8 @@ function interval( $since ) {
 
 /**
  * Sets up the Events listing screen.
+ *
+ * @return void
  */
 function setup_manage_page() {
 	// Initialise the list table
@@ -1866,6 +1898,7 @@ function setup_manage_page() {
  * Registers the stylesheet and JavaScript for the admin areas.
  *
  * @param string $hook_suffix The admin screen ID.
+ * @return void
  */
 function enqueue_assets( $hook_suffix ) {
 	$tab = get_tab_states();
@@ -1905,8 +1938,8 @@ function enqueue_assets( $hook_suffix ) {
 /**
  * Filters the list of query arguments which get removed from admin area URLs in WordPress.
  *
- * @param string[] $args List of removable query arguments.
- * @return string[] Updated list of removable query arguments.
+ * @param array<int,string> $args List of removable query arguments.
+ * @return array<int,string> Updated list of removable query arguments.
  */
 function filter_removable_query_args( array $args ) {
 	return array_merge( $args, array(
@@ -1918,7 +1951,7 @@ function filter_removable_query_args( array $args ) {
 /**
  * Returns an array of cron event hooks that are persistently added by WordPress core.
  *
- * @return string[] Array of hook names.
+ * @return array<int,string> Array of hook names.
  */
 function get_persistent_core_hooks() {
 	return array(
@@ -1939,7 +1972,7 @@ function get_persistent_core_hooks() {
 /**
  * Returns an array of all cron event hooks that are added by WordPress core.
  *
- * @return string[] Array of hook names.
+ * @return array<int,string> Array of hook names.
  */
 function get_all_core_hooks() {
 	return array_merge(
@@ -1959,7 +1992,7 @@ function get_all_core_hooks() {
 /**
  * Returns an array of cron schedules that are added by WordPress core.
  *
- * @return string[] Array of schedule names.
+ * @return array<int,string> Array of schedule names.
  */
 function get_core_schedules() {
 	return array(
@@ -2005,6 +2038,7 @@ function json_output( $input, $pretty = true ) {
  * Therefore, the user access level required to execute arbitrary PHP code does not change with WP Crontrol activated.
  *
  * @param string $code The PHP code to evaluate.
+ * @return void
  */
 function action_php_cron_event( $code ) {
 	// phpcs:ignore Squiz.PHP.Eval.Discouraged

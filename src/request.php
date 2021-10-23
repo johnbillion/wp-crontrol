@@ -92,7 +92,7 @@ class Request {
 	/**
 	 * Crontrol_Request constructor.
 	 *
-	 * @param array $props Properties.
+	 * @param array<string,mixed> $props Properties.
 	 * @return Request This object.
 	 */
 	public function init( array $props ) {

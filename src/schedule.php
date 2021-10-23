@@ -13,6 +13,7 @@ namespace Crontrol\Schedule;
  * @param string $name     The internal name of the schedule.
  * @param int    $interval The interval between executions of the new schedule.
  * @param string $display  The display name of the schedule.
+ * @return void
  */
 function add( $name, $interval, $display ) {
 	$old_scheds = get_option( 'crontrol_schedules', array() );
@@ -37,6 +38,7 @@ function add( $name, $interval, $display ) {
  * Deletes a custom cron schedule.
  *
  * @param string $name The internal name of the schedule to delete.
+ * @return void
  */
 function delete( $name ) {
 	$scheds = get_option( 'crontrol_schedules', array() );
@@ -74,6 +76,7 @@ function get() {
  * Displays a dropdown filled with the possible schedules, including non-repeating.
  *
  * @param string|false $current The currently selected schedule, or false for none.
+ * @return void
  */
 function dropdown( $current = false ) {
 	$schedules = get();
