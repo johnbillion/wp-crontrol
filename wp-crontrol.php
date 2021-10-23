@@ -632,7 +632,7 @@ function action_handle_posts() {
 
 		if ( isset( $events[ $type ] ) ) {
 			foreach ( $events[ $type ] as $event ) {
-				$next_run_local = get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), 'c' );
+				$next_run_local = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->time ), 'c' );
 				$next_run_utc = gmdate( 'c', $event->time );
 				$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
 
