@@ -40,6 +40,7 @@ use WP_Error;
 defined( 'ABSPATH' ) || die();
 
 require_once __DIR__ . '/src/event.php';
+require_once __DIR__ . '/src/request.php';
 require_once __DIR__ . '/src/schedule.php';
 
 const TRANSIENT = 'crontrol-message-%d';
@@ -126,22 +127,26 @@ function action_init() {
  * Handles any POSTs made by the plugin. Run using the 'init' action.
  */
 function action_handle_posts() {
+	$request = new Request();
+
 	if ( isset( $_POST['action'] ) && ( 'crontrol_new_cron' === $_POST['action'] ) ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ), 401 );
 		}
 		check_admin_referer( 'crontrol-new-cron' );
-		extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
-		if ( 'crontrol_cron_job' === $in_hookname && ! current_user_can( 'edit_files' ) ) {
+
+		$cr = $request->init( wp_unslash( $_POST ) );
+
+		if ( 'crontrol_cron_job' === $cr->hookname && ! current_user_can( 'edit_files' ) ) {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
 		}
-		$in_args = json_decode( $in_args, true );
+		$args = json_decode( $cr->args, true );
 
-		if ( empty( $in_args ) ) {
-			$in_args = array();
+		if ( empty( $args ) ) {
+			$args = array();
 		}
 
-		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
+		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
 
 		add_filter( 'schedule_event', function( $event ) {
 			if ( ! $event ) {
@@ -166,12 +171,12 @@ function action_handle_posts() {
 			return $event;
 		}, 99 );
 
-		$added = Event\add( $next_run_local, $in_schedule, $in_hookname, $in_args );
+		$added = Event\add( $next_run_local, $cr->schedule, $cr->hookname, $args );
 
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '5',
-			'crontrol_name'    => rawurlencode( $in_hookname ),
+			'crontrol_name'    => rawurlencode( $cr->hookname ),
 		);
 
 		if ( is_wp_error( $added ) ) {
@@ -187,11 +192,13 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 		check_admin_referer( 'crontrol-new-cron' );
-		extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
-		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
+
+		$cr = $request->init( wp_unslash( $_POST ) );
+
+		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
 		$args           = array(
-			'code' => $in_hookcode,
-			'name' => $in_eventname,
+			'code' => $cr->hookcode,
+			'name' => $cr->eventname,
 		);
 
 		add_filter( 'schedule_event', function( $event ) {
@@ -217,9 +224,9 @@ function action_handle_posts() {
 			return $event;
 		}, 99 );
 
-		$added = Event\add( $next_run_local, $in_schedule, 'crontrol_cron_job', $args );
+		$added = Event\add( $next_run_local, $cr->schedule, 'crontrol_cron_job', $args );
 
-		$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
+		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '5',
@@ -239,26 +246,27 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ), 401 );
 		}
 
-		extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
-		check_admin_referer( "crontrol-edit-cron_{$in_original_hookname}_{$in_original_sig}_{$in_original_next_run_utc}" );
+		$cr = $request->init( wp_unslash( $_POST ) );
 
-		if ( 'crontrol_cron_job' === $in_hookname && ! current_user_can( 'edit_files' ) ) {
+		check_admin_referer( "crontrol-edit-cron_{$cr->original_hookname}_{$cr->original_sig}_{$cr->original_next_run_utc}" );
+
+		if ( 'crontrol_cron_job' === $cr->hookname && ! current_user_can( 'edit_files' ) ) {
 			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 
-		$in_args = json_decode( $in_args, true );
+		$args = json_decode( $cr->args, true );
 
-		if ( empty( $in_args ) ) {
-			$in_args = array();
+		if ( empty( $args ) ) {
+			$args = array();
 		}
 
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '4',
-			'crontrol_name'    => rawurlencode( $in_hookname ),
+			'crontrol_name'    => rawurlencode( $cr->hookname ),
 		);
 
-		$original = Event\get_single( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
+		$original = Event\get_single( $cr->original_hookname, $cr->original_sig, $cr->original_next_run_utc );
 
 		if ( is_wp_error( $original ) ) {
 			set_message( $original->get_error_message() );
@@ -267,7 +275,7 @@ function action_handle_posts() {
 			exit;
 		}
 
-		$deleted = Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
+		$deleted = Event\delete( $cr->original_hookname, $cr->original_sig, $cr->original_next_run_utc );
 
 		if ( is_wp_error( $deleted ) ) {
 			set_message( $deleted->get_error_message() );
@@ -276,7 +284,7 @@ function action_handle_posts() {
 			exit;
 		}
 
-		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
+		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
 
 		add_filter( 'schedule_event', function( $event ) use ( $original ) {
 			if ( ! $event || ! $original ) {
@@ -310,7 +318,7 @@ function action_handle_posts() {
 			return $event;
 		}, 99 );
 
-		$added = Event\add( $next_run_local, $in_schedule, $in_hookname, $in_args );
+		$added = Event\add( $next_run_local, $cr->schedule, $cr->hookname, $args );
 
 		if ( is_wp_error( $added ) ) {
 			set_message( $added->get_error_message() );
@@ -325,20 +333,21 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 
-		extract( wp_unslash( $_POST ), EXTR_PREFIX_ALL, 'in' );
-		check_admin_referer( "crontrol-edit-cron_{$in_original_hookname}_{$in_original_sig}_{$in_original_next_run_utc}" );
+		$cr = $request->init( wp_unslash( $_POST ) );
+
+		check_admin_referer( "crontrol-edit-cron_{$cr->original_hookname}_{$cr->original_sig}_{$cr->original_next_run_utc}" );
 		$args = array(
-			'code' => $in_hookcode,
-			'name' => $in_eventname,
+			'code' => $cr->hookcode,
+			'name' => $cr->eventname,
 		);
-		$hookname = ( ! empty( $in_eventname ) ) ? $in_eventname : __( 'PHP Cron', 'wp-crontrol' );
+		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
 			'crontrol_message' => '4',
 			'crontrol_name'    => rawurlencode( $hookname ),
 		);
 
-		$original = Event\get_single( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
+		$original = Event\get_single( $cr->original_hookname, $cr->original_sig, $cr->original_next_run_utc );
 
 		if ( is_wp_error( $original ) ) {
 			set_message( $original->get_error_message() );
@@ -347,7 +356,7 @@ function action_handle_posts() {
 			exit;
 		}
 
-		$deleted = Event\delete( $in_original_hookname, $in_original_sig, $in_original_next_run_utc );
+		$deleted = Event\delete( $cr->original_hookname, $cr->original_sig, $cr->original_next_run_utc );
 
 		if ( is_wp_error( $deleted ) ) {
 			set_message( $deleted->get_error_message() );
@@ -356,7 +365,7 @@ function action_handle_posts() {
 			exit;
 		}
 
-		$next_run_local = ( 'custom' === $in_next_run_date_local ) ? $in_next_run_date_local_custom_date . ' ' . $in_next_run_date_local_custom_time : $in_next_run_date_local;
+		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
 
 		add_filter( 'schedule_event', function( $event ) use ( $original ) {
 			if ( ! $event || ! $original ) {
@@ -390,7 +399,7 @@ function action_handle_posts() {
 			return $event;
 		}, 99 );
 
-		$added = Event\add( $next_run_local, $in_schedule, 'crontrol_cron_job', $args );
+		$added = Event\add( $next_run_local, $cr->schedule, 'crontrol_cron_job', $args );
 
 		if ( is_wp_error( $added ) ) {
 			set_message( $added->get_error_message() );
