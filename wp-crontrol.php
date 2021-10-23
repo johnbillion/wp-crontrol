@@ -452,11 +452,11 @@ function action_handle_posts() {
 			return;
 		}
 
-		$delete  = wp_unslash( $_POST['delete'] );
+		$delete  = (array) wp_unslash( $_POST['delete'] );
 		$deleted = 0;
 
 		foreach ( $delete as $next_run_utc => $events ) {
-			foreach ( $events as $hook => $sig ) {
+			foreach ( (array) $events as $hook => $sig ) {
 				if ( 'crontrol_cron_job' === $hook && ! current_user_can( 'edit_files' ) ) {
 					continue;
 				}
