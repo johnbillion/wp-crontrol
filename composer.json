@@ -29,7 +29,7 @@
 	},
 	"scripts": {
 		"test:cs": [
-			"vendor/bin/phpcs -nps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs ."
+			"phpcs -nps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs ."
 		],
 		"test:cs2pr": [
 			"phpcs -nsq --report=checkstyle --cache=tests/cache/phpcs . | cs2pr"
