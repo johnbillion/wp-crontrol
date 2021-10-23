@@ -259,6 +259,7 @@ class Table extends \WP_List_Table {
 	 * @param string $which
 	 */
 	protected function extra_tablenav( $which ) {
+		wp_nonce_field( 'crontrol-export-event-csv', 'crontrol_nonce' );
 		printf(
 			'<input type="hidden" name="hooks_type" value="%s"/>',
 			esc_attr( isset( $_GET['hooks_type'] ) ? sanitize_text_field( wp_unslash( $_GET['hooks_type'] ) ) : 'all' )

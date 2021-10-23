@@ -601,7 +601,7 @@ function action_handle_posts() {
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 	} elseif ( isset( $_POST['action'] ) && 'crontrol-export-event-csv' === $_POST['action'] ) {
-		// @TODO check_admin_referer
+		check_admin_referer( 'crontrol-export-event-csv', 'crontrol_nonce' );
 
 		require_once __DIR__ . '/src/event-list-table.php';
 
