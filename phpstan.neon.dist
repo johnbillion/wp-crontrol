@@ -6,6 +6,8 @@ parameters:
     paths:
         - wp-crontrol.php
         - src/
+    bootstrapFiles:
+        - tests/stubs.php
     ignoreErrors:
         # Uses func_get_args()
         - '#^Function apply_filters invoked with [34567] parameters, 2 required\.$#'
