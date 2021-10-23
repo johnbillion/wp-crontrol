@@ -1202,7 +1202,7 @@ function show_cron_form( $editing ) {
 			esc_attr( $existing['sig'] )
 		);
 		$other_fields .= sprintf( '<input name="original_next_run_utc" type="hidden" value="%s" />',
-			esc_attr( $existing['next_run'] )
+			esc_attr( (string) $existing['next_run'] )
 		);
 		if ( ! empty( $existing['args'] ) ) {
 			$display_args = wp_json_encode( $existing['args'] );
@@ -1823,7 +1823,7 @@ function interval( $since ) {
 		$name    = $chunks[ $i ][1];
 
 		// Finding the biggest chunk (if the chunk fits, break).
-		$count = floor( $since / $seconds );
+		$count = (int) floor( $since / $seconds );
 		if ( $count ) {
 			break;
 		}
@@ -1836,7 +1836,7 @@ function interval( $since ) {
 	if ( $i + 1 < count( $chunks ) ) {
 		$seconds2 = $chunks[ $i + 1 ][0];
 		$name2    = $chunks[ $i + 1 ][1];
-		$count2   = floor( ( $since - ( $seconds * $count ) ) / $seconds2 );
+		$count2   = (int) floor( ( $since - ( $seconds * $count ) ) / $seconds2 );
 		if ( $count2 ) {
 			// Add to output var.
 			$output .= ' ' . sprintf( translate_nooped_plural( $name2, $count2, 'wp-crontrol' ), $count2 );
