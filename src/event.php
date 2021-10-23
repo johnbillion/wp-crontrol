@@ -238,6 +238,14 @@ function delete( $hook, $sig, $next_run_utc ) {
  * @return stdClass[] An array of cron event objects.
  */
 function get() {
+	/**
+	 * @var array<int,array<string,array<string,array<string,mixed[]>>>>
+	 * @phpstan-var array<int,array<string,array<string,array<string,array{
+	 *     args: mixed[],
+	 *     schedule: string|false,
+	 *     interval?: int,
+	 * }>>>>
+	 */
 	$crons  = _get_cron_array();
 	$events = array();
 
