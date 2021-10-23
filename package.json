@@ -1,19 +1,19 @@
 {
-  "name": "wp-crontrol",
-  "version": "1.10.0",
-  "description": "WP Crontrol lets you view and control what's happening in the WP-Cron system.",
-  "license": "GPL-2.0-or-later",
-  "private": true,
-  "author": "John Blackbourn",
-  "repository": "johnbillion/wp-crontrol",
-  "homepage": "https://github.com/johnbillion/wp-crontrol",
-  "devDependencies": {
-    "@actions/github": "^2",
-    "version-bump-prompt": "^6.1.0"
-  },
-  "scripts": {
-    "bump:patch": "bump patch --commit 'Version %s.' wp-crontrol.php package.json readme.md",
-    "bump:minor": "bump minor --commit 'Version %s.' wp-crontrol.php package.json readme.md",
-    "bump:major": "bump major --commit 'Version %s.' wp-crontrol.php package.json readme.md"
-  }
+	"name": "wp-crontrol",
+	"version": "1.10.0",
+	"description": "WP Crontrol lets you view and control what's happening in the WP-Cron system.",
+	"license": "GPL-2.0-or-later",
+	"private": true,
+	"author": "John Blackbourn",
+	"repository": "johnbillion/wp-crontrol",
+	"homepage": "https://github.com/johnbillion/wp-crontrol",
+	"devDependencies": {
+		"@actions/github": "^2",
+		"version-bump-prompt": "^6.1.0"
+	},
+	"scripts": {
+		"bump:patch": "bump patch --commit 'Version %s.' wp-crontrol.php package.json readme.md",
+		"bump:minor": "bump minor --commit 'Version %s.' wp-crontrol.php package.json readme.md",
+		"bump:major": "bump major --commit 'Version %s.' wp-crontrol.php package.json readme.md"
+	}
 }
