@@ -455,10 +455,6 @@ class Table extends \WP_List_Table {
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_args( $event ) {
-		if ( ! empty( $event->args ) ) {
-			$args = \Crontrol\json_output( $event->args );
-		}
-
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			$return = '<em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em>';
 
@@ -495,7 +491,7 @@ class Table extends \WP_List_Table {
 			} else {
 				return sprintf(
 					'<pre>%s</pre>',
-					esc_html( $args )
+					esc_html( \Crontrol\json_output( $event->args ) )
 				);
 			}
 		}
