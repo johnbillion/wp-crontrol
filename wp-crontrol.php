@@ -290,7 +290,7 @@ function action_handle_posts() {
 		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
 
 		add_filter( 'schedule_event', function( $event ) use ( $original ) {
-			if ( ! $event || ! $original ) {
+			if ( ! $event ) {
 				return $event;
 			}
 
@@ -371,7 +371,7 @@ function action_handle_posts() {
 		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
 
 		add_filter( 'schedule_event', function( $event ) use ( $original ) {
-			if ( ! $event || ! $original ) {
+			if ( ! $event ) {
 				return $event;
 			}
 
