@@ -2,6 +2,7 @@
 <ruleset name="WP Crontrol">
 
 	<config name="testVersion" value="5.3-"/>
+	<arg name="extensions" value="php"/>
 
 	<exclude-pattern>*/build/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>

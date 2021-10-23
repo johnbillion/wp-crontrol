@@ -256,7 +256,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Extra controls to be displayed between bulk actions and pagination.
 	 *
-	 * @param string $which
+	 * @param string $which One of 'top' or 'bottom' to indicate the position on the screen.
 	 */
 	protected function extra_tablenav( $which ) {
 		wp_nonce_field( 'crontrol-export-event-csv', 'crontrol_nonce' );

@@ -653,7 +653,7 @@ function action_handle_posts() {
 						$callbacks[] = $callback['callback']['name'];
 					}
 
-					$action = implode( ",", $callbacks );
+					$action = implode( ',', $callbacks );
 				}
 
 				if ( $event->schedule ) {
