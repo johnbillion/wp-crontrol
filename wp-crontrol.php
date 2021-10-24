@@ -649,6 +649,11 @@ function action_handle_posts() {
 			gmdate( 'Y-m-d-H.i.s' )
 		);
 		$csv = fopen( 'php://output', 'w' );
+
+		if ( false === $csv ) {
+			wp_die( __( 'Could not save CSV file.', 'wp-crontrol' ) );
+		}
+
 		$events = Table::get_filtered_events( Event\get() );
 
 		header( 'Content-Type: text/csv; charset=utf-8' );
@@ -966,7 +971,13 @@ function ajax_check_events_hash() {
 		wp_send_json_error( null, 403 );
 	}
 
-	wp_send_json_success( md5( json_encode( Event\get() ) ) );
+	$data = json_encode( Event\get() );
+
+	if ( false === $data ) {
+		wp_send_json_error( null, 500 );
+	}
+
+	wp_send_json_success( md5( $data ) );
 }
 
 /**
@@ -1221,6 +1232,10 @@ function show_cron_form( $editing ) {
 		);
 		if ( ! empty( $existing['args'] ) ) {
 			$display_args = wp_json_encode( $existing['args'] );
+
+			if ( false === $display_args ) {
+				$display_args = '';
+			}
 		}
 		$button        = __( 'Update Event', 'wp-crontrol' );
 		$next_run_gmt  = gmdate( 'Y-m-d H:i:s', $existing['next_run'] );
@@ -1512,7 +1527,10 @@ function admin_manage_page() {
 			__( 'Failed to save the cron event %s.', 'wp-crontrol' ),
 			'error',
 		),
-		'error' => array(),
+		'error' => array(
+			'',
+			'error',
+		),
 	);
 
 	if ( isset( $_GET['crontrol_name'] ) && isset( $_GET['crontrol_message'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
@@ -1521,10 +1539,7 @@ function admin_manage_page() {
 		$link    = '';
 
 		if ( 'error' === $message ) {
-			$messages['error'] = array(
-				get_message(),
-				'error',
-			);
+			$messages['error'][0] = get_message();
 		}
 
 		printf(
@@ -1907,17 +1922,21 @@ function enqueue_assets( $hook_suffix ) {
 		return;
 	}
 
-	$ver = filemtime( plugin_dir_path( __FILE__ ) . 'css/wp-crontrol.css' );
+	$ver = (string) filemtime( plugin_dir_path( __FILE__ ) . 'css/wp-crontrol.css' );
 	wp_enqueue_style( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'css/wp-crontrol.css', array( 'dashicons' ), $ver );
 
-	$ver = filemtime( plugin_dir_path( __FILE__ ) . 'js/wp-crontrol.js' );
+	$ver = (string) filemtime( plugin_dir_path( __FILE__ ) . 'js/wp-crontrol.js' );
 	wp_enqueue_script( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'js/wp-crontrol.js', array( 'jquery', 'wp-a11y' ), $ver, true );
 
 	$vars = array();
 
 	if ( ! empty( $tab['events'] ) ) {
-		$vars['eventsHash'] = md5( json_encode( Event\get() ) );
-		$vars['eventsHashInterval'] = 20;
+		$data = json_encode( Event\get() );
+
+		if ( false !== $data ) {
+			$vars['eventsHash'] = md5( $data );
+			$vars['eventsHashInterval'] = 20;
+		}
 	}
 
 	if ( ! empty( $tab['add-event'] ) || ! empty( $tab['edit-event'] ) ) {
@@ -2022,7 +2041,13 @@ function json_output( $input, $pretty = true ) {
 		$json_options |= JSON_PRETTY_PRINT;
 	}
 
-	return wp_json_encode( $input, $json_options );
+	$output = wp_json_encode( $input, $json_options );
+
+	if ( false === $output ) {
+		$output = '';
+	}
+
+	return $output;
 }
 
 /**
