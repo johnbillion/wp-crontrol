@@ -21,11 +21,7 @@ use WP_Error;
  * @return true|WP_Error True if the execution was successful, WP_Error if not.
  */
 function run( $hookname, $sig ) {
-	$crons = _get_cron_array();
-
-	if ( empty( $crons ) ) {
-		$crons = array();
-	}
+	$crons = get_core_cron_array();
 
 	foreach ( $crons as $time => $cron ) {
 		if ( isset( $cron[ $hookname ][ $sig ] ) ) {
@@ -97,12 +93,7 @@ function force_schedule_single_event( $hook, $args = array() ) {
 		'schedule'  => false,
 		'args'      => $args,
 	);
-	$crons = _get_cron_array();
-
-	if ( empty( $crons ) ) {
-		$crons = array();
-	}
-
+	$crons = get_core_cron_array();
 	$key   = md5( serialize( $event->args ) );
 
 	$crons[ $event->timestamp ][ $event->hook ][ $key ] = array(
@@ -252,15 +243,7 @@ function delete( $hook, $sig, $next_run_utc ) {
  * @return stdClass[] An array of cron event objects.
  */
 function get() {
-	/**
-	 * @var array<int,array<string,array<string,array<string,mixed[]>>>>
-	 * @phpstan-var array<int,array<string,array<string,array<string,array{
-	 *     args: mixed[],
-	 *     schedule: string|false,
-	 *     interval?: int,
-	 * }>>>>
-	 */
-	$crons  = _get_cron_array();
+	$crons  = get_core_cron_array();
 	$events = array();
 
 	if ( empty( $crons ) ) {
@@ -301,11 +284,7 @@ function get() {
  * @return stdClass|WP_Error A cron event object, or a WP_Error if it's not found.
  */
 function get_single( $hook, $sig, $next_run_utc ) {
-	$crons = _get_cron_array();
-
-	if ( empty( $crons ) ) {
-		$crons = array();
-	}
+	$crons = get_core_cron_array();
 
 	if ( isset( $crons[ $next_run_utc ][ $hook ][ $sig ] ) ) {
 		$event = $crons[ $next_run_utc ][ $hook ][ $sig ];
@@ -334,7 +313,7 @@ function get_single( $hook, $sig, $next_run_utc ) {
  * @return array<string,int> Array of number of events for each hook, keyed by the hook name.
  */
 function count_by_hook() {
-	$crons  = _get_cron_array();
+	$crons  = get_core_cron_array();
 	$events = array();
 
 	if ( empty( $crons ) ) {
@@ -460,4 +439,24 @@ function uasort_order_events( $a, $b ) {
 	}
 
 	return $compare;
+}
+
+/**
+ * Fetches the list of cron events from WordPress core.
+ *
+ * @return array<int,array<string,array<string,array<string,mixed[]>>>>
+ * @phpstan-return array<int,array<string,array<string,array<string,array{
+ *     args: mixed[],
+ *     schedule: string|false,
+ *     interval?: int,
+ * }>>>>
+ */
+function get_core_cron_array() {
+	$crons = _get_cron_array();
+
+	if ( empty( $crons ) ) {
+		$crons = array();
+	}
+
+	return $crons;
 }
