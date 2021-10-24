@@ -22,6 +22,11 @@ use WP_Error;
  */
 function run( $hookname, $sig ) {
 	$crons = _get_cron_array();
+
+	if ( empty( $crons ) ) {
+		$crons = array();
+	}
+
 	foreach ( $crons as $time => $cron ) {
 		if ( isset( $cron[ $hookname ][ $sig ] ) ) {
 			$event = $cron[ $hookname ][ $sig ];
@@ -92,7 +97,12 @@ function force_schedule_single_event( $hook, $args = array() ) {
 		'schedule'  => false,
 		'args'      => $args,
 	);
-	$crons = (array) _get_cron_array();
+	$crons = _get_cron_array();
+
+	if ( empty( $crons ) ) {
+		$crons = array();
+	}
+
 	$key   = md5( serialize( $event->args ) );
 
 	$crons[ $event->timestamp ][ $event->hook ][ $key ] = array(
@@ -288,6 +298,11 @@ function get() {
  */
 function get_single( $hook, $sig, $next_run_utc ) {
 	$crons = _get_cron_array();
+
+	if ( empty( $crons ) ) {
+		$crons = array();
+	}
+
 	if ( isset( $crons[ $next_run_utc ][ $hook ][ $sig ] ) ) {
 		$event = $crons[ $next_run_utc ][ $hook ][ $sig ];
 
