@@ -651,7 +651,7 @@ function action_handle_posts() {
 		$csv = fopen( 'php://output', 'w' );
 
 		if ( false === $csv ) {
-			wp_die( __( 'Could not save CSV file.', 'wp-crontrol' ) );
+			wp_die( esc_html__( 'Could not save CSV file.', 'wp-crontrol' ) );
 		}
 
 		$events = Table::get_filtered_events( Event\get() );
