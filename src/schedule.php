@@ -56,7 +56,13 @@ function delete( $name ) {
 /**
  * Gets a sorted (according to interval) list of the cron schedules
  *
- * @return array[] Array of cron schedule arrays.
+ * @return array<string,array<string,(int|string)>> Array of cron schedule arrays.
+ * @phpstan-return array<string,array{
+ *   interval: int,
+ *   display: string,
+ *   name: string,
+ *   is_too_frequent: bool,
+ * }>
  */
 function get() {
 	$schedules = wp_get_schedules();

@@ -828,8 +828,8 @@ function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
  *
  * Called by the `cron_schedules` filter.
  *
- * @param array[] $scheds Array of cron schedule arrays. Usually empty.
- * @return array[] Array of modified cron schedule arrays.
+ * @param array<string,array<string,(int|string)>> $scheds Array of cron schedule arrays. Usually empty.
+ * @return array<string,array<string,(int|string)>> Array of modified cron schedule arrays.
  */
 function filter_cron_schedules( array $scheds ) {
 	$new_scheds = get_option( 'crontrol_schedules', array() );
