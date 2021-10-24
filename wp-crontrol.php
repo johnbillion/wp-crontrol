@@ -755,6 +755,10 @@ function action_admin_menu() {
 function admin_help_tab() {
 	$screen = get_current_screen();
 
+	if ( ! $screen ) {
+		return;
+	}
+
 	$content = '<p>' . __( 'There are several places to get help with issues relating to WP-Cron:', 'wp-crontrol' ) . '</p>';
 	$content .= '<ul>';
 	$content .= '<li>';
