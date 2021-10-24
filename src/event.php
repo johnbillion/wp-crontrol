@@ -138,7 +138,11 @@ function force_schedule_single_event( $hook, $args = array() ) {
  * @return true|WP_error True if the addition was successful, WP_Error otherwise.
  */
 function add( $next_run_local, $schedule, $hook, array $args ) {
-	$next_run_local = strtotime( $next_run_local, current_time( 'timestamp' ) );
+	/**
+	 * @var int
+	 */
+	$current_time = current_time( 'timestamp' );
+	$next_run_local = strtotime( $next_run_local, $current_time );
 
 	if ( false === $next_run_local ) {
 		return new WP_Error(
