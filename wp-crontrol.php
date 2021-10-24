@@ -1829,7 +1829,7 @@ function time_since( $older_date, $newer_date ) {
  *     echo \Crontrol\interval( 90 );
  *     // 1 minute 30 seconds
  *
- * @param  int $since A period of time in seconds.
+ * @param  int|float $since A period of time in seconds.
  * @return string An interval represented as a string.
  */
 function interval( $since ) {

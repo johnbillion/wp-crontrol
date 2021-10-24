@@ -236,6 +236,9 @@ class Table extends \WP_List_Table {
 
 		$url = admin_url( 'tools.php?page=crontrol_admin_manage_page' );
 
+		/**
+		 * @var array<string,string> $types
+		 */
 		foreach ( $types as $key => $type ) {
 			if ( ! isset( $filtered[ $key ] ) ) {
 				continue;
