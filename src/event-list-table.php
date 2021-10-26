@@ -141,6 +141,8 @@ class Table extends \WP_List_Table {
 		/**
 		 * Filters the available filtered events on the cron event listing screen.
 		 *
+		 * See the corresponding `crontrol/filter-types` filter to adjust the list of filter types.
+		 *
 		 * @since 1.11.0
 		 *
 		 * @param array[]    $filtered Array of filtered event arrays keyed by filter name.
@@ -226,6 +228,8 @@ class Table extends \WP_List_Table {
 
 		/**
 		 * Filters the filter types on the cron event listing screen.
+		 *
+		 * See the corresponding `crontrol/filtered-events` filter to adjust the filtered events.
 		 *
 		 * @since 1.11.0
 		 *
