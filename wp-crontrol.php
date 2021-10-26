@@ -1678,7 +1678,7 @@ function do_tabs() {
 		<nav class="nav-tab-wrapper">
 			<?php
 			foreach ( $links as $id => $link ) {
-				if ( $tabs[ $id ] ) {
+				if ( ! empty( $tabs[ $id ] ) ) {
 					printf(
 						'<a href="%s" class="nav-tab nav-tab-active">%s</a>',
 						esc_url( $link[0] ),
