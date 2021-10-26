@@ -622,7 +622,19 @@ function action_handle_posts() {
 		);
 
 		if ( is_wp_error( $ran ) ) {
-			set_message( $ran->get_error_message() );
+			$set = set_message( $ran->get_error_message() );
+
+			// If we can't store the error message in a transient, just display it.
+			if ( ! $set ) {
+				wp_die(
+					esc_html( $ran->get_error_message() ),
+					'',
+					array(
+						'response'  => 500,
+						'back_link' => true,
+					)
+				);
+			}
 			$redirect['crontrol_message'] = 'error';
 		}
 
@@ -1532,7 +1544,7 @@ function admin_manage_page() {
 			'error',
 		),
 		'error' => array(
-			'',
+			__( 'An unknown error occurred.', 'wp-crontrol' ),
 			'error',
 		),
 	);
@@ -1543,7 +1555,11 @@ function admin_manage_page() {
 		$link    = '';
 
 		if ( 'error' === $message ) {
-			$messages['error'][0] = get_message();
+			$error = get_message();
+
+			if ( $error ) {
+				$messages['error'][0] = $error;
+			}
 		}
 
 		printf(
