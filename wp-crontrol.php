@@ -2024,6 +2024,8 @@ function get_all_core_hooks() {
 			'wp_maybe_auto_update',
 			'wp_split_shared_term_batch',
 			'wp_update_comment_type_batch',
+			'delete_temp_updater_backups',
+			'wp_delete_temp_updater_backups',
 		)
 	);
 }
