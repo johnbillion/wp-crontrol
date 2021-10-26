@@ -1994,17 +1994,17 @@ function filter_removable_query_args( array $args ) {
  */
 function get_persistent_core_hooks() {
 	return array(
-		'delete_expired_transients',
-		'recovery_mode_clean_expired_keys',
-		'update_network_counts',
-		'wp_https_detection',
-		'wp_privacy_delete_old_export_files',
-		'wp_scheduled_auto_draft_delete',
-		'wp_scheduled_delete',
-		'wp_site_health_scheduled_check',
-		'wp_update_plugins',
-		'wp_update_themes',
-		'wp_version_check',
+		'wp_update_plugins', // 2.7.0
+		'wp_update_themes', // 2.7.0
+		'wp_version_check', // 2.7.0
+		'wp_scheduled_delete', // 2.9.0
+		'update_network_counts', // 3.1.0
+		'wp_scheduled_auto_draft_delete', // 3.4.0
+		'delete_expired_transients', // 4.9.0
+		'wp_privacy_delete_old_export_files', // 4.9.6
+		'recovery_mode_clean_expired_keys', // 5.2.0
+		'wp_site_health_scheduled_check', // 5.4.0
+		'wp_https_detection', // 5.7.0
 	);
 }
 
@@ -2017,15 +2017,15 @@ function get_all_core_hooks() {
 	return array_merge(
 		get_persistent_core_hooks(),
 		array(
-			'do_pings',
-			'importer_scheduled_cleanup',
-			'publish_future_post',
-			'upgrader_scheduled_cleanup',
-			'wp_maybe_auto_update',
-			'wp_split_shared_term_batch',
-			'wp_update_comment_type_batch',
-			'delete_temp_updater_backups',
-			'wp_delete_temp_updater_backups',
+			'do_pings', // 2.1.0
+			'publish_future_post', // 2.1.0
+			'importer_scheduled_cleanup', // 2.5.0
+			'upgrader_scheduled_cleanup', // 3.2.2
+			'wp_maybe_auto_update', // 3.7.0
+			'wp_split_shared_term_batch', // 4.3.0
+			'wp_update_comment_type_batch', // 5.5.0
+			'delete_temp_updater_backups', // 5.9.0
+			'wp_delete_temp_updater_backups', // 5.9.0
 		)
 	);
 }
