@@ -1006,8 +1006,8 @@ function test_cron_spawn( $cache = true ) {
 	global $wp_version;
 
 	$cron_runner_plugins = array(
-		'\HM\Cavalcade\Plugin\Job'    => 'Cavalcade',
-		'\Automattic\WP\Cron_Control' => 'Cron Control',
+		'\HM\Cavalcade\Plugin\Job'         => 'Cavalcade',
+		'\Automattic\WP\Cron_Control\Main' => 'Cron Control',
 	);
 
 	foreach ( $cron_runner_plugins as $class => $plugin ) {
