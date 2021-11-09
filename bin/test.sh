@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# -e Exit immediately if a pipeline returns a non-zero status
+# -x Print a trace of commands and their arguments after they are expanded and before they are executed
+set -ex
+
 # Specify the directory where the WordPress installation lives:
 WP_CORE_DIR="${PWD}/tests/wordpress"
 
