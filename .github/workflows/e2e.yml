@@ -43,8 +43,8 @@ jobs:
       uses: shivammathur/setup-php@2.7.0
       with:
         php-version: ${{ matrix.php }}
-        extensions: mysqli, xmlwriter
-        coverage: none
+        extensions: mysqli, xmlwriter, xdebug
+        ini-values: xdebug.mode="develop"
       env:
         fail-fast: true
 
