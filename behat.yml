@@ -1,0 +1,35 @@
+default:
+  suites:
+    default:
+      contexts:
+        - WPCrontrolContext
+        - WordHat\Extension\Context\WordpressContext
+        - Behat\MinkExtension\Context\MinkContext
+        - WordHat\Extension\Context\DashboardContext
+        - WordHat\Extension\Context\SiteContext
+        - WordHat\Extension\Context\UserContext
+        - FailAid\Context\FailureContext
+
+  extensions:
+    Behat\MinkExtension:
+      base_url:    'http://localhost:8000'
+      browser_name: chrome
+      default_session: default
+      sessions:
+        default:
+          goutte:
+            guzzle_parameters:
+              verify: false  # Allow self-signed SSL certificates
+
+    WordHat\Extension:
+      default_driver: wpphp
+      users:
+        -
+          roles:
+            - administrator
+          username: admin
+          password: admin
+      database:
+        restore_after_test: true
+
+    FailAid\Extension: ~

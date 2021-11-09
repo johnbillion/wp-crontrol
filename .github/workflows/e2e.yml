@@ -1,0 +1,68 @@
+name: Functional Tests
+on:
+  push:
+    branches:
+      - 'develop'
+      - 'trunk'
+      - 'master'
+  pull_request:
+    branches:
+      - '**'
+  # Once weekly on Wednesdays at 16:00 UTC.
+  schedule:
+    - cron: '0 16 * * 3'
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    strategy:
+      matrix:
+        php: ['7.3','8.0']
+        wp: ['*', 'dev-nightly']
+      fail-fast: false
+    name: WP ${{ matrix.wp }} / PHP ${{ matrix.php }}
+    runs-on: ubuntu-18.04
+    timeout-minutes: 10
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v1
+
+    - name: Get Composer cache directory
+      id: composer-cache
+      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+    - name: Composer cache
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-composer-dependencies
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+
+    - name: Install PHP
+      uses: shivammathur/setup-php@2.7.0
+      with:
+        php-version: ${{ matrix.php }}
+        extensions: mysqli, xmlwriter
+        coverage: none
+      env:
+        fail-fast: true
+
+    - name: Debugging
+      run: |
+        php --version
+        php -m
+        composer --version
+        mysql --version
+
+    - name: Install dependencies
+      run: |
+        sudo systemctl start mysql.service
+        composer install --prefer-dist --ignore-platform-reqs
+        composer require --dev --update-with-dependencies --prefer-dist --ignore-platform-reqs roots/wordpress="${{ matrix.wp }} || *"
+
+    - name: Run the tests
+      run: composer test:ft
+      env:
+        MYSQL_DATABASE: wordpress
+        WP_TESTS_DB_PASS: root

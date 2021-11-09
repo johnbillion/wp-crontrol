@@ -18,11 +18,20 @@
 		"sort-packages": true,
 		"preferred-install": "dist"
 	},
+	"extra": {
+		"wordpress-install-dir": "tests/wordpress"
+	},
 	"require-dev": {
+		"behat/mink-goutte-driver": "^1.2",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+		"genesis/behat-fail-aid": "^2.0",
+		"johnbillion/wordhat": "dev-develop",
 		"phpcompatibility/phpcompatibility-wp": "2.1.2",
 		"phpstan/phpstan": "0.12.99",
+		"roots/wordpress": "*",
 		"szepeviktor/phpstan-wordpress": "^0.7.7",
+		"wp-cli/core-command": "^2",
+		"wp-cli/db-command": "^2",
 		"wp-coding-standards/wpcs": "2.3.0"
 	},
 	"require": {
@@ -39,9 +48,13 @@
 		"test:analyze": [
 			"vendor/bin/phpstan analyze"
 		],
+		"test:ft": [
+			"bin/test.sh"
+		],
 		"test": [
 			"@test:cs",
-			"@test:analyze"
+			"@test:analyze",
+			"@test:ft"
 		]
 	}
 }
