@@ -20,7 +20,7 @@ $WP core install --title="Example" --admin_user="admin" --admin_password="admin"
 
 # Run the functional tests:
 BEHAT_PARAMS='{"extensions" : {"WordHat\\Extension" : {"path" : "'$WP_CORE_DIR'"}}}' \
-	./vendor/bin/behat --colors "$1"
+	./vendor/bin/behat --colors --strict "$1"
 
 # Stop the PHP web server:
 kill $!
