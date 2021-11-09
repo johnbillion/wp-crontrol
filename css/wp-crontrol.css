@@ -30,7 +30,7 @@ table.wp-list-table {
 	padding: 0;
 }
 
-.wp-list-table td.column-status {
+.wp-list-table td.column-crontrol_status {
 	white-space: nowrap;
 }
 
@@ -65,16 +65,16 @@ table.wp-list-table {
 }
 
 .status-crontrol-complete,
-.wp-list-table tr.crontrol-complete td.column-status {
+.wp-list-table tr.crontrol-complete td.column-crontrol_status {
 	color: #080;
 }
 
 .status-crontrol-no-action,
 .status-crontrol-stalled,
 .status-crontrol-warning,
-.wp-list-table tr.crontrol-no-action td.column-status,
-.wp-list-table tr.crontrol-stalled td.column-status,
-.wp-list-table tr.crontrol-warning td.column-status {
+.wp-list-table tr.crontrol-no-action td.column-crontrol_status,
+.wp-list-table tr.crontrol-stalled td.column-crontrol_status,
+.wp-list-table tr.crontrol-warning td.column-crontrol_status {
 	color: #c60;
 }
 
@@ -82,23 +82,23 @@ table.wp-list-table {
 .status-crontrol-alert,
 .status-crontrol-critical,
 .status-crontrol-error,
-.wp-list-table tr.crontrol-error td.column-status {
+.wp-list-table tr.crontrol-error td.column-crontrol_status {
 	color: #a00;
 }
 
-.wp-list-table .column-https,
-.wp-list-table .column-queries,
-.wp-list-table .column-time {
+.wp-list-table .column-crontrol_https,
+.wp-list-table .column-crontrol_queries,
+.wp-list-table .column-crontrol_time {
 	text-align: end;
 }
 
-.column-time,
-.column-ran,
+.column-crontrol_time,
+.column-crontrol_ran,
 .column-crontrol_next {
 	white-space: nowrap;
 }
 
-.row-actions .in-use {
+.row-actions .crontrol-in-use {
 	color: #666;
 }
 

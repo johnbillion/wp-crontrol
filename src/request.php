@@ -97,8 +97,10 @@ class Request {
 	 */
 	public function init( array $props ) {
 		foreach ( $props as $name => $value ) {
-			if ( property_exists( $this, $name ) ) {
-				$this->$name = $value;
+			$prop = (string) preg_replace( '#^crontrol_#', '', $name );
+
+			if ( property_exists( $this, $prop ) ) {
+				$this->$prop = $value;
 			}
 		}
 
