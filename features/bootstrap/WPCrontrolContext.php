@@ -1,4 +1,9 @@
 <?php
+/**
+ * This is the Behat context file that's used for the WordHat functional tests.
+ *
+ * @package wp-crontrol
+ */
 
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\ElementHtmlException;
