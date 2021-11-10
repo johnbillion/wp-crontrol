@@ -5,9 +5,6 @@ Feature: List cron events
 
 	Background:
 		Given the "wp-crontrol/wp-crontrol.php" plugin is active
-		And there are users:
-			| user_login    | display_name  | user_email                | user_pass | role          |
-			| administrator | Administrator | administrator@example.com | password  | administrator |
 
 	Scenario: List cron events
 		Given I am logged in as admin
