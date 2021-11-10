@@ -19,4 +19,31 @@ use PHPUnit\Framework\Assert;
 class WPCrontrolContext extends WordPressContext {
 	use UserContext;
 
+	/**
+	 * Click on the element with the provided CSS Selector
+	 *
+	 * @When /^I click on the element with CSS selector "([^"]*)"$/
+	 *
+	 * @throws \InvalidArgumentException When the element cannot be found.
+	 * @param string $css_selector The selector.
+	 * @return void
+	 */
+	public function iClickOnTheElementWithCSSSelector( $css_selector ) {
+		$session = $this->getSession();
+		$element = $session->getPage()->find(
+			'xpath',
+			$session->getSelectorsHandler()->selectorToXpath( 'css', $css_selector )
+		);
+
+		if ( null === $element ) {
+			throw new \InvalidArgumentException(
+				sprintf(
+					'Could not evaluate CSS Selector: "%s"',
+					$css_selector
+				)
+			);
+		}
+
+		$element->click();
+	}
 }
