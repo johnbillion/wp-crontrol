@@ -68,4 +68,21 @@ class FeatureContext extends WordPressContext {
 	public function iAmOnTheAddCronEventScreen() {
 		$this->dashboard_page->go( 'tools.php?page=crontrol_admin_manage_page&crontrol_action=new-cron' );
 	}
+
+	/**
+	 * Check the specified notification is on-screen.
+	 *
+	 * Example: Then I should see a success notice that says "Post published"
+	 *
+	 * @Then /^I should see an? (success|warning|error|info) notice that says "([^"]+)"$/
+	 *
+	 * @param string $type    Notice type. One of success, warning, error, or info.
+	 * @param string $message Text to search for.
+	 * @return void
+	 */
+	public function iShouldSeeNoticeThatSays( $type, $message ) {
+		$selector = '.notice-' . $type;
+
+		$this->assertSession()->elementTextContains( 'css', $selector, $message );
+	}
 }

@@ -18,4 +18,7 @@ Feature: Add a cron event
 	Scenario: Adding a new event
 		Given I am logged in as admin
 		When I am on the Add Cron Event screen
-		Then I should be on the "Add Cron Event" screen
+		And I fill in "crontrol_hookname" with "my_hookname"
+		And I press "Add Event"
+		Then I should be on the "Cron Events" screen
+		And I should see a success notice that says "Created the cron event my_hookname."
