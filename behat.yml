@@ -2,7 +2,7 @@ default:
   suites:
     default:
       contexts:
-        - WPCrontrolContext
+        - WPCrontrol\Context\FeatureContext
         - WordHat\Extension\Context\WordpressContext
         - Behat\MinkExtension\Context\MinkContext
         - WordHat\Extension\Context\DashboardContext

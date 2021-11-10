@@ -5,20 +5,14 @@
  * @package wp-crontrol
  */
 
-use Behat\Mink\Exception\ElementNotFoundException;
-use Behat\Mink\Exception\ElementHtmlException;
-use Behat\Mink\Exception\ElementTextException;
-use Behat\Mink\Exception\ExpectationException;
+namespace WPCrontrol\Context;
+
 use WordHat\Extension\Context\RawWordpressContext as WordPressContext;
-use WordHat\Extension\Context\Traits\UserAwareContextTrait as UserContext;
-use PHPUnit\Framework\Assert;
 
 /**
  * Defines application features from the specific context.
  */
-class WPCrontrolContext extends WordPressContext {
-	use UserContext;
-
+class FeatureContext extends WordPressContext {
 	/**
 	 * Click on the element with the provided CSS Selector
 	 *
