@@ -17,7 +17,7 @@ jobs:
   e2e:
     strategy:
       matrix:
-        php: ['7.3','8.0']
+        php: ['7.4']
         wp: ['*', 'dev-nightly']
       fail-fast: false
     name: WP ${{ matrix.wp }} / PHP ${{ matrix.php }}
@@ -58,8 +58,8 @@ jobs:
     - name: Install dependencies
       run: |
         sudo systemctl start mysql.service
-        composer install --prefer-dist --ignore-platform-reqs
-        composer require --dev --update-with-dependencies --prefer-dist --ignore-platform-reqs roots/wordpress="${{ matrix.wp }} || *"
+        composer install --prefer-dist
+        composer require --dev --update-with-dependencies --prefer-dist roots/wordpress="${{ matrix.wp }} || *"
 
     - name: Run the tests
       run: composer test:ft
