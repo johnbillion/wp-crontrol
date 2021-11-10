@@ -11,3 +11,4 @@ Feature: List cron events
 		When I go to the dashboard
 		And I go to the "Tools > Cron Events" menu
 		Then I should see "Cron Events"
+		And I should see a "table.crontrol-events" element
