@@ -278,13 +278,14 @@ function get() {
 /**
  * Gets a single cron event.
  *
- * @param string $hook         The hook name of the event.
- * @param string $sig          The event signature.
- * @param string $next_run_utc The UTC time that the event would be run at.
+ * @param string     $hook         The hook name of the event.
+ * @param string     $sig          The event signature.
+ * @param string|int $next_run_utc The UTC time that the event would be run at.
  * @return stdClass|WP_Error A cron event object, or a WP_Error if it's not found.
  */
 function get_single( $hook, $sig, $next_run_utc ) {
 	$crons = get_core_cron_array();
+	$next_run_utc = (int) $next_run_utc;
 
 	if ( isset( $crons[ $next_run_utc ][ $hook ][ $sig ] ) ) {
 		$event = $crons[ $next_run_utc ][ $hook ][ $sig ];
