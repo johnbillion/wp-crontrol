@@ -27,9 +27,9 @@
 		"genesis/behat-fail-aid": "^2.0",
 		"johnbillion/wordhat": "dev-develop",
 		"phpcompatibility/phpcompatibility-wp": "2.1.2",
-		"phpstan/phpstan": "0.12.99",
+		"phpstan/phpstan": "^1.0",
 		"roots/wordpress": "*",
-		"szepeviktor/phpstan-wordpress": "^0.7.7",
+		"szepeviktor/phpstan-wordpress": "^1.0",
 		"wp-cli/core-command": "^2",
 		"wp-cli/db-command": "^2",
 		"wp-coding-standards/wpcs": "2.3.0"
