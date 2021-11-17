@@ -1806,19 +1806,19 @@ function output_callback( array $callback ) {
 	$qm   = WP_PLUGIN_DIR . '/query-monitor/query-monitor.php';
 	$html = plugin_dir_path( $qm ) . 'output/Html.php';
 
+	if ( ! empty( $callback['callback']['error'] ) ) {
+		$return  = '<code>' . $callback['callback']['name'] . '</code>';
+		$return .= '<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
+		$return .= esc_html( $callback['callback']['error']->get_error_message() );
+		$return .= '</span>';
+		return $return;
+	}
+
 	// If Query Monitor is installed, use its rich callback output.
 	if ( class_exists( '\QueryMonitor' ) && file_exists( $html ) ) {
 		require_once $html;
 
 		if ( class_exists( '\QM_Output_Html' ) ) {
-			if ( ! empty( $callback['callback']['error'] ) ) {
-				$return  = '<code>' . $callback['callback']['name'] . '</code>';
-				$return .= '<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
-				$return .= esc_html( $callback['callback']['error']->get_error_message() );
-				$return .= '</span>';
-				return $return;
-			}
-
 			return \QM_Output_Html::output_filename(
 				$callback['callback']['name'],
 				$callback['callback']['file'],
@@ -2025,7 +2025,6 @@ function get_all_core_hooks() {
 			'wp_maybe_auto_update', // 3.7.0
 			'wp_split_shared_term_batch', // 4.3.0
 			'wp_update_comment_type_batch', // 5.5.0
-			'delete_temp_updater_backups', // 5.9.0
 			'wp_delete_temp_updater_backups', // 5.9.0
 		)
 	);
