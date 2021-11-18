@@ -569,6 +569,7 @@ function action_handle_posts() {
 		}
 
 		if ( function_exists( 'wp_unschedule_hook' ) ) {
+			/** @var int|false */
 			$deleted = wp_unschedule_hook( $hook );
 		}
 
