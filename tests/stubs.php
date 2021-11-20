@@ -3,3 +3,17 @@
 // WP core constants:
 define( 'WP_CRON_LOCK_TIMEOUT', 123 );
 define( 'WP_PLUGIN_DIR', '' );
+
+class QM_Util {
+	/**
+	 * @return array<string,mixed> The updated callback entry.
+	 */
+	public static function populate_callback( array $callback ) {}
+}
+
+class QM_Output_Html {
+	/**
+	 * @return string
+	 */
+	public static function output_filename( string $text, string $file, int $line = 0, bool $is_filename = false ) {}
+}
