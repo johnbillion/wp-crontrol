@@ -9,7 +9,6 @@ actor: AcceptanceTester
 modules:
     enabled:
         - WPBrowser
-        - \Helper\Acceptance
     config:
         WPBrowser:
             url: '%TEST_SITE_WP_URL%'
