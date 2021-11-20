@@ -36,6 +36,14 @@
 		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
 	</rule>
 
+	<!-- Ignore some rules for the tests -->
+	<rule ref="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase">
+		<exclude-pattern>/tests/acceptance</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase">
+		<exclude-pattern>/tests/acceptance</exclude-pattern>
+	</rule>
+
 	<rule ref="WordPress-Docs" />
 
 	<rule ref="WordPress.WP.I18n">

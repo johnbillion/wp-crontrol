@@ -23,7 +23,7 @@ $WP db reset --yes
 $WP core install --title="Example" --admin_user="admin" --admin_password="admin" --admin_email="admin@example.com"
 
 # Run the functional tests:
-./vendor/bin/codecept run "$1" \
+./vendor/bin/codecept run --steps "$1" \
 	|| TESTS_EXIT_CODE=$? && kill $! && exit $TESTS_EXIT_CODE
 
 # Stop the PHP web server:
