@@ -1342,7 +1342,7 @@ function show_cron_form( $editing ) {
 					?>
 					<tr class="crontrol-event-php">
 						<th valign="top" scope="row">
-							<label for="hookcode">
+							<label for="crontrol_hookcode">
 								<?php esc_html_e( 'PHP Code', 'wp-crontrol' ); ?>
 							</label>
 						</th>
@@ -1362,7 +1362,7 @@ function show_cron_form( $editing ) {
 					</tr>
 					<tr class="crontrol-event-php">
 						<th valign="top" scope="row">
-							<label for="eventname">
+							<label for="crontrol_eventname">
 								<?php esc_html_e( 'Event Name (optional)', 'wp-crontrol' ); ?>
 							</label>
 						</th>
@@ -1378,7 +1378,7 @@ function show_cron_form( $editing ) {
 					?>
 					<tr class="crontrol-event-standard">
 						<th valign="top" scope="row">
-							<label for="hookname">
+							<label for="crontrol_hookname">
 								<?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?>
 							</label>
 						</th>
@@ -1389,7 +1389,7 @@ function show_cron_form( $editing ) {
 					</tr>
 					<tr class="crontrol-event-standard">
 						<th valign="top" scope="row">
-							<label for="args">
+							<label for="crontrol_args">
 								<?php esc_html_e( 'Arguments (optional)', 'wp-crontrol' ); ?>
 							</label>
 						</th>
@@ -1414,7 +1414,7 @@ function show_cron_form( $editing ) {
 				?>
 				<tr>
 					<th valign="top" scope="row">
-						<label for="next_run_date_local">
+						<label for="crontrol_next_run_date_local">
 							<?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?>
 						</label>
 					</th>
@@ -1467,7 +1467,7 @@ function show_cron_form( $editing ) {
 				</tr>
 				<tr>
 					<th valign="top" scope="row">
-						<label for="schedule">
+						<label for="crontrol_schedule">
 							<?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?>
 						</label>
 					</th>
