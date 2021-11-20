@@ -63,5 +63,3 @@ jobs:
 
     - name: Run the tests
       run: composer test:ft
-      env:
-        TEST_SITE_DB_PASSWORD: root
