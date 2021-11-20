@@ -1,4 +1,9 @@
 <?php
+/**
+ * Acceptance testing actor.
+ *
+ * @package wp-crontrol
+ */
 
 /**
  * Inherited Methods
@@ -13,8 +18,6 @@
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
  * @method void pause()
- *
- * @SuppressWarnings(PHPMD)
  */
 class AcceptanceTester extends \Codeception\Actor {
 	use _generated\AcceptanceTesterActions;

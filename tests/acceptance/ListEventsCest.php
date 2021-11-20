@@ -1,5 +1,13 @@
 <?php
+/**
+ * Acceptance tests for listing cron events.
+ *
+ * @package wp-crontrol
+ */
 
+/**
+ * Test class.
+ */
 class ListEventsCest {
 	public function _before( AcceptanceTester $I ) {
 		$I->loginAsAdmin();

@@ -37,7 +37,10 @@
 	</rule>
 
 	<!-- Ignore some rules for the tests -->
-	<rule ref="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase">
+	<rule ref="Squiz.Commenting.FunctionComment.MissingParamTag">
+		<exclude-pattern>/tests/acceptance</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid">
 		<exclude-pattern>/tests/acceptance</exclude-pattern>
 	</rule>
 	<rule ref="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase">
