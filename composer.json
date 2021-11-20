@@ -33,7 +33,7 @@
 		"phpstan/phpstan": "^1.0",
 		"roots/wordpress": "*",
 		"szepeviktor/phpstan-wordpress": "^1.0",
-		"vlucas/phpdotenv": "^3",
+		"vlucas/phpdotenv": "^5",
 		"wp-cli/core-command": "^2",
 		"wp-cli/db-command": "^2",
 		"wp-coding-standards/wpcs": "2.3.0"
