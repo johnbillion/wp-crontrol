@@ -151,7 +151,7 @@ function action_handle_posts() {
 		}
 		$args = json_decode( $cr->args, true );
 
-		if ( empty( $args ) ) {
+		if ( empty( $args ) || ! is_array( $args ) ) {
 			$args = array();
 		}
 
@@ -265,7 +265,7 @@ function action_handle_posts() {
 
 		$args = json_decode( $cr->args, true );
 
-		if ( empty( $args ) ) {
+		if ( empty( $args ) || ! is_array( $args ) ) {
 			$args = array();
 		}
 
@@ -1135,6 +1135,7 @@ function show_cron_status( $tab ) {
  * @return string The name and UTC offset for the site's timezone.
  */
 function get_timezone_name() {
+	/** @var string */
 	$timezone_string = get_option( 'timezone_string', '' );
 	$gmt_offset      = get_option( 'gmt_offset', 0 );
 

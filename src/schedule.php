@@ -16,6 +16,7 @@ namespace Crontrol\Schedule;
  * @return void
  */
 function add( $name, $interval, $display ) {
+	/** @var array<string,int|string> */
 	$old_scheds = get_option( 'crontrol_schedules', array() );
 
 	$old_scheds[ $name ] = array(
@@ -41,6 +42,7 @@ function add( $name, $interval, $display ) {
  * @return void
  */
 function delete( $name ) {
+	/** @var array<string,int|string> */
 	$scheds = get_option( 'crontrol_schedules', array() );
 	unset( $scheds[ $name ] );
 	update_option( 'crontrol_schedules', $scheds );
