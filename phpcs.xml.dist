@@ -37,6 +37,9 @@
 	</rule>
 
 	<!-- Ignore some rules for the tests -->
+	<rule ref="PSR2.Methods.MethodDeclaration.Underscore">
+		<exclude-pattern>/tests/acceptance</exclude-pattern>
+	</rule>
 	<rule ref="Squiz.Commenting.FunctionComment.MissingParamTag">
 		<exclude-pattern>/tests/acceptance</exclude-pattern>
 	</rule>
