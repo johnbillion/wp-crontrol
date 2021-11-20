@@ -23,9 +23,8 @@ $WP db reset --yes
 $WP core install --title="Example" --admin_user="admin" --admin_password="admin" --admin_email="admin@example.com"
 
 # Run the functional tests:
-BEHAT_PARAMS='{"extensions" : {"WordHat\\Extension" : {"path" : "'$WP_CORE_DIR'"}}}' \
-	./vendor/bin/behat --colors --strict "$1" \
-	|| BEHAT_EXIT_CODE=$? && kill $! && exit $BEHAT_EXIT_CODE
+./vendor/bin/codecept run "$1" \
+	|| TESTS_EXIT_CODE=$? && kill $! && exit $TESTS_EXIT_CODE
 
 # Stop the PHP web server:
 kill $!

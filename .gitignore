@@ -4,5 +4,6 @@
 
 /composer.lock
 /package-lock.json
+/tests/.env
 /tests/cache
 /tests/wordpress

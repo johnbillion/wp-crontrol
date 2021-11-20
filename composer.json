@@ -22,14 +22,18 @@
 		"wordpress-install-dir": "tests/wordpress"
 	},
 	"require-dev": {
-		"behat/mink-goutte-driver": "^1.2",
+		"codeception/module-asserts": "^1.0",
+		"codeception/module-filesystem": "^1.0",
+		"codeception/module-phpbrowser": "^1.0",
+		"codeception/module-webdriver": "^1.0",
+		"codeception/util-universalframework": "^1.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-		"genesis/behat-fail-aid": "^2.0",
-		"johnbillion/wordhat": "dev-develop",
+		"lucatume/wp-browser": "^3.0",
 		"phpcompatibility/phpcompatibility-wp": "2.1.2",
 		"phpstan/phpstan": "^1.0",
 		"roots/wordpress": "*",
 		"szepeviktor/phpstan-wordpress": "^1.0",
+		"vlucas/phpdotenv": "^3",
 		"wp-cli/core-command": "^2",
 		"wp-cli/db-command": "^2",
 		"wp-coding-standards/wpcs": "2.3.0"
@@ -39,6 +43,9 @@
 		"composer/installers": "^1.0 || ^2.0"
 	},
 	"scripts": {
+		"post-update-cmd": [
+			"@php -r \"! file_exists( 'tests/.env' ) && copy( 'tests/.env.dist', 'tests/.env' );\""
+		],
 		"test:cs": [
 			"phpcs -nps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs ."
 		],
