@@ -64,4 +64,4 @@ jobs:
     - name: Run the tests
       run: composer test:ft
       env:
-        WP_TESTS_DB_PASS: root
+        TEST_SITE_DB_PASSWORD: root

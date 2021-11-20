@@ -11,7 +11,7 @@ modules:
         - WPBrowser
     config:
         WPBrowser:
-            url: '%TEST_SITE_WP_URL%'
+            url: 'http://%TEST_SITE_WP_DOMAIN%'
             adminUsername: '%TEST_SITE_ADMIN_USERNAME%'
             adminPassword: '%TEST_SITE_ADMIN_PASSWORD%'
             adminPath: '%TEST_SITE_WP_ADMIN_PATH%'

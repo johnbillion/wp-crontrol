@@ -4,24 +4,25 @@
 # -o pipefail Produce a failure return code if any command errors
 set -eo pipefail
 
-# Specify the directory where the WordPress installation lives:
-WP_CORE_DIR="${PWD}/tests/wordpress"
+set -o allexport
+source ./tests/.env
+set +o allexport
 
-# Specify the URL for the site:
-WP_URL="localhost:8000"
+# Specify the directory where the WordPress installation lives:
+WP_CORE_DIR="${PWD}/${WP_ROOT_FOLDER}"
 
 # Shorthand:
-WP="./vendor/bin/wp --color --path=$WP_CORE_DIR --url=http://$WP_URL"
+WP="./vendor/bin/wp --color --path=$WP_CORE_DIR --url=http://$TEST_SITE_WP_DOMAIN"
 
 # Start the PHP server:
-php -S "$WP_URL" -t "$WP_CORE_DIR" -d disable_functions=mail 2>/dev/null &
+php -S "$TEST_SITE_WP_DOMAIN" -t "$WP_CORE_DIR" -d disable_functions=mail 2>/dev/null &
 PHP_SERVER_PROCESS_ID=$!
 
 # Reset or install the test database:
 $WP db reset --yes
 
 # Install WordPress:
-$WP core install --title="Example" --admin_user="admin" --admin_password="admin" --admin_email="admin@example.com"
+$WP core install --title="Example" --admin_user="${TEST_SITE_ADMIN_USERNAME}" --admin_password="${TEST_SITE_ADMIN_PASSWORD}" --admin_email="${TEST_SITE_ADMIN_EMAIL}"
 
 # Run the functional tests:
 ./vendor/bin/codecept run --steps "$1" \
