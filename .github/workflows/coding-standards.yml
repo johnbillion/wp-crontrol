@@ -18,11 +18,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v1
 
+    - name: Get Composer cache directory
+      id: composer-cache
+      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
     - name: Composer cache
-      uses: actions/cache@v1
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-composer-dependencies
       with:
-        path: ~/.composer/cache
-        key: phpcs-composer-${{ hashFiles('composer.json') }}
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: 7.4-composer-${{ hashFiles('composer.json') }}
 
     - name: PHPCS cache
       uses: actions/cache@v1
@@ -36,7 +42,7 @@ jobs:
     - name: Install PHP
       uses: shivammathur/setup-php@2.7.0
       with:
-        php-version: '7.3'
+        php-version: '7.4'
         coverage: none
       env:
         fail-fast: true
