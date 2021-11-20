@@ -1,6 +1,6 @@
 <?php
 /**
- * This is the configuration file that's used for the WordHat functional tests and WP-CLI commands.
+ * This is the configuration file that's used for the functional tests and WP-CLI commands.
  */
 
 $_root_dir = dirname( __DIR__ );
