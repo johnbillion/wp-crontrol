@@ -15,6 +15,7 @@ WP="./vendor/bin/wp --color --path=$WP_CORE_DIR --url=http://$WP_URL"
 
 # Start the PHP server:
 php -S "$WP_URL" -t "$WP_CORE_DIR" -d disable_functions=mail 2>/dev/null &
+PHP_SERVER_PROCESS_ID=$!
 
 # Reset or install the test database:
 $WP db reset --yes
@@ -24,7 +25,7 @@ $WP core install --title="Example" --admin_user="admin" --admin_password="admin"
 
 # Run the functional tests:
 ./vendor/bin/codecept run --steps "$1" \
-	|| TESTS_EXIT_CODE=$? && kill $! && exit $TESTS_EXIT_CODE
+	|| TESTS_EXIT_CODE=$? && kill $PHP_SERVER_PROCESS_ID && exit $TESTS_EXIT_CODE
 
 # Stop the PHP web server:
-kill $!
+kill $PHP_SERVER_PROCESS_ID
