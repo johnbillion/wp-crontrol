@@ -7,14 +7,14 @@
 
 actor: AcceptanceTester
 modules:
-    enabled:
-        - WPBrowser
-    config:
-        WPBrowser:
-            url: 'http://%TEST_SITE_WP_DOMAIN%'
-            adminUsername: '%TEST_SITE_ADMIN_USERNAME%'
-            adminPassword: '%TEST_SITE_ADMIN_PASSWORD%'
-            adminPath: '%TEST_SITE_WP_ADMIN_PATH%'
-            headers:
-                X_TEST_REQUEST: 1
-                X_WPBROWSER_REQUEST: 1
+  enabled:
+    - WPBrowser
+  config:
+    WPBrowser:
+      url: 'http://%TEST_SITE_WP_DOMAIN%'
+      adminUsername: '%TEST_SITE_ADMIN_USERNAME%'
+      adminPassword: '%TEST_SITE_ADMIN_PASSWORD%'
+      adminPath: '%TEST_SITE_WP_ADMIN_PATH%'
+      headers:
+        X_TEST_REQUEST: 1
+        X_WPBROWSER_REQUEST: 1
