@@ -96,17 +96,15 @@ class Schedule_List_Table extends \WP_List_Table {
 	/**
 	 * Generates and displays row action links for the table.
 	 *
-	 * @param mixed[] $schedule    The schedule for the current row.
-	 * @param string  $column_name Current column name.
-	 * @param string  $primary     Primary column name.
-	 *
 	 * @phpstan-param array{
 	 *   interval: int,
 	 *   display: string,
 	 *   name: string,
 	 *   is_too_frequent: bool,
 	 * } $schedule
-	 *
+	 * @param mixed[] $schedule    The schedule for the current row.
+	 * @param string  $column_name Current column name.
+	 * @param string  $primary     Primary column name.
 	 * @return string The row actions HTML.
 	 */
 	protected function handle_row_actions( $schedule, $column_name, $primary ) {
@@ -141,15 +139,13 @@ class Schedule_List_Table extends \WP_List_Table {
 	/**
 	 * Returns the output for the icon cell of a table row.
 	 *
-	 * @param mixed[] $schedule The schedule for the current row.
-	 *
 	 * @phpstan-param array{
 	 *   interval: int,
 	 *   display: string,
 	 *   name: string,
 	 *   is_too_frequent: bool,
 	 * } $schedule
-	 *
+	 * @param mixed[] $schedule The schedule for the current row.
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_icon( array $schedule ) {
@@ -167,15 +163,13 @@ class Schedule_List_Table extends \WP_List_Table {
 	/**
 	 * Returns the output for the schdule name cell of a table row.
 	 *
-	 * @param mixed[] $schedule The schedule for the current row.
-	 *
 	 * @phpstan-param array{
 	 *   interval: int,
 	 *   display: string,
 	 *   name: string,
 	 *   is_too_frequent: bool,
 	 * } $schedule
-	 *
+	 * @param mixed[] $schedule The schedule for the current row.
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_name( array $schedule ) {
@@ -185,15 +179,13 @@ class Schedule_List_Table extends \WP_List_Table {
 	/**
 	 * Returns the output for the interval cell of a table row.
 	 *
-	 * @param mixed[] $schedule The schedule for the current row.
-	 *
 	 * @phpstan-param array{
 	 *   interval: int,
 	 *   display: string,
 	 *   name: string,
 	 *   is_too_frequent: bool,
 	 * } $schedule
-	 *
+	 * @param mixed[] $schedule The schedule for the current row.
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_interval( array $schedule ) {
@@ -229,7 +221,6 @@ class Schedule_List_Table extends \WP_List_Table {
 	 *   name: string,
 	 *   is_too_frequent: bool,
 	 * } $schedule
-	 *
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_display( array $schedule ) {
