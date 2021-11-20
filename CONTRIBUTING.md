@@ -44,7 +44,7 @@ You can clone this repo and activate it like a normal WordPress plugin. If you w
 
 ## Running the Tests
 
-To run the whole test suite which includes PHPCS code sniffs, PHPStan static analysis, and WordHat functional tests:
+To run the whole test suite which includes PHPCS code sniffs, PHPStan static analysis, and WPBrowser functional tests:
 
 	composer test
 
