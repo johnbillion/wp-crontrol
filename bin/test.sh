@@ -5,7 +5,7 @@
 set -eo pipefail
 
 # Shorthand:
-WP="docker-compose run --rm cli wp --url=http://localhost"
+WP="docker-compose run --rm cli wp --url=http://localhost:8080"
 
 # Reset or install the test database:
 $WP db reset --yes

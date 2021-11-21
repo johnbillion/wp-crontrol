@@ -11,7 +11,7 @@ modules:
     - WPBrowser
   config:
     WPBrowser:
-      url: 'http://localhost'
+      url: 'http://localhost:8080'
       adminUsername: 'admin'
       adminPassword: 'admin'
       adminPath: '/wp-admin'
