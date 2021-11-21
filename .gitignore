@@ -4,7 +4,6 @@
 
 /composer.lock
 /package-lock.json
-/tests/.env
 /tests/_output/
 /tests/_support/_generated
 /tests/cache
