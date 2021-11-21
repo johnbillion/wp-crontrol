@@ -29,6 +29,7 @@ You can clone this repo and activate it like a normal WordPress plugin. If you w
 
 ### Prerequisites
 
+* [Docker Desktop](https://www.docker.com/products/docker-desktop)
 * [Composer](https://getcomposer.org/)
 * [Node](https://nodejs.org/)
 
@@ -43,6 +44,8 @@ You can clone this repo and activate it like a normal WordPress plugin. If you w
        npm install
 
 ## Running the Tests
+
+If you want to run the functional tests, ensure Docker Desktop is running.
 
 To run the whole test suite which includes PHPCS code sniffs, PHPStan static analysis, and WPBrowser functional tests:
 
