@@ -54,6 +54,15 @@ jobs:
       run: |
         php --version
         composer --version
+        docker --version
+        docker-compose --version
+
+    - name: Start Docker environment
+      run: |
+        docker-compose up -d
+
+    - name: Log running Docker containers
+      run: docker ps -a
 
     - name: Install dependencies
       run: |

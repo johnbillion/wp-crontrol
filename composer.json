@@ -52,7 +52,9 @@
 			"vendor/bin/phpstan analyze"
 		],
 		"test:ft": [
-			"bin/test.sh"
+			"docker-compose up",
+			"bin/test.sh",
+			"docker-compose down"
 		],
 		"test": [
 			"@test:cs",
