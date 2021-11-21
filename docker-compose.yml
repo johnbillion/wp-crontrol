@@ -15,7 +15,8 @@ services:
       WORDPRESS_DB_PASSWORD: examplepass
       WORDPRESS_DB_NAME: exampledb
     volumes:
-      - ./tests/wordpress:/var/www/html
+      - wp:/var/www/html
+      - ./:/var/www/html/wp-content/plugins/wp-crontrol
 
   db:
     image: mysql:latest
@@ -35,14 +36,16 @@ services:
     networks:
       - wp-crontrol
     environment:
-      - LOCAL_PHP_XDEBUG=${LOCAL_PHP_XDEBUG-false}
-      - PHP_FPM_UID=${PHP_FPM_UID-1000}
-      - PHP_FPM_GID=${PHP_FPM_GID-1000}
-    volumes:
-      - ./tests/wordpress:/var/www/html
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: exampleuser
+      WORDPRESS_DB_PASSWORD: examplepass
+      WORDPRESS_DB_NAME: exampledb
     init: true
+    volumes:
+      - wp:/var/www/html
 
 volumes:
+  wp:
   db:
 
 networks:
