@@ -77,8 +77,7 @@ jobs:
     - name: Update to nightly
       if: ${{ matrix.nightly }}
       run: |
-        docker-compose run --rm cli wp db reset --yes
-        docker-compose run --rm cli wp core update --version=nightly
+        docker-compose run --rm cli wp core download --force --version=nightly
 
     - name: Run the tests
       run: composer test:ft
