@@ -15,7 +15,7 @@ services:
     depends_on:
       - mysql
     volumes:
-      - wp:/var/www/html
+      - wp:/var/www/html:rw
       - ./:/var/www/html/wp-content/plugins/wp-crontrol
 
   mysql:
@@ -27,7 +27,7 @@ services:
       MYSQL_PASSWORD: examplepass
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
     volumes:
-      - mysql:/var/lib/mysql
+      - mysql:/var/lib/mysql:rw
 
   cli:
     image: wordpress:cli-php${LOCAL_PHP-7.4}
