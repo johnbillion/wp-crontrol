@@ -40,7 +40,7 @@ services:
       - mysql
     init: true
     volumes:
-      - wp:/var/www/html
+      - wp:/var/www/html:rw
 
 volumes:
   wp:
