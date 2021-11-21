@@ -30,6 +30,18 @@ services:
     volumes:
       - db:/var/lib/mysql
 
+  cli:
+    image: wordpress:cli-php${LOCAL_PHP-7.4}
+    networks:
+      - wp-crontrol
+    environment:
+      - LOCAL_PHP_XDEBUG=${LOCAL_PHP_XDEBUG-false}
+      - PHP_FPM_UID=${PHP_FPM_UID-1000}
+      - PHP_FPM_GID=${PHP_FPM_GID-1000}
+    volumes:
+      - ./tests/wordpress:/var/www/html
+    init: true
+
 volumes:
   db:
 
