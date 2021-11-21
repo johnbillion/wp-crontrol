@@ -4,11 +4,8 @@
 # -o pipefail Produce a failure return code if any command errors
 set -eo pipefail
 
-# Specify the directory where the WordPress installation lives:
-WP_CORE_DIR="${PWD}/tests/wordpress"
-
 # Shorthand:
-WP="docker-compose run --rm cli --path=$WP_CORE_DIR --url=http://localhost"
+WP="docker-compose run --rm cli --path=/var/www/html --url=http://localhost"
 
 # Reset or install the test database:
 $WP db reset --yes
