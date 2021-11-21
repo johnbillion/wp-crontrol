@@ -79,10 +79,10 @@ jobs:
     - name: Update to nightly
       if: ${{ matrix.nightly }}
       run: |
-        docker-compose run --rm cli wp core download --force --version=nightly
+        docker-compose run --rm wpcli wp core download --force --version=nightly
 
     - name: Debug WordPress version
-      run: docker-compose run --rm cli wp core version
+      run: docker-compose run --rm wpcli wp core version
 
     - name: Run the tests
       run: composer test:ft

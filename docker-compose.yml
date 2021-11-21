@@ -33,7 +33,7 @@ services:
     volumes:
       - mysql:/var/lib/mysql:rw
 
-  cli:
+  wpcli:
     image: wordpress:cli-php${LOCAL_PHP-7.4}
     environment:
       WORDPRESS_DB_HOST: mysql
