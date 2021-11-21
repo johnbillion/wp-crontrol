@@ -8,17 +8,17 @@ services:
     ports:
       - ${LOCAL_PORT-8080}:80
     environment:
-      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_HOST: mysql
       WORDPRESS_DB_USER: exampleuser
       WORDPRESS_DB_PASSWORD: examplepass
       WORDPRESS_DB_NAME: exampledb
     depends_on:
-      - db
+      - mysql
     volumes:
       - wp:/var/www/html
       - ./:/var/www/html/wp-content/plugins/wp-crontrol
 
-  db:
+  mysql:
     image: mysql:5.7
     restart: always
     environment:
@@ -27,21 +27,21 @@ services:
       MYSQL_PASSWORD: examplepass
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
     volumes:
-      - db:/var/lib/mysql
+      - mysql:/var/lib/mysql
 
   cli:
     image: wordpress:cli-php${LOCAL_PHP-7.4}
     environment:
-      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_HOST: mysql
       WORDPRESS_DB_USER: exampleuser
       WORDPRESS_DB_PASSWORD: examplepass
       WORDPRESS_DB_NAME: exampledb
     depends_on:
-      - db
+      - mysql
     init: true
     volumes:
       - wp:/var/www/html
 
 volumes:
   wp:
-  db:
+  mysql:
