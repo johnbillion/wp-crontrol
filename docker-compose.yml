@@ -5,6 +5,8 @@ services:
   wordpress:
     image: wordpress:${LOCAL_WP-5.8}-php${LOCAL_PHP-7.4}
     restart: always
+    networks:
+      - wp-crontrol
     ports:
       - ${LOCAL_PORT-8080}:80
     environment:
@@ -18,6 +20,8 @@ services:
   db:
     image: mysql:latest
     restart: always
+    networks:
+      - wp-crontrol
     environment:
       MYSQL_DATABASE: exampledb
       MYSQL_USER: exampleuser
@@ -28,3 +32,7 @@ services:
 
 volumes:
   db:
+
+networks:
+  wp-crontrol:
+    driver: bridge
