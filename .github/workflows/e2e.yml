@@ -18,11 +18,14 @@ jobs:
     strategy:
       matrix:
         php: ['7.4','8.0']
-        wp: ['*', 'dev-nightly']
+        wp: ['5.6','5.8']
       fail-fast: false
     name: WP ${{ matrix.wp }} / PHP ${{ matrix.php }}
     runs-on: ubuntu-18.04
     timeout-minutes: 10
+    env:
+      LOCAL_WP: ${{ matrix.wp }}
+      LOCAL_PHP: ${{ matrix.php }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v1
@@ -37,13 +40,12 @@ jobs:
         cache-name: cache-composer-dependencies
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+        key: 7.4-composer-${{ hashFiles('composer.json') }}
 
     - name: Install PHP
       uses: shivammathur/setup-php@2.7.0
       with:
-        php-version: ${{ matrix.php }}
-        extensions: mysqli, xmlwriter, xdebug
+        php-version: 7.4
         coverage: none
       env:
         fail-fast: true
@@ -51,15 +53,11 @@ jobs:
     - name: Debugging
       run: |
         php --version
-        php -m
         composer --version
-        mysql --version
 
     - name: Install dependencies
       run: |
-        sudo systemctl start mysql.service
         composer install --prefer-dist
-        composer require --dev --update-with-dependencies --prefer-dist roots/wordpress="${{ matrix.wp }} || *"
 
     - name: Run the tests
       run: composer test:ft

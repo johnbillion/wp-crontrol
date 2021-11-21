@@ -18,9 +18,6 @@
 		"sort-packages": true,
 		"preferred-install": "dist"
 	},
-	"extra": {
-		"wordpress-install-dir": "tests/wordpress"
-	},
 	"require-dev": {
 		"codeception/module-asserts": "^1.0",
 		"codeception/module-filesystem": "^1.0",
@@ -31,7 +28,6 @@
 		"lucatume/wp-browser": "^3.0",
 		"phpcompatibility/phpcompatibility-wp": "2.1.2",
 		"phpstan/phpstan": "^1.0",
-		"roots/wordpress": "*",
 		"szepeviktor/phpstan-wordpress": "^1.0",
 		"vlucas/phpdotenv": "^5",
 		"wp-cli/core-command": "^2",
