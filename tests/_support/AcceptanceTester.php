@@ -41,4 +41,20 @@ class AcceptanceTester extends \Codeception\Actor {
 	public function seeAdminInfoNotice( string $message ) {
 		return $this->see( $message, '.notice-info' );
 	}
+
+	/**
+	 * Fill out lines of code in a CodeMirror field.
+	 *
+	 * @example
+	 *
+	 * ```php
+	 * $I->fillCodeMirrorField("if ( function_exists( 'foo' ) {", "\tfoo();", "}");
+	 * ```
+	 *
+	 * @param string ...$values Individual lines to fill in.
+	 * @return void
+	 */
+	public function fillCodeMirrorField( string ...$values ) {
+		$this->executeJS( 'document.getElementsByClassName("CodeMirror")[0].CodeMirror.setValue(Array.prototype.join.call(arguments, "\n"));', $values );
+	}
 }
