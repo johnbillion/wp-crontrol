@@ -5,8 +5,8 @@
 set -eo pipefail
 
 # Shorthand:
-WP_PORT=`docker port wp-crontrol-wordpress | grep "[0-9]+$" -ohE`
-CHROME_PORT=`docker port wp-crontrol-chrome | grep "[0-9]+$" -ohE`
+WP_PORT=`docker port wp-crontrol-wordpress | grep "[0-9]+$" -m 1 -ohE`
+CHROME_PORT=`docker port wp-crontrol-chrome | grep "[0-9]+$" -m 1 -ohE`
 WP_URL="http://host.docker.internal:${WP_PORT}"
 WP="docker-compose run --rm wpcli wp --url=${WP_URL}"
 
