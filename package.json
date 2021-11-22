@@ -1,6 +1,6 @@
 {
 	"name": "wp-crontrol",
-	"version": "1.11.0",
+	"version": "1.12.0",
 	"description": "WP Crontrol lets you view and control what's happening in the WP-Cron system.",
 	"license": "GPL-2.0-or-later",
 	"private": true,
