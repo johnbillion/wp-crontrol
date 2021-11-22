@@ -52,6 +52,8 @@ services:
     restart: always
     ports:
       - 4444:4444
+    extra_hosts:
+    - host.docker.internal:host-gateway
 
 volumes:
   wp:
