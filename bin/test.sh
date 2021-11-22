@@ -10,6 +10,8 @@ CHROME_PORT=`docker port wp-crontrol-chrome | grep "[0-9]+$" -ohE`
 WP_URL="http://host.docker.internal:${WP_PORT}"
 WP="docker-compose run --rm wpcli wp --url=${WP_URL}"
 
+docker port wp-crontrol-wordpress
+echo $WP_PORT
 echo $WP_URL
 
 # Reset or install the test database:
