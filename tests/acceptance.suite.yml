@@ -17,7 +17,7 @@ modules:
       adminPath: '/wp-admin'
       browser: chrome
       host: localhost
-      port: 4444
+      port: '%TEST_SITE_WEBDRIVER_PORT%'
       window_size: 1024x768
       capabilities:
         chromeOptions:
