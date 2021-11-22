@@ -37,7 +37,7 @@ class AddEventCest {
 		$I->dontSee( 'PHP Code' );
 		$I->selectOption( 'input[name="crontrol_action"]', 'PHP cron event' );
 		$I->see( 'PHP Code' );
-		$I->fillCodeMirrorField( 'amazing();' );
+		$I->fillPHPEditorField( 'amazing();' );
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );
 		$I->seeAdminSuccessNotice( 'Created the cron event PHP Cron.' );

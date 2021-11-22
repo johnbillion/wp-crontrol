@@ -59,18 +59,18 @@ class AcceptanceTester extends \Codeception\Actor {
 	}
 
 	/**
-	 * Fill out lines of code in a CodeMirror field.
+	 * Fill out lines of code in the PHP editor field.
 	 *
 	 * @example
 	 *
 	 * ```php
-	 * $I->fillCodeMirrorField("if ( function_exists( 'foo' ) {", "\tfoo();", "}");
+	 * $I->fillPHPEditorField("if ( function_exists( 'foo' ) {", "\tfoo();", "}");
 	 * ```
 	 *
 	 * @param string ...$values Individual lines to fill in.
 	 * @return void
 	 */
-	public function fillCodeMirrorField( string ...$values ) {
-		$this->executeJS( 'document.getElementsByClassName("CodeMirror")[0].CodeMirror.setValue(Array.prototype.join.call(arguments, "\n"));', $values );
+	public function fillPHPEditorField( string ...$values ) {
+		$this->executeJS( 'window.codeMirror ? document.getElementsByClassName("CodeMirror")[0].CodeMirror.setValue(Array.prototype.join.call(arguments, "\n")) : document.getElementById("crontrol_hookcode").value = Array.prototype.join.call(arguments, "\n");', $values );
 	}
 }
