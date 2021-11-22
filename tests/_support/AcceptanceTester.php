@@ -71,6 +71,6 @@ class AcceptanceTester extends \Codeception\Actor {
 	 * @return void
 	 */
 	public function fillPHPEditorField( string ...$values ) {
-		$this->executeJS( 'window.CodeMirror ? document.getElementsByClassName("CodeMirror")[0].CodeMirror.setValue(Array.prototype.join.call(arguments, "\n")) : document.getElementById("crontrol_hookcode").value = Array.prototype.join.call(arguments, "\n");', $values );
+		$this->executeJS( 'document.getElementsByClassName("CodeMirror")[0].CodeMirror.setValue(Array.prototype.join.call(arguments, "\n"));', $values );
 	}
 }
