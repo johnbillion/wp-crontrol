@@ -2,6 +2,7 @@
 .git
 .github
 .wordpress-org
+bin
 node_modules
 tests
 vendor
@@ -11,7 +12,7 @@ vendor
 .editorconfig
 .gitignore
 CODE_OF_CONDUCT.md
-coeception.dist.yml
+codeception.dist.yml
 composer.json
 composer.lock
 CONTRIBUTING.md
