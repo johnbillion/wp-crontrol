@@ -8,10 +8,16 @@ vendor
 
 # Files
 .distignore
+.editorconfig
 .gitignore
+CODE_OF_CONDUCT.md
+coeception.dist.yml
 composer.json
 composer.lock
-Gruntfile.js
+CONTRIBUTING.md
+docker-compose.yml
 package-lock.json
 package.json
 phpcs.xml.dist
+phpstan.neon.dist
+SECURITY.md
