@@ -4,9 +4,10 @@ services:
 
   wordpress:
     image: wordpress:${LOCAL_WP-5.8}-php${LOCAL_PHP-7.4}
+    container_name: wp-crontrol-wordpress
     restart: always
     ports:
-      - ${LOCAL_PORT-8080}:80
+      - 80
     environment:
       WORDPRESS_DB_HOST: mysql
       WORDPRESS_DB_USER: exampleuser
@@ -24,6 +25,7 @@ services:
 
   mysql:
     image: mysql:5.7
+    container_name: wp-crontrol-mysql
     restart: always
     environment:
       MYSQL_DATABASE: exampledb
@@ -35,6 +37,7 @@ services:
 
   wpcli:
     image: wordpress:cli-php${LOCAL_PHP-7.4}
+    container_name: wp-crontrol-wpcli
     environment:
       WORDPRESS_DB_HOST: mysql
       WORDPRESS_DB_USER: exampleuser
@@ -49,6 +52,7 @@ services:
 
   chrome:
     image: selenium/standalone-chrome
+    container_name: wp-crontrol-chrome
     restart: always
     ports:
       - 4444:4444

@@ -11,7 +11,7 @@ modules:
     - WPWebDriver
   config:
     WPWebDriver:
-      url: 'http://host.docker.internal:8080'
+      url: '%TEST_SITE_WP_URL%'
       adminUsername: 'admin'
       adminPassword: 'admin'
       adminPath: '/wp-admin'
