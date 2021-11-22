@@ -5,7 +5,7 @@
 set -eo pipefail
 
 # Shorthand:
-WP="docker-compose run --rm wpcli wp --url=http://localhost:8080"
+WP="docker-compose run --rm wpcli wp --url=http://host.docker.internal:8080"
 
 # Reset or install the test database:
 $WP db reset --yes
@@ -14,4 +14,4 @@ $WP db reset --yes
 $WP core install --title="Example" --admin_user="admin" --admin_password="admin" --admin_email="admin@example.com"
 
 # Run the functional tests:
-./vendor/bin/codecept run --steps "$1"
+./vendor/bin/codecept run acceptance --steps "$1"
