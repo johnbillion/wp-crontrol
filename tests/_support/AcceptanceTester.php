@@ -23,23 +23,39 @@ class AcceptanceTester extends \Codeception\Actor {
 	use _generated\AcceptanceTesterActions;
 
 	/**
-	 * Define custom actions here
+	 * Checks that the current page contains an admin success notice.
+	 *
+	 * @param string $text The message text to search for.
 	 */
-
-	public function seeAdminSuccessNotice( string $message ) {
-		return $this->see( $message, '.notice-success' );
+	public function seeAdminSuccessNotice( string $text ) {
+		return $this->see( $text, '.notice-success' );
 	}
 
-	public function seeAdminWarningNotice( string $message ) {
-		return $this->see( $message, '.notice-warning' );
+	/**
+	 * Checks that the current page contains an admin success notice.
+	 *
+	 * @param string $text The message text to search for.
+	 */
+	public function seeAdminWarningNotice( string $text ) {
+		return $this->see( $text, '.notice-warning' );
 	}
 
-	public function seeAdminErrorNotice( string $message ) {
-		return $this->see( $message, '.notice-error' );
+	/**
+	 * Checks that the current page contains an admin success notice.
+	 *
+	 * @param string $text The message text to search for.
+	 */
+	public function seeAdminErrorNotice( string $text ) {
+		return $this->see( $text, '.notice-error' );
 	}
 
-	public function seeAdminInfoNotice( string $message ) {
-		return $this->see( $message, '.notice-info' );
+	/**
+	 * Checks that the current page contains an admin success notice.
+	 *
+	 * @param string $text The message text to search for.
+	 */
+	public function seeAdminInfoNotice( string $text ) {
+		return $this->see( $text, '.notice-info' );
 	}
 
 	/**
