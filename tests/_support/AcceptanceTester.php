@@ -25,4 +25,20 @@ class AcceptanceTester extends \Codeception\Actor {
 	/**
 	 * Define custom actions here
 	 */
+
+	public function seeAdminSuccessNotice( string $message ) {
+		return $this->see( $message, '.notice-success' );
+	}
+
+	public function seeAdminWarningNotice( string $message ) {
+		return $this->see( $message, '.notice-warning' );
+	}
+
+	public function seeAdminErrorNotice( string $message ) {
+		return $this->see( $message, '.notice-error' );
+	}
+
+	public function seeAdminInfoNotice( string $message ) {
+		return $this->see( $message, '.notice-info' );
+	}
 }

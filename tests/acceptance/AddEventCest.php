@@ -28,6 +28,6 @@ class AddEventCest {
 		$I->fillField( 'Hook Name', 'my_hookname' );
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );
-		$I->see( 'Created the cron event my_hookname.', '.notice-success' );
+		$I->seeAdminSuccessNotice( 'Created the cron event my_hookname.' );
 	}
 }
