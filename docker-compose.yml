@@ -46,6 +46,7 @@ services:
     user: "33:33"
     depends_on:
       - mysql
+      - wordpress
     init: true
     volumes:
       - wp:/var/www/html:rw
