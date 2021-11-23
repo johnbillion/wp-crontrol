@@ -51,6 +51,7 @@
 			"docker-compose down"
 		],
 		"test": [
+			"composer validate --strict",
 			"@test:cs",
 			"@test:analyze",
 			"@test:ft"
