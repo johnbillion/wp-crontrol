@@ -36,9 +36,6 @@
 		"composer/installers": "^1.0 || ^2.0"
 	},
 	"scripts": {
-		"post-update-cmd": [
-			"@php -r \"! file_exists( 'tests/.env' ) && copy( 'tests/.env.dist', 'tests/.env' );\""
-		],
 		"test:cs": [
 			"phpcs -nps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs  --basepath=./ ."
 		],
