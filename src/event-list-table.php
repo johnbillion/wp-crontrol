@@ -19,7 +19,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Array of cron event hooks that are persistently added by WordPress core.
 	 *
-	 * @var string[] Array of hook names.
+	 * @var array<int,string> Array of hook names.
 	 */
 	protected static $persistent_core_hooks;
 
@@ -33,14 +33,14 @@ class Table extends \WP_List_Table {
 	/**
 	 * Array of the count of each hook.
 	 *
-	 * @var int[] Array of count of each hooked, keyed by hook name.
+	 * @var array<string,int> Array of count of each hooked, keyed by hook name.
 	 */
 	protected static $count_by_hook;
 
 	/**
 	 * Array of all cron events.
 	 *
-	 * @var stdClass[] Array of event objects.
+	 * @var array<string,stdClass> Array of event objects.
 	 */
 	protected $all_events = array();
 
@@ -116,8 +116,8 @@ class Table extends \WP_List_Table {
 	/**
 	 * Returns events filtered by various parameters
 	 *
-	 * @param stdClass[] $events The list of all events.
-	 * @return stdClass[][] Array of filtered events keyed by filter name.
+	 * @param array<string,stdClass> $events The list of all events.
+	 * @return array<string,array<string,stdClass>> Array of filtered events keyed by filter name.
 	 */
 	public static function get_filtered_events( array $events ) {
 		$all_core_hooks = \Crontrol\get_all_core_hooks();
@@ -156,7 +156,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Returns an array of column names for the table.
 	 *
-	 * @return string[] Array of column names keyed by their ID.
+	 * @return array<string,string> Array of column names keyed by their ID.
 	 */
 	public function get_columns() {
 		return array(

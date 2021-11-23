@@ -240,7 +240,7 @@ function delete( $hook, $sig, $next_run_utc ) {
 /**
  * Returns a flattened array of cron events.
  *
- * @return stdClass[] An array of cron event objects.
+ * @return array<string,stdClass> An array of cron event objects keyed by unique signature.
  */
 function get() {
 	$crons  = get_core_cron_array();
