@@ -34,7 +34,8 @@
 
 namespace Crontrol;
 
-use Crontrol\Event\Table;
+use Crontrol\Event\Table as EventListTable;
+use Crontrol\Schedule\Table as ScheduleListTable;
 use stdClass;
 use WP_Error;
 
@@ -42,9 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once __DIR__ . '/src/event.php';
-require_once __DIR__ . '/src/request.php';
-require_once __DIR__ . '/src/schedule.php';
+require_once __DIR__ . '/autoload.php';
 
 const TRANSIENT = 'crontrol-message-%d';
 
@@ -644,8 +643,6 @@ function action_handle_posts() {
 	} elseif ( isset( $_POST['crontrol_action'] ) && 'export-event-csv' === $_POST['crontrol_action'] ) {
 		check_admin_referer( 'crontrol-export-event-csv', 'crontrol_nonce' );
 
-		require_once __DIR__ . '/src/event-list-table.php';
-
 		$type = isset( $_POST['crontrol_hooks_type'] ) ? $_POST['crontrol_hooks_type'] : 'all';
 		$headers = array(
 			'hook',
@@ -667,7 +664,7 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'Could not save CSV file.', 'wp-crontrol' ) );
 		}
 
-		$events = Table::get_filtered_events( Event\get() );
+		$events = EventListTable::get_filtered_events( Event\get() );
 
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header(
@@ -886,9 +883,7 @@ function admin_options_page() {
 		);
 	}
 
-	require_once __DIR__ . '/src/schedule-list-table.php';
-
-	$table = new Schedule_List_Table();
+	$table = new ScheduleListTable();
 
 	$table->prepare_items();
 

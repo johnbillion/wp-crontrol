@@ -5,14 +5,15 @@
  * @package wp-crontrol
  */
 
-namespace Crontrol;
+namespace Crontrol\Schedule;
 
-require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+use function Crontrol\get_core_schedules;
+use function Crontrol\interval;
 
 /**
  * Cron schedule list table class.
  */
-class Schedule_List_Table extends \WP_List_Table {
+class Table extends \WP_List_Table {
 
 	/**
 	 * Array of cron event schedules that are added by WordPress core.
@@ -55,11 +56,11 @@ class Schedule_List_Table extends \WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
-		$schedules = Schedule\get();
+		$schedules = get();
 		$count     = count( $schedules );
 
 		self::$core_schedules = get_core_schedules();
-		self::$used_schedules = array_unique( wp_list_pluck( Event\get(), 'schedule' ) );
+		self::$used_schedules = array_unique( wp_list_pluck( \Crontrol\Event\get(), 'schedule' ) );
 
 		$this->items = $schedules;
 
