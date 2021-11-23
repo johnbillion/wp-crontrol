@@ -16,14 +16,14 @@ class AddEventCest {
 	}
 
 	public function NavigatingToTheAddCronEventScreen( AcceptanceTester $I ) {
-		$I->amOnAdminPage( 'tools.php?page=crontrol_admin_manage_page' );
+		$I->amOnCronEventListingPage();
 		$I->click( 'Add New', '#wpbody' );
 		$I->see( 'Add Cron Event', 'h1' );
 		$I->see( 'Add Cron Event', '#crontrol-header' );
 	}
 
 	public function AddingANewEvent( AcceptanceTester $I ) {
-		$I->amOnAdminPage( 'tools.php?page=crontrol_admin_manage_page' );
+		$I->amOnCronEventListingPage();
 		$I->click( 'Add New', '#wpbody' );
 		$I->fillField( 'Hook Name', 'my_hookname' );
 		$I->click( 'Add Event' );
@@ -32,7 +32,7 @@ class AddEventCest {
 	}
 
 	public function AddingANewPHPEvent( AcceptanceTester $I ) {
-		$I->amOnAdminPage( 'tools.php?page=crontrol_admin_manage_page' );
+		$I->amOnCronEventListingPage();
 		$I->click( 'Add New', '#wpbody' );
 		$I->dontSee( 'PHP Code' );
 		$I->selectOption( 'input[name="crontrol_action"]', 'PHP cron event' );

@@ -73,4 +73,13 @@ class AcceptanceTester extends \Codeception\Actor {
 	public function fillPHPEditorField( string ...$values ) {
 		$this->executeJS( 'document.getElementsByClassName("CodeMirror")[0].CodeMirror.setValue(Array.prototype.join.call(arguments, "\n"));', $values );
 	}
+
+	/**
+	 * Go to the cron event listing page in the admininstration area of the site.
+	 *
+	 * @return string The admin page path.
+	 */
+	public function amOnCronEventListingPage() {
+		return $this->amOnAdminPage( 'tools.php?page=crontrol_admin_manage_page' );
+	}
 }

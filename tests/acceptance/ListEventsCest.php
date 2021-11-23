@@ -16,7 +16,7 @@ class ListEventsCest {
 	}
 
 	public function ListCronEvents( AcceptanceTester $I ) {
-		$I->amOnAdminPage( 'tools.php?page=crontrol_admin_manage_page' );
+		$I->amOnCronEventListingPage();
 		$I->see( 'Cron Events', 'h1' );
 		$I->see( 'Cron Events', '#crontrol-header' );
 		$I->seeElement( 'table.crontrol-events' );
