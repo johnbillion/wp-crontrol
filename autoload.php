@@ -2,8 +2,6 @@
 /**
  * Autoloader for WordPress.
  *
- * @package CompanyProject
- * @link https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/#naming-conventions
  * @link https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader-examples.md#class-example
  */
 
