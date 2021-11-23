@@ -100,7 +100,7 @@ function force_schedule_single_event( $hook, $args = array() ) {
 		'schedule' => $event->schedule,
 		'args'     => $event->args,
 	);
-	uksort( $crons, 'strnatcasecmp' );
+	ksort( $crons );
 
 	$result = _set_cron_array( $crons );
 
