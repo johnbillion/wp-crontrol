@@ -45,9 +45,13 @@
 		"test:analyze": [
 			"vendor/bin/phpstan analyze"
 		],
+		"test:start": [
+			"docker-compose up -d"
+		],
 		"test:ft": [
-			"docker-compose up -d",
-			"bin/test.sh",
+			"bin/test.sh"
+		],
+		"test:stop": [
 			"docker-compose down"
 		],
 		"test": [

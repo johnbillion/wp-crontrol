@@ -67,7 +67,7 @@ jobs:
 
     - name: Start Docker environment
       run: |
-        docker-compose up -d
+        composer test:start
 
     - name: Log running Docker containers
       run: docker ps -a
