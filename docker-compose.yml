@@ -24,7 +24,7 @@ services:
       - ./:/var/www/html/wp-content/plugins/wp-crontrol
 
   mysql:
-    image: mysql:5.7
+    image: mariadb:10.5.8
     container_name: wp-crontrol-mysql
     restart: always
     environment:
