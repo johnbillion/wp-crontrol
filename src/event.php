@@ -1,8 +1,6 @@
 <?php
 /**
  * Functions related to cron events.
- *
- * @package wp-crontrol
  */
 
 namespace Crontrol\Event;

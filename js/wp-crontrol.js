@@ -1,7 +1,5 @@
 /**
  * Functionality related to Crontrol.
- *
- * @package wp-crontrol
  */
 
 let hashtimer = null;

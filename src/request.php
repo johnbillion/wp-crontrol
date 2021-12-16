@@ -1,8 +1,6 @@
 <?php
 /**
  * Request handler.
- *
- * @package wp-crontrol
  */
 
 namespace Crontrol;

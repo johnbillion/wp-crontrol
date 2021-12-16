@@ -1,8 +1,6 @@
 <?php
 /**
  * List table for cron schedules.
- *
- * @package wp-crontrol
  */
 
 namespace Crontrol;

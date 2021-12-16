@@ -24,6 +24,7 @@
 		<exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments" />
 		<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
+		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
 
 		<!-- False positives: -->
 		<exclude name="WordPress.Security.NonceVerification.Recommended" />

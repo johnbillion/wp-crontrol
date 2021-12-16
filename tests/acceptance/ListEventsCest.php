@@ -1,8 +1,6 @@
 <?php
 /**
  * Acceptance tests for listing cron events.
- *
- * @package wp-crontrol
  */
 
 /**

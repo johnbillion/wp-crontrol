@@ -1,8 +1,6 @@
 <?php
 /**
  * Functions related to schedules.
- *
- * @package wp-crontrol
  */
 
 namespace Crontrol\Schedule;

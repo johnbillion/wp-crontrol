@@ -1,8 +1,6 @@
 <?php
 /**
  * Acceptance testing actor.
- *
- * @package wp-crontrol
  */
 
 /**
