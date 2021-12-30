@@ -9,8 +9,6 @@
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/.github/*</exclude-pattern>
 	<exclude-pattern>/tests/stubs.php</exclude-pattern>
-	<exclude-pattern>/tests/wp-config.php</exclude-pattern>
-	<exclude-pattern>/tests/wordpress</exclude-pattern>
 
 	<rule ref="WordPress-Extra">
 
