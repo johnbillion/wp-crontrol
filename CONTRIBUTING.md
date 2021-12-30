@@ -45,7 +45,7 @@ You can clone this repo and activate it like a normal WordPress plugin. If you w
 
 ## Running the Tests
 
-The test quite includes functional tests which run in a Docker container. Ensure Docker Desktop is running, then start the containers with:
+The test suite includes functional tests which run in a Docker container. Ensure Docker Desktop is running, then start the containers with:
 
 	composer test:start
 
