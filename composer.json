@@ -16,7 +16,11 @@
 	],
 	"config": {
 		"sort-packages": true,
-		"preferred-install": "dist"
+		"preferred-install": "dist",
+		"allow-plugins": {
+			"composer/installers": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
 	},
 	"require-dev": {
 		"codeception/module-asserts": "^1.0",
