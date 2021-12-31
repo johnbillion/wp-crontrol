@@ -51,13 +51,13 @@
 			"vendor/bin/phpstan analyze"
 		],
 		"test:start": [
-			"[[ `uname -m` = \"arm64\" ]] && CHROME_IMAGE=\"seleniarm/standalone-chromium\" docker-compose up -d"
+			"[[ `uname -m` = \"arm64\" ]] && CHROME_IMAGE=\"seleniarm/standalone-chromium\"; docker-compose up -d"
 		],
 		"test:ft": [
 			"bin/test.sh"
 		],
 		"test:stop": [
-			"[[ `uname -m` = \"arm64\" ]] && CHROME_IMAGE=\"seleniarm/standalone-chromium\" docker-compose down"
+			"[[ `uname -m` = \"arm64\" ]] && CHROME_IMAGE=\"seleniarm/standalone-chromium\"; docker-compose down"
 		],
 		"test": [
 			"composer validate --strict",
