@@ -52,7 +52,7 @@ services:
       - wp:/var/www/html:rw
 
   chrome:
-    image: selenium/standalone-chrome
+    image: ${CHROME_IMAGE-selenium/standalone-chrome}
     container_name: wp-crontrol-chrome
     restart: always
     ports:
