@@ -50,6 +50,7 @@ services:
     init: true
     volumes:
       - wp:/var/www/html:rw
+      - ./:/var/www/html/wp-content/plugins/wp-crontrol
 
   chrome:
     image: ${CHROME_IMAGE-selenium/standalone-chrome}

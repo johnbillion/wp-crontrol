@@ -9,8 +9,6 @@
 class ListEventsCest {
 	public function _before( AcceptanceTester $I ) {
 		$I->loginAsAdmin();
-		$I->amOnPluginsPage();
-		$I->activatePlugin( 'wp-crontrol' );
 	}
 
 	public function ListCronEvents( AcceptanceTester $I ) {
