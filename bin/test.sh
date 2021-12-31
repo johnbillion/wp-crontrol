@@ -15,6 +15,7 @@ $WP db reset --yes
 
 # Install WordPress:
 $WP core install --title="Example" --admin_user="admin" --admin_password="admin" --admin_email="admin@example.com" --skip-email
+echo "Home URL: $WP_URL"
 
 # Run the functional tests:
 TEST_SITE_WEBDRIVER_PORT=$CHROME_PORT \
