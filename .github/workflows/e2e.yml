@@ -33,7 +33,6 @@ jobs:
     env:
       LOCAL_WP: ${{ matrix.wp }}
       LOCAL_PHP: ${{ matrix.php }}
-      LOCAL_WP_NIGHTLY: ${{ matrix.nightly }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v1
