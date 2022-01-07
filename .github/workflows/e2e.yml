@@ -46,12 +46,12 @@ jobs:
         cache-name: cache-composer-dependencies
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: 7.4-composer-${{ hashFiles('composer.json') }}
+        key: 8.0-composer-${{ hashFiles('composer.json') }}
 
     - name: Install PHP
       uses: shivammathur/setup-php@2.7.0
       with:
-        php-version: 7.4
+        php-version: 8.0
         coverage: none
       env:
         fail-fast: true
