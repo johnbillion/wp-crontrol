@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow
 
-name: Functional Tests
+name: Acceptance Tests
 on:
   push:
     branches:
@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  e2e:
+  acceptance:
     strategy:
       matrix:
         wp: ['5.8','5.6','nightly']
@@ -86,11 +86,11 @@ jobs:
       run: docker-compose run --rm wpcli wp core version
 
     - name: Run the tests
-      run: composer test:ft
+      run: composer test:acceptance
 
     - name: Upload test artifacts
       if: failure()
       uses: actions/upload-artifact@v2
       with:
-        name: e2e-wp-${{ matrix.wp }}-php-${{ matrix.php }}
+        name: acceptance-wp-${{ matrix.wp }}-php-${{ matrix.php }}
         path: tests/_output

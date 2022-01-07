@@ -53,7 +53,7 @@
 		"test:start": [
 			"[[ `uname -m` = \"arm64\" ]] && export CHROME_IMAGE=\"seleniarm/standalone-chromium\"; docker-compose up -d"
 		],
-		"test:ft": [
+		"test:acceptance": [
 			"bin/test.sh"
 		],
 		"test:stop": [
@@ -63,7 +63,7 @@
 			"composer validate --strict",
 			"@test:cs",
 			"@test:analyze",
-			"@test:ft"
+			"@test:acceptance"
 		]
 	}
 }

@@ -26,7 +26,7 @@ $WP core install \
 echo "Home URL: $WP_URL"
 $WP plugin activate wp-crontrol
 
-# Run the functional tests:
+# Run the acceptance tests:
 echo "Running tests..."
 TEST_SITE_WEBDRIVER_PORT=$CHROME_PORT \
 TEST_SITE_WP_URL=$WP_URL \

@@ -45,11 +45,11 @@ You can clone this repo and activate it like a normal WordPress plugin. If you w
 
 ## Running the Tests
 
-The test suite includes functional tests which run in a Docker container. Ensure Docker Desktop is running, then start the containers with:
+The test suite includes acceptance tests which run in a Docker container. Ensure Docker Desktop is running, then start the containers with:
 
 	composer test:start
 
-To run the whole test suite which includes PHPCS code sniffs, PHPStan static analysis, and WPBrowser functional tests:
+To run the whole test suite which includes PHPCS code sniffs, PHPStan static analysis, and WPBrowser acceptance tests:
 
 	composer test
 
@@ -61,9 +61,9 @@ To run just the static analysis:
 
 	composer test:phpstan
 
-To run just the functional tests:
+To run just the acceptance tests:
 
-	composer test:ft
+	composer test:acceptance
 
 To stop the Docker containers:
 
