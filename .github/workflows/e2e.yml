@@ -19,19 +19,14 @@ jobs:
   e2e:
     strategy:
       matrix:
-        wp: ['5.8','5.6']
+        wp: ['5.8','5.6','nightly']
         php: ['8.0','7.4']
-        nightly: [false]
-        include:
-          - php: '8.0'
-            wp: '5.8'
-            nightly: true
       fail-fast: false
-    name: WP ${{ matrix.nightly && 'nightly' || matrix.wp }} / PHP ${{ matrix.php }}
+    name: WP ${{ matrix.wp }} / PHP ${{ matrix.php }}
     runs-on: ubuntu-18.04
     timeout-minutes: 10
     env:
-      LOCAL_WP: ${{ matrix.wp }}
+      LOCAL_WP: ${{ matrix.wp == 'nightly' && '5.8' || matrix.wp }}
       LOCAL_PHP: ${{ matrix.php }}
     steps:
     - name: Checkout repository
@@ -76,7 +71,7 @@ jobs:
         composer install --prefer-dist
 
     - name: Update to nightly
-      if: ${{ matrix.nightly }}
+      if: ${{ matrix.php == 'nightly' }}
       run: |
         docker-compose run --rm wpcli wp core download --force --version=nightly
 
@@ -91,5 +86,5 @@ jobs:
       if: failure()
       uses: actions/upload-artifact@v2
       with:
-        name: e2e-wp-${{ matrix.nightly && 'nightly' || matrix.wp }}-php-${{ matrix.php }}
+        name: e2e-wp-${{ matrix.wp }}-php-${{ matrix.php }}
         path: tests/_output
