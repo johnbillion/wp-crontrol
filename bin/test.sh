@@ -21,7 +21,8 @@ $WP core install \
 	--admin_user="admin" \
 	--admin_password="admin" \
 	--admin_email="admin@example.com" \
-	--skip-email
+	--skip-email \
+	--exec="mysqli_report( MYSQLI_REPORT_OFF );"
 echo "Home URL: $WP_URL"
 $WP plugin activate wp-crontrol
 
