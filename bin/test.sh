@@ -11,14 +11,17 @@ WP_URL="http://host.docker.internal:${WP_PORT}"
 WP="docker-compose run --rm wpcli wp --url=${WP_URL}"
 
 # Reset or install the test database:
+echo "Installing database..."
 $WP db reset --yes
 
 # Install WordPress:
+echo "Installing WordPress..."
 $WP core install --title="Example" --admin_user="admin" --admin_password="admin" --admin_email="admin@example.com" --skip-email
 echo "Home URL: $WP_URL"
 $WP plugin activate wp-crontrol
 
 # Run the functional tests:
+echo "Running tests..."
 TEST_SITE_WEBDRIVER_PORT=$CHROME_PORT \
 TEST_SITE_WP_URL=$WP_URL \
 	./vendor/bin/codecept run acceptance --steps "$1"
