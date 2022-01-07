@@ -16,7 +16,13 @@ $WP db reset --yes
 
 # Install WordPress:
 echo "Installing WordPress..."
-$WP core install --title="Example" --admin_user="admin" --admin_password="admin" --admin_email="admin@example.com" --skip-email
+$WP core install \
+	--title="Example" \
+	--admin_user="admin" \
+	--admin_password="admin" \
+	--admin_email="admin@example.com" \
+	--skip-email \
+	--exec="mysqli_report( MYSQLI_REPORT_OFF );"
 echo "Home URL: $WP_URL"
 $WP plugin activate wp-crontrol
 
