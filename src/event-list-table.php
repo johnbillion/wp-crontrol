@@ -22,11 +22,11 @@ class Table extends \WP_List_Table {
 	protected static $persistent_core_hooks;
 
 	/**
-	 * Whether the current user has the capability to edit files.
+	 * Whether the current user has the capability to create or edit PHP cron events.
 	 *
-	 * @var bool Whether the user can edit files.
+	 * @var bool Whether the user can create or edit PHP cron events.
 	 */
-	protected static $can_edit_files;
+	protected static $can_manage_php_crons;
 
 	/**
 	 * Array of the count of each hook.
@@ -61,7 +61,7 @@ class Table extends \WP_List_Table {
 	 */
 	public function prepare_items() {
 		self::$persistent_core_hooks = \Crontrol\get_persistent_core_hooks();
-		self::$can_edit_files        = current_user_can( 'edit_files' );
+		self::$can_manage_php_crons  = current_user_can( 'edit_files' );
 		self::$count_by_hook         = count_by_hook();
 
 		$events = get();
@@ -343,7 +343,7 @@ class Table extends \WP_List_Table {
 
 		$links = array();
 
-		if ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) {
+		if ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_manage_php_crons ) {
 			$link = array(
 				'page'                  => 'crontrol_admin_manage_page',
 				'crontrol_action'       => 'edit-cron',
@@ -368,7 +368,7 @@ class Table extends \WP_List_Table {
 
 		$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
 
-		if ( ! in_array( $event->hook, self::$persistent_core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) ) {
+		if ( ! in_array( $event->hook, self::$persistent_core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_manage_php_crons ) ) {
 			$link = array(
 				'page'                  => 'crontrol_admin_manage_page',
 				'crontrol_action'       => 'delete-cron',
@@ -424,7 +424,7 @@ class Table extends \WP_List_Table {
 				<span class="screen-reader-text">%s</span>',
 				esc_html__( 'This is a WordPress core event and cannot be deleted', 'wp-crontrol' )
 			);
-		} elseif ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_edit_files ) {
+		} elseif ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_manage_php_crons ) {
 			return sprintf(
 				'<label class="screen-reader-text" for="%1$s">%2$s</label>
 				<input type="checkbox" name="crontrol_delete[%3$s][%4$s]" value="%5$s" id="%1$s">',
