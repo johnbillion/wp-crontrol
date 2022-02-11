@@ -1795,6 +1795,17 @@ function populate_callback( array $callback ) {
 		$callback['name'] = $callback['function'] . '()';
 	}
 
+	if ( ! method_exists( '\QM_Util', 'populate_callback' ) && ! is_callable( $callback['function'] ) ) {
+		$callback['error'] = new WP_Error(
+			'not_callable',
+			sprintf(
+				/* translators: %s: Function name */
+				__( 'Function %s does not exist', 'wp-crontrol' ),
+				$callback['name']
+			)
+		);
+	}
+
 	return $callback;
 }
 
