@@ -43,7 +43,7 @@ Yes, it's actively tested and working up to PHP 8.1.
 
 ### I get the error "There was a problem spawning a call to the WP-Cron system on your site". How do I fix this?
 
-[You can read all about problems spwaning WP-Cron here](https://github.com/johnbillion/wp-crontrol/wiki/Problems-with-spawning-a-call-to-the-WP-Cron-system).
+[You can read all about problems spawning WP-Cron here](https://github.com/johnbillion/wp-crontrol/wiki/Problems-with-spawning-a-call-to-the-WP-Cron-system).
 
 ### Why do some cron events miss their schedule?
 
