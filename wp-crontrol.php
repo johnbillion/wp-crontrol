@@ -2019,6 +2019,7 @@ function get_persistent_core_hooks() {
 		'recovery_mode_clean_expired_keys', // 5.2.0
 		'wp_site_health_scheduled_check', // 5.4.0
 		'wp_https_detection', // 5.7.0
+		'wp_update_user_counts', // 6.0.0
 	);
 }
 
