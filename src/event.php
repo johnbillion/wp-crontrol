@@ -161,8 +161,14 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 	}
 
 	if ( '_oneoff' === $schedule || '' === $schedule ) {
+		/**
+		 * @var bool|null|\WP_Error $result
+		 */
 		$result = wp_schedule_single_event( $next_run_utc, $hook, $args, true );
 	} else {
+		/**
+		 * @var bool|null|\WP_Error $result
+		 */
 		$result = wp_schedule_event( $next_run_utc, $schedule, $hook, $args, true );
 	}
 
@@ -207,6 +213,9 @@ function delete( $hook, $sig, $next_run_utc ) {
 		return $event;
 	}
 
+	/**
+	 * @var bool|null|\WP_Error $unscheduled
+	 */
 	$unscheduled = wp_unschedule_event( $event->timestamp, $event->hook, $event->args, true );
 
 	/**
