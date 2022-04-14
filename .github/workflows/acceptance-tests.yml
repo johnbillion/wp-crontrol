@@ -82,7 +82,6 @@ jobs:
         docker-compose run --rm wpcli wp core download --force --version=nightly
 
     - name: Debug WordPress version
-      continue-on-error: true
       run: docker-compose run --rm wpcli wp core version
 
     - name: Run the tests
