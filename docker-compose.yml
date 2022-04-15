@@ -3,7 +3,7 @@ version: '3.1'
 services:
 
   wordpress:
-    image: wordpress:${LOCAL_WP-5.8}-php${LOCAL_PHP-7.4}
+    image: wordpress:${LOCAL_WP-5.9}-php${LOCAL_PHP-7.4}
     container_name: wp-crontrol-wordpress
     restart: always
     ports:
