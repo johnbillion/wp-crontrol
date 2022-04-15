@@ -30,7 +30,7 @@ jobs:
         cache-name: cache-composer-dependencies
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: 7.4-${{ env.cache-name }}-${{ hashFiles('composer.json') }}
+        key: 8.0-${{ env.cache-name }}-${{ hashFiles('composer.json') }}
 
     - name: PHPCS and PHPStan cache
       uses: actions/cache@v3
@@ -41,12 +41,12 @@ jobs:
         # This uses the hash of wp-crontrol.php in its cache key because Actions doesn't support
         # always pulling in a cache file and simultaneously always updating it, unlike Travis.
         # This way we always pull in a cache file and refresh it with each new version of the plugin.
-        key: 7.4-${{ env.cache-name }}-${{ hashFiles('wp-crontrol.php') }}
+        key: 8.0-${{ env.cache-name }}-${{ hashFiles('wp-crontrol.php') }}
 
     - name: Install PHP
       uses: shivammathur/setup-php@2.7.0
       with:
-        php-version: '7.4'
+        php-version: 8.0
         coverage: none
       env:
         fail-fast: true
