@@ -19,7 +19,8 @@
 		"preferred-install": "dist",
 		"allow-plugins": {
 			"composer/installers": true,
-			"dealerdirect/phpcodesniffer-composer-installer": true
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"roots/wordpress-core-installer": true
 		}
 	},
 	"require-dev": {
@@ -32,12 +33,16 @@
 		"phpcompatibility/phpcompatibility-wp": "2.1.2",
 		"phpstan/phpstan": "^1.0",
 		"phpunit/phpunit": "^9.0",
+		"roots/wordpress": "*",
 		"szepeviktor/phpstan-wordpress": "^1.0",
 		"wp-coding-standards/wpcs": "2.3.0"
 	},
 	"require": {
 		"php": ">=5.3.6",
 		"composer/installers": "^1.0 || ^2.0"
+	},
+	"extra": {
+		"wordpress-install-dir": "tests/wordpress"
 	},
 	"scripts": {
 		"test:cs": [
@@ -50,13 +55,13 @@
 			"vendor/bin/phpstan analyze"
 		],
 		"test:start": [
-			"[[ `uname -m` = \"arm64\" ]] && export CHROME_IMAGE=\"seleniarm/standalone-chromium\"; docker-compose up -d"
+			"docker-compose up -d"
 		],
 		"test:acceptance": [
 			"bin/test.sh"
 		],
 		"test:stop": [
-			"[[ `uname -m` = \"arm64\" ]] && export CHROME_IMAGE=\"seleniarm/standalone-chromium\"; docker-compose down"
+			"docker-compose down"
 		],
 		"test": [
 			"composer validate --strict",
@@ -64,5 +69,16 @@
 			"@test:analyze",
 			"@test:acceptance"
 		]
-	}
+	},
+	"support": {
+		"issues": "https://github.com/johnbillion/wp-crontrol/issues",
+		"forum": "https://wordpress.org/support/plugin/wp-crontrol",
+		"source": "https://github.com/johnbillion/wp-crontrol"
+	},
+	"funding": [
+		{
+			"type": "github",
+			"url": "https://github.com/sponsors/johnbillion"
+		}
+	]
 }
