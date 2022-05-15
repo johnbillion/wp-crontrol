@@ -4,12 +4,12 @@
 	<config name="testVersion" value="5.3-"/>
 	<arg name="extensions" value="php"/>
 
-	<exclude-pattern>*/build/*</exclude-pattern>
-	<exclude-pattern>*/node_modules/*</exclude-pattern>
-	<exclude-pattern>*/vendor/*</exclude-pattern>
-	<exclude-pattern>*/.github/*</exclude-pattern>
-	<exclude-pattern>/tests/*</exclude-pattern>
+	<exclude-pattern>/.github/*</exclude-pattern>
 	<exclude-pattern>/bin/*</exclude-pattern>
+	<exclude-pattern>/build/*</exclude-pattern>
+	<exclude-pattern>/node_modules/*</exclude-pattern>
+	<exclude-pattern>/tests/*</exclude-pattern>
+	<exclude-pattern>/vendor/*</exclude-pattern>
 
 	<rule ref="WordPress-Extra">
 
