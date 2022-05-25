@@ -25,13 +25,13 @@ This project is released with <a href="https://github.com/johnbillion/wp-crontro
 
 ## Setting up Locally
 
-You can clone this repo and activate it like a normal WordPress plugin. If you want to contribute to WP Crontrol, you should install the developer dependencies in order to run the tests.
+You can clone this repo into your `wp-content/plugins` directory but you'll need to install the development dependencies before activating the plugin.
 
 ### Prerequisites
 
-* [Docker Desktop](https://www.docker.com/products/docker-desktop)
 * [Composer](https://getcomposer.org/)
 * [Node](https://nodejs.org/)
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) if you want to run the tests
 
 ### Setup
 
