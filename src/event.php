@@ -400,8 +400,6 @@ function get_list_table() {
 	static $table = null;
 
 	if ( ! $table ) {
-		require_once __DIR__ . '/event-list-table.php';
-
 		$table = new Table();
 		$table->prepare_items();
 

@@ -8,7 +8,7 @@
  * Version:      1.12.1
  * Text Domain:  wp-crontrol
  * Domain Path:  /languages/
- * Requires PHP: 5.3.6
+ * Requires PHP: 5.6
  * License:      GPL v2 or later
  *
  * LICENSE
@@ -42,8 +42,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/src/event.php';
-require_once __DIR__ . '/src/request.php';
 require_once __DIR__ . '/src/schedule.php';
 
 const TRANSIENT = 'crontrol-message-%d';
@@ -644,8 +644,6 @@ function action_handle_posts() {
 	} elseif ( isset( $_POST['crontrol_action'] ) && 'export-event-csv' === $_POST['crontrol_action'] ) {
 		check_admin_referer( 'crontrol-export-event-csv', 'crontrol_nonce' );
 
-		require_once __DIR__ . '/src/event-list-table.php';
-
 		$type = isset( $_POST['crontrol_hooks_type'] ) ? $_POST['crontrol_hooks_type'] : 'all';
 		$headers = array(
 			'hook',
@@ -885,8 +883,6 @@ function admin_options_page() {
 			)
 		);
 	}
-
-	require_once __DIR__ . '/src/schedule-list-table.php';
 
 	$table = new Schedule_List_Table();
 

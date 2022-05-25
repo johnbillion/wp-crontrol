@@ -38,8 +38,13 @@
 		"wp-coding-standards/wpcs": "2.3.0"
 	},
 	"require": {
-		"php": ">=5.3.6",
+		"php": ">=5.6",
 		"composer/installers": "^1.0 || ^2.0"
+	},
+	"autoload": {
+		"classmap": [
+			"src"
+		]
 	},
 	"extra": {
 		"wordpress-install-dir": "tests/wordpress"
