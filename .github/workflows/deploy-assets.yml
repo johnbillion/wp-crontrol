@@ -19,8 +19,18 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Generate autoload file
+        run: composer dump-autoload --no-dev
+
       - name: Populate Changelog
-        run: node .github/workflows/changelog.js readme.md
+        run: |
+          node .github/workflows/changelog.js readme.md
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add readme.md
+          git add -f vendor/autoload.php
+          git add -f vendor/composer/*
+          git commit -m "Readme"
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
