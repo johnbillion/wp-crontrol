@@ -61,13 +61,13 @@
 			"vendor/bin/phpstan analyze"
 		],
 		"test:start": [
-			"docker-compose up -d"
+			"docker compose up -d"
 		],
 		"test:acceptance": [
 			"bin/test.sh"
 		],
 		"test:stop": [
-			"docker-compose down"
+			"docker compose down"
 		],
 		"test": [
 			"composer validate --strict",

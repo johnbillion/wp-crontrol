@@ -45,9 +45,7 @@ You can clone this repo into your `wp-content/plugins` directory but you'll need
 
 ## Running the Tests
 
-The test suite includes acceptance tests which run in a Docker container. Ensure Docker Desktop is running, then start the containers with:
-
-	composer test:start
+The test suite includes acceptance tests which run in a Docker container. Ensure Docker Desktop is running before running the tests.
 
 To run the whole test suite which includes PHPCS code sniffs, PHPStan static analysis, and WPBrowser acceptance tests:
 
@@ -65,8 +63,12 @@ To run just the acceptance tests:
 
 	composer test:acceptance
 
-To stop the Docker containers:
+If you're repeatedly running the tests during development, to speed things up you can start and stop the containers manually and then they won't be started and stopped each time you run the tests:
 
+	composer test:start
+	composer test
+	composer test
+	composer test
 	composer test:stop
 
 ## Releasing a New Version
