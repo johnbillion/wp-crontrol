@@ -33,7 +33,8 @@
 		"phpcompatibility/phpcompatibility-wp": "2.1.2",
 		"phpstan/phpstan": "^1.0",
 		"phpunit/phpunit": "^9.0",
-		"roots/wordpress": "*",
+		"roots/wordpress-core-installer": "^1.0.0",
+		"roots/wordpress-full": "*",
 		"szepeviktor/phpstan-wordpress": "^1.0",
 		"wp-coding-standards/wpcs": "2.3.0"
 	},

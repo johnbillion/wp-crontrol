@@ -71,9 +71,9 @@ jobs:
       run: |
         if [ "${{ matrix.wp }}" == "nightly" ]
         then
-          composer require --dev --update-with-dependencies --prefer-dist roots/wordpress="dev-nightly"
+          composer require --dev --update-with-dependencies --prefer-dist roots/wordpress-full="dev-main"
         else
-          composer require --dev --update-with-dependencies --prefer-dist roots/wordpress="~${{ matrix.wp }}.0"
+          composer require --dev --update-with-dependencies --prefer-dist roots/wordpress-full="~${{ matrix.wp }}.0"
         fi
 
     - name: Start Docker environment
