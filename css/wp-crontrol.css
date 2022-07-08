@@ -42,18 +42,18 @@ table.wp-list-table {
 .wp-list-table tr.crontrol-no-action th,
 .wp-list-table tr.crontrol-stalled th,
 .wp-list-table tr.crontrol-warning th {
-	border-color: #ffb900;
+	border-color: #dba617;
 }
 
 .wp-list-table tr.crontrol-error th {
-	border-color: #dc3232;
+	border-color: #d63638;
 }
 
 .wp-list-table .column-crontrol_icon .dashicons,
 .wp-list-table .check-column .dashicons {
 	margin-left: 6px;
 	font-size: 14px;
-	color: #aaa;
+	color: #a7aaad;
 }
 
 .wp-list-table .column-crontrol_icon .dashicons {
@@ -66,7 +66,7 @@ table.wp-list-table {
 
 .status-crontrol-complete,
 .wp-list-table tr.crontrol-complete td.column-crontrol_status {
-	color: #080;
+	color: #00a32a;
 }
 
 .status-crontrol-no-action,
@@ -75,7 +75,7 @@ table.wp-list-table {
 .wp-list-table tr.crontrol-no-action td.column-crontrol_status,
 .wp-list-table tr.crontrol-stalled td.column-crontrol_status,
 .wp-list-table tr.crontrol-warning td.column-crontrol_status {
-	color: #c60;
+	color: #bd8600;
 }
 
 .status-crontrol-emergency,
@@ -83,7 +83,7 @@ table.wp-list-table {
 .status-crontrol-critical,
 .status-crontrol-error,
 .wp-list-table tr.crontrol-error td.column-crontrol_status {
-	color: #a00;
+	color: #d63638;
 }
 
 .wp-list-table .column-crontrol_https,
@@ -99,7 +99,7 @@ table.wp-list-table {
 }
 
 .row-actions .crontrol-in-use {
-	color: #666;
+	color: #646970;
 }
 
 .form-field input[type="number"] {
