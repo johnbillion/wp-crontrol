@@ -86,6 +86,18 @@ table.wp-list-table {
 	color: #d63638;
 }
 
+.status-crontrol-paused .dashicons {
+	background: #646970;
+	border-radius: 50%;
+	color: #fff;
+	font-size: 14px;
+	height: 14px;
+	line-height: 14px;
+	margin-top: 2px;
+	padding: 1px;
+	width: 14px;
+}
+
 .wp-list-table .column-crontrol_https,
 .wp-list-table .column-crontrol_queries,
 .wp-list-table .column-crontrol_time {

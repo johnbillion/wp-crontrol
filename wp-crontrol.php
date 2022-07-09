@@ -47,6 +47,7 @@ require_once __DIR__ . '/src/event.php';
 require_once __DIR__ . '/src/schedule.php';
 
 const TRANSIENT = 'crontrol-message-%d';
+const PAUSED_OPTION = 'wp_crontrol_paused';
 
 /**
  * Hook onto all of the actions and filters needed by the plugin.
@@ -128,6 +129,22 @@ function filter_plugin_row_meta( array $plugin_meta, $plugin_file ) {
  */
 function action_init() {
 	load_plugin_textdomain( 'wp-crontrol', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+
+	/** @var array<string, true>|false $paused */
+	$paused = get_option( PAUSED_OPTION, array() );
+
+	if ( is_array( $paused ) ) {
+		foreach ( $paused as $hook => $value ) {
+			add_action( $hook, __NAMESPACE__ . '\\pauser', -99999 );
+		}
+	}
+}
+
+/**
+ * @return void
+ */
+function pauser() {
+	remove_all_actions( current_filter() );
 }
 
 /**
@@ -637,6 +654,90 @@ function action_handle_posts() {
 				);
 			}
 			$redirect['crontrol_message'] = 'error';
+		}
+
+		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+		exit;
+	} elseif ( isset( $_GET['crontrol_action'] ) && 'pause-hook' === $_GET['crontrol_action'] ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 401 );
+		}
+
+		$hook = wp_unslash( $_GET['crontrol_id'] );
+		check_admin_referer( "crontrol-pause-hook_{$hook}" );
+
+		$paused = Event\pause( $hook );
+
+		$redirect = array(
+			'page'             => 'crontrol_admin_manage_page',
+			'crontrol_message' => '11',
+			'crontrol_name'    => rawurlencode( $hook ),
+		);
+
+		if ( is_wp_error( $paused ) ) {
+			$set = set_message( $paused->get_error_message() );
+
+			// If we can't store the error message in a transient, just display it.
+			if ( ! $set ) {
+				wp_die(
+					esc_html( $paused->get_error_message() ),
+					'',
+					array(
+						'response'  => 500,
+						'back_link' => true,
+					)
+				);
+			}
+			$redirect['crontrol_message'] = 'error';
+		} else {
+			/**
+			 * Fires after a cron event hook is paused.
+			 *
+			 * @param string $hook The event hook name.
+			 */
+			do_action( 'crontrol/paused_hook', $hook );
+		}
+
+		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+		exit;
+	} elseif ( isset( $_GET['crontrol_action'] ) && 'resume-hook' === $_GET['crontrol_action'] ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 401 );
+		}
+
+		$hook = wp_unslash( $_GET['crontrol_id'] );
+		check_admin_referer( "crontrol-resume-hook_{$hook}" );
+
+		$resumed = Event\resume( $hook );
+
+		$redirect = array(
+			'page'             => 'crontrol_admin_manage_page',
+			'crontrol_message' => '12',
+			'crontrol_name'    => rawurlencode( $hook ),
+		);
+
+		if ( is_wp_error( $resumed ) ) {
+			$set = set_message( $resumed->get_error_message() );
+
+			// If we can't store the error message in a transient, just display it.
+			if ( ! $set ) {
+				wp_die(
+					esc_html( $resumed->get_error_message() ),
+					'',
+					array(
+						'response'  => 500,
+						'back_link' => true,
+					)
+				);
+			}
+			$redirect['crontrol_message'] = 'error';
+		} else {
+			/**
+			 * Fires after a paused cron event hook is resumed.
+			 *
+			 * @param string $hook The event hook name.
+			 */
+			do_action( 'crontrol/resumed_hook', $hook );
 		}
 
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
@@ -1542,6 +1643,16 @@ function admin_manage_page() {
 			__( 'Failed to save the cron event %s.', 'wp-crontrol' ),
 			'error',
 		),
+		'11' => array(
+			/* translators: 1: The name of the cron event. */
+			__( 'Paused the %s hook.', 'wp-crontrol' ),
+			'success',
+		),
+		'12' => array(
+			/* translators: 1: The name of the cron event. */
+			__( 'Resumed the %s hook.', 'wp-crontrol' ),
+			'success',
+		),
 		'error' => array(
 			__( 'An unknown error occurred.', 'wp-crontrol' ),
 			'error',
@@ -1737,6 +1848,10 @@ function get_hook_callbacks( $name ) {
 		foreach ( $action as $priority => $callbacks ) {
 			foreach ( $callbacks as $callback ) {
 				$callback = populate_callback( $callback );
+
+				if ( __NAMESPACE__ . '\\pauser' === $callback['function'] ) {
+					continue;
+				}
 
 				$actions[] = array(
 					'priority' => $priority,

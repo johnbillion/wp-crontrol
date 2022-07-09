@@ -9,6 +9,8 @@ use stdClass;
 use Crontrol\Schedule;
 use WP_Error;
 
+use const Crontrol\PAUSED_OPTION;
+
 /**
  * Executes a cron event immediately.
  *
@@ -245,6 +247,72 @@ function delete( $hook, $sig, $next_run_utc ) {
 }
 
 /**
+ * Pauses a cron event.
+ *
+ * @param string $hook The hook name of the event to pause.
+ * @return true|WP_Error True if the pause was successful, WP_Error otherwise.
+ */
+function pause( $hook ) {
+	$paused = get_option( PAUSED_OPTION, array() );
+
+	if ( ! is_array( $paused ) ) {
+		$paused = array();
+	}
+
+	$paused[ $hook ] = true;
+
+	$result = update_option( PAUSED_OPTION, $paused, false );
+
+	if ( false === $result ) {
+		return new WP_Error(
+			'could_not_pause',
+			sprintf(
+				/* translators: 1: The name of the cron event. */
+				__( 'Failed to the pause the cron event %s.', 'wp-crontrol' ),
+				$hook
+			)
+		);
+	}
+
+	return true;
+}
+
+/**
+ * Resumes a paused cron event.
+ *
+ * @param string $hook The hook name of the event to resume.
+ * @return true|WP_Error True if the resumption was successful, WP_Error otherwise.
+ */
+function resume( $hook ) {
+	$paused = get_option( PAUSED_OPTION );
+
+	if ( ! is_array( $paused ) || ( count( $paused ) === 0 ) ) {
+		return true;
+	}
+
+	unset( $paused[ $hook ] );
+
+	if ( count( $paused ) === 0 ) {
+		$result = delete_option( PAUSED_OPTION );
+	} else {
+		$result = update_option( PAUSED_OPTION, $paused, false );
+	}
+
+	if ( false === $result ) {
+		return new WP_Error(
+			'could_not_resume',
+			sprintf(
+				/* translators: 1: The name of the cron event. */
+				__( 'Failed to the resume the cron event %s.', 'wp-crontrol' ),
+				$hook
+			)
+		);
+	}
+
+	return true;
+}
+
+/**
  * Returns a flattened array of cron events.
  *
  * @return array<string,stdClass> An array of cron event objects keyed by unique signature.
@@ -389,6 +457,22 @@ function is_late( stdClass $event ) {
 	$until = $event->time - time();
 
 	return ( $until < ( 0 - ( 10 * MINUTE_IN_SECONDS ) ) );
+}
+
+/**
+ * Determines whether an event is paused.
+ *
+ * @param stdClass $event The event.
+ * @return bool Whether the event is paused.
+ */
+function is_paused( stdClass $event ) {
+	$paused = get_option( PAUSED_OPTION );
+
+	if ( ! is_array( $paused ) ) {
+		return false;
+	}
+
+	return array_key_exists( $event->hook, $paused );
 }
 
 /**

@@ -319,6 +319,10 @@ class Table extends \WP_List_Table {
 			$classes[] = 'crontrol-warning';
 		}
 
+		if ( is_paused( $event ) ) {
+			$classes[] = 'crontrol-paused';
+		}
+
 		printf(
 			'<tr class="%s">',
 			esc_attr( implode( ' ', $classes ) )
@@ -367,6 +371,31 @@ class Table extends \WP_List_Table {
 		$link = wp_nonce_url( $link, "crontrol-run-cron_{$event->hook}_{$event->sig}" );
 
 		$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
+		}
+
+		if ( is_paused( $event ) ) {
+			$link = array(
+				'page'            => 'crontrol_admin_manage_page',
+				'crontrol_action' => 'resume-hook',
+				'crontrol_id'     => rawurlencode( $event->hook ),
+			);
+			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
+			$link = wp_nonce_url( $link, "crontrol-resume-hook_{$event->hook}" );
+
+			/* translators: Verb */
+			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Resume', 'wp-crontrol' ) . '</a>';
+		} elseif ( 'crontrol_cron_job' !== $event->hook ) {
+			$link = array(
+				'page'            => 'crontrol_admin_manage_page',
+				'crontrol_action' => 'pause-hook',
+				'crontrol_id'     => rawurlencode( $event->hook ),
+			);
+			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
+			$link = wp_nonce_url( $link, "crontrol-pause-hook_{$event->hook}" );
+
+			/* translators: Verb */
+			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Pause', 'wp-crontrol' ) . '</a>';
+		}
 
 		if ( ! in_array( $event->hook, self::$persistent_core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_manage_php_crons ) ) {
 			$link = array(
@@ -455,7 +484,17 @@ class Table extends \WP_List_Table {
 			}
 		}
 
-		return esc_html( $event->hook );
+		$output = esc_html( $event->hook );
+
+		if ( is_paused( $event ) ) {
+			$output .= sprintf(
+				' &mdash; <strong class="status-crontrol-paused post-state"><span class="dashicons dashicons-controls-pause" aria-hidden="true"></span> %s</strong>',
+				/* translators: State of a cron event, adjective */
+				esc_html__( 'Paused', 'wp-crontrol' )
+			);
+		}
+
+		return $output;
 	}
 
 	/**
