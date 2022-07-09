@@ -15,7 +15,7 @@ WP Crontrol enables you to view and control what's happening in the WP-Cron syst
 WP Crontrol enables you to view and control what's happening in the WP-Cron system. From the admin screens you can:
 
  * View all cron events along with their arguments, recurrence, callback functions, and when they are next due.
- * Edit, delete, and immediately run any cron events.
+ * Edit, delete, pause, resume, and immediately run cron events.
  * Add new cron events.
  * Bulk delete cron events.
  * Add and remove custom cron schedules.
@@ -51,7 +51,7 @@ Yes, it's actively tested and working up to PHP 8.1.
 
 ### Why do some cron events reappear shortly after I delete them?
 
-If the event is added by a plugin then the plugin most likely rescheduled the event as soon as it saw that the event was missing. Unfortunately there's nothing that WP Crontrol can do about this - you should contact the author of the related plugin and ask for advice.
+If the event is added by a plugin then the plugin most likely rescheduled the event as soon as it saw that the event was missing. To get around this you can instead use the "Pause" option for the event which means it'll remain in place but won't perform any action when it runs.
 
 ### Is it safe to delete cron events?
 
@@ -62,6 +62,18 @@ If the event shows "None" as its action then it's usually safe to delete. Please
 ### Why can't I delete some cron events?
 
 The WordPress core software uses cron events for some of its functionality and removing these events is not possible because WordPress would immediately reschedule them if you did delete them. For this reason, WP Crontrol doesn't let you delete these persistent events from WordPress core in the first place.
+
+If you don't want these events to run, you can "Pause" them instead.
+
+### What happens when I pause an event?
+
+Pausing an event will disable all actions attached to the event's hook. The event itself will remain in place and will run according to its schedule, but all actions attached to its hook will be disabled. This renders the event inoperative but keeps it scheduled so as to remain fully compatible with plugins which automatically schedule events when they're missing.
+
+As pausing an event actually pauses its hook, all events that use the same hook will be paused or resumed when pausing and resuming an event. This is much more useful and reliable than pausing individual events separately.
+
+### What happens when I resume an event?
+
+Resuming an event re-enables all actions attached to the event's hook. All events that use the same hook will be resumed.
 
 ### What does it mean when "None" is shown for the Action of a cron event?
 
