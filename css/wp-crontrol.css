@@ -49,6 +49,10 @@ table.wp-list-table {
 	border-color: #d63638;
 }
 
+.wp-list-table tr.crontrol-paused th {
+	border-color: #8c8f94;
+}
+
 .wp-list-table .column-crontrol_icon .dashicons,
 .wp-list-table .check-column .dashicons {
 	margin-left: 6px;
