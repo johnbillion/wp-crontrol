@@ -369,17 +369,18 @@ class Table extends \WP_List_Table {
 			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a>';
 		}
 
-		$link = array(
-			'page'                  => 'crontrol_admin_manage_page',
-			'crontrol_action'       => 'run-cron',
-			'crontrol_id'           => rawurlencode( $event->hook ),
-			'crontrol_sig'          => rawurlencode( $event->sig ),
-			'crontrol_next_run_utc' => rawurlencode( $event->time ),
-		);
-		$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-		$link = wp_nonce_url( $link, "crontrol-run-cron_{$event->hook}_{$event->sig}" );
+		if ( ! is_paused( $event ) ) {
+			$link = array(
+				'page'                  => 'crontrol_admin_manage_page',
+				'crontrol_action'       => 'run-cron',
+				'crontrol_id'           => rawurlencode( $event->hook ),
+				'crontrol_sig'          => rawurlencode( $event->sig ),
+				'crontrol_next_run_utc' => rawurlencode( $event->timestamp ),
+			);
+			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
+			$link = wp_nonce_url( $link, "crontrol-run-cron_{$event->hook}_{$event->sig}" );
 
-		$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
+			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
 		}
 
 		if ( is_paused( $event ) ) {
