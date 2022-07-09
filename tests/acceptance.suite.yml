@@ -16,7 +16,7 @@ modules:
       browser: chrome
       host: localhost
       port: '%TEST_SITE_WEBDRIVER_PORT%'
-      window_size: 1024x768
+      window_size: 1440x900
       capabilities:
         chromeOptions:
           args: ["--headless", "--disable-gpu", "--proxy-server='direct://'", "--proxy-bypass-list=*"]
