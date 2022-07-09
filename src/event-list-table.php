@@ -136,6 +136,14 @@ class Table extends \WP_List_Table {
 			return ( ! in_array( $event->hook, $all_core_hooks, true ) );
 		} );
 
+		$paused = array_filter( $events, function( $event ) {
+			return ( is_paused( $event ) );
+		} );
+
+		if ( count( $paused ) > 0 ) {
+			$filtered['paused'] = $paused;
+		}
+
 		/**
 		 * Filters the available filtered events on the cron event listing screen.
 		 *
@@ -222,6 +230,7 @@ class Table extends \WP_List_Table {
 			'noaction' => __( 'Events with no action', 'wp-crontrol' ),
 			'core'     => __( 'WordPress core events', 'wp-crontrol' ),
 			'custom'   => __( 'Custom events', 'wp-crontrol' ),
+			'paused'   => __( 'Paused events', 'wp-crontrol' ),
 		);
 
 		/**
