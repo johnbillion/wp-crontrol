@@ -3,6 +3,8 @@
  * Acceptance testing actor.
  */
 
+use Codeception\Util\Locator;
+
 /**
  * Inherited Methods
  *
@@ -79,5 +81,21 @@ class AcceptanceTester extends \Codeception\Actor {
 	 */
 	public function amOnCronEventListingPage() {
 		return $this->amOnAdminPage( 'tools.php?page=crontrol_admin_manage_page' );
+	}
+
+	/**
+	 * Create a cron event to work with.
+	 *
+	 * @param string $hook_name The event hook name.
+	 * @return string
+	 */
+	public function amWorkingWithACronEvent( string $hook_name ) {
+		$this->amOnCronEventListingPage();
+		$this->click( 'Add New', '#wpbody' );
+		$this->fillField( 'Hook Name', $hook_name );
+		$this->selectOption( 'input[name="crontrol_next_run_date_local"]', 'Tomorrow' );
+		$this->click( 'Add Event' );
+
+		return Locator::contains( '.crontrol-events tr', $hook_name );
 	}
 }

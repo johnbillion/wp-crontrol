@@ -5,6 +5,20 @@
 
 mysqli_report( MYSQLI_REPORT_OFF );
 
+// Force the wp-admin area to use 'mobile' mode so list table row actions are shown.
+$GLOBALS['wp_filter'] = array(
+	'admin_body_class' => array(
+		10 => array(
+			array(
+				'accepted_args' => 1,
+				'function' => function( $classes ) {
+					return $classes .= ' mobile';
+				},
+			),
+		),
+	),
+);
+
 define( 'WP_DEBUG', ! empty( getenv( 'WORDPRESS_DEBUG' ) ) );
 
 // Prevent WP-Cron doing its thing during testing.
