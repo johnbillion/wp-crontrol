@@ -16,5 +16,12 @@ class PauseEventCest {
 
 		$I->click( 'Pause', $row );
 		$I->seeAdminSuccessNotice( 'Paused the pause_me_soon hook.' );
+		$I->see( 'Paused', $row );
+
+		$I->click( 'Paused events (1)' );
+		$I->see( 'Paused', $row );
+
+		$I->click( 'Resume', $row );
+		$I->seeAdminSuccessNotice( 'Resumed the pause_me_soon hook.' );
 	}
 }
