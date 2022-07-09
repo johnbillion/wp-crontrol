@@ -53,6 +53,10 @@ table.wp-list-table {
 	border-color: #8c8f94;
 }
 
+.wp-list-table tr.crontrol-paused:not(.crontrol-no-action) .column-crontrol_actions {
+	text-decoration: line-through;
+}
+
 .wp-list-table .column-crontrol_icon .dashicons,
 .wp-list-table .check-column .dashicons {
 	margin-left: 6px;

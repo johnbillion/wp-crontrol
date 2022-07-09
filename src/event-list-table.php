@@ -314,7 +314,7 @@ class Table extends \WP_List_Table {
 		$callbacks = \Crontrol\get_hook_callbacks( $event->hook );
 
 		if ( ! $callbacks ) {
-			$classes[] = 'crontrol-warning';
+			$classes[] = 'crontrol-no-action';
 		} else {
 			foreach ( $callbacks as $callback ) {
 				if ( ! empty( $callback['callback']['error'] ) ) {
