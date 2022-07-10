@@ -148,7 +148,7 @@ function pauser() {
 }
 
 /**
- * Handles any POSTs made by the plugin. Run using the 'init' action.
+ * Handles any POSTs and GETs made by the plugin. Run using the 'init' action.
  *
  * @return void
  */

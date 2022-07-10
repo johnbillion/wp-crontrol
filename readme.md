@@ -22,9 +22,9 @@ WP Crontrol enables you to view and control what's happening in the WP-Cron syst
  * Add new cron events.
  * Bulk delete cron events.
  * Add and remove custom cron schedules.
- * Export cron event lists as a CSV file.
+ * Export and download cron event lists as a CSV file.
 
-WP Crontrol is aware of timezones, will alert you to events that have no actions or that have missed their schedule, and will show you a warning message if your cron system doesn't appear to be working (for example if your server can't connect to itself to fire scheduled cron events).
+WP Crontrol is aware of timezones, will alert you to events that have no actions or that have missed their schedule, and will show you a helpful warning message if it detects any problems with your cron system.
 
 ### Usage
 
@@ -102,7 +102,7 @@ Please see the "Which users can manage PHP cron events?" FAQ for information abo
 
 ### Can I export a list of cron events?
 
-Yes, a CSV file of the event list can be exported via the "Export" button on the cron event listing screen. This file can be opened in any spreadsheet application.
+Yes, a CSV file of the event list can be exported and downloaded via the "Export" button on the cron event listing screen. This file can be opened in any spreadsheet application.
 
 ### Can I see a historical log of all the cron events that ran on my site?
 
@@ -156,7 +156,7 @@ Therefore, the user access level required to execute arbitrary PHP code does not
 
 ### Are any WP-CLI commands available?
 
-The cron commands which were previously included in WP Crontrol are now part of WP-CLI (since 0.16), so this plugin no longer provides any WP-CLI commands. See `wp help cron` for more info.
+The cron commands which were previously included in WP Crontrol are now part of WP-CLI itself. See `wp help cron` for more info.
 
 ### Who took the photo in the plugin header image?
 
