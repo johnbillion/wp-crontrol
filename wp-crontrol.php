@@ -5,7 +5,7 @@
  * Description:  WP Crontrol enables you to view and control what's happening in the WP-Cron system.
  * Author:       John Blackbourn & crontributors
  * Author URI:   https://github.com/johnbillion/wp-crontrol/graphs/contributors
- * Version:      1.12.1
+ * Version:      1.13.0
  * Text Domain:  wp-crontrol
  * Domain Path:  /languages/
  * Requires PHP: 5.6
