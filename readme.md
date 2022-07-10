@@ -4,13 +4,16 @@ Contributors: johnbillion, scompt
 Tags: cron, wp-cron, crontrol, debug  
 Requires at least: 4.2  
 Tested up to: 6.0  
-Stable tag: 1.13.1  
+Stable tag: 1.13.2  
 Requires PHP: 5.6  
 Donate link: https://github.com/sponsors/johnbillion
 
 WP Crontrol enables you to view and control what's happening in the WP-Cron system.
 
 ## Description
+
+// need a test on github actions which runs the tests against the thing that the 10up action builds
+// or the tests on GHA should always use the built version
 
 WP Crontrol enables you to view and control what's happening in the WP-Cron system. From the admin screens you can:
 
