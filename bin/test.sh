@@ -10,7 +10,7 @@ if ! [ -x "$(command -v docker)" ]; then
 	exit 1
 fi
 
-# # Start the containers if necessary:
+# Start the containers if necessary:
 if docker container inspect wp-crontrol-database > /dev/null 2>&1; then
 	DOCKER_ALREADY_RUNNING=true
 else

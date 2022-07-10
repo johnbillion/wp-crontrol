@@ -30,18 +30,14 @@ You can clone this repo into your `wp-content/plugins` directory but you'll need
 ### Prerequisites
 
 * [Composer](https://getcomposer.org/)
-* [Node](https://nodejs.org/)
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/) if you want to run the tests
+* [Node](https://nodejs.org/) if you are packaging a release
 
 ### Setup
 
-1. Install the PHP dependencies:
+Install the PHP dependencies:
 
-       composer install
-
-2. Install the Node dependencies:
-
-       npm install
+	composer install
 
 ## Running the Tests
 
@@ -82,22 +78,41 @@ These are the steps to take to release a new version of WP Crontrol (for contrib
 1. Ensure you're on the `develop` branch and all the changes for this release have been merged in.
 1. Ensure `readme.md` contains up to date descriptions, "Tested up to" versions, FAQs, screenshots, etc.
 1. Ensure `.gitattributes` is up to date with all files that shouldn't be part of the build.
-   - To do this, run `git archive --output=wp-crontrol.zip HEAD` then check the contents for files that shouldn't be part of the package.
-1. Run `composer test` and ensure everything passes.
+   - To do this, export the archive then check the contents for files that shouldn't be part of the package:
+
+         git archive --output=wp-crontrol.zip HEAD
+
+1. Run the tests and ensure everything passes:
+
+       composer test
+
 1. Prepare a changelog for [the Releases page on GitHub](https://github.com/johnbillion/wp-crontrol/releases).
 
 ### For Release
 
+1. Install the Node dependencies:
+
+       npm install
+
 1. Bump the plugin version number:
-   - `npm run bump:patch` for a patch release (1.2.3 => 1.2.4)
-   - `npm run bump:minor` for a minor release (1.2.3 => 1.3.0)
-   - `npm run bump:major` for a major release (1.2.3 => 2.0.0)
-1. `git push origin develop`
+   - For a patch release (1.2.3 => 1.2.4):
+
+         npm run bump:patch
+
+   - For a minor release (1.2.3 => 1.3.0):
+
+         npm run bump:minor
+
+   - For a major release (1.2.3 => 2.0.0):
+
+         npm run bump:major
+
+1.     git push origin develop
 1. Wait until (and ensure that) [the build passes](https://github.com/johnbillion/wp-crontrol/actions)
-1. `git checkout master`
-1. `git merge develop`
-1. `git push origin master`
-1. `git push origin master:release`
+1.     git checkout master
+1.     git merge develop
+1.     git push origin master
+1.     git push origin master:release
 1. Wait for [the Build Release action](https://github.com/johnbillion/wp-crontrol/actions?query=workflow%3A%22Build+Release%22) to complete
 1. Enter the changelog into [the release on GitHub](https://github.com/johnbillion/wp-crontrol/releases) and publish it.
 

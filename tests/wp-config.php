@@ -19,6 +19,7 @@ $GLOBALS['wp_filter'] = array(
 	),
 );
 
+// Use debug mode to gently encourage PHP errors to show themselves.
 define( 'WP_DEBUG', ! empty( getenv( 'WORDPRESS_DEBUG' ) ) );
 
 // Prevent WP-Cron doing its thing during testing.
