@@ -268,7 +268,7 @@ function pause( $hook ) {
 			'could_not_pause',
 			sprintf(
 				/* translators: 1: The name of the cron event. */
-				__( 'Failed to the pause the cron event %s.', 'wp-crontrol' ),
+				__( 'Failed to pause the cron event %s.', 'wp-crontrol' ),
 				$hook
 			)
 		);
@@ -303,7 +303,7 @@ function resume( $hook ) {
 			'could_not_resume',
 			sprintf(
 				/* translators: 1: The name of the cron event. */
-				__( 'Failed to the resume the cron event %s.', 'wp-crontrol' ),
+				__( 'Failed to resume the cron event %s.', 'wp-crontrol' ),
 				$hook
 			)
 		);
