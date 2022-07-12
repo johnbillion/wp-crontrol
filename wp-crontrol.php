@@ -790,8 +790,8 @@ function action_handle_posts() {
 
 		if ( isset( $events[ $type ] ) ) {
 			foreach ( $events[ $type ] as $event ) {
-				$next_run_local = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->time ), 'c' );
-				$next_run_utc = gmdate( 'c', $event->time );
+				$next_run_local = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->timestamp ), 'c' );
+				$next_run_utc = gmdate( 'c', $event->timestamp );
 				$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
 
 				if ( 'crontrol_cron_job' === $event->hook ) {
@@ -1306,10 +1306,10 @@ function show_cron_form( $editing ) {
 		$edit_id = wp_unslash( $_GET['crontrol_id'] );
 
 		foreach ( Event\get() as $event ) {
-			if ( $edit_id === $event->hook && intval( $_GET['crontrol_next_run_utc'] ) === $event->time && $event->sig === $_GET['crontrol_sig'] ) {
+			if ( $edit_id === $event->hook && intval( $_GET['crontrol_next_run_utc'] ) === $event->timestamp && $event->sig === $_GET['crontrol_sig'] ) {
 				$existing = array(
 					'hookname' => $event->hook,
-					'next_run' => $event->time, // UTC
+					'next_run' => $event->timestamp, // UTC
 					'schedule' => ( $event->schedule ? $event->schedule : '_oneoff' ),
 					'sig'      => $event->sig,
 					'args'     => $event->args,

@@ -362,7 +362,7 @@ class Table extends \WP_List_Table {
 				'crontrol_action'       => 'edit-cron',
 				'crontrol_id'           => rawurlencode( $event->hook ),
 				'crontrol_sig'          => rawurlencode( $event->sig ),
-				'crontrol_next_run_utc' => rawurlencode( $event->time ),
+				'crontrol_next_run_utc' => rawurlencode( $event->timestamp ),
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 
@@ -375,7 +375,7 @@ class Table extends \WP_List_Table {
 				'crontrol_action'       => 'run-cron',
 				'crontrol_id'           => rawurlencode( $event->hook ),
 				'crontrol_sig'          => rawurlencode( $event->sig ),
-				'crontrol_next_run_utc' => rawurlencode( $event->time ),
+				'crontrol_next_run_utc' => rawurlencode( $event->timestamp ),
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 			$link = wp_nonce_url( $link, "crontrol-run-cron_{$event->hook}_{$event->sig}" );
@@ -413,10 +413,10 @@ class Table extends \WP_List_Table {
 				'crontrol_action'       => 'delete-cron',
 				'crontrol_id'           => rawurlencode( $event->hook ),
 				'crontrol_sig'          => rawurlencode( $event->sig ),
-				'crontrol_next_run_utc' => rawurlencode( $event->time ),
+				'crontrol_next_run_utc' => rawurlencode( $event->timestamp ),
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-			$link = wp_nonce_url( $link, "crontrol-delete-cron_{$event->hook}_{$event->sig}_{$event->time}" );
+			$link = wp_nonce_url( $link, "crontrol-delete-cron_{$event->hook}_{$event->sig}_{$event->timestamp}" );
 
 			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
 		}
@@ -452,7 +452,7 @@ class Table extends \WP_List_Table {
 	protected function column_cb( $event ) {
 		$id = sprintf(
 			'crontrol-delete-%1$s-%2$s-%3$s',
-			$event->time,
+			$event->timestamp,
 			rawurlencode( $event->hook ),
 			$event->sig
 		);
@@ -469,7 +469,7 @@ class Table extends \WP_List_Table {
 				<input type="checkbox" name="crontrol_delete[%3$s][%4$s]" value="%5$s" id="%1$s">',
 				esc_attr( $id ),
 				esc_html__( 'Select this row', 'wp-crontrol' ),
-				esc_attr( $event->time ),
+				esc_attr( $event->timestamp ),
 				esc_attr( rawurlencode( $event->hook ) ),
 				esc_attr( $event->sig )
 			);
@@ -592,14 +592,14 @@ class Table extends \WP_List_Table {
 	protected function column_crontrol_next( $event ) {
 		$date_local_format = 'Y-m-d H:i:s';
 		$offset_site = get_date_from_gmt( 'now', 'P' );
-		$offset_event = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->time ), 'P' );
+		$offset_event = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->timestamp ), 'P' );
 
 		if ( $offset_site !== $offset_event ) {
 			$date_local_format .= ' P';
 		}
 
-		$date_utc   = gmdate( 'c', $event->time );
-		$date_local = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->time ), $date_local_format );
+		$date_utc   = gmdate( 'c', $event->timestamp );
+		$date_local = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->timestamp ), $date_local_format );
 
 		$time = sprintf(
 			'<time datetime="%1$s">%2$s</time>',
@@ -607,7 +607,7 @@ class Table extends \WP_List_Table {
 			esc_html( $date_local )
 		);
 
-		$until = $event->time - time();
+		$until = $event->timestamp - time();
 		$late  = is_late( $event );
 
 		if ( $late ) {
