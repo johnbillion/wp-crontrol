@@ -53,7 +53,7 @@ jobs:
         key: 8.0-composer-${{ hashFiles('composer.json') }}
 
     - name: Install PHP
-      uses: shivammathur/setup-php@2.7.0
+      uses: shivammathur/setup-php@2.20.1
       with:
         php-version: 8.0
         coverage: none
@@ -92,7 +92,7 @@ jobs:
 
     - name: Upload test artifacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: acceptance-wp-${{ matrix.wp }}-php-${{ matrix.php }}
         path: tests/_output

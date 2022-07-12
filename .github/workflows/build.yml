@@ -13,10 +13,10 @@ jobs:
     timeout-minutes: 10
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Install PHP
-      uses: shivammathur/setup-php@2.7.0
+      uses: shivammathur/setup-php@2.20.1
       with:
         php-version: 8.0
         coverage: none
