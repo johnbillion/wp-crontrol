@@ -42,7 +42,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once __DIR__ . '/vendor/autoload.php';
+if ( ! version_compare( PHP_VERSION, '5.6', '>=' ) ) {
+	return;
+}
+
+$autoload = __DIR__ . '/vendor/autoload.php';
+
+if ( ! file_exists( $autoload ) ) {
+	return;
+}
+
+require_once $autoload;
 require_once __DIR__ . '/src/event.php';
 require_once __DIR__ . '/src/schedule.php';
 
