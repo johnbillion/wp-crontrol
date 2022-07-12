@@ -41,6 +41,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Debugging
+      run: |
+        npm --version
+
     - name: Install Dependencies
       run: npm install
 

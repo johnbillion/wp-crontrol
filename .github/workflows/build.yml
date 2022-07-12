@@ -23,6 +23,11 @@ jobs:
       env:
         fail-fast: true
 
+    - name: Debugging
+      run: |
+        php --version
+        composer --version
+
     - name: Generate autoload file
       run: composer dump-autoload --no-dev
 
