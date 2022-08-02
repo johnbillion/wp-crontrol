@@ -33,7 +33,7 @@
 
 namespace Crontrol;
 
-const CRONTROL_FILE = __FILE__;
+const PLUGIN_FILE = __FILE__;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
