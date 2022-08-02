@@ -27,7 +27,6 @@ services:
       WORDPRESS_DB_USER: exampleuser
       WORDPRESS_DB_PASSWORD: examplepass
       WORDPRESS_DB_NAME: exampledb
-      WORDPRESS_DEBUG: ${LOCAL_WP_DEBUG-1}
     depends_on:
       - database
     init: true
