@@ -25,6 +25,7 @@ function init_hooks() {
 	add_action( 'admin_menu',                         __NAMESPACE__ . '\action_admin_menu' );
 	add_action( 'wp_ajax_crontrol_checkhash',         __NAMESPACE__ . '\ajax_check_events_hash' );
 	add_filter( "plugin_action_links_{$plugin_file}", __NAMESPACE__ . '\plugin_action_links', 10, 4 );
+	add_filter( "network_admin_plugin_action_links_{$plugin_file}", __NAMESPACE__ . '\network_plugin_action_links' );
 	add_filter( 'removable_query_args',               __NAMESPACE__ . '\filter_removable_query_args' );
 	add_filter( 'pre_unschedule_event',               __NAMESPACE__ . '\maybe_clear_doing_cron' );
 	add_filter( 'plugin_row_meta',                    __NAMESPACE__ . '\filter_plugin_row_meta', 10, 4 );
@@ -888,6 +889,24 @@ function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
 			esc_url( admin_url( 'options-general.php?page=crontrol_admin_options_page' ) ),
 			esc_html__( 'Schedules', 'wp-crontrol' )
 		),
+		'crontrol-help' => sprintf(
+			'<a href="%s">%s</a>',
+			'https://github.com/johnbillion/wp-crontrol/wiki',
+			esc_html__( 'Help', 'wp-crontrol' )
+		),
+	);
+
+	return array_merge( $new, $actions );
+}
+
+/**
+ * Adds items to the plugin's action links on the Network Admin -> Plugins listing screen.
+ *
+ * @param array<string,string> $actions     Array of action links.
+ * @return array<string,string> Array of action links.
+ */
+function network_plugin_action_links( $actions ) {
+	$new = array(
 		'crontrol-help' => sprintf(
 			'<a href="%s">%s</a>',
 			'https://github.com/johnbillion/wp-crontrol/wiki',
