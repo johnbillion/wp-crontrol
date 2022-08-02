@@ -33,6 +33,8 @@
 
 namespace Crontrol;
 
+const CRONTROL_FILE = __FILE__;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -53,4 +55,4 @@ require_once __DIR__ . '/src/event.php';
 require_once __DIR__ . '/src/schedule.php';
 
 // Get this show on the road.
-init_hooks( plugin_basename( __FILE__ ) );
+init_hooks();

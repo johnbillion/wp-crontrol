@@ -15,10 +15,11 @@ const PAUSED_OPTION = 'wp_crontrol_paused';
 /**
  * Hook onto all of the actions and filters needed by the plugin.
  *
- * @param string $plugin_file Path to the main WP Crontrol plugin file.
  * @return void
  */
-function init_hooks( $plugin_file ) {
+function init_hooks() {
+	$plugin_file = plugin_basename( CRONTROL_FILE );
+
 	add_action( 'init',                               __NAMESPACE__ . '\action_init' );
 	add_action( 'init',                               __NAMESPACE__ . '\action_handle_posts' );
 	add_action( 'admin_menu',                         __NAMESPACE__ . '\action_admin_menu' );
@@ -90,7 +91,7 @@ function filter_plugin_row_meta( array $plugin_meta, $plugin_file ) {
  * @return void
  */
 function action_init() {
-	load_plugin_textdomain( 'wp-crontrol', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	load_plugin_textdomain( 'wp-crontrol', false, dirname( plugin_basename( CRONTROL_FILE ) ) . '/languages' );
 
 	/** @var array<string, true>|false $paused */
 	$paused = get_option( PAUSED_OPTION, array() );
@@ -2029,11 +2030,11 @@ function enqueue_assets( $hook_suffix ) {
 		return;
 	}
 
-	$ver = (string) filemtime( plugin_dir_path( __FILE__ ) . 'css/wp-crontrol.css' );
-	wp_enqueue_style( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'css/wp-crontrol.css', array( 'dashicons' ), $ver );
+	$ver = (string) filemtime( plugin_dir_path( CRONTROL_FILE ) . 'css/wp-crontrol.css' );
+	wp_enqueue_style( 'wp-crontrol', plugin_dir_url( CRONTROL_FILE ) . 'css/wp-crontrol.css', array( 'dashicons' ), $ver );
 
-	$ver = (string) filemtime( plugin_dir_path( __FILE__ ) . 'js/wp-crontrol.js' );
-	wp_enqueue_script( 'wp-crontrol', plugin_dir_url( __FILE__ ) . 'js/wp-crontrol.js', array( 'jquery', 'wp-a11y' ), $ver, true );
+	$ver = (string) filemtime( plugin_dir_path( CRONTROL_FILE ) . 'js/wp-crontrol.js' );
+	wp_enqueue_script( 'wp-crontrol', plugin_dir_url( CRONTROL_FILE ) . 'js/wp-crontrol.js', array( 'jquery', 'wp-a11y' ), $ver, true );
 
 	$vars = array();
 
