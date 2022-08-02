@@ -1,35 +1,6 @@
 <?php
 /**
- * Plugin Name:  WP Crontrol
- * Plugin URI:   https://wordpress.org/plugins/wp-crontrol/
- * Description:  WP Crontrol enables you to view and control what's happening in the WP-Cron system.
- * Author:       John Blackbourn & crontributors
- * Author URI:   https://github.com/johnbillion/wp-crontrol/graphs/contributors
- * Version:      1.13.2
- * Text Domain:  wp-crontrol
- * Domain Path:  /languages/
- * Requires PHP: 5.6
- * License:      GPL v2 or later
- *
- * LICENSE
- * This file is part of WP Crontrol.
- *
- * WP Crontrol is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * @package    wp-crontrol
- * @author     John Blackbourn <john@johnblackbourn.com> & Edward Dale <scompt@scompt.com>
- * @copyright  Copyright 2008 Edward Dale, 2012-2022 John Blackbourn
- * @license    http://www.gnu.org/licenses/gpl.txt GPL 2.0
- * @link       https://wordpress.org/plugins/wp-crontrol/
- * @since      0.2
+ * Functions related to bootstrapping WP Crontrol.
  */
 
 namespace Crontrol;
@@ -38,35 +9,16 @@ use Crontrol\Event\Table;
 use stdClass;
 use WP_Error;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-if ( ! version_compare( PHP_VERSION, '5.6', '>=' ) ) {
-	return;
-}
-
-$autoload = __DIR__ . '/vendor/autoload.php';
-
-if ( ! file_exists( $autoload ) ) {
-	return;
-}
-
-require_once $autoload;
-require_once __DIR__ . '/src/event.php';
-require_once __DIR__ . '/src/schedule.php';
-
 const TRANSIENT = 'crontrol-message-%d';
 const PAUSED_OPTION = 'wp_crontrol_paused';
 
 /**
  * Hook onto all of the actions and filters needed by the plugin.
  *
+ * @param string $plugin_file Path to the main WP Crontrol plugin file.
  * @return void
  */
-function init_hooks() {
-	$plugin_file = plugin_basename( __FILE__ );
-
+function init_hooks( $plugin_file ) {
 	add_action( 'init',                               __NAMESPACE__ . '\action_init' );
 	add_action( 'init',                               __NAMESPACE__ . '\action_handle_posts' );
 	add_action( 'admin_menu',                         __NAMESPACE__ . '\action_admin_menu' );
@@ -2226,6 +2178,3 @@ function action_php_cron_event( $code ) {
 	// phpcs:ignore Squiz.PHP.Eval.Discouraged
 	eval( $code );
 }
-
-// Get this show on the road.
-init_hooks();
