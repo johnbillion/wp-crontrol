@@ -12,9 +12,6 @@ WP Crontrol enables you to view and control what's happening in the WP-Cron syst
 
 ## Description
 
-// need a test on github actions which runs the tests against the thing that the 10up action builds
-// or the tests on GHA should always use the built version
-
 WP Crontrol enables you to view and control what's happening in the WP-Cron system. From the admin screens you can:
 
  * View all cron events along with their arguments, recurrence, callback functions, and when they are next due.
