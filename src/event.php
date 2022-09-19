@@ -419,7 +419,7 @@ function get_schedule_name( stdClass $event ) {
 	$schedules = Schedule\get();
 
 	if ( isset( $schedules[ $event->schedule ] ) ) {
-		return $schedules[ $event->schedule ]['display'];
+		return isset( $schedules[ $event->schedule ]['display'] ) ? $schedules[ $event->schedule ]['display'] : $schedules[ $event->schedule ]['name'];
 	}
 
 	return new WP_Error( 'unknown_schedule', sprintf(

@@ -96,7 +96,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 *
 	 * @phpstan-param array{
 	 *   interval: int,
-	 *   display: string,
+	 *   display?: string,
 	 *   name: string,
 	 *   is_too_frequent: bool,
 	 * } $schedule
@@ -139,7 +139,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 *
 	 * @phpstan-param array{
 	 *   interval: int,
-	 *   display: string,
+	 *   display?: string,
 	 *   name: string,
 	 *   is_too_frequent: bool,
 	 * } $schedule
@@ -163,7 +163,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 *
 	 * @phpstan-param array{
 	 *   interval: int,
-	 *   display: string,
+	 *   display?: string,
 	 *   name: string,
 	 *   is_too_frequent: bool,
 	 * } $schedule
@@ -179,7 +179,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 *
 	 * @phpstan-param array{
 	 *   interval: int,
-	 *   display: string,
+	 *   display?: string,
 	 *   name: string,
 	 *   is_too_frequent: bool,
 	 * } $schedule
@@ -215,14 +215,14 @@ class Schedule_List_Table extends \WP_List_Table {
 	 *
 	 * @phpstan-param array{
 	 *   interval: int,
-	 *   display: string,
+	 *   display?: string,
 	 *   name: string,
 	 *   is_too_frequent: bool,
 	 * } $schedule
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_display( array $schedule ) {
-		return esc_html( $schedule['display'] );
+		return esc_html( isset( $schedule['display'] ) ? $schedule['display'] : $schedule['name'] );
 	}
 
 	/**

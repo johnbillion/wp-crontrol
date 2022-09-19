@@ -59,7 +59,7 @@ function delete( $name ) {
  * @return array<string,array<string,(int|string)>> Array of cron schedule arrays.
  * @phpstan-return array<string,array{
  *   interval: int,
- *   display: string,
+ *   display?: string,
  *   name: string,
  *   is_too_frequent: bool,
  * }>
@@ -68,7 +68,7 @@ function get() {
 	/**
 	 * @phpstan-var array<string,array{
 	 *   interval: int,
-	 *   display: string,
+	 *   display?: string,
 	 * }> $schedules
 	 */
 	$schedules = wp_get_schedules();
@@ -84,7 +84,7 @@ function get() {
 	/**
 	 * @phpstan-var array<string,array{
 	 *   interval: int,
-	 *   display: string,
+	 *   display?: string,
 	 *   name: string,
 	 *   is_too_frequent: bool,
 	 * }> $schedules
@@ -108,7 +108,7 @@ function dropdown( $current = false ) {
 			<?php
 			printf(
 				'%s (%s)',
-				esc_html( $sched_data['display'] ),
+				esc_html( isset( $sched_data['display'] ) ? $sched_data['display'] : $sched_data['name'] ),
 				esc_html( $sched_name )
 			);
 			?>
