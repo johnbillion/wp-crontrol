@@ -68,6 +68,10 @@ table.wp-list-table {
 	margin-top: 2px;
 }
 
+.wp-list-table .qm-icon-edit {
+	display: none;
+}
+
 #crontrol-hash-message {
 	display: none;
 }
