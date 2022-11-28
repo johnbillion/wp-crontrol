@@ -1559,6 +1559,16 @@ function show_cron_form( $editing ) {
 			<p class="submit">
 				<input type="submit" class="button button-primary" value="<?php echo esc_attr( $button ); ?>"/>
 			</p>
+			<p class="description">
+				<?php
+					echo esc_html( sprintf(
+						/* translators: 1: Date and time, 2: Timezone */
+						__( 'Site time when page loaded: %1$s (%2$s)', 'wp-crontrol' ),
+						date_i18n( 'Y-m-d H:i:s' ),
+						get_timezone_name()
+					) );
+				?>
+			</p>
 		</form>
 		<?php } else { ?>
 			<div class="error inline">
@@ -1694,11 +1704,11 @@ function admin_manage_page() {
 					</div>
 				</form>
 
-				<p>
+				<p class="description">
 					<?php
 						echo esc_html( sprintf(
 							/* translators: 1: Date and time, 2: Timezone */
-							__( 'Site time: %1$s (%2$s)', 'wp-crontrol' ),
+							__( 'Site time when page loaded: %1$s (%2$s)', 'wp-crontrol' ),
 							date_i18n( 'Y-m-d H:i:s' ),
 							get_timezone_name()
 						) );
