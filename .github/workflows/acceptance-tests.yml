@@ -56,6 +56,7 @@ jobs:
       uses: shivammathur/setup-php@2.20.1
       with:
         php-version: 8.0
+        tools: composer:2.2
         coverage: none
         ini-file: development
       env:
