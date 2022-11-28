@@ -20,8 +20,17 @@ class PauseEventCest {
 
 		$I->click( 'Paused events (1)' );
 		$I->see( 'Paused', $row );
+		$I->see( 'Edit', $row );
+		$I->dontSee( 'Run Now', $row );
+		$I->see( 'Resume', $row );
+		$I->see( 'Delete', $row );
 
 		$I->click( 'Resume', $row );
 		$I->seeAdminSuccessNotice( 'Resumed the pause_me_soon hook.' );
+		$I->see( 'Edit', $row );
+		$I->see( 'Run Now', $row );
+		$I->see( 'Pause', $row );
+		$I->dontSee( 'Resume', $row );
+		$I->see( 'Delete', $row );
 	}
 }

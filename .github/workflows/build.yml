@@ -9,22 +9,32 @@ on:
 jobs:
   wordpress:
     name: Release
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Install PHP
-      uses: shivammathur/setup-php@2.7.0
+      uses: shivammathur/setup-php@2.20.1
       with:
         php-version: 8.0
         coverage: none
+        # Pin Composer to 2.2 while we still support PHP 5.6:
+        tools: composer:2.2
+        ini-file: development
       env:
         fail-fast: true
 
+    - name: Debugging
+      run: |
+        php --version
+        composer --version
+
     - name: Generate autoload file
-      run: composer dump-autoload --no-dev
+      run: |
+        composer remove composer/installers --update-no-dev
+        composer dump-autoload --no-dev
 
     - name: Setup
       run: 'echo "VERSION=$(grep -Po ''\"version\": \"[0-9\\.]+\"'' package.json | grep -Po ''[0-9\\.]+'')" >> $GITHUB_ENV'

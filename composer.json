@@ -17,6 +17,8 @@
 	"config": {
 		"sort-packages": true,
 		"preferred-install": "dist",
+		"prepend-autoloader": false,
+		"classmap-authoritative": true,
 		"allow-plugins": {
 			"composer/installers": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true,
@@ -52,7 +54,8 @@
 	},
 	"scripts": {
 		"test:cs": [
-			"phpcs -nps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs  --basepath=./ ."
+			"phpcs -nps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs --basepath=./ --standard=phpcs53.xml",
+			"phpcs -nps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs --basepath=./ ."
 		],
 		"test:cs2pr": [
 			"phpcs -nsq --report=checkstyle --cache=tests/cache/phpcs . | cs2pr"

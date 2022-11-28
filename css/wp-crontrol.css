@@ -28,6 +28,7 @@ table.wp-list-table {
 .wp-list-table code {
 	background: transparent;
 	padding: 0;
+	font-size: 12px;
 }
 
 .wp-list-table td.column-crontrol_status {
@@ -66,6 +67,10 @@ table.wp-list-table {
 
 .wp-list-table .column-crontrol_icon .dashicons {
 	margin-top: 2px;
+}
+
+.wp-list-table .qm-icon-edit {
+	display: none;
 }
 
 #crontrol-hash-message {

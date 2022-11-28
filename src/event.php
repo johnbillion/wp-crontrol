@@ -268,7 +268,7 @@ function pause( $hook ) {
 			'could_not_pause',
 			sprintf(
 				/* translators: 1: The name of the cron event. */
-				__( 'Failed to the pause the cron event %s.', 'wp-crontrol' ),
+				__( 'Failed to pause the cron event %s.', 'wp-crontrol' ),
 				$hook
 			)
 		);
@@ -303,7 +303,7 @@ function resume( $hook ) {
 			'could_not_resume',
 			sprintf(
 				/* translators: 1: The name of the cron event. */
-				__( 'Failed to the resume the cron event %s.', 'wp-crontrol' ),
+				__( 'Failed to resume the cron event %s.', 'wp-crontrol' ),
 				$hook
 			)
 		);
@@ -332,7 +332,7 @@ function get() {
 				// This is a prime candidate for a Crontrol_Event class but I'm not bothering currently.
 				$events[ "$hook-$sig-$time" ] = (object) array(
 					'hook'     => $hook,
-					'time'     => $time, // UTC
+					'timestamp' => $time, // UTC
 					'sig'      => $sig,
 					'args'     => $data['args'],
 					'schedule' => $data['schedule'],
@@ -419,7 +419,7 @@ function get_schedule_name( stdClass $event ) {
 	$schedules = Schedule\get();
 
 	if ( isset( $schedules[ $event->schedule ] ) ) {
-		return $schedules[ $event->schedule ]['display'];
+		return isset( $schedules[ $event->schedule ]['display'] ) ? $schedules[ $event->schedule ]['display'] : $schedules[ $event->schedule ]['name'];
 	}
 
 	return new WP_Error( 'unknown_schedule', sprintf(
@@ -454,7 +454,7 @@ function is_too_frequent( stdClass $event ) {
  * @return bool Whether the event is late.
  */
 function is_late( stdClass $event ) {
-	$until = $event->time - time();
+	$until = $event->timestamp - time();
 
 	return ( $until < ( 0 - ( 10 * MINUTE_IN_SECONDS ) ) );
 }
@@ -516,13 +516,13 @@ function uasort_order_events( $a, $b ) {
 			}
 			break;
 		default:
-			if ( $a->time === $b->time ) {
+			if ( $a->timestamp === $b->timestamp ) {
 				$compare = 0;
 			} else {
 				if ( 'desc' === $order ) {
-					$compare = ( $a->time > $b->time ) ? 1 : -1;
+					$compare = ( $a->timestamp > $b->timestamp ) ? 1 : -1;
 				} else {
-					$compare = ( $a->time < $b->time ) ? 1 : -1;
+					$compare = ( $a->timestamp < $b->timestamp ) ? 1 : -1;
 				}
 			}
 			break;

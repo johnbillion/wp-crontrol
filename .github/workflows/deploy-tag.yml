@@ -11,7 +11,7 @@ env:
 jobs:
   wordpress:
     name: WordPress.org
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
     - uses: octokit/request-action@v2.x
@@ -41,6 +41,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Debugging
+      run: |
+        npm --version
+
     - name: Install Dependencies
       run: npm install
 
@@ -55,7 +59,7 @@ jobs:
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: WordPress Plugin Deploy
-      uses: 10up/action-wordpress-plugin-deploy@1.4.1
+      uses: 10up/action-wordpress-plugin-deploy@2.1.0
       env:
         SVN_USERNAME: ${{ secrets.WPORG_SVN_USERNAME }}
         SVN_PASSWORD: ${{ secrets.WPORG_SVN_PASSWORD }}
@@ -86,7 +90,7 @@ jobs:
 
   github:
     name: GitHub Milestones
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
     - name: Get next versions

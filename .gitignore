@@ -1,8 +1,6 @@
 /build
 /node_modules
 /vendor/*
-!/vendor/autoload.php
-!/vendor/composer
 
 /composer.lock
 /package-lock.json

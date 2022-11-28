@@ -14,7 +14,7 @@ on:
 jobs:
   build:
     name: PHP Coding Standards
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
     - name: Checkout repository
@@ -44,10 +44,12 @@ jobs:
         key: 8.0-${{ env.cache-name }}-${{ hashFiles('wp-crontrol.php') }}
 
     - name: Install PHP
-      uses: shivammathur/setup-php@2.7.0
+      uses: shivammathur/setup-php@2.20.1
       with:
         php-version: 8.0
+        tools: composer:2.2
         coverage: none
+        ini-file: development
       env:
         fail-fast: true
 

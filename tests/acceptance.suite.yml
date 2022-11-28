@@ -7,6 +7,7 @@ actor: AcceptanceTester
 modules:
   enabled:
     - WPWebDriver
+    - \Helper\Acceptance
   config:
     WPWebDriver:
       url: '%TEST_SITE_WP_URL%'
