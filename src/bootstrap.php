@@ -28,7 +28,7 @@ function init_hooks() {
 	add_filter( "network_admin_plugin_action_links_{$plugin_file}", __NAMESPACE__ . '\network_plugin_action_links' );
 	add_filter( 'removable_query_args',               __NAMESPACE__ . '\filter_removable_query_args' );
 	add_filter( 'pre_unschedule_event',               __NAMESPACE__ . '\maybe_clear_doing_cron' );
-	add_filter( 'plugin_row_meta',                    __NAMESPACE__ . '\filter_plugin_row_meta', 10, 4 );
+	add_filter( 'plugin_row_meta',                    __NAMESPACE__ . '\filter_plugin_row_meta', 10, 2 );
 
 	add_action( 'load-tools_page_crontrol_admin_manage_page', __NAMESPACE__ . '\setup_manage_page' );
 
