@@ -15,12 +15,14 @@
 		}
 	],
 	"config": {
+		"classloader-suffix": "WPCrontrol",
 		"sort-packages": true,
 		"preferred-install": "dist",
 		"prepend-autoloader": false,
 		"classmap-authoritative": true,
 		"allow-plugins": {
 			"composer/installers": true,
+			"dangoodman/composer-for-wordpress": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true,
 			"roots/wordpress-core-installer": true
 		}
@@ -42,7 +44,8 @@
 	},
 	"require": {
 		"php": ">=5.6",
-		"composer/installers": "^1.0 || ^2.0"
+		"composer/installers": "^1.0 || ^2.0",
+		"dangoodman/composer-for-wordpress": "^2.0"
 	},
 	"autoload": {
 		"classmap": [
