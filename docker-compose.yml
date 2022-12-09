@@ -55,7 +55,7 @@ services:
       - wp-crontrol
 
   wpcli:
-    image: wordpress:cli-php${LOCAL_PHP-8.0}
+    image: wordpressdevelop/cli:${LOCAL_PHP-8.0}-fpm
     container_name: wp-crontrol-wpcli
     environment:
       WORDPRESS_DB_HOST: database
@@ -64,12 +64,12 @@ services:
       WORDPRESS_DB_NAME: exampledb
     depends_on:
       - database
-      - php
     init: true
     volumes:
-      - ./tests/wordpress:/var/www/html/:rw
-      - ./tests/wp-config.php:/var/www/html/wp-config.php
-      - ./:/var/www/html/wp-content/plugins/wp-crontrol:rw
+      - ./tests/wordpress:/var/www/:rw
+      - ./tests/wp-config.php:/var/www/wp-config.php
+      - ./tests/php-config.ini:/usr/local/etc/php/conf.d/php-config.ini
+      - ./:/var/www/wp-content/plugins/wp-crontrol:rw
     networks:
       - wp-crontrol
 
