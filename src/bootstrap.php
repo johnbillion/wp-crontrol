@@ -95,12 +95,15 @@ function action_init() {
 	load_plugin_textdomain( 'wp-crontrol', false, dirname( plugin_basename( PLUGIN_FILE ) ) . '/languages' );
 
 	/** @var array<string, true>|false $paused */
-	$paused = get_option( PAUSED_OPTION, array() );
+	$paused = get_option( PAUSED_OPTION );
 
-	if ( is_array( $paused ) ) {
-		foreach ( $paused as $hook => $value ) {
-			add_action( $hook, __NAMESPACE__ . '\\pauser', -99999 );
-		}
+	if ( ! is_array( $paused ) ) {
+		$paused = array();
+		update_option( PAUSED_OPTION, $paused, true );
+	}
+
+	foreach ( $paused as $hook => $value ) {
+		add_action( $hook, __NAMESPACE__ . '\\pauser', -99999 );
 	}
 }
 
