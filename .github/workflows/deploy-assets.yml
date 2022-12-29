@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Generate autoload file
-        run: composer dump-autoload --no-dev
+        run: ./bin/build.sh
 
       - name: Populate Changelog
         run: |
