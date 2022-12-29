@@ -12,6 +12,9 @@ jobs:
   wordpress:
     name: WordPress.org
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
     timeout-minutes: 10
     steps:
     - uses: octokit/request-action@v2.x
@@ -91,6 +94,9 @@ jobs:
   github:
     name: GitHub Milestones
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
     timeout-minutes: 10
     steps:
     - name: Get next versions
