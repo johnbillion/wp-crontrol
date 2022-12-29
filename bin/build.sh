@@ -9,4 +9,4 @@ composer remove composer/installers --update-no-dev
 composer dump-autoload --no-dev
 
 # Wrap the call to `setClassMapAuthoritative` in a `method_exists` check:
-sed -i '' 's/\$loader->setClassMapAuthoritative(true);/if (method_exists(\$loader,"setClassMapAuthoritative")){\$loader->setClassMapAuthoritative(true);}/' vendor/composer/autoload_real.php
+sed -i '' 's/\$loader->setClassMapAuthoritative(true);/if (method_exists(\$loader,"setClassMapAuthoritative")){\n            \$loader->setClassMapAuthoritative(true);\n        }/' vendor/composer/autoload_real.php
