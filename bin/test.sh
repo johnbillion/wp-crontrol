@@ -19,9 +19,9 @@ else
 fi
 
 # Prep:
-WP_PORT=`docker port wp-crontrol-server | grep "[0-9]+$" -ohE | head -1`
-CHROME_PORT=`docker port wp-crontrol-chrome | grep "[0-9]+$" -ohE | head -1`
-DATABASE_PORT=`docker port wp-crontrol-database | grep "[0-9]+$" -ohE | head -1`
+WP_PORT=`docker inspect --type=container --format='{{(index .NetworkSettings.Ports "80/tcp" 0).HostPort}}' wp-crontrol-server`
+CHROME_PORT=`docker inspect --type=container --format='{{(index .NetworkSettings.Ports "4444/tcp" 0).HostPort}}' wp-crontrol-chrome`
+DATABASE_PORT=`docker inspect --type=container --format='{{(index .NetworkSettings.Ports "3306/tcp" 0).HostPort}}' wp-crontrol-database`
 WP_URL="http://host.docker.internal:${WP_PORT}"
 WP="docker compose run --rm wpcli --url=${WP_URL}"
 
