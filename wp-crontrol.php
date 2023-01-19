@@ -26,7 +26,7 @@
  *
  * @package    wp-crontrol
  * @author     John Blackbourn <john@johnblackbourn.com> & Edward Dale <scompt@scompt.com>
- * @copyright  Copyright 2008 Edward Dale, 2012-2022 John Blackbourn
+ * @copyright  Copyright 2008 Edward Dale, 2012-2023 John Blackbourn
  * @license    https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GPL 2.0
  * @link       https://wordpress.org/plugins/wp-crontrol/
  */
