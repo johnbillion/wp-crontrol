@@ -155,6 +155,10 @@ Therefore, the user access level required to execute arbitrary PHP code does not
 
 The cron commands which were previously included in WP Crontrol are now part of WP-CLI itself. See `wp help cron` for more info.
 
+### What happens when I deactivate the WP Crontrol plugin?
+
+[You can read all about what happens when you deactivate the plugin here](https://github.com/johnbillion/wp-crontrol/wiki/What-happens-when-I-deactivate-the-WP-Crontrol-plugin%3F).
+
 ### Who took the photo in the plugin header image?
 
 The photo was taken by <a href="https://www.flickr.com/photos/michaelpardo/21453119315">Michael Pardo</a> and is in the public domain.
