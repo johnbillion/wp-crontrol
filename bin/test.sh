@@ -25,6 +25,12 @@ DATABASE_PORT=`docker inspect --type=container --format='{{(index .NetworkSettin
 WP_URL="http://host.docker.internal:${WP_PORT}"
 WP="docker compose run --rm wpcli --url=${WP_URL}"
 
+# Wait for MariaDB:
+while ! docker-compose exec -T database /bin/bash -c 'mysqladmin ping --user="${MYSQL_USER}" --password="${MYSQL_PASSWORD}" --silent' | grep 'mysqld is alive' >/dev/null; do
+	echo 'Waiting for MariaDB...'
+	sleep 1
+done
+
 # Reset or install the test database:
 echo "Installing database..."
 $WP db reset --yes
