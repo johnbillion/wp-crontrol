@@ -99,7 +99,7 @@ function action_init() {
 
 	if ( is_array( $paused ) ) {
 		foreach ( $paused as $hook => $value ) {
-			add_action( $hook, __NAMESPACE__ . '\\pauser', -99999 );
+			add_action( $hook, __NAMESPACE__ . '\\pauser', -99999, 0 );
 		}
 	}
 }
