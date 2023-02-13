@@ -94,11 +94,15 @@ function filter_plugin_row_meta( array $plugin_meta, $plugin_file ) {
 function action_init() {
 	load_plugin_textdomain( 'wp-crontrol', false, dirname( plugin_basename( PLUGIN_FILE ) ) . '/languages' );
 
-	/** @var array<string, true>|false $paused */
+	/** @var array<array-key, true>|false $paused */
 	$paused = get_option( PAUSED_OPTION, array() );
 
 	if ( is_array( $paused ) ) {
-		foreach ( $paused as $hook => $value ) {
+		foreach ( array_keys( $paused ) as $hook ) {
+			if ( ! is_string( $hook ) ) {
+				continue;
+			}
+
 			add_action( $hook, __NAMESPACE__ . '\\pauser', -99999, 0 );
 		}
 	}
