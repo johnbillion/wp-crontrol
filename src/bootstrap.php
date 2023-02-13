@@ -1977,17 +1977,17 @@ function interval( $since ) {
 	// Array of time period chunks.
 	$chunks = array(
 		/* translators: 1: The number of years in an interval of time. */
-		array( 60 * 60 * 24 * 365, _n_noop( '%s year', '%s years', 'wp-crontrol' ) ),
+		array( YEAR_IN_SECONDS, _n_noop( '%s year', '%s years', 'wp-crontrol' ) ),
 		/* translators: 1: The number of months in an interval of time. */
-		array( 60 * 60 * 24 * 30, _n_noop( '%s month', '%s months', 'wp-crontrol' ) ),
+		array( MONTH_IN_SECONDS, _n_noop( '%s month', '%s months', 'wp-crontrol' ) ),
 		/* translators: 1: The number of weeks in an interval of time. */
-		array( 60 * 60 * 24 * 7, _n_noop( '%s week', '%s weeks', 'wp-crontrol' ) ),
+		array( WEEK_IN_SECONDS, _n_noop( '%s week', '%s weeks', 'wp-crontrol' ) ),
 		/* translators: 1: The number of days in an interval of time. */
-		array( 60 * 60 * 24, _n_noop( '%s day', '%s days', 'wp-crontrol' ) ),
+		array( DAY_IN_SECONDS, _n_noop( '%s day', '%s days', 'wp-crontrol' ) ),
 		/* translators: 1: The number of hours in an interval of time. */
-		array( 60 * 60, _n_noop( '%s hour', '%s hours', 'wp-crontrol' ) ),
+		array( HOUR_IN_SECONDS, _n_noop( '%s hour', '%s hours', 'wp-crontrol' ) ),
 		/* translators: 1: The number of minutes in an interval of time. */
-		array( 60, _n_noop( '%s minute', '%s minutes', 'wp-crontrol' ) ),
+		array( MINUTE_IN_SECONDS, _n_noop( '%s minute', '%s minutes', 'wp-crontrol' ) ),
 		/* translators: 1: The number of seconds in an interval of time. */
 		array( 1, _n_noop( '%s second', '%s seconds', 'wp-crontrol' ) ),
 	);
