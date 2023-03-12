@@ -1845,7 +1845,7 @@ function get_hook_callbacks( $name ) {
 			foreach ( $callbacks as $callback ) {
 				$callback = populate_callback( $callback );
 
-				if ( __NAMESPACE__ . '\\pauser' === $callback['function'] ) {
+				if ( __NAMESPACE__ . '\\pauser()' === $callback['name'] ) {
 					continue;
 				}
 
