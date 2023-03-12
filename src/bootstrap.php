@@ -36,6 +36,9 @@ function init_hooks() {
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_assets' );
 	add_action( 'crontrol/tab-header',   __NAMESPACE__ . '\show_cron_status', 20 );
+	add_action( 'activated_plugin',      __NAMESPACE__ . '\flush_status_cache', 10, 0 );
+	add_action( 'deactivated_plugin',    __NAMESPACE__ . '\flush_status_cache', 10, 0 );
+	add_action( 'switch_theme',          __NAMESPACE__ . '\flush_status_cache', 10, 0 );
 }
 
 /**
@@ -1157,6 +1160,15 @@ function test_cron_spawn( $cache = true ) {
 		return true;
 	}
 
+}
+
+/**
+ * Deletes the cached value of the cron status check.
+ *
+ * @return void
+ */
+function flush_status_cache() {
+	delete_transient( 'crontrol-cron-test-ok' );
 }
 
 /**
