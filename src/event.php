@@ -261,7 +261,7 @@ function pause( $hook ) {
 
 	$paused[ $hook ] = true;
 
-	$result = update_option( PAUSED_OPTION, $paused, false );
+	$result = update_option( PAUSED_OPTION, $paused, true );
 
 	if ( false === $result ) {
 		return new WP_Error(
@@ -292,11 +292,7 @@ function resume( $hook ) {
 
 	unset( $paused[ $hook ] );
 
-	if ( count( $paused ) === 0 ) {
-		$result = delete_option( PAUSED_OPTION );
-	} else {
-		$result = update_option( PAUSED_OPTION, $paused, false );
-	}
+	$result = update_option( PAUSED_OPTION, $paused, true );
 
 	if ( false === $result ) {
 		return new WP_Error(

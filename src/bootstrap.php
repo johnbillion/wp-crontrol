@@ -98,16 +98,19 @@ function action_init() {
 	load_plugin_textdomain( 'wp-crontrol', false, dirname( plugin_basename( PLUGIN_FILE ) ) . '/languages' );
 
 	/** @var array<array-key, true>|false $paused */
-	$paused = get_option( PAUSED_OPTION, array() );
+	$paused = get_option( PAUSED_OPTION );
 
-	if ( is_array( $paused ) ) {
-		foreach ( array_keys( $paused ) as $hook ) {
-			if ( ! is_string( $hook ) ) {
-				continue;
-			}
+	if ( ! is_array( $paused ) ) {
+		$paused = array();
+		update_option( PAUSED_OPTION, $paused, true );
+	}
 
-			add_action( $hook, __NAMESPACE__ . '\\pauser', -99999, 0 );
+	foreach ( $paused as $hook => $value ) {
+		if ( ! is_string( $hook ) ) {
+			continue;
 		}
+
+		add_action( $hook, __NAMESPACE__ . '\\pauser', -99999, 0 );
 	}
 }
 
