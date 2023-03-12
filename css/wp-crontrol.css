@@ -1,16 +1,3 @@
-@keyframes crontrol-rotating {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: rotate(360deg);
-	}
-}
-
-.crontrol-rotating {
-	animation: crontrol-rotating 3s linear infinite;
-}
-
 table.wp-list-table {
 	width: 100%;
 	max-width: 100%;
@@ -41,7 +28,6 @@ table.wp-list-table {
 }
 
 .wp-list-table tr.crontrol-no-action th,
-.wp-list-table tr.crontrol-stalled th,
 .wp-list-table tr.crontrol-warning th {
 	border-color: #dba617;
 }
@@ -76,23 +62,12 @@ table.wp-list-table {
 	display: none;
 }
 
-.status-crontrol-complete,
-.wp-list-table tr.crontrol-complete td.column-crontrol_status {
-	color: #00a32a;
-}
-
-.status-crontrol-no-action,
-.status-crontrol-stalled,
 .status-crontrol-warning,
 .wp-list-table tr.crontrol-no-action td.column-crontrol_status,
-.wp-list-table tr.crontrol-stalled td.column-crontrol_status,
 .wp-list-table tr.crontrol-warning td.column-crontrol_status {
 	color: #bd8600;
 }
 
-.status-crontrol-emergency,
-.status-crontrol-alert,
-.status-crontrol-critical,
 .status-crontrol-error,
 .wp-list-table tr.crontrol-error td.column-crontrol_status {
 	color: #d63638;
@@ -108,12 +83,6 @@ table.wp-list-table {
 	margin-top: 2px;
 	padding: 1px;
 	width: 14px;
-}
-
-.wp-list-table .column-crontrol_https,
-.wp-list-table .column-crontrol_queries,
-.wp-list-table .column-crontrol_time {
-	text-align: end;
 }
 
 .column-crontrol_time,
