@@ -51,7 +51,7 @@ Yes, it's actively tested and working up to PHP 8.2.
 
 ### Why do some cron events reappear shortly after I delete them?
 
-If the event is added by a plugin then the plugin most likely rescheduled the event as soon as it saw that the event was missing. To get around this you can instead use the "Pause" option for the event which means it'll remain in place but won't perform any action when it runs.
+If the event is added by a plugin then the plugin most likely rescheduled the event as soon as it saw that the event was missing. To get around this you can instead use the "Pause this hook" action which means it'll remain in place but won't perform any action when it runs.
 
 ### Is it safe to delete cron events?
 

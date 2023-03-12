@@ -1035,7 +1035,7 @@ function admin_options_page() {
  * What on earth does this function do, and why?
  *
  * Good question. The purpose of this function is to prevent other overdue cron events from firing when an event is run
- * manually with the "Run Now" action. WP Crontrol works very hard to ensure that when cron event runs manually that it
+ * manually with the "Run now" action. WP Crontrol works very hard to ensure that when cron event runs manually that it
  * runs in the exact same way it would run as part of its schedule - via a properly spawned cron with a queued event in
  * place. It does this by queueing an event at time `1` (1 second into 1st January 1970) and then immediately spawning
  * cron (see the `Event\run()` function).
