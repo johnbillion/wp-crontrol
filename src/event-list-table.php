@@ -197,7 +197,7 @@ class Table extends \WP_List_Table {
 	 * @return array<int,string> Array of class names.
 	 */
 	protected function get_table_classes() {
-		return array( 'widefat', 'striped', $this->_args['plural'] );
+		return array( 'widefat', 'striped', 'table-view-list', $this->_args['plural'] );
 	}
 
 	/**
