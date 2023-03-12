@@ -35,6 +35,12 @@ I maintain several other plugins for developers. Check them out:
 * [Query Monitor](https://wordpress.org/plugins/query-monitor/) is the developer tools panel for WordPress.
 * [User Switching](https://wordpress.org/plugins/user-switching/) provides instant switching between user accounts in WordPress.
 
+### Privacy Statement
+
+WP Crontrol is private by default and always will be. It does not send data to any third party, nor does it include any third party resources.
+
+[WP Crontrol's full privacy statement can be found here](https://github.com/johnbillion/wp-crontrol/wiki/Privacy-statement).
+
 ## Frequently Asked Questions
 
 ### Does this plugin work with PHP 8?
