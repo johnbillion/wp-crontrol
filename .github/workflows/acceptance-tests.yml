@@ -44,7 +44,7 @@ jobs:
     - name: Install PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: ${{ matrix.php }}
+        php-version: 8.0
         tools: composer:2.2
         coverage: none
         ini-file: development
@@ -57,7 +57,7 @@ jobs:
 
     - name: Install dependencies
       env:
-        WP_CORE_CONSTRAINT: ${{ matrix.wp == 'nightly' && 'nightly' || format('~{0}.0', matrix.wp) }}
+        WP_CORE_CONSTRAINT: ${{ matrix.wp == 'nightly' && 'dev-main' || format('~{0}.0', matrix.wp) }}
       run: |
         composer require --dev --update-with-dependencies --prefer-dist "roots/wordpress-full:${WP_CORE_CONSTRAINT}"
 
