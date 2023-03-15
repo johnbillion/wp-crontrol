@@ -53,13 +53,11 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Install dependencies
-      uses: ramsey/composer-install@v2
-
-    - name: Install dependencies
       env:
         WP_CORE_CONSTRAINT: ${{ matrix.wp == 'nightly' && 'dev-main' || format('~{0}.0', matrix.wp) }}
-      run: |
-        composer require --dev --update-with-dependencies --prefer-dist "roots/wordpress-full:${WP_CORE_CONSTRAINT}"
+      uses: ramsey/composer-install@v2
+      with:
+        composer-options: "--with=roots/wordpress-full:${WP_CORE_CONSTRAINT}"
 
     - name: Start Docker environment
       run: composer test:start
