@@ -7,9 +7,7 @@ on:
       - 'develop'
       - 'trunk'
       - 'master'
-  pull_request:
-    branches:
-      - '**'
+  pull_request: null
   # Once weekly on Wednesdays at 16:00 UTC.
   schedule:
     - cron: '0 16 * * 3'
@@ -40,28 +38,13 @@ jobs:
       LOCAL_PHP: ${{ matrix.php }}
       LOCAL_WP_DEBUG: 1
     steps:
-    - name: Matrix values
-      run: echo "${{ toJSON(matrix) }}"
-
     - name: Checkout repository
       uses: actions/checkout@v3
-
-    - name: Get Composer cache directory
-      id: composer-cache
-      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-    - name: Composer cache
-      uses: actions/cache@v3
-      env:
-        cache-name: cache-composer-dependencies
-      with:
-        path: ${{ steps.composer-cache.outputs.dir }}
-        key: 8.0-composer-${{ hashFiles('composer.json') }}
 
     - name: Install PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 8.0
+        php-version: ${{ matrix.php }}
         tools: composer:2.2
         coverage: none
         ini-file: development
@@ -69,30 +52,17 @@ jobs:
         fail-fast: true
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Debugging
-      run: |
-        php --version
-        composer --version
-        docker --version
-        docker-compose --version
+    - name: Install dependencies
+      uses: ramsey/composer-install@v2
 
     - name: Install dependencies
+      env:
+        WP_CORE_CONSTRAINT: ${{ matrix.wp == 'nightly' && 'nightly' || format('~{0}.0', matrix.wp) }}
       run: |
-        if [ "${{ matrix.wp }}" == "nightly" ]
-        then
-          composer require --dev --update-with-dependencies --prefer-dist roots/wordpress-full="dev-main"
-        else
-          composer require --dev --update-with-dependencies --prefer-dist roots/wordpress-full="~${{ matrix.wp }}.0"
-        fi
+        composer require --dev --update-with-dependencies --prefer-dist "roots/wordpress-full:${WP_CORE_CONSTRAINT}"
 
     - name: Start Docker environment
       run: composer test:start
-
-    - name: Log running Docker containers
-      run: docker ps -a
-
-    - name: Debug WordPress version
-      run: docker-compose run --rm wpcli wp core version
 
     - name: Run the tests
       run: composer test:acceptance
