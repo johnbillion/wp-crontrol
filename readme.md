@@ -75,7 +75,7 @@ If the event shows "None" as its action then it's usually safe to delete. Please
 
 The WordPress core software uses cron events for some of its functionality and removing these events is not possible because WordPress would immediately reschedule them if you did delete them. For this reason, WP Crontrol doesn't let you delete these persistent events from WordPress core in the first place.
 
-If you don't want these events to run, you can "Pause" them instead.
+If you don't want these events to run, you can use the "Pause this hook" action instead.
 
 ### What happens when I pause an event?
 
