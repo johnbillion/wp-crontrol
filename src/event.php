@@ -450,7 +450,7 @@ function is_too_frequent( stdClass $event ) {
  * @return bool Whether the event is late.
  */
 function is_late( stdClass $event ) {
-	$until = $event->timestamp - time();
+	$until = (int) $event->timestamp - time();
 
 	return ( $until < ( 0 - ( 10 * MINUTE_IN_SECONDS ) ) );
 }
