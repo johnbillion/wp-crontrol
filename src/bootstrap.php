@@ -1144,7 +1144,7 @@ function test_cron_spawn( $cache = true ) {
 			'blocking'  => true,
 			'sslverify' => apply_filters( 'https_local_ssl_verify', $sslverify ),
 		),
-	) );
+	), $doing_wp_cron );
 
 	$cron_request['args']['blocking'] = true;
 
