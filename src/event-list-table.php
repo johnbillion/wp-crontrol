@@ -107,7 +107,7 @@ class Table extends \WP_List_Table {
 		$this->set_pagination_args( array(
 			'total_items' => $count,
 			'per_page'    => $per_page,
-			'total_pages' => ceil( $count / $per_page ),
+			'total_pages' => (int) ceil( $count / $per_page ),
 		) );
 	}
 
