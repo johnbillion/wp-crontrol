@@ -157,9 +157,9 @@ Only users with the `manage_options` capability can manage cron events and sched
 
 ### Which users can manage PHP cron events? Is this dangerous?
 
-Only users with the `edit_files` capability can manage PHP cron events. This means if a user cannot edit files on the site (eg. through the Plugin Editor or Theme Editor) then they cannot edit or add a PHP cron event. By default, only Administrators have this capability, and with Multisite enabled only Super Admins have this capability.
+Only users with the `edit_files` capability can manage PHP cron events. This means if a user cannot edit files via the WordPress admin area (i.e. through the Plugin Editor or Theme Editor) then they also cannot add, edit, or delete a PHP cron event in WP Crontrol. By default only Administrators have this capability, and with Multisite enabled only Super Admins have this capability.
 
-If file editing has been disabled via the `DISALLOW_FILE_MODS` or `DISALLOW_FILE_EDIT` configuration constants then no user will have the `edit_files` capability, which means editing or adding a PHP cron event will not be permitted.
+If file editing has been disabled via the `DISALLOW_FILE_MODS` or `DISALLOW_FILE_EDIT` configuration constants then no user will have the `edit_files` capability, which means adding, editing, or deleting a PHP cron event will not be permitted.
 
 Therefore, the user access level required to execute arbitrary PHP code does not change with WP Crontrol activated.
 
