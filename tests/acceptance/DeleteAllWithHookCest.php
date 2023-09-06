@@ -21,4 +21,13 @@ class DeleteAllWithHookCest {
 
 		$I->dontSee( 'example_hook', '.crontrol-events' );
 	}
+
+	public function DeletingAPersistentWordPressCoreHook( AcceptanceTester $I ) {
+		$I->amWorkingWithACronEvent( 'wp_scheduled_delete', '[1]' );
+		$I->amWorkingWithACronEvent( 'wp_scheduled_delete', '[2]' );
+		$row = $I->amWorkingWithACronEvent( 'wp_scheduled_delete', '[3]' );
+
+		$I->click( 'Delete all events with this hook (4)', $row );
+		$I->seeAdminSuccessNotice( 'Deleted all wp_scheduled_delete cron events.' );
+	}
 }
