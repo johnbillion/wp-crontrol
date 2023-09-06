@@ -182,12 +182,20 @@ class Table extends \WP_List_Table {
 	/**
 	 * Columns to make sortable.
 	 *
-	 * @return array<string,array<int,(string|bool)>>
+	 * @return array<string,array<int,mixed>>
+	 * @phpstan-return array<string,array{
+	 *   0: string,
+	 *   1: bool,
+	 *   2?: ?string,
+	 *   3?: ?string,
+	 *   4?: 'asc'|'desc',
+	 * }>
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'crontrol_hook' => array( 'crontrol_hook', true ),
-			'crontrol_next' => array( 'crontrol_next', false ),
+			'crontrol_hook' => array( 'crontrol_hook', false ),
+			'crontrol_next' => array( 'crontrol_next', false, null, null, 'asc' ),
+			'crontrol_recurrence' => array( 'crontrol_recurrence', false ),
 		);
 	}
 
