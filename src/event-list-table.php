@@ -429,9 +429,24 @@ class Table extends \WP_List_Table {
 					'crontrol_id'     => rawurlencode( $event->hook ),
 				);
 				$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-				$link = wp_nonce_url( $link, "crontrol-delete-hook_{$event->hook}" );
+				$link = wp_nonce_url(
+					$link,
+					sprintf(
+						'crontrol-delete-hook_%1$s',
+						$event->hook
+					)
+				);
+				$text = sprintf(
+					/* translators: %s: The number of events with this hook */
+					__( 'Delete all events with this hook (%s)', 'wp-crontrol' ),
+					number_format_i18n( self::$count_by_hook[ $event->hook ] )
+				);
 
-				$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete all events with this hook', 'wp-crontrol' ) . '</a></span>';
+				$links[] = sprintf(
+					'<span class="delete"><a href="%1$s">%2$s</a></span>',
+					esc_url( $link ),
+					esc_html( $text )
+				);
 			}
 		}
 
