@@ -2049,11 +2049,24 @@ function enqueue_assets( $hook_suffix ) {
 		return;
 	}
 
-	$ver = (string) filemtime( plugin_dir_path( PLUGIN_FILE ) . 'css/wp-crontrol.css' );
-	wp_enqueue_style( 'wp-crontrol', plugin_dir_url( PLUGIN_FILE ) . 'css/wp-crontrol.css', array( 'dashicons' ), $ver );
-
-	$ver = (string) filemtime( plugin_dir_path( PLUGIN_FILE ) . 'js/wp-crontrol.js' );
-	wp_enqueue_script( 'wp-crontrol', plugin_dir_url( PLUGIN_FILE ) . 'js/wp-crontrol.js', array( 'jquery', 'wp-a11y' ), $ver, true );
+	wp_enqueue_style(
+		'wp-crontrol',
+		plugin_dir_url( PLUGIN_FILE ) . 'css/wp-crontrol.css',
+		array(
+			'dashicons',
+		),
+		WP_CRONTROL_VERSION
+	);
+	wp_enqueue_script(
+		'wp-crontrol',
+		plugin_dir_url( PLUGIN_FILE ) . 'js/wp-crontrol.js',
+		array(
+			'jquery',
+			'wp-a11y',
+		),
+		WP_CRONTROL_VERSION,
+		true
+	);
 
 	$vars = array();
 

@@ -34,6 +34,7 @@
 namespace Crontrol;
 
 const PLUGIN_FILE = __FILE__;
+const WP_CRONTROL_VERSION = '1.15.3';
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
