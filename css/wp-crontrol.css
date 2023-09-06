@@ -58,10 +58,6 @@ table.wp-list-table {
 	display: none;
 }
 
-#crontrol-hash-message {
-	display: none;
-}
-
 .status-crontrol-warning,
 .wp-list-table tr.crontrol-no-action td.column-crontrol_status,
 .wp-list-table tr.crontrol-warning td.column-crontrol_status {

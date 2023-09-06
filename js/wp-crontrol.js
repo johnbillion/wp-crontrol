@@ -2,35 +2,6 @@
  * Functionality related to Crontrol.
  */
 
-let hashtimer = null;
-
-if ( window.wpCrontrol && window.wpCrontrol.eventsHash && window.wpCrontrol.eventsHashInterval ) {
-	hashtimer = setInterval( crontrolCheckHash, ( 1000 * window.wpCrontrol.eventsHashInterval ) );
-}
-
-function crontrolCheckHash() {
-	jQuery.ajax( {
-		url: window.ajaxurl,
-		type: 'post',
-		data: {
-			action: 'crontrol_checkhash',
-		},
-		dataType: 'json',
-	} ).done( function( response ) {
-		if ( response.success && response.data && response.data !== window.wpCrontrol.eventsHash ) {
-			jQuery( '#crontrol-hash-message' ).slideDown();
-
-			if ( wp && wp.a11y && wp.a11y.speak ) {
-				wp.a11y.speak( jQuery( '#crontrol-hash-message' ).text() );
-			}
-
-			if ( hashtimer ) {
-				clearInterval( hashtimer );
-			}
-		}
-	} );
-}
-
 jQuery(function($){
 	$('#crontrol_next_run_date_local_custom_date,#crontrol_next_run_date_local_custom_time').on('change', function() {
 		$('#crontrol_next_run_date_local_custom').prop('checked',true);

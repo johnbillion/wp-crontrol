@@ -23,7 +23,6 @@ function init_hooks() {
 	add_action( 'init',                               __NAMESPACE__ . '\action_init' );
 	add_action( 'init',                               __NAMESPACE__ . '\action_handle_posts' );
 	add_action( 'admin_menu',                         __NAMESPACE__ . '\action_admin_menu' );
-	add_action( 'wp_ajax_crontrol_checkhash',         __NAMESPACE__ . '\ajax_check_events_hash' );
 	add_filter( "plugin_action_links_{$plugin_file}", __NAMESPACE__ . '\plugin_action_links', 10, 4 );
 	add_filter( "network_admin_plugin_action_links_{$plugin_file}", __NAMESPACE__ . '\network_plugin_action_links' );
 	add_filter( 'removable_query_args',               __NAMESPACE__ . '\filter_removable_query_args' );
@@ -1068,25 +1067,6 @@ function maybe_clear_doing_cron( $pre ) {
 }
 
 /**
- * Ajax handler which outputs a hash of the current list of scheduled events.
- *
- * @return void
- */
-function ajax_check_events_hash() {
-	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_send_json_error( null, 403 );
-	}
-
-	$data = json_encode( Event\get() );
-
-	if ( false === $data ) {
-		wp_send_json_error( null, 500 );
-	}
-
-	wp_send_json_success( md5( $data ) );
-}
-
-/**
  * Gets the status of WP-Cron functionality on the site by performing a test spawn if necessary. Cached for one hour when all is well.
  *
  * @param bool $cache Whether to use the cached result from previous calls.
@@ -2054,14 +2034,6 @@ function interval( $since ) {
 function setup_manage_page() {
 	// Initialise the list table
 	Event\get_list_table();
-
-	// Add the initially hidden admin notice about the out of date events list
-	add_action( 'admin_notices', function() {
-		printf(
-			'<div id="crontrol-hash-message" class="notice notice-info"><p>%s</p></div>',
-			esc_html__( 'The scheduled cron events have changed since you first opened this page. Reload the page to see the up to date list.', 'wp-crontrol' )
-		);
-	} );
 }
 
 /**
@@ -2084,15 +2056,6 @@ function enqueue_assets( $hook_suffix ) {
 	wp_enqueue_script( 'wp-crontrol', plugin_dir_url( PLUGIN_FILE ) . 'js/wp-crontrol.js', array( 'jquery', 'wp-a11y' ), $ver, true );
 
 	$vars = array();
-
-	if ( ! empty( $tab['events'] ) ) {
-		$data = json_encode( Event\get() );
-
-		if ( false !== $data ) {
-			$vars['eventsHash'] = md5( $data );
-			$vars['eventsHashInterval'] = 20;
-		}
-	}
 
 	if ( ! empty( $tab['add-event'] ) || ! empty( $tab['edit-event'] ) ) {
 		if ( function_exists( 'wp_enqueue_code_editor' ) && current_user_can( 'edit_files' ) ) {
