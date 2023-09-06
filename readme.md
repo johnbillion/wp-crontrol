@@ -5,7 +5,7 @@ Tags: cron, wp-cron, crontrol, debug
 Requires at least: 4.4  
 Tested up to: 6.3  
 Stable tag: 1.15.3  
-Requires PHP: 5.6  
+Requires PHP: 7.4  
 Donate link: https://github.com/sponsors/johnbillion
 
 WP Crontrol enables you to view and control what's happening in the WP-Cron system.

@@ -8,7 +8,7 @@
  * Version:      1.15.3
  * Text Domain:  wp-crontrol
  * Domain Path:  /languages/
- * Requires PHP: 5.6
+ * Requires PHP: 7.4
  * License:      GPL v2 or later
  *
  * LICENSE
@@ -40,7 +40,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! version_compare( PHP_VERSION, '5.6', '>=' ) ) {
+if ( ! version_compare( PHP_VERSION, '7.4', '>=' ) ) {
 	return;
 }
 

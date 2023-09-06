@@ -22,8 +22,6 @@ jobs:
       with:
         php-version: 8.0
         coverage: none
-        # Pin Composer to 2.2 while we still support PHP 5.6:
-        tools: composer:2.2
         ini-file: development
       env:
         fail-fast: true

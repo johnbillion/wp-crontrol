@@ -41,7 +41,7 @@
 		"wp-coding-standards/wpcs": "2.3.0"
 	},
 	"require": {
-		"php": ">=5.6",
+		"php": ">=7.4",
 		"composer/installers": "^1.0 || ^2.0"
 	},
 	"autoload": {
@@ -54,8 +54,8 @@
 	},
 	"scripts": {
 		"test:cs": [
-			"phpcs -nps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs --basepath=./ --standard=phpcs53.xml",
-			"phpcs -nps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs --basepath=./ ."
+			"phpcs -nps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs56.json --basepath=./ --standard=phpcs56.xml",
+			"phpcs -nps --colors --report-code --report-summary --report-width=80 --cache=tests/cache/phpcs.json --basepath=./ ."
 		],
 		"test:cs2pr": [
 			"phpcs -nsq --report=checkstyle --cache=tests/cache/phpcs . | cs2pr"
