@@ -512,25 +512,17 @@ function uasort_order_events( $a, $b ) {
 			}
 			break;
 		case 'crontrol_recurrence':
-			if ( ( $a->interval ?? 0 ) === ( $b->interval ?? 0 ) ) {
-				$compare = 0;
+			if ( 'asc' === $order ) {
+				$compare = ( $a->interval ?? 0 ) <=> ( $b->interval ?? 0 );
 			} else {
-				if ( 'asc' === $order ) {
-					$compare = ( ( $a->interval ?? 0 ) > ( $b->interval ?? 0 ) ) ? 1 : -1;
-				} else {
-					$compare = ( ( $a->interval ?? 0 ) < ( $b->interval ?? 0 ) ) ? 1 : -1;
-				}
+				$compare = ( $b->interval ?? 0 ) <=> ( $a->interval ?? 0 );
 			}
 			break;
 		default:
-			if ( $a->timestamp === $b->timestamp ) {
-				$compare = 0;
+			if ( 'asc' === $order ) {
+				$compare = $a->timestamp <=> $b->timestamp;
 			} else {
-				if ( 'asc' === $order ) {
-					$compare = ( $a->timestamp > $b->timestamp ) ? 1 : -1;
-				} else {
-					$compare = ( $a->timestamp < $b->timestamp ) ? 1 : -1;
-				}
+				$compare = $b->timestamp <=> $a->timestamp;
 			}
 			break;
 	}
