@@ -8,4 +8,4 @@ parameters:
 		- wp-crontrol.php
 		- src/
 	bootstrapFiles:
-		- tests/stubs.php
+		- tests/bootstrap.php
