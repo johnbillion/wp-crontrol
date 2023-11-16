@@ -8,6 +8,7 @@
  * Version:      1.16.0
  * Text Domain:  wp-crontrol
  * Domain Path:  /languages/
+ * Requires at least: 5.6
  * Requires PHP: 7.4
  * License:      GPL v2 or later
  *
