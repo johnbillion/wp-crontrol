@@ -3,7 +3,7 @@
 Contributors: johnbillion, scompt  
 Tags: cron, wp-cron, crontrol, debug  
 Tested up to: 6.4  
-Stable tag: 1.16.0  
+Stable tag: 1.16.1  
 Donate link: https://github.com/sponsors/johnbillion
 
 WP Crontrol enables you to view and control what's happening in the WP-Cron system.
