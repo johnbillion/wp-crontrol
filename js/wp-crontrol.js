@@ -1,5 +1,5 @@
 /**
- * Functionality related to Crontrol.
+ * Functionality related to WP Crontrol.
  */
 
 jQuery(function($){
