@@ -2060,10 +2060,7 @@ function enqueue_assets( $hook_suffix ) {
 	wp_enqueue_script(
 		'wp-crontrol',
 		plugin_dir_url( PLUGIN_FILE ) . 'js/wp-crontrol.js',
-		array(
-			'jquery',
-			'wp-a11y',
-		),
+		array(),
 		WP_CRONTROL_VERSION,
 		true
 	);
