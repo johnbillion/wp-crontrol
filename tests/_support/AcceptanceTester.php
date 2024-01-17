@@ -84,6 +84,15 @@ class AcceptanceTester extends \Codeception\Actor {
 	}
 
 	/**
+	 * Go to the cron schedule listing page in the admininstration area of the site.
+	 *
+	 * @return string The admin page path.
+	 */
+	public function amOnCronScheduleListingPage() {
+		return $this->amOnAdminPage( 'options-general.php?page=crontrol_admin_options_page' );
+	}
+
+	/**
 	 * Create a cron event to work with.
 	 *
 	 * @param string $hook_name The event hook name.
