@@ -3,10 +3,15 @@ includes:
 	- vendor/johnbillion/plugin-infrastructure/phpstan/extension.neon
 parameters:
 	level: 8
-	tmpDir: tests/cache
-	inferPrivatePropertyTypeFromConstructor: true
 	paths:
 		- wp-crontrol.php
 		- src/
+		# - tests/acceptance
+	scanDirectories:
+		- tests/_support/
+		- vendor/lucatume/wp-browser/src/includes/factory/
+	excludePaths:
+		analyse:
+			- tests/integration/Supports/
 	bootstrapFiles:
-		- tests/stubs.php
+		- tests/phpstan/stubs.php
