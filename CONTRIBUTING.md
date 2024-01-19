@@ -2,13 +2,6 @@
 
 Bug reports, code contributions, and general feedback are very welcome. These should be submitted through [the GitHub repository](https://github.com/johnbillion/wp-crontrol). Development happens in the `develop` branch, and any pull requests should be made against that branch please.
 
-* [Reviews on WordPress.org](#reviews-on-wordpressorg)
-* [Reporting Security Issues](#reporting-security-issues)
-* [Inclusivity and Code of Conduct](#inclusivity-and-code-of-conduct)
-* [Setting up Locally](#setting-up-locally)
-* [Running the Tests](#running-the-tests)
-* [Releasing a New Version](#releasing-a-new-version)
-
 ## Reviews on WordPress.org
 
 If you enjoy using WP Crontrol I would greatly appreciate it <a href="https://wordpress.org/support/plugin/wp-crontrol/reviews/">if you left a positive review on the WordPress.org Plugin Directory</a>. This is the fastest and easiest way to contribute to WP Crontrol 😄.
@@ -25,7 +18,7 @@ This project is released with <a href="https://github.com/johnbillion/wp-crontro
 
 ## Setting up Locally
 
-You can clone this repo into your `wp-content/plugins` directory but you'll need to install the development dependencies before activating the plugin.
+You can clone this repo and activate it like a normal WordPress plugin. If you want to contribute to WP Crontrol, you should install the developer dependencies in order to run the tests.
 
 ### Prerequisites
 
@@ -41,30 +34,22 @@ Install the PHP dependencies:
 
 ## Running the Tests
 
-The test suite includes acceptance tests which run in a Docker container. Ensure Docker Desktop is running before running the tests.
-
-To run the whole test suite which includes PHPCS code sniffs, PHPStan static analysis, and WPBrowser acceptance tests:
-
-	composer test
-
-To run just the code sniffs:
-
-	composer test:cs
-
-To run just the static analysis:
-
-	composer test:phpstan
-
-To run just the acceptance tests:
-
-	composer test:acceptance
-
-If you're repeatedly running the tests during development, to speed things up you can start and stop the containers manually and then they won't be started and stopped each time you run the tests:
+The test suite includes acceptance tests which run in a Docker container. Ensure Docker Desktop is running, then start the containers with:
 
 	composer test:start
+
+To run the whole test suite which includes acceptance tests, linting, and static analysis:
+
 	composer test
-	composer test
-	composer test
+
+To run tests individually, run one of:
+
+	composer test:acceptance
+	composer test:phpcs
+	composer test:phpstan
+
+To stop the Docker containers:
+
 	composer test:stop
 
 ## Releasing a New Version
