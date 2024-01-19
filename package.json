@@ -8,9 +8,7 @@
 	"repository": "johnbillion/wp-crontrol",
 	"homepage": "https://github.com/johnbillion/wp-crontrol",
 	"devDependencies": {
-		"@actions/github": "^2",
-		"replace-in-file": "^5",
-		"semver": "^7",
+		"plugin-infrastructure": "file:vendor/johnbillion/plugin-infrastructure",
 		"version-bump-prompt": "^6.1.0"
 	},
 	"scripts": {
