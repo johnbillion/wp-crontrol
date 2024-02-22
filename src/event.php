@@ -150,6 +150,14 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 
 	if ( 'crontrol_cron_job' === $hook && ! empty( $args['code'] ) && class_exists( '\ParseError' ) ) {
 		try {
+			/**
+			 * The call to `eval()` below checks the syntax of the PHP code provided in the cron event. This is done to
+			 * add a flag to a cron event that contains invalid PHP code, so that the user can be informed of the syntax
+			 * error when viewing the event in the list table.
+			 *
+			 * Security: The code is not executed due to the early return statement that precedes it. The code is only
+			 * checked for syntax correctness.
+			 */
 			// phpcs:ignore Squiz.PHP.Eval.Discouraged
 			eval( sprintf(
 				'return true; %s',
