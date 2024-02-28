@@ -171,6 +171,10 @@ The cron commands which were previously included in WP Crontrol are now part of 
 
 [You can read all about what happens when you deactivate the plugin on the WP Crontrol wiki](https://github.com/johnbillion/wp-crontrol/wiki/What-happens-when-I-deactivate-the-WP-Crontrol-plugin%3F).
 
+### How can I report a security bug?
+
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage, and handle any security vulnerabilities. [Report a security vulnerability here](https://patchstack.com/database/vdp/wp-crontrol).
+
 ### Who took the photo in the plugin header image?
 
 The photo was taken by <a href="https://www.flickr.com/photos/michaelpardo/21453119315">Michael Pardo</a> and is in the public domain.
