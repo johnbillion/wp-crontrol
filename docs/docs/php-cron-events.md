@@ -18,7 +18,7 @@ If you wish to prevent PHP cron events from being added or edited on your site t
 
 ## How do I create a new PHP cron event?
 
-In the Tools → Cron Events admin panel, click on "Add New". In the form that appears, select "PHP cron event" and enter the schedule and next run time. In the "PHP Code" area, enter the PHP code that should be run when your cron event is executed. Don't include the PHP opening tag (`<?php`).
+In the Tools → Cron Events admin panel, click on "Add New". In the form that appears, select the "Execute PHP" option under the "Event Type" list and enter the schedule and next run time. In the "Hook code" area, enter the PHP code that should be run when your cron event is executed. Don't include the PHP opening tag (`<?php`).
 
 ## Can I "lock" PHP cron events so that other users cannot edit them?
 
@@ -28,11 +28,7 @@ If you need to edit the event in the future, you can temporarily remove the rele
 
 ## How can I create a cron event that requests a URL?
 
-From the Tools → Cron Events → Add New screen, create a PHP cron event that includes PHP that fetches the URL using the WordPress HTTP API. For example:
-
-```php
-wp_remote_get( 'http://example.com' );
-```
+You don't need to use a PHP cron event for this. From the Tools → Cron Events → Add New screen, select the "Request a URL" option under the "Event Type" list. Fill out the rest of the details as required and press the "Add Event" button.
 
 ## Can the code in PHP cron events be tampered with?
 

@@ -27,12 +27,33 @@ class AddEventCest {
 		$I->seeAdminSuccessNotice( 'Created the cron event my_hookname.' );
 	}
 
+	public function AddingANewURLEvent( AcceptanceTester $I ) {
+		$I->amOnCronEventListingPage();
+		$I->click( 'Add New', '#wpbody' );
+		$I->dontSee( 'PHP Code' );
+		$I->dontSee( 'URL' );
+		$I->dontSee( 'HTTP Method' );
+		$I->selectOption( 'input[name="crontrol_action"]', 'Request a URL' );
+		$I->dontSee( 'PHP Code' );
+		$I->see( 'URL' );
+		$I->see( 'HTTP Method' );
+		$I->fillField( 'URL', 'https://example.org/' );
+		$I->click( 'Add Event' );
+		$I->see( 'Cron Events', 'h1' );
+		$I->seeAdminSuccessNotice( 'Created the cron event URL Cron.' );
+		$I->see( 'https://example.org/' );
+	}
+
 	public function AddingANewPHPEvent( AcceptanceTester $I ) {
 		$I->amOnCronEventListingPage();
 		$I->click( 'Add New Cron Event', '#wpbody' );
 		$I->dontSee( 'PHP Code' );
-		$I->selectOption( 'input[name="crontrol_action"]', 'PHP cron event' );
+		$I->dontSee( 'URL' );
+		$I->dontSee( 'HTTP Method' );
+		$I->selectOption( 'input[name="crontrol_action"]', 'Execute PHP' );
 		$I->see( 'PHP Code' );
+		$I->dontSee( 'URL' );
+		$I->dontSee( 'HTTP Method' );
 		$I->fillPHPEditorField( 'amazing();' );
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );

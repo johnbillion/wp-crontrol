@@ -93,13 +93,7 @@ You can change the time and recurrence of a cron event by clicking the "Edit" li
 
 ### How can I create a cron event that requests a URL?
 
-From the Tools → Cron Events → Add New screen, create a PHP cron event that includes PHP that fetches the URL using the WordPress HTTP API. For example:
-
-~~~php
-wp_remote_get( 'http://example.com' );
-~~~
-
-[You can read all about the features and security of PHP cron events on the WP Crontrol website](https://wp-crontrol.com/docs/php-cron-events/).
+From the Tools → Cron Events → Add New screen, select the "Request a URL" option under the "Event Type" list. Fill out the rest of the details as required and press the "Add Event" button.
 
 ### Why do changes that I make to some cron events not get saved?
 

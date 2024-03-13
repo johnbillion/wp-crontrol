@@ -96,7 +96,11 @@ table.wp-list-table {
 	width: 100px;
 }
 
+.crontrol-edit-event-url .crontrol-event-standard,
+.crontrol-edit-event-url .crontrol-event-php,
+.crontrol-edit-event-standard .crontrol-event-url,
 .crontrol-edit-event-standard .crontrol-event-php,
+.crontrol-edit-event-php .crontrol-event-url,
 .crontrol-edit-event-php .crontrol-event-standard {
 	display: none;
 }

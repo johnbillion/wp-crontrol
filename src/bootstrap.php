@@ -8,6 +8,7 @@ namespace Crontrol;
 use Crontrol\Event\Table;
 use stdClass;
 use WP_Error;
+use Exception;
 
 use function Crontrol\Event\check_integrity;
 
@@ -35,6 +36,7 @@ function init_hooks() {
 
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
+	add_action( 'crontrol_url_cron_job', __NAMESPACE__ . '\action_url_cron_event', 10, 2 );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_assets' );
 	add_action( 'crontrol/tab-header',   __NAMESPACE__ . '\show_cron_status', 20 );
 	add_action( 'activated_plugin',      __NAMESPACE__ . '\flush_status_cache', 10, 0 );
@@ -188,6 +190,64 @@ function action_handle_posts() {
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 
+	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'new_url_cron' === $_POST['crontrol_action'] ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ), 401 );
+		}
+		check_admin_referer( 'crontrol-new-cron' );
+
+		$cr = $request->init( wp_unslash( $_POST ) );
+
+		if ( 'crontrol_cron_job' === $cr->hookname ) {
+			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
+		}
+
+		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
+		$args           = array(
+			'url' => $cr->url,
+			'method' => $cr->method,
+		);
+
+		add_filter( 'schedule_event', function( $event ) {
+			if ( ! $event ) {
+				return $event;
+			}
+
+			/**
+			 * Fires after a new URL cron event is added.
+			 *
+			 * @param stdClass $event {
+			 *     An object containing the event's data.
+			 *
+			 *     @type string       $hook      Action hook to execute when the event is run.
+			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
+			 *     @type string|false $schedule  How often the event should subsequently recur.
+			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
+			 * }
+			 */
+			do_action( 'crontrol/added_new_url_event', $event );
+
+			return $event;
+		}, 99 );
+
+		$added = Event\add( $next_run_local, $cr->schedule, 'crontrol_url_cron_job', $args );
+
+		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'URL Cron', 'wp-crontrol' );
+		$redirect = array(
+			'page'             => 'crontrol_admin_manage_page',
+			'crontrol_message' => '5',
+			'crontrol_name'    => rawurlencode( $hookname ),
+		);
+
+		if ( is_wp_error( $added ) ) {
+			set_message( $added->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
+		}
+
+		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+		exit;
+
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'new_php_cron' === $_POST['crontrol_action'] ) ) {
 		if ( ! current_user_can( 'edit_files' ) ) {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
@@ -329,6 +389,93 @@ function action_handle_posts() {
 		}, 99 );
 
 		$added = Event\add( $next_run_local, $cr->schedule, $cr->hookname, $args );
+
+		if ( is_wp_error( $added ) ) {
+			set_message( $added->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
+		}
+
+		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+		exit;
+
+	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'edit_url_cron' === $_POST['crontrol_action'] ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ), 401 );
+		}
+
+		$cr = $request->init( wp_unslash( $_POST ) );
+
+		check_admin_referer( "crontrol-edit-cron_{$cr->original_hookname}_{$cr->original_sig}_{$cr->original_next_run_utc}" );
+
+		$args = array(
+			'url' => $cr->url,
+			'method' => $cr->method,
+		);
+		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'URL Cron', 'wp-crontrol' );
+		$redirect = array(
+			'page'             => 'crontrol_admin_manage_page',
+			'crontrol_message' => '4',
+			'crontrol_name'    => rawurlencode( $hookname ),
+		);
+
+		$original = Event\get_single( $cr->original_hookname, $cr->original_sig, $cr->original_next_run_utc );
+
+		if ( is_wp_error( $original ) ) {
+			set_message( $original->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			exit;
+		}
+
+		$deleted = Event\delete( $cr->original_hookname, $cr->original_sig, $cr->original_next_run_utc );
+
+		if ( is_wp_error( $deleted ) ) {
+			set_message( $deleted->get_error_message() );
+			$redirect['crontrol_message'] = 'error';
+			wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+			exit;
+		}
+
+		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
+
+		/**
+		 * Modifies an event before it is scheduled.
+		 *
+		 * @param stdClass|false $event An object containing the new event's data, or boolean false.
+		 */
+		add_filter( 'schedule_event', function( $event ) use ( $original ) {
+			if ( ! $event ) {
+				return $event;
+			}
+
+			/**
+			 * Fires after a URL cron event is edited.
+			 *
+			 * @param stdClass $event {
+			 *     An object containing the new event's data.
+			 *
+			 *     @type string       $hook      Action hook to execute when the event is run.
+			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
+			 *     @type string|false $schedule  How often the event should subsequently recur.
+			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
+			 * }
+			 * @param stdClass $original {
+			 *     An object containing the original event's data.
+			 *
+			 *     @type string       $hook      Action hook to execute when the event is run.
+			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
+			 *     @type string|false $schedule  How often the event should subsequently recur.
+			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
+			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
+			 * }
+			 */
+			do_action( 'crontrol/edited_url_event', $event, $original );
+
+			return $event;
+		}, 99 );
+
+		$added = Event\add( $next_run_local, $cr->schedule, 'crontrol_url_cron_job', $args );
 
 		if ( is_wp_error( $added ) ) {
 			set_message( $added->get_error_message() );
@@ -1342,6 +1489,7 @@ function show_cron_form( $editing ) {
 	}
 
 	$is_editing_php = ( $existing && 'crontrol_cron_job' === $existing['hookname'] );
+	$is_editing_url = ( $existing && 'crontrol_url_cron_job' === $existing['hookname'] );
 
 	if ( $is_editing_php ) {
 		$helper_text = esc_html__( 'Cron events trigger actions in your code. Enter the schedule of the event, as well as the PHP code to execute when the action is triggered.', 'wp-crontrol' );
@@ -1424,8 +1572,16 @@ function show_cron_form( $editing ) {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				$helper_text
 			);
+
+			if ( $is_editing_php ) {
+				$cron_type = 'php';
+			} elseif ( $is_editing_url ) {
+				$cron_type = 'url';
+			} else {
+				$cron_type = 'standard';
+			}
 			?>
-		<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ); ?>" class="crontrol-edit-event crontrol-edit-event-<?php echo ( $is_editing_php ) ? 'php' : 'standard'; ?>">
+		<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ); ?>" class="crontrol-edit-event crontrol-edit-event-<?php echo esc_attr( $cron_type ); ?>">
 			<?php
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo $other_fields;
@@ -1433,12 +1589,19 @@ function show_cron_form( $editing ) {
 			<table class="form-table"><tbody>
 				<?php
 				if ( $editing ) {
-					$action = $is_editing_php ? 'edit_php_cron' : 'edit_cron';
+					if ( $is_editing_php ) {
+						$action = 'edit_php_cron';
+					} elseif ( $is_editing_url ) {
+						$action = 'edit_url_cron';
+					} else {
+						$action = 'edit_cron';
+					}
+
 					printf(
 						'<input type="hidden" name="crontrol_action" value="%s"/>',
 						esc_attr( $action )
 					);
-				} elseif ( $can_add_php ) {
+				} else {
 					?>
 					<tr class="hide-if-no-js">
 						<th scope="row">
@@ -1457,6 +1620,12 @@ function show_cron_form( $editing ) {
 								</p>
 								<p>
 									<label>
+										<input type="radio" name="crontrol_action" value="new_url_cron">
+										<?php esc_html_e( 'Request a URL', 'wp-crontrol' ); ?>
+									</label>
+								</p>
+								<p>
+									<label>
 										<input type="radio" name="crontrol_action" value="new_php_cron">
 										<?php esc_html_e( 'PHP cron event', 'wp-crontrol' ); ?>
 									</label>
@@ -1465,11 +1634,51 @@ function show_cron_form( $editing ) {
 						</td>
 					</tr>
 					<?php
-				} else {
-					?>
-					<input type="hidden" name="crontrol_action" value="new_cron"/>
-					<?php
 				}
+
+				?>
+				<tr class="crontrol-event-url">
+					<th valign="top" scope="row">
+						<label for="crontrol_url">
+							<?php esc_html_e( 'URL', 'wp-crontrol' ); ?>
+						</label>
+					</th>
+					<td>
+						<input type="url" class="regular-text code" id="crontrol_url" name="crontrol_url" value="<?php echo esc_url( $editing ? $existing['args']['url'] : '' ); ?>" required />
+						<?php do_action( 'crontrol/manage/url', $existing ); ?>
+					</td>
+				</tr>
+				<tr class="crontrol-event-url">
+					<th valign="top" scope="row">
+						<?php esc_html_e( 'HTTP Method', 'wp-crontrol' ); ?>
+					</th>
+					<td>
+						<p>
+							<label>
+								<input type="radio" name="crontrol_method" value="GET" checked>
+								GET
+							</label>
+						</p>
+						<p>
+							<label>
+								<input type="radio" name="crontrol_method" value="POST" <?php checked( $is_editing_url && 'POST' === $existing['args']['method'] ); ?>>
+								POST
+							</label>
+						</p>
+					</td>
+				</tr>
+				<tr class="crontrol-event-url">
+					<th valign="top" scope="row">
+						<label for="crontrol_eventname">
+							<?php esc_html_e( 'Event Name (optional)', 'wp-crontrol' ); ?>
+						</label>
+					</th>
+					<td>
+						<input type="text" class="regular-text" id="crontrol_eventname" name="crontrol_eventname" value="<?php echo esc_attr( $editing ? $existing['args']['name'] : '' ); ?>"/>
+						<?php do_action( 'crontrol/manage/eventname', $existing ); ?>
+					</td>
+				</tr>
+				<?php
 
 				if ( $is_editing_php || $can_add_php ) {
 					?>
@@ -1517,7 +1726,7 @@ function show_cron_form( $editing ) {
 					<?php
 				}
 
-				if ( ! $is_editing_php ) {
+				if ( ! $is_editing_url && ! $is_editing_php ) {
 					?>
 					<tr class="crontrol-event-standard">
 						<th scope="row">
@@ -2247,6 +2456,42 @@ function json_output( $input, $pretty = true ) {
 	}
 
 	return $output;
+}
+
+/**
+ * Fetches the URL in a cron event using the HTTP API.
+ *
+ * @throws Exception If the request fails.
+ *
+ * @param string $url    The URL to fetch.
+ * @param string $method The HTTP method to use.
+ */
+function action_url_cron_event( $url, $method ): void {
+	$args = array(
+		'timeout' => 30,
+		'method'  => $method,
+	);
+	$response = wp_remote_request( $url, $args );
+
+	if ( is_wp_error( $response ) ) {
+		throw new Exception( sprintf(
+			'WP Crontrol: Failed to fetch URL %s: %s',
+			$url,
+			$response->get_error_message()
+		) );
+	}
+
+	$code = wp_remote_retrieve_response_code( $response );
+	$message = wp_remote_retrieve_response_message( $response );
+
+	if ( $code < 200 || $code >= 300 ) {
+		throw new Exception( sprintf(
+			'WP Crontrol: Unexpected response code for URL %s: HTTP %s %s',
+			$url,
+			$code,
+			$message
+		) );
+	}
 }
 
 /**
