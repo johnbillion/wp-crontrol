@@ -9,6 +9,10 @@ WP Crontrol enables you to view and control what’s happening in the WP-Cron sy
 * Add and remove custom cron schedules.
 * Export and download cron event lists as a CSV file.
 
+## Installation
+
+Install and activate WP Crontrol as you would any other WordPress plugin. [You can download it here on WordPress.org](https://wordpress.org/plugins/wp-crontrol/).
+
 ## Manage cron events
 
 Go to the Tools → Cron Events menu to manage cron events.
