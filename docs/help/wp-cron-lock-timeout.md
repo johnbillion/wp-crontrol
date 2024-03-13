@@ -14,6 +14,6 @@ You may not need to fix anything, but you should remain aware of the potential l
 
 ## How do I fix this?
 
-Firstly, take a look at the [[Cron events that have missed their schedule]] page, there's lots of useful information on there.
+Firstly, take a look at the [Cron events that have missed their schedule](https://wp-crontrol.com/help/missed-cron-events/) page, there's lots of useful information on there.
 
 Secondly, you should either adjust the interval at which the cron events run so they run less frequently, or decrease the value of `WP_CRON_LOCK_TIMEOUT`. The effects of changing this constant are a bit beyond the scope of this document but I'll try to add some more info here in the future.

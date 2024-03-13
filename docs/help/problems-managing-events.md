@@ -12,4 +12,4 @@ If you try to add, delete, or edit a cron event and the changes aren't saved, th
 * Try again. Often the problem is sporadic and making the change a second time will work. For example this problem can occur if you make a change right at the time when a cron event is being run by WordPress.
 * Ensure the event is not scheduled within 10 minutes of another event with the same hook. If the event is not a recurring event, WordPress core will block this "duplicate" event and the error message may not indicate this.
 * Try deactivating any plugins that provide a persistent object cache, for example Redis or Memcached. This is not ideal of course, but it can help you get to the root of the problem.
-* Read through the [[Cron events that have missed their schedule]] page. Much of the information there applies to creating and editing events too.
+* Read through the [Cron events that have missed their schedule](https://wp-crontrol.com/help/missed-cron-events/) page. Much of the information there applies to creating and editing events too.

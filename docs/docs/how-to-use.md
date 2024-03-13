@@ -45,7 +45,7 @@ function my_function() {
 
 ## Add a new PHP cron event
 
-[[See here for full information about creating PHP cron events]].
+[See here for full information about creating PHP cron events](https://wp-crontrol.com/docs/php-cron-events).
 
 ## Pause cron events
 
