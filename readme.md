@@ -35,15 +35,11 @@ I maintain several other plugins for developers. Check them out:
 
 ### Privacy Statement
 
-WP Crontrol is private by default and always will be. It does not send data to any third party, nor does it include any third party resources.
-
-[WP Crontrol's full privacy statement can be found here](https://wp-crontrol.com/privacy).
+WP Crontrol is private by default and always will be. It does not send data to any third party, nor does it include any third party resources. [WP Crontrol's full privacy statement can be found here](https://wp-crontrol.com/privacy/).
 
 ### Accessibility Statement
 
-WP Crontrol aims to be fully accessible to all of its users. It implements best practices for web accessibility, outputs semantic and structured markup, adheres to the default styles and accessibility guidelines of WordPress, uses the accessibility APIs provided by WordPress and web browsers where appropriate, and is fully accessible via keyboard and via mobile devices.
-
-WP Crontrol should adhere to Web Content Accessibility Guidelines (WCAG) 2.0 at level AA when used with a recent version of WordPress where its admin area itself adheres to these guidelines. If you've experienced or identified an accessibility issue in WP Crontrol, please open a thread in [the WP Crontrol plugin support forum](https://wordpress.org/support/plugin/wp-crontrol/) and I'll address it swiftly.
+WP Crontrol aims to be fully accessible to all of its users. [WP Crontrol's full accessibility statement can be found here](https://wp-crontrol.com/accessibility/).
 
 ## Frequently Asked Questions
 

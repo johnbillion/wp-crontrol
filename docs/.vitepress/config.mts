@@ -21,6 +21,7 @@ export default defineConfig({
 		'help/:page.md': 'help/:page/index.md',
 		'docs/:page.md': 'docs/:page/index.md',
 		'privacy.md': 'privacy/index.md',
+		'accessibility.md': 'accessibility/index.md',
 	},
 	head: [
 		[
@@ -110,6 +111,10 @@ export default defineConfig({
 			{
 				text: 'Privacy statement',
 				link: '/privacy/',
+			},
+			{
+				text: 'Accessibility statement',
+				link: '/accessibility/',
 			},
 		],
 
