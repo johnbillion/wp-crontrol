@@ -10,6 +10,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	const customDateElement = document.getElementById( 'crontrol_next_run_date_local_custom_date' );
 	const customTimeElement = document.getElementById( 'crontrol_next_run_date_local_custom_time' );
 	const newCronElement = document.querySelector( 'input[value="new_cron"]' );
+	const newURLCronElement = document.querySelector( 'input[value="new_url_cron"]' );
 	const newPHPCronElement = document.querySelector( 'input[value="new_php_cron"]' );
 	const hookCodeElement = document.getElementById( 'crontrol_hookcode' );
 	const hookNameElement = document.getElementById( 'crontrol_hookname' );
@@ -18,14 +19,24 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	customDateElement && customDateElement.addEventListener( 'change', checkCustom );
 	customTimeElement && customTimeElement.addEventListener( 'change', checkCustom );
 
+	newCronElement.addEventListener( 'click', () => {
+		editEventElement.classList.remove( 'crontrol-edit-event-url' );
+		editEventElement.classList.remove( 'crontrol-edit-event-php' );
+		editEventElement.classList.add( 'crontrol-edit-event-standard' );
+		hookNameElement.setAttribute( 'required', true );
+	} );
+
+	newURLCronElement.addEventListener( 'click', () => {
+		editEventElement.classList.remove( 'crontrol-edit-event-standard' );
+		editEventElement.classList.remove( 'crontrol-edit-event-php' );
+		editEventElement.classList.add( 'crontrol-edit-event-url' );
+		hookNameElement.removeAttribute( 'required' );
+	} );
+
 	if ( newPHPCronElement ) {
-		newCronElement.addEventListener( 'click', () => {
-			editEventElement.classList.remove( 'crontrol-edit-event-php' );
-			editEventElement.classList.add( 'crontrol-edit-event-standard' );
-			hookNameElement.setAttribute( 'required', true );
-		} );
 		newPHPCronElement.addEventListener( 'click', () => {
 			editEventElement.classList.remove( 'crontrol-edit-event-standard' );
+			editEventElement.classList.remove( 'crontrol-edit-event-url' );
 			editEventElement.classList.add( 'crontrol-edit-event-php' );
 			hookNameElement.removeAttribute( 'required' );
 			if ( ! hookCodeElement.classList.contains( 'crontrol-editor-initialized' ) ) {
