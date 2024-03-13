@@ -6,7 +6,7 @@
 	"private": true,
 	"author": "John Blackbourn",
 	"repository": "johnbillion/wp-crontrol",
-	"homepage": "https://github.com/johnbillion/wp-crontrol",
+	"homepage": "https://wp-crontrol.com",
 	"engines": {
 		"node": ">=18"
 	},

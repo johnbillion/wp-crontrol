@@ -849,8 +849,8 @@ function admin_help_tab() {
 	$content .= '<li>';
 	$content .= sprintf(
 		/* translators: %s: URL to the documentation */
-		__( '<a href="%s">Read the WP Crontrol wiki</a> which contains information about events that have missed their schedule, problems with spawning a call to the WP-Cron system, and much more.', 'wp-crontrol' ),
-		'https://github.com/johnbillion/wp-crontrol/wiki'
+		__( '<a href="%s">Read the WP Crontrol website</a> which contains information about events that have missed their schedule, problems with spawning a call to the WP-Cron system, and much more.', 'wp-crontrol' ),
+		'https://wp-crontrol.com'
 	);
 	$content .= '</li>';
 	$content .= '<li>';
@@ -900,7 +900,7 @@ function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
 		),
 		'crontrol-help' => sprintf(
 			'<a href="%s">%s</a>',
-			'https://github.com/johnbillion/wp-crontrol/wiki',
+			'https://wp-crontrol.com',
 			esc_html__( 'Help', 'wp-crontrol' )
 		),
 	);
@@ -918,7 +918,7 @@ function network_plugin_action_links( $actions ) {
 	$new = array(
 		'crontrol-help' => sprintf(
 			'<a href="%s">%s</a>',
-			'https://github.com/johnbillion/wp-crontrol/wiki',
+			'https://wp-crontrol.com',
 			esc_html__( 'Help', 'wp-crontrol' )
 		),
 	);
@@ -1168,7 +1168,7 @@ function show_cron_status( $tab ) {
 					'<p>%1$s</p><p><a href="%2$s">%3$s</a></p>',
 					/* translators: %s: Help page URL. */
 					esc_html__( 'PHP default timezone is not set to UTC. This may cause issues with cron event timings.', 'wp-crontrol' ),
-					'https://github.com/johnbillion/wp-crontrol/wiki/PHP-default-timezone-is-not-set-to-UTC',
+					'https://wp-crontrol.com/help/php-default-timezone/',
 					esc_html__( 'More information', 'wp-crontrol' )
 				);
 			?>
@@ -1196,7 +1196,7 @@ function show_cron_status( $tab ) {
 						esc_html__( 'There was a problem spawning a call to the WP-Cron system on your site. This means WP-Cron events on your site may not work. The problem was: %s', 'wp-crontrol' ),
 						'</p><p><strong>' . esc_html( $status->get_error_message() ) . '</strong>'
 					),
-					'https://github.com/johnbillion/wp-crontrol/wiki/Problems-with-spawning-a-call-to-the-WP-Cron-system',
+					'https://wp-crontrol.com/help/problems-spawning-wp-cron/',
 					esc_html__( 'More information', 'wp-crontrol' )
 				);
 				?>

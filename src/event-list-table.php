@@ -98,7 +98,7 @@ class Table extends \WP_List_Table {
 					'<div id="crontrol-late-message" class="notice notice-warning"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
 					/* translators: %s: Help page URL. */
 					esc_html__( 'One or more cron events have missed their schedule.', 'wp-crontrol' ),
-					'https://github.com/johnbillion/wp-crontrol/wiki/Cron-events-that-have-missed-their-schedule',
+					'https://wp-crontrol.com/help/missed-cron-events/',
 					esc_html__( 'More information', 'wp-crontrol' )
 				);
 			} );
