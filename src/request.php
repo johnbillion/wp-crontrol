@@ -71,6 +71,20 @@ class Request {
 	 *
 	 * @var string
 	 */
+	public $url = '';
+
+	/**
+	 * Description.
+	 *
+	 * @var string
+	 */
+	public $method = '';
+
+	/**
+	 * Description.
+	 *
+	 * @var string
+	 */
 	public $original_hookname = '';
 
 	/**

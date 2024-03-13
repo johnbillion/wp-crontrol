@@ -6,9 +6,9 @@ If you deactivate or delete the WP Crontrol plugin, your existing cron events wi
 
 Any cron hooks that you've paused through WP Crontrol will be resumed because the paused functionality is provided by WP Crontrol. If you reactivate WP Crontrol, they will become paused again.
 
-## PHP cron events
+## URL cron events and PHP cron events
 
-If you've created a PHP cron event with WP Crontrol, these events will remain in place after you deactivate WP Crontrol but they will _cease to operate_ because these events are processed by WP Crontrol. If you reactivate WP Crontrol, they will resume operating as normal.
+If you've created a URL cron event or PHP cron event with WP Crontrol, these events will remain in place after you deactivate WP Crontrol but they will _cease to operate_ because these events are processed by WP Crontrol. If you reactivate WP Crontrol, they will resume operating as normal.
 
 ## Custom schedules
 
