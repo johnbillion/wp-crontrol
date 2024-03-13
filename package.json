@@ -7,15 +7,23 @@
 	"author": "John Blackbourn",
 	"repository": "johnbillion/wp-crontrol",
 	"homepage": "https://github.com/johnbillion/wp-crontrol",
+	"engines": {
+		"node": ">=18"
+	},
 	"devDependencies": {
 		"@actions/github": "^2",
 		"replace-in-file": "^5",
 		"semver": "^7",
-		"version-bump-prompt": "^6.1.0"
+		"version-bump-prompt": "^6.1.0",
+		"vitepress-plugin-rss": "^0.2.0",
+		"vitepress": "1.0.0-rc.45"
 	},
 	"scripts": {
 		"bump:patch": "bump patch --commit 'Version %s.' wp-crontrol.php package.json readme.md",
 		"bump:minor": "bump minor --commit 'Version %s.' wp-crontrol.php package.json readme.md",
-		"bump:major": "bump major --commit 'Version %s.' wp-crontrol.php package.json readme.md"
+		"bump:major": "bump major --commit 'Version %s.' wp-crontrol.php package.json readme.md",
+		"docs:dev": "vitepress dev docs",
+		"docs:build": "vitepress build docs",
+		"docs:preview": "vitepress preview docs"
 	}
 }
