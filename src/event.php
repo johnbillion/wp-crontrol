@@ -502,24 +502,16 @@ function integrity_passed( stdClass $event ): bool {
  * @return bool
  */
 function check_integrity( $code, $stored_hash ): bool {
-	// If there's no code then the integrity check is ok.
-	if ( empty( $code ) ) {
-		return true;
-	}
 
-	// If there's no hash then the integrity check is not ok.
-	if ( empty( $stored_hash ) ) {
+	// If there's no code or hash then the integrity check is not ok.
+	if ( empty($code) || empty( $stored_hash ) ) {
 		return false;
 	}
 
-	$known_hash = wp_hash( $code );
+	$potentially_tampered_hash = wp_hash( $code );
 
 	// If the hashes match then the integrity check is ok.
-	if ( hash_equals( $known_hash, $stored_hash ) ) {
-		return true;
-	}
-
-	return false;
+	return hash_equals( $stored_hash, $potentially_tampered_hash );
 }
 
 /**
