@@ -641,6 +641,11 @@ function action_handle_posts() {
 		}
 
 		$hook = wp_unslash( $_GET['crontrol_id'] );
+
+		if ( 'crontrol_cron_job' === $hook ) {
+			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 401 );
+		}
+
 		check_admin_referer( "crontrol-pause-hook_{$hook}" );
 
 		$paused = Event\pause( $hook );
@@ -683,6 +688,11 @@ function action_handle_posts() {
 		}
 
 		$hook = wp_unslash( $_GET['crontrol_id'] );
+
+		if ( 'crontrol_cron_job' === $hook ) {
+			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 401 );
+		}
+
 		check_admin_referer( "crontrol-resume-hook_{$hook}" );
 
 		$resumed = Event\resume( $hook );
