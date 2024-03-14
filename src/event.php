@@ -480,6 +480,49 @@ function is_paused( stdClass $event ) {
 }
 
 /**
+ * Determines whether the integrity check of a PHP cron event is ok.
+ *
+ * @param stdClass $event The event.
+ * @return bool Whether the event integrity check is ok.
+ */
+function integrity_passed( stdClass $event ): bool {
+	// Only check PHP cron events.
+	if ( 'crontrol_cron_job' !== $event->hook ) {
+		return true;
+	}
+
+	return check_integrity( $event->args['code'] ?? null, $event->args['hash'] ?? null );
+}
+
+/**
+ * Checks the integrity of a code string compared to its stored hash.
+ *
+ * @param string|null $code        The code string.
+ * @param string|null $stored_hash The stored integrity hash of the code.
+ * @return bool
+ */
+function check_integrity( $code, $stored_hash ): bool {
+	// If there's no code then the integrity check is ok.
+	if ( empty( $code ) ) {
+		return true;
+	}
+
+	// If there's no hash then the integrity check is not ok.
+	if ( empty( $stored_hash ) ) {
+		return false;
+	}
+
+	$known_hash = wp_hash( $code );
+
+	// If the hashes match then the integrity check is ok.
+	if ( hash_equals( $known_hash, $stored_hash ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * Initialises and returns the list table for events.
  *
  * @return Table The list table.

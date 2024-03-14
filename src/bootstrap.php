@@ -9,6 +9,8 @@ use Crontrol\Event\Table;
 use stdClass;
 use WP_Error;
 
+use function Crontrol\Event\check_integrity;
+
 const TRANSIENT = 'crontrol-message-%d';
 const PAUSED_OPTION = 'wp_crontrol_paused';
 
@@ -32,7 +34,7 @@ function init_hooks() {
 	add_action( 'load-tools_page_crontrol_admin_manage_page', __NAMESPACE__ . '\setup_manage_page' );
 
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
-	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
+	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event', 10, 3 );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_assets' );
 	add_action( 'crontrol/tab-header',   __NAMESPACE__ . '\show_cron_status', 20 );
 	add_action( 'activated_plugin',      __NAMESPACE__ . '\flush_status_cache', 10, 0 );
@@ -198,6 +200,7 @@ function action_handle_posts() {
 		$args           = array(
 			'code' => $cr->hookcode,
 			'name' => $cr->eventname,
+			'hash' => wp_hash( $cr->hookcode ),
 		);
 
 		add_filter( 'schedule_event', function( $event ) {
@@ -343,6 +346,7 @@ function action_handle_posts() {
 		$args = array(
 			'code' => $cr->hookcode,
 			'name' => $cr->eventname,
+			'hash' => wp_hash( $cr->hookcode ),
 		);
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
@@ -2192,10 +2196,31 @@ function json_output( $input, $pretty = true ) {
  *
  * Therefore, the user access level required to execute arbitrary PHP code does not change with WP Crontrol activated.
  *
- * @param string $code The PHP code to evaluate.
+ * The PHP code that's saved in a PHP cron event is protected with an integrity check which prevents it from being executed
+ * if the code is tampered with. At the point where the PHP cron event gets saved, the PHP code is hashed and this hash is
+ * stored in the event args. Before the PHP code is executed, the hash is checked to ensure the integrity of the PHP code
+ * and confirm that it has not been tampered with. This prevents an attacker with database-level access from modifying the
+ * PHP in order to execute arbitrary code.
+ *
+ * @link https://wp-crontrol.com/docs/php-cron-events/
+ *
+ * @param string      $code        The PHP code to evaluate.
+ * @param string      $name        The name of the event, or an empty string if not set.
+ * @param string|null $stored_hash Optional. The stored integrity hash of the PHP code. Not present for events created prior to WP Crontrol 1.16.2.
  * @return void
  */
-function action_php_cron_event( $code ) {
+function action_php_cron_event( $code, $name, $stored_hash = null ) {
+	if ( empty( $stored_hash ) ) {
+		// @todo trigger warning
+		return;
+	}
+
+	// Check the integrity of the PHP code.
+	if ( ! check_integrity( $code, $stored_hash ) ) {
+		// @todo trigger warning
+		return;
+	}
+
 	// phpcs:ignore Squiz.PHP.Eval.Discouraged
 	eval( $code );
 }
