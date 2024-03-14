@@ -502,9 +502,8 @@ function integrity_passed( stdClass $event ): bool {
  * @return bool
  */
 function check_integrity( $code, $stored_hash ): bool {
-
 	// If there's no code or hash then the integrity check is not ok.
-	if ( empty($code) || empty( $stored_hash ) ) {
+	if ( empty( $code ) || empty( $stored_hash ) ) {
 		return false;
 	}
 
