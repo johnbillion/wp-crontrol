@@ -138,7 +138,7 @@ function action_handle_posts() {
 
 		$cr = $request->init( wp_unslash( $_POST ) );
 
-		if ( 'crontrol_cron_job' === $cr->hookname && ! current_user_can( 'edit_files' ) ) {
+		if ( 'crontrol_cron_job' === $cr->hookname ) {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 		$args = json_decode( $cr->args, true );
