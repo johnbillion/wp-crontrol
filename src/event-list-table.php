@@ -136,6 +136,10 @@ class Table extends \WP_List_Table {
 			return ( ! in_array( $event->hook, $all_core_hooks, true ) );
 		} );
 
+		$filtered['php'] = array_filter( $events, function( $event ) use ( $all_core_hooks ) {
+			return ( 'crontrol_cron_job' === $event->hook );
+		} );
+
 		$paused = array_filter( $events, function( $event ) {
 			return ( is_paused( $event ) );
 		} );
@@ -238,6 +242,7 @@ class Table extends \WP_List_Table {
 			'noaction' => __( 'Events with no action', 'wp-crontrol' ),
 			'core'     => __( 'WordPress core events', 'wp-crontrol' ),
 			'custom'   => __( 'Custom events', 'wp-crontrol' ),
+			'php'      => __( 'PHP events', 'wp-crontrol' ),
 			'paused'   => __( 'Paused events', 'wp-crontrol' ),
 		);
 
