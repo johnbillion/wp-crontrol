@@ -480,18 +480,18 @@ function is_paused( stdClass $event ) {
 }
 
 /**
- * Determines whether the integrity check of a PHP cron event is ok.
+ * Determines whether the integrity check of a PHP cron event has failed.
  *
  * @param stdClass $event The event.
- * @return bool Whether the event integrity check is ok.
+ * @return bool Whether the event integrity check has failed.
  */
-function integrity_passed( stdClass $event ): bool {
+function integrity_failed( stdClass $event ): bool {
 	// Only check PHP cron events.
 	if ( 'crontrol_cron_job' !== $event->hook ) {
-		return true;
+		return false;
 	}
 
-	return check_integrity( $event->args['code'] ?? null, $event->args['hash'] ?? null );
+	return ! check_integrity( $event->args['code'] ?? null, $event->args['hash'] ?? null );
 }
 
 /**
