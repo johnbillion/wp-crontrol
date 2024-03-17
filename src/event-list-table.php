@@ -382,7 +382,7 @@ class Table extends \WP_List_Table {
 			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a>';
 		}
 
-		if ( ! is_paused( $event ) ) {
+		if ( ! is_paused( $event ) && integrity_passed( $event ) ) {
 			$link = array(
 				'page'                  => 'crontrol_admin_manage_page',
 				'crontrol_action'       => 'run-cron',
