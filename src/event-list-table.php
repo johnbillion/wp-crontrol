@@ -90,7 +90,20 @@ class Table extends \WP_List_Table {
 
 		$this->items = array_slice( $events, $offset, $per_page );
 
+		$has_integrity_failures = (bool) array_filter( array_map( __NAMESPACE__ . '\\integrity_failed', $this->items ) );
 		$has_late = (bool) array_filter( array_map( __NAMESPACE__ . '\\is_late', $this->items ) );
+
+		if ( $has_integrity_failures ) {
+			add_action( 'admin_notices', function() {
+				printf(
+					'<div id="crontrol-integrity-failures-message" class="notice notice-error"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
+					/* translators: %s: Help page URL. */
+					esc_html__( 'The integrity of one or more of your PHP cron events needs to be checked.', 'wp-crontrol' ),
+					'https://wp-crontrol.com/docs/php-cron-events/',
+					esc_html__( 'More information', 'wp-crontrol' )
+				);
+			} );
+		}
 
 		if ( $has_late ) {
 			add_action( 'admin_notices', function() {
@@ -315,6 +328,10 @@ class Table extends \WP_List_Table {
 		$classes = array();
 
 		if ( ( 'crontrol_cron_job' === $event->hook ) && ! empty( $event->args['syntax_error_message'] ) ) {
+			$classes[] = 'crontrol-error';
+		}
+
+		if ( integrity_failed( $event ) ) {
 			$classes[] = 'crontrol-error';
 		}
 
