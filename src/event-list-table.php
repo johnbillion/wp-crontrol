@@ -149,7 +149,7 @@ class Table extends \WP_List_Table {
 			return ( ! in_array( $event->hook, $all_core_hooks, true ) );
 		} );
 
-		$filtered['php'] = array_filter( $events, function( $event ) use ( $all_core_hooks ) {
+		$filtered['php'] = array_filter( $events, function( $event ) {
 			return ( 'crontrol_cron_job' === $event->hook );
 		} );
 
