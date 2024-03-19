@@ -93,12 +93,12 @@ class Table extends \WP_List_Table {
 		$has_integrity_failures = (bool) array_filter( array_map( __NAMESPACE__ . '\\integrity_failed', $this->items ) );
 		$has_late = (bool) array_filter( array_map( __NAMESPACE__ . '\\is_late', $this->items ) );
 
-		if ( $has_integrity_failures ) {
+		if ( $has_integrity_failures && empty( $_GET['crontrol_action'] ) ) {
 			add_action( 'admin_notices', function() {
 				printf(
 					'<div id="crontrol-integrity-failures-message" class="notice notice-error"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
 					/* translators: %s: Help page URL. */
-					esc_html__( 'The integrity of one or more of your PHP cron events needs to be checked.', 'wp-crontrol' ),
+					esc_html__( 'One or more of your PHP cron events needs to be checked for integrity. These events will not run until you check and re-save them.', 'wp-crontrol' ),
 					'https://wp-crontrol.com/docs/php-cron-events/',
 					esc_html__( 'More information', 'wp-crontrol' )
 				);
@@ -396,7 +396,17 @@ class Table extends \WP_List_Table {
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 
-			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a>';
+			if ( integrity_failed( $event ) ) {
+				$label = __( 'Check and edit', 'wp-crontrol' );
+			} else {
+				$label = __( 'Edit', 'wp-crontrol' );
+			}
+
+			$links[] = sprintf(
+				'<a href="%1$s">%2$s</a>',
+				esc_url( $link ),
+				esc_html( $label )
+			);
 		}
 
 		if ( ! is_paused( $event ) && ! integrity_failed( $event ) ) {
@@ -528,10 +538,19 @@ class Table extends \WP_List_Table {
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			if ( ! empty( $event->args['name'] ) ) {
 				/* translators: 1: The name of the PHP cron event. */
-				return '<em>' . esc_html( sprintf( __( 'PHP Cron (%s)', 'wp-crontrol' ), $event->args['name'] ) ) . '</em>';
+				$output = esc_html( sprintf( __( 'PHP Cron (%s)', 'wp-crontrol' ), $event->args['name'] ) );
 			} else {
-				return '<em>' . esc_html__( 'PHP Cron', 'wp-crontrol' ) . '</em>';
+				$output = esc_html__( 'PHP Cron', 'wp-crontrol' );
 			}
+
+			if ( integrity_failed( $event ) ) {
+				$output .= sprintf(
+					' &mdash; <strong class="status-crontrol-check post-state"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</strong>',
+					esc_html__( 'Needs checking', 'wp-crontrol' )
+				);
+			}
+
+			return $output;
 		}
 
 		$output = esc_html( $event->hook );
@@ -606,7 +625,7 @@ class Table extends \WP_List_Table {
 		$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
 
 		if ( 'crontrol_cron_job' === $event->hook ) {
-			return '<em>' . esc_html__( 'WP Crontrol', 'wp-crontrol' ) . '</em>';
+			return esc_html__( 'WP Crontrol', 'wp-crontrol' );
 		} elseif ( ! empty( $hook_callbacks ) ) {
 			$callbacks = array();
 
