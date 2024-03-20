@@ -1392,6 +1392,17 @@ function show_cron_form( $editing ) {
 				'<h1>%s</h1>',
 				esc_html( $heading )
 			);
+
+			if ( $is_editing_php && ! check_integrity( $existing['args']['code'], $existing['args']['hash'] ?? null ) ) {
+				printf(
+					'<div id="crontrol-integrity-failures-message" class="notice notice-error"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
+					/* translators: %s: Help page URL. */
+					esc_html__( 'The PHP code in this event needs to be checked for integrity. This event will not run until you check and re-save it.', 'wp-crontrol' ),
+					'https://wp-crontrol.com/docs/php-cron-events/',
+					esc_html__( 'More information', 'wp-crontrol' )
+				);
+			}
+
 			printf(
 				'<p>%s</p>',
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
