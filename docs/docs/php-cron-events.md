@@ -38,13 +38,13 @@ wp_remote_get( 'http://example.com' );
 
 The PHP code that's saved in a PHP cron event is protected with an integrity check which prevents it from being executed if the code is tampered with.
 
-At the point where the PHP cron event gets saved, the PHP code is hashed and this hash is stored alongside the event. Before the PHP code gets executed when the event runs, the hash is checked to ensure the integrity of the PHP code and confirm that it has not been tampered with. WP Crontrol will not execute PHP that does not pass the integrity check, and will show you a message on the Cron Events listing screen in the admin area asking you to check the event.
+PHP cron events are secured via an integrity check that makes use of an HMAC to store a hash of the PHP code alongside the code when the event is saved. When the event runs, the hash is checked to ensure the integrity of the PHP code and confirm that it has not been tampered with. WP Crontrol will not execute the PHP code if the hashes do not match or if a stored hash is not present.
 
-This process prevents an attacker with database-level access from modifying the PHP code in order to execute arbitrary code.
+If an attacker with database-level access were to modify the PHP code in an event in an attempt to execute arbitrary code, the code would no longer execute.
 
 ## Why do I see "Needs checking" next to my PHP cron events?
 
-The integrity checking mechanism documented above was introduced in WP Crontrol 1.16.2 in March 2024. If you have PHP cron events stored on your site prior to updating to this version or later then you'll need to check and re-save your PHP cron events so the integrity hash can be generated and saved alongside the PHP code.
+The integrity checking mechanism documented above was introduced in WP Crontrol 1.16.2 in March 2024. If you have PHP cron events stored on your site prior to updating to this version or later then you'll need to check and re-save your PHP cron events so the hash can be generated and saved alongside the PHP code.
 
 Otherwise, if WP Crontrol is showing you a message saying your PHP cron events need to be checked, this could either mean there is a real problem caused by tampering of the PHP code in the events, or it could be caused by your security salts having been changed.
 
@@ -57,4 +57,4 @@ If the security salts in the `wp-config.php` file on your site have been changed
 
 Your security salts may also change if you move your site from one server to another and the salts in the `wp-config.php` file differ, or if you move your site from a staging environment to a production environment (or vice versa) and the salts differ.
 
-In all of these cases, you should edit the affected PHP cron events, make absolutely sure that the code remains as intended, and save it again. This will cause the integrity hash to be regenerated and saved alongside the PHP code, and the event will begin working as expected once again.
+In all of these cases, you should edit the affected PHP cron events, make absolutely sure that the code remains as intended, and save it again. This will cause the hash to be regenerated and saved alongside the PHP code, and the event will begin working as expected once again.

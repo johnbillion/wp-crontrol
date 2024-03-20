@@ -2218,16 +2218,21 @@ function json_output( $input, $pretty = true ) {
  * Therefore, the user access level required to execute arbitrary PHP code does not change with WP Crontrol activated.
  *
  * The PHP code that's saved in a PHP cron event is protected with an integrity check which prevents it from being executed
- * if the code is tampered with. At the point where the PHP cron event gets saved, the PHP code is hashed and this hash is
- * stored in the event args. Before the PHP code is executed, the hash is checked to ensure the integrity of the PHP code
- * and confirm that it has not been tampered with. This prevents an attacker with database-level access from modifying the
- * PHP in order to execute arbitrary code.
+ * if the code is tampered with.
+ *
+ * PHP cron events are secured via an integrity check that makes use of an HMAC to store a hash of the PHP code alongside
+ * the code when the event is saved. When the event runs, the hash is checked to ensure the integrity of the PHP code and
+ * confirm that it has not been tampered with. WP Crontrol will not execute the PHP code if the hashes do not match or if
+ * a stored hash is not present.
+ *
+ * If an attacker with database-level access were to modify the PHP code in an event in an attempt to execute arbitrary
+ * code, the code would no longer execute.
  *
  * @link https://wp-crontrol.com/docs/php-cron-events/
  *
  * @param string      $code        The PHP code to evaluate.
  * @param string      $name        The name of the event, or an empty string if not set.
- * @param string|null $stored_hash Optional. The stored integrity hash of the PHP code. Not present for events created prior to WP Crontrol 1.16.2.
+ * @param string|null $stored_hash Optional. The stored HMAC of the PHP code. Not present for events created prior to WP Crontrol 1.16.2.
  * @return void
  */
 function action_php_cron_event( $code, $name, $stored_hash = null ) {
