@@ -126,6 +126,7 @@ function force_schedule_single_event( $hook, $args = array() ) {
  * @param string  $schedule       The recurrence of the cron event.
  * @param string  $hook           The name of the hook to execute.
  * @param mixed[] $args           Arguments to add to the cron event.
+ * @phpstan-param list<mixed> $args
  * @return true|WP_error True if the addition was successful, WP_Error otherwise.
  */
 function add( $next_run_local, $schedule, $hook, array $args ) {
@@ -144,11 +145,7 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 
 	$next_run_utc = (int) get_gmt_from_date( gmdate( 'Y-m-d H:i:s', $next_run_local ), 'U' );
 
-	if ( ! is_array( $args ) ) {
-		$args = array();
-	}
-
-	if ( 'crontrol_cron_job' === $hook && ! empty( $args['code'] ) && class_exists( '\ParseError' ) ) {
+	if ( 'crontrol_cron_job' === $hook && ! empty( $args[0]['code'] ) && class_exists( '\ParseError' ) ) {
 		try {
 			/**
 			 * The call to `eval()` below checks the syntax of the PHP code provided in the cron event. This is done to
@@ -161,12 +158,12 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 			// phpcs:ignore Squiz.PHP.Eval.Discouraged
 			eval( sprintf(
 				'return true; %s',
-				$args['code']
+				$args[0]['code']
 			) );
 		// phpcs:ignore PHPCompatibility.Classes.NewClasses.parseerrorFound
 		} catch ( \ParseError $e ) {
-			$args['syntax_error_message'] = $e->getMessage();
-			$args['syntax_error_line']    = $e->getLine();
+			$args[0]['syntax_error_message'] = $e->getMessage();
+			$args[0]['syntax_error_line'] = $e->getLine();
 		}
 	}
 
@@ -491,7 +488,14 @@ function integrity_failed( stdClass $event ): bool {
 		return false;
 	}
 
-	return ! check_integrity( $event->args['code'] ?? null, $event->args['hash'] ?? null );
+	// This is a PHP cron event saved prior to WP Crontrol 1.16.2.
+	if ( isset( $event->args['code'] ) ) {
+		return true;
+	}
+
+	$args = $event->args[0] ?? array();
+
+	return ! check_integrity( $args['code'] ?? null, $args['hash'] ?? null );
 }
 
 /**

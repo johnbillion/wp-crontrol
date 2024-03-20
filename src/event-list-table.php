@@ -327,7 +327,7 @@ class Table extends \WP_List_Table {
 	public function single_row( $event ) {
 		$classes = array();
 
-		if ( ( 'crontrol_cron_job' === $event->hook ) && ! empty( $event->args['syntax_error_message'] ) ) {
+		if ( ( 'crontrol_cron_job' === $event->hook ) && isset( $event->args[0]['syntax_error_message'] ) ) {
 			$classes[] = 'crontrol-error';
 		}
 
@@ -576,19 +576,25 @@ class Table extends \WP_List_Table {
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			$return = '<em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em>';
 
-			if ( ! empty( $event->args['syntax_error_message'] ) ) {
+			if ( isset( $event->args['code'] ) ) {
+				$args = $event->args;
+			} else {
+				$args = $event->args[0];
+			}
+
+			if ( isset( $args['syntax_error_message'], $args['syntax_error_line'] ) ) {
 				$return .= '<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
 				$return .= sprintf(
 					/* translators: 1: Line number, 2: Error message text */
 					esc_html__( 'Line %1$s: %2$s', 'wp-crontrol' ),
-					esc_html( number_format_i18n( $event->args['syntax_error_line'] ) ),
-					esc_html( $event->args['syntax_error_message'] )
+					esc_html( number_format_i18n( $args['syntax_error_line'] ) ),
+					esc_html( $args['syntax_error_message'] )
 				);
 				$return .= '</span>';
 			}
 
-			if ( ! empty( $event->args['code'] ) ) {
-				$lines = explode( "\n", trim( $event->args['code'] ) );
+			if ( ! empty( $args['code'] ) ) {
+				$lines = explode( "\n", trim( $args['code'] ) );
 				$code  = reset( $lines );
 				$code  = substr( $code, 0, 50 );
 

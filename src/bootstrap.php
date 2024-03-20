@@ -34,7 +34,7 @@ function init_hooks() {
 	add_action( 'load-tools_page_crontrol_admin_manage_page', __NAMESPACE__ . '\setup_manage_page' );
 
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
-	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event', 10, 3 );
+	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event', 10 );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_assets' );
 	add_action( 'crontrol/tab-header',   __NAMESPACE__ . '\show_cron_status', 20 );
 	add_action( 'activated_plugin',      __NAMESPACE__ . '\flush_status_cache', 10, 0 );
@@ -197,10 +197,13 @@ function action_handle_posts() {
 		$cr = $request->init( wp_unslash( $_POST ) );
 
 		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
-		$args           = array(
-			'code' => $cr->hookcode,
-			'name' => $cr->eventname,
-			'hash' => wp_hash( $cr->hookcode ),
+
+		$args = array(
+			array(
+				'code' => $cr->hookcode,
+				'name' => $cr->eventname,
+				'hash' => wp_hash( $cr->hookcode ),
+			),
 		);
 
 		add_filter( 'schedule_event', function( $event ) {
@@ -343,10 +346,13 @@ function action_handle_posts() {
 		$cr = $request->init( wp_unslash( $_POST ) );
 
 		check_admin_referer( "crontrol-edit-cron_{$cr->original_hookname}_{$cr->original_sig}_{$cr->original_next_run_utc}" );
+
 		$args = array(
-			'code' => $cr->hookcode,
-			'name' => $cr->eventname,
-			'hash' => wp_hash( $cr->hookcode ),
+			array(
+				'code' => $cr->hookcode,
+				'name' => $cr->eventname,
+				'hash' => wp_hash( $cr->hookcode ),
+			),
 		);
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
@@ -1365,13 +1371,15 @@ function show_cron_form( $editing ) {
 		$next_run_time_local = '';
 	}
 
-	if ( $is_editing_php ) {
-		if ( ! isset( $existing['args']['code'] ) ) {
-			$existing['args']['code'] = '';
-		}
-		if ( ! isset( $existing['args']['name'] ) ) {
-			$existing['args']['name'] = '';
-		}
+	if ( $is_editing_php && isset( $existing['args']['code'] ) ) {
+		// Support the args array format used prior to WP Crontrol 1.16.2
+		$existing['args'] = array(
+			array(
+				'code' => $existing['args']['code'],
+				'name' => $existing['args']['name'] ?? '',
+				'hash' => null,
+			),
+		);
 	}
 
 	$can_add_php = current_user_can( 'edit_files' ) && ! $editing;
@@ -1393,7 +1401,7 @@ function show_cron_form( $editing ) {
 				esc_html( $heading )
 			);
 
-			if ( $is_editing_php && ! check_integrity( $existing['args']['code'], $existing['args']['hash'] ?? null ) ) {
+			if ( $is_editing_php && ! check_integrity( $existing['args'][0]['code'], $existing['args'][0]['hash'] ) ) {
 				printf(
 					'<div id="crontrol-integrity-failures-message" class="notice notice-error"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
 					/* translators: %s: Help page URL. */
@@ -1458,7 +1466,7 @@ function show_cron_form( $editing ) {
 									);
 								?>
 							</p>
-							<p><textarea class="large-text code" rows="10" cols="50" id="crontrol_hookcode" name="crontrol_hookcode"><?php echo esc_textarea( $editing ? $existing['args']['code'] : '' ); ?></textarea></p>
+							<p><textarea class="large-text code" rows="10" cols="50" id="crontrol_hookcode" name="crontrol_hookcode"><?php echo esc_textarea( $editing ? $existing['args'][0]['code'] : '' ); ?></textarea></p>
 							<?php do_action( 'crontrol/manage/hookcode', $existing ); ?>
 						</td>
 					</tr>
@@ -1469,7 +1477,7 @@ function show_cron_form( $editing ) {
 							</label>
 						</th>
 						<td>
-							<input type="text" class="regular-text" id="crontrol_eventname" name="crontrol_eventname" value="<?php echo esc_attr( $editing ? $existing['args']['name'] : '' ); ?>"/>
+							<input type="text" class="regular-text" id="crontrol_eventname" name="crontrol_eventname" value="<?php echo esc_attr( $editing ? $existing['args'][0]['name'] : '' ); ?>"/>
 							<?php do_action( 'crontrol/manage/eventname', $existing ); ?>
 						</td>
 					</tr>
@@ -2230,23 +2238,54 @@ function json_output( $input, $pretty = true ) {
  *
  * @link https://wp-crontrol.com/docs/php-cron-events/
  *
- * @param string      $code        The PHP code to evaluate.
- * @param string      $name        The name of the event, or an empty string if not set.
- * @param string|null $stored_hash Optional. The stored HMAC of the PHP code. Not present for events created prior to WP Crontrol 1.16.2.
+ * @param array<string,string>|string $args The event args array, or a string containing the PHP code to evaluate.
+ * @phpstan-param array{
+ *   code?: string,
+ *   name?: string,
+ *   hash?: string,
+ * }|string $args
  * @return void
  */
-function action_php_cron_event( $code, $name, $stored_hash = null ) {
-	if ( empty( $stored_hash ) ) {
-		// @todo trigger warning
+function action_php_cron_event( $args ) {
+	if ( is_string( $args ) ) {
+		// Prior to WP Crontrol 1.16.2, PHP cron events were saved with the associative arguments array at the top
+		// level. This means arguments are passed as individual parameters to this function and the first parameter
+		// contains the PHP code.
+		$code = $args;
+		$hash = null;
+	} else {
+		// Since WP Crontrol 1.16.2, PHP cron events are stored with the associative arguments array as the first element
+		// in the args list. This means arguments are passed as a single associative array parameter to this function.
+		$code = $args['code'] ?? null;
+		$hash = $args['hash'] ?? null;
+	}
+
+	if ( empty( $hash ) ) {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+		trigger_error(
+			sprintf(
+				'The stored hash is missing for a PHP cron event. For more information see %s.',
+				esc_url_raw( admin_url( 'tools.php?page=crontrol_admin_manage_page&crontrol_hooks_type=php' ) ),
+			),
+			E_USER_WARNING
+		);
 		return;
 	}
 
 	// Check the integrity of the PHP code.
-	if ( ! check_integrity( $code, $stored_hash ) ) {
-		// @todo trigger warning
+	if ( ! check_integrity( $code, $hash ) ) {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+		trigger_error(
+			sprintf(
+				'The stored hash for a PHP cron event is not valid. For more information see %s.',
+				esc_url_raw( admin_url( 'tools.php?page=crontrol_admin_manage_page&crontrol_hooks_type=php' ) ),
+			),
+			E_USER_WARNING
+		);
 		return;
 	}
 
+	// Please see the function description above for information about the safety of this code.
 	// phpcs:ignore Squiz.PHP.Eval.Discouraged
 	eval( $code );
 }
