@@ -1401,16 +1401,6 @@ function show_cron_form( $editing ) {
 				esc_html( $heading )
 			);
 
-			if ( $is_editing_php && ! check_integrity( $existing['args'][0]['code'], $existing['args'][0]['hash'] ) ) {
-				printf(
-					'<div id="crontrol-integrity-failures-message" class="notice notice-error"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
-					/* translators: %s: Help page URL. */
-					esc_html__( 'The PHP code in this event needs to be checked for integrity. This event will not run until you check and re-save it.', 'wp-crontrol' ),
-					'https://wp-crontrol.com/docs/php-cron-events/',
-					esc_html__( 'More information', 'wp-crontrol' )
-				);
-			}
-
 			printf(
 				'<p>%s</p>',
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -1457,6 +1447,17 @@ function show_cron_form( $editing ) {
 							</label>
 						</th>
 						<td>
+							<?php
+							if ( $is_editing_php && ! check_integrity( $existing['args'][0]['code'], $existing['args'][0]['hash'] ) ) {
+								printf(
+									'<div class="notice notice-error inline"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
+									/* translators: %s: Help page URL. */
+									esc_html__( 'The PHP code in this event needs to be checked for integrity. This event will not run until you check and re-save it.', 'wp-crontrol' ),
+									'https://wp-crontrol.com/docs/php-cron-events/',
+									esc_html__( 'More information', 'wp-crontrol' )
+								);
+							}
+							?>
 							<p class="description">
 								<?php
 									printf(

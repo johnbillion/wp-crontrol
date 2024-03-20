@@ -103,9 +103,7 @@ class Table extends \WP_List_Table {
 					esc_html__( 'More information', 'wp-crontrol' )
 				);
 			} );
-		}
-
-		if ( $has_late ) {
+		} elseif ( $has_late && empty( $_GET['crontrol_action'] ) ) {
 			add_action( 'admin_notices', function() {
 				printf(
 					'<div id="crontrol-late-message" class="notice notice-warning"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
