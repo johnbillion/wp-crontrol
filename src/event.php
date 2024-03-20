@@ -502,7 +502,7 @@ function integrity_failed( stdClass $event ): bool {
  * Checks the integrity of a code string compared to its stored hash.
  *
  * @param string|null $code        The code string.
- * @param string|null $stored_hash The stored integrity hash of the code.
+ * @param string|null $stored_hash The stored HMAC of the code.
  * @return bool
  */
 function check_integrity( $code, $stored_hash ): bool {
@@ -511,10 +511,10 @@ function check_integrity( $code, $stored_hash ): bool {
 		return false;
 	}
 
-	$potentially_tampered_hash = wp_hash( $code );
+	$code_hash = wp_hash( $code );
 
 	// If the hashes match then the integrity check is ok.
-	return hash_equals( $stored_hash, $potentially_tampered_hash );
+	return hash_equals( $stored_hash, $code_hash );
 }
 
 /**
