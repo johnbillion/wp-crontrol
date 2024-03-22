@@ -97,10 +97,9 @@ class Table extends \WP_List_Table {
 			add_action( 'admin_notices', function() {
 				printf(
 					'<div id="crontrol-integrity-failures-message" class="notice notice-error"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
-					/* translators: %s: Help page URL. */
 					esc_html__( 'The PHP code in one or more of your PHP cron events needs to be checked for integrity. These events will not run until you check and re-save them.', 'wp-crontrol' ),
-					'https://wp-crontrol.com/docs/php-cron-events/',
-					esc_html__( 'More information', 'wp-crontrol' )
+					'https://wp-crontrol.com/help/check-php-cron-events/',
+					esc_html__( 'Read what to do', 'wp-crontrol' )
 				);
 			} );
 		} elseif ( $has_late && empty( $_GET['crontrol_action'] ) ) {

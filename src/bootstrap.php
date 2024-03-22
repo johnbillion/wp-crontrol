@@ -1451,10 +1451,9 @@ function show_cron_form( $editing ) {
 							if ( $is_editing_php && ! check_integrity( $existing['args'][0]['code'], $existing['args'][0]['hash'] ) ) {
 								printf(
 									'<div class="notice notice-error inline"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
-									/* translators: %s: Help page URL. */
-									esc_html__( 'The PHP code in this event needs to be checked for integrity. This event will not run until you check and re-save it.', 'wp-crontrol' ),
-									'https://wp-crontrol.com/docs/php-cron-events/',
-									esc_html__( 'More information', 'wp-crontrol' )
+									esc_html__( 'The PHP code in this event needs to be checked for integrity. This event will not run until you re-save it.', 'wp-crontrol' ),
+									'https://wp-crontrol.com/help/check-php-cron-events/',
+									esc_html__( 'Read what to do', 'wp-crontrol' )
 								);
 							}
 							?>

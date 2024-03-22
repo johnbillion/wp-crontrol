@@ -48,13 +48,4 @@ The integrity checking mechanism documented above was introduced in WP Crontrol 
 
 Otherwise, if WP Crontrol is showing you a message saying your PHP cron events need to be checked, this could either mean there is a real problem caused by tampering of the PHP code in the events, or it could be caused by your security salts having been changed.
 
-If the PHP code in an event *has* been tampered with externally then WP Crontrol will refuse to execute the PHP code when the event runs in order to keep your site secure. You should carefully and fully check the PHP code in the affected events. [Consult the "My site was hacked" page on the WordPress.org documentation site if you find unexpected code](https://wordpress.org/documentation/article/faq-my-site-was-hacked/).
-
-If the security salts in the `wp-config.php` file on your site have been changed then this invalidates the stored hashes for the PHP code in all of your PHP cron events. Note that changing or rotating the security salts on your site will have several effects, including but not limited to:
-
-  - Logging out all users and invalidating all security nonces
-  - Invalidating hashes used within functionality such as comment moderation, Customizer controls, and widget management
-
-Your security salts may also change if you move your site from one server to another and the salts in the `wp-config.php` file differ, or if you move your site from a staging environment to a production environment (or vice versa) and the salts differ.
-
-In all of these cases, you should edit the affected PHP cron events, make absolutely sure that the code remains as intended, and save it again. This will cause the hash to be regenerated and saved alongside the PHP code, and the event will begin working as expected once again.
+[See here for complete information about PHP events which show "Needs checking"](/help/check-php-cron-events/).

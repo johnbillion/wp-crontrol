@@ -98,6 +98,10 @@ export default defineConfig({
 						text: 'This interval is less than the cron lock timeout',
 						link: '/help/wp-cron-lock-timeout/',
 					},
+					{
+						text: 'PHP cron events that need to be checked',
+						link: '/help/check-php-cron-events/',
+					},
 				],
 			},
 			{
