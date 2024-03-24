@@ -95,7 +95,9 @@ You can change the time and recurrence of a cron event by clicking the "Edit" li
 
 From the Tools → Cron Events → Add New screen, create a PHP cron event that includes PHP that fetches the URL using the WordPress HTTP API. For example:
 
-	wp_remote_get( 'http://example.com' );
+~~~php
+wp_remote_get( 'http://example.com' );
+~~~
 
 [You can read all about the features and security of PHP cron events on the WP Crontrol website](https://wp-crontrol.com/docs/php-cron-events/).
 
@@ -131,13 +133,17 @@ In the Tools → Cron Events admin panel, click on "Add New" and enter the detai
 
 This part takes place in PHP code (for example, in the `functions.php` file from your theme). To execute your hook, WordPress runs an action. For this reason, we need to tell WordPress which function to execute when this action is run. The following line accomplishes that:
 
-	add_action( 'my_hookname', 'my_function' );
+~~~php
+add_action( 'my_hookname', 'my_function' );
+~~~
 
 The next step is to write your function. Here's a simple example:
 
-	function my_function() {
-		wp_mail( 'hello@example.com', 'WP Crontrol', 'WP Crontrol rocks!' );
-	}
+~~~php
+function my_function() {
+	wp_mail( 'hello@example.com', 'WP Crontrol', 'WP Crontrol rocks!' );
+}
+~~~
 
 ### How do I create a new PHP cron event?
 

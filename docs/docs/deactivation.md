@@ -12,7 +12,7 @@ If you've created a PHP cron event with WP Crontrol, these events will remain in
 
 ## Custom schedules
 
-If you've created a custom cron schedule from the Settings -> Cron Schedules screen, these schedules will no longer be available for use by cron events on your site because they get added by WP Crontrol.
+If you've created a custom cron schedule from the Settings → Cron Schedules screen, these schedules will no longer be available for use by cron events on your site because they get added by WP Crontrol.
 
 Any cron event which uses a custom schedule will run at its next scheduled time as normal but will _not_ subsequently get rescheduled and will disappear.
 

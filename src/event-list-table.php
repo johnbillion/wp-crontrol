@@ -106,7 +106,6 @@ class Table extends \WP_List_Table {
 			add_action( 'admin_notices', function() {
 				printf(
 					'<div id="crontrol-late-message" class="notice notice-warning"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
-					/* translators: %s: Help page URL. */
 					esc_html__( 'One or more cron events have missed their schedule.', 'wp-crontrol' ),
 					'https://wp-crontrol.com/help/missed-cron-events/',
 					esc_html__( 'More information', 'wp-crontrol' )
@@ -534,7 +533,7 @@ class Table extends \WP_List_Table {
 	protected function column_crontrol_hook( $event ) {
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			if ( ! empty( $event->args['name'] ) ) {
-				/* translators: 1: The name of the PHP cron event. */
+				/* translators: %s: The name of the PHP cron event. */
 				$output = esc_html( sprintf( __( 'PHP Cron (%s)', 'wp-crontrol' ), $event->args['name'] ) );
 			} else {
 				$output = esc_html__( 'PHP Cron', 'wp-crontrol' );

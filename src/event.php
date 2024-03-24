@@ -70,7 +70,7 @@ function run( $hookname, $sig ) {
 	return new WP_Error(
 		'not_found',
 		sprintf(
-			/* translators: 1: The name of the cron event. */
+			/* translators: %s: The name of the cron event. */
 			__( 'The cron event %s could not be found.', 'wp-crontrol' ),
 			$hookname
 		)
@@ -109,7 +109,7 @@ function force_schedule_single_event( $hook, $args = array() ) {
 		return new WP_Error(
 			'could_not_add',
 			sprintf(
-				/* translators: 1: The name of the cron event. */
+				/* translators: %s: The name of the cron event. */
 				__( 'Failed to schedule the cron event %s.', 'wp-crontrol' ),
 				$hook
 			)
@@ -241,7 +241,7 @@ function delete( $hook, $sig, $next_run_utc ) {
 		return new WP_Error(
 			'could_not_delete',
 			sprintf(
-				/* translators: 1: The name of the cron event. */
+				/* translators: %s: The name of the cron event. */
 				__( 'Failed to the delete the cron event %s.', 'wp-crontrol' ),
 				$hook
 			)
@@ -272,7 +272,7 @@ function pause( $hook ) {
 		return new WP_Error(
 			'could_not_pause',
 			sprintf(
-				/* translators: 1: The name of the cron event. */
+				/* translators: %s: The name of the cron event. */
 				__( 'Failed to pause the cron event %s.', 'wp-crontrol' ),
 				$hook
 			)
@@ -303,7 +303,7 @@ function resume( $hook ) {
 		return new WP_Error(
 			'could_not_resume',
 			sprintf(
-				/* translators: 1: The name of the cron event. */
+				/* translators: %s: The name of the cron event. */
 				__( 'Failed to resume the cron event %s.', 'wp-crontrol' ),
 				$hook
 			)
@@ -377,7 +377,7 @@ function get_single( $hook, $sig, $next_run_utc ) {
 	return new WP_Error(
 		'not_found',
 		sprintf(
-			/* translators: 1: The name of the cron event. */
+			/* translators: %s: The name of the cron event. */
 			__( 'The cron event %s could not be found.', 'wp-crontrol' ),
 			$hook
 		)

@@ -972,12 +972,12 @@ function filter_cron_schedules( array $scheds ) {
 function admin_options_page() {
 	$messages = array(
 		'2' => array(
-			/* translators: 1: The name of the cron schedule. */
+			/* translators: %s: The name of the cron schedule. */
 			__( 'Deleted the cron schedule %s.', 'wp-crontrol' ),
 			'success',
 		),
 		'3' => array(
-			/* translators: 1: The name of the cron schedule. */
+			/* translators: %s: The name of the cron schedule. */
 			__( 'Added the cron schedule %s.', 'wp-crontrol' ),
 			'success',
 		),
@@ -1103,7 +1103,7 @@ function test_cron_spawn( $cache = true ) {
 	foreach ( $cron_runner_plugins as $class => $plugin ) {
 		if ( class_exists( $class ) ) {
 			return new WP_Error( 'crontrol_info', sprintf(
-				/* translators: 1: The name of the plugin that controls the running of cron events. */
+				/* translators: %s: The name of the plugin that controls the running of cron events. */
 				__( 'WP-Cron spawning is being managed by the %s plugin.', 'wp-crontrol' ),
 				$plugin
 			) );
@@ -1112,7 +1112,7 @@ function test_cron_spawn( $cache = true ) {
 
 	if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
 		return new WP_Error( 'crontrol_info', sprintf(
-			/* translators: 1: The name of the PHP constant that is set. */
+			/* translators: %s: The name of the PHP constant that is set. */
 			__( 'The %s constant is set to true. WP-Cron spawning is disabled.', 'wp-crontrol' ),
 			'DISABLE_WP_CRON'
 		) );
@@ -1120,7 +1120,7 @@ function test_cron_spawn( $cache = true ) {
 
 	if ( defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON ) {
 		return new WP_Error( 'crontrol_info', sprintf(
-			/* translators: 1: The name of the PHP constant that is set. */
+			/* translators: %s: The name of the PHP constant that is set. */
 			__( 'The %s constant is set to true.', 'wp-crontrol' ),
 			'ALTERNATE_WP_CRON'
 		) );
@@ -1153,7 +1153,7 @@ function test_cron_spawn( $cache = true ) {
 		return $result;
 	} elseif ( wp_remote_retrieve_response_code( $result ) >= 300 ) {
 		return new WP_Error( 'unexpected_http_response_code', sprintf(
-			/* translators: 1: The HTTP response code. */
+			/* translators: %s: The HTTP response code. */
 			__( 'Unexpected HTTP response code: %s', 'wp-crontrol' ),
 			intval( wp_remote_retrieve_response_code( $result ) )
 		) );
@@ -1186,7 +1186,6 @@ function show_cron_status( $tab ) {
 			<?php
 				printf(
 					'<p>%1$s</p><p><a href="%2$s">%3$s</a></p>',
-					/* translators: %s: Help page URL. */
 					esc_html__( 'PHP default timezone is not set to UTC. This may cause issues with cron event timings.', 'wp-crontrol' ),
 					'https://wp-crontrol.com/help/php-default-timezone/',
 					esc_html__( 'More information', 'wp-crontrol' )
@@ -1212,7 +1211,7 @@ function show_cron_status( $tab ) {
 				printf(
 					'<p>%1$s</p><p><a href="%2$s">%3$s</a></p>',
 					sprintf(
-						/* translators: 1: Error message text. */
+						/* translators: %s: Error message text. */
 						esc_html__( 'There was a problem spawning a call to the WP-Cron system on your site. This means WP-Cron events on your site may not work. The problem was: %s', 'wp-crontrol' ),
 						'</p><p><strong>' . esc_html( $status->get_error_message() ) . '</strong>'
 					),
@@ -1329,7 +1328,7 @@ function show_cron_form( $editing ) {
 		$helper_text = esc_html__( 'Cron events trigger actions in your code. Enter the schedule of the event, as well as the PHP code to execute when the action is triggered.', 'wp-crontrol' );
 	} else {
 		$helper_text = sprintf(
-			/* translators: %s: A file name */
+			/* translators: %1$s: A file name */
 			esc_html__( 'Cron events trigger actions in your code. A cron event needs a corresponding action hook somewhere in code, e.g. the %1$s file in your theme.', 'wp-crontrol' ),
 			'<code>functions.php</code>'
 		);
@@ -1618,42 +1617,42 @@ function show_cron_form( $editing ) {
 function admin_manage_page() {
 	$messages = array(
 		'1'  => array(
-			/* translators: 1: The name of the cron event. */
+			/* translators: %s: The name of the cron event. */
 			__( 'Scheduled the cron event %s to run now. The original event will not be affected.', 'wp-crontrol' ),
 			'success',
 		),
 		'2'  => array(
-			/* translators: 1: The name of the cron event. */
+			/* translators: %s: The name of the cron event. */
 			__( 'Deleted all %s cron events.', 'wp-crontrol' ),
 			'success',
 		),
 		'3'  => array(
-			/* translators: 1: The name of the cron event. */
+			/* translators: %s: The name of the cron event. */
 			__( 'There are no %s cron events to delete.', 'wp-crontrol' ),
 			'info',
 		),
 		'4'  => array(
-			/* translators: 1: The name of the cron event. */
+			/* translators: %s: The name of the cron event. */
 			__( 'Saved the cron event %s.', 'wp-crontrol' ),
 			'success',
 		),
 		'5'  => array(
-			/* translators: 1: The name of the cron event. */
+			/* translators: %s: The name of the cron event. */
 			__( 'Created the cron event %s.', 'wp-crontrol' ),
 			'success',
 		),
 		'6'  => array(
-			/* translators: 1: The name of the cron event. */
+			/* translators: %s: The name of the cron event. */
 			__( 'Deleted the cron event %s.', 'wp-crontrol' ),
 			'success',
 		),
 		'7'  => array(
-			/* translators: 1: The name of the cron event. */
+			/* translators: %s: The name of the cron event. */
 			__( 'Failed to the delete the cron event %s.', 'wp-crontrol' ),
 			'error',
 		),
 		'8'  => array(
-			/* translators: 1: The name of the cron event. */
+			/* translators: %s: The name of the cron event. */
 			__( 'Failed to the execute the cron event %s.', 'wp-crontrol' ),
 			'error',
 		),
@@ -1662,17 +1661,17 @@ function admin_manage_page() {
 			'success',
 		),
 		'10' => array(
-			/* translators: 1: The name of the cron event. */
+			/* translators: %s: The name of the cron event. */
 			__( 'Failed to save the cron event %s.', 'wp-crontrol' ),
 			'error',
 		),
 		'11' => array(
-			/* translators: 1: The name of the cron event. */
+			/* translators: %s: The name of the cron event. */
 			__( 'Paused the %s hook.', 'wp-crontrol' ),
 			'success',
 		),
 		'12' => array(
-			/* translators: 1: The name of the cron event. */
+			/* translators: %s: The name of the cron event. */
 			__( 'Resumed the %s hook.', 'wp-crontrol' ),
 			'success',
 		),
@@ -2003,19 +2002,19 @@ function time_since( $older_date, $newer_date ) {
 function interval( $since ) {
 	// Array of time period chunks.
 	$chunks = array(
-		/* translators: 1: The number of years in an interval of time. */
+		/* translators: %s: The number of years in an interval of time. */
 		array( YEAR_IN_SECONDS, _n_noop( '%s year', '%s years', 'wp-crontrol' ) ),
-		/* translators: 1: The number of months in an interval of time. */
+		/* translators: %s: The number of months in an interval of time. */
 		array( MONTH_IN_SECONDS, _n_noop( '%s month', '%s months', 'wp-crontrol' ) ),
-		/* translators: 1: The number of weeks in an interval of time. */
+		/* translators: %s: The number of weeks in an interval of time. */
 		array( WEEK_IN_SECONDS, _n_noop( '%s week', '%s weeks', 'wp-crontrol' ) ),
-		/* translators: 1: The number of days in an interval of time. */
+		/* translators: %s: The number of days in an interval of time. */
 		array( DAY_IN_SECONDS, _n_noop( '%s day', '%s days', 'wp-crontrol' ) ),
-		/* translators: 1: The number of hours in an interval of time. */
+		/* translators: %s: The number of hours in an interval of time. */
 		array( HOUR_IN_SECONDS, _n_noop( '%s hour', '%s hours', 'wp-crontrol' ) ),
-		/* translators: 1: The number of minutes in an interval of time. */
+		/* translators: %s: The number of minutes in an interval of time. */
 		array( MINUTE_IN_SECONDS, _n_noop( '%s minute', '%s minutes', 'wp-crontrol' ) ),
-		/* translators: 1: The number of seconds in an interval of time. */
+		/* translators: %s: The number of seconds in an interval of time. */
 		array( 1, _n_noop( '%s second', '%s seconds', 'wp-crontrol' ) ),
 	);
 

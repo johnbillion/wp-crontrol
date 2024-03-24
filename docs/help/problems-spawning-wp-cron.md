@@ -37,7 +37,7 @@ This means an access control restriction such as BasicAuth, a firewall, a securi
 
 ### Unexpected HTTP response code: 404
 
-This means the `wp-cron.php` file in the root of your website has been deleted. Try reinstalling WordPress from the Dashboard -> Updates screen.
+This means the `wp-cron.php` file in the root of your website has been deleted. Try reinstalling WordPress from the Dashboard → Updates screen.
 
 ### Unexpected HTTP response code: 500 or higher
 
