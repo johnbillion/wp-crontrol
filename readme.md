@@ -45,7 +45,7 @@ WP Crontrol aims to be fully accessible to all of its users. [WP Crontrol's full
 
 ### Does this plugin work with PHP 8?
 
-Yes, it's actively tested and working up to PHP 8.2.
+Yes, it's actively tested and working up to PHP 8.3.
 
 ### I get the error "There was a problem spawning a call to the WP-Cron system on your site". How do I fix this?
 
