@@ -159,7 +159,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	}
 
 	/**
-	 * Returns the output for the schdule name cell of a table row.
+	 * Returns the output for the schedule name cell of a table row.
 	 *
 	 * @phpstan-param array{
 	 *   interval: int,
