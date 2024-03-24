@@ -1426,8 +1426,18 @@ function show_cron_form( $editing ) {
 							<?php esc_html_e( 'Event Type', 'wp-crontrol' ); ?>
 						</th>
 						<td>
-							<p><label><input type="radio" name="crontrol_action" value="new_cron" checked>Standard cron event</label></p>
-							<p><label><input type="radio" name="crontrol_action" value="new_php_cron">PHP cron event</label></p>
+							<p>
+								<label>
+									<input type="radio" name="crontrol_action" value="new_cron" checked>
+									<?php esc_html_e( 'Standard cron event', 'wp-crontrol' ); ?>
+								</label>
+							</p>
+							<p>
+								<label>
+									<input type="radio" name="crontrol_action" value="new_php_cron">
+									<?php esc_html_e( 'PHP cron event', 'wp-crontrol' ); ?>
+								</label>
+							</p>
 						</td>
 					</tr>
 					<?php
@@ -1547,7 +1557,7 @@ function show_cron_form( $editing ) {
 									<?php
 									printf(
 										/* translators: %s: An input field for specifying a date and time */
-										esc_html__( 'At: %s', 'wp-crontrol' ),
+										esc_html__( 'At this time: %s', 'wp-crontrol' ),
 										sprintf(
 											'<br>
 											<input type="date" autocorrect="off" autocapitalize="off" spellcheck="false" name="crontrol_next_run_date_local_custom_date" id="crontrol_next_run_date_local_custom_date" value="%1$s" placeholder="yyyy-mm-dd" pattern="\d{4}-\d{2}-\d{2}" />
