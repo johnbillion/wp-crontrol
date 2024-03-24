@@ -511,7 +511,7 @@ class Table extends \WP_List_Table {
 			);
 		} elseif ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_manage_php_crons ) {
 			return sprintf(
-				'<label class="screen-reader-text" for="%1$s">%2$s</label>
+				'<label for="%1$s"><span class="screen-reader-text">%2$s</span></label>
 				<input type="checkbox" name="crontrol_delete[%3$s][%4$s]" value="%5$s" id="%1$s">',
 				esc_attr( $id ),
 				esc_html__( 'Select this row', 'wp-crontrol' ),

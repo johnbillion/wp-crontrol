@@ -1426,18 +1426,23 @@ function show_cron_form( $editing ) {
 							<?php esc_html_e( 'Event Type', 'wp-crontrol' ); ?>
 						</th>
 						<td>
-							<p>
-								<label>
-									<input type="radio" name="crontrol_action" value="new_cron" checked>
-									<?php esc_html_e( 'Standard cron event', 'wp-crontrol' ); ?>
-								</label>
-							</p>
-							<p>
-								<label>
-									<input type="radio" name="crontrol_action" value="new_php_cron">
-									<?php esc_html_e( 'PHP cron event', 'wp-crontrol' ); ?>
-								</label>
-							</p>
+							<fieldset>
+								<legend class="screen-reader-text">
+									<?php esc_html_e( 'Event Type', 'wp-crontrol' ); ?>
+								</legend>
+								<p>
+									<label>
+										<input type="radio" name="crontrol_action" value="new_cron" checked>
+										<?php esc_html_e( 'Standard cron event', 'wp-crontrol' ); ?>
+									</label>
+								</p>
+								<p>
+									<label>
+										<input type="radio" name="crontrol_action" value="new_php_cron">
+										<?php esc_html_e( 'PHP cron event', 'wp-crontrol' ); ?>
+									</label>
+								</p>
+							</fieldset>
 						</td>
 					</tr>
 					<?php
@@ -1513,9 +1518,9 @@ function show_cron_form( $editing ) {
 							</label>
 						</th>
 						<td>
-							<input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" class="regular-text code" id="crontrol_args" name="crontrol_args" value="<?php echo esc_attr( $display_args ); ?>"/>
+							<input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" class="regular-text code" id="crontrol_args" name="crontrol_args" value="<?php echo esc_attr( $display_args ); ?>" aria-describedby="crontrol_args_description"/>
 							<?php do_action( 'crontrol/manage/args', $existing ); ?>
-							<p class="description">
+							<p class="description" id="crontrol_args_description">
 								<?php
 									printf(
 										/* translators: 1, 2, and 3: Example values for an input field. */
@@ -1538,20 +1543,23 @@ function show_cron_form( $editing ) {
 						</label>
 					</th>
 					<td>
-						<ul>
-							<li>
+						<fieldset>
+							<legend class="screen-reader-text">
+								<?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?>
+							</legend>
+							<p>
 								<label>
 									<input type="radio" name="crontrol_next_run_date_local" value="now" checked>
 									<?php esc_html_e( 'Now', 'wp-crontrol' ); ?>
 								</label>
-							</li>
-							<li>
+							</p>
+							<p>
 								<label>
 									<input type="radio" name="crontrol_next_run_date_local" value="+1 day">
 									<?php esc_html_e( 'Tomorrow', 'wp-crontrol' ); ?>
 								</label>
-							</li>
-							<li>
+							</p>
+							<p>
 								<label>
 									<input type="radio" name="crontrol_next_run_date_local" value="custom" id="crontrol_next_run_date_local_custom" <?php checked( $editing ); ?>>
 									<?php
@@ -1559,7 +1567,7 @@ function show_cron_form( $editing ) {
 										/* translators: %s: An input field for specifying a date and time */
 										esc_html__( 'At this time: %s', 'wp-crontrol' ),
 										sprintf(
-											'<br>
+											'<br><br>
 											<input type="date" autocorrect="off" autocapitalize="off" spellcheck="false" name="crontrol_next_run_date_local_custom_date" id="crontrol_next_run_date_local_custom_date" value="%1$s" placeholder="yyyy-mm-dd" pattern="\d{4}-\d{2}-\d{2}" />
 											<input type="time" autocorrect="off" autocapitalize="off" spellcheck="false" name="crontrol_next_run_date_local_custom_time" id="crontrol_next_run_date_local_custom_time" value="%2$s" step="1" placeholder="hh:mm:ss" pattern="\d{2}:\d{2}:\d{2}" />',
 											esc_attr( $next_run_date_local ),
@@ -1568,8 +1576,8 @@ function show_cron_form( $editing ) {
 									);
 									?>
 								</label>
-							</li>
-						</ul>
+							</p>
+						</fieldset>
 
 						<?php do_action( 'crontrol/manage/next_run', $existing ); ?>
 
