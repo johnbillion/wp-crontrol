@@ -1,4 +1,4 @@
-# Problems with spawning a call to the WP Cron system
+# Problems spawning a call to the WP-Cron system
 
 If you're seeing an error message saying **there was a problem spawning a call to the WP-Cron system on your site**, this indicates a problem that is preventing cron events from running. If you can see cron events that have missed their schedule by more than a few minutes, this is almost certainly a problem you need to investigate.
 

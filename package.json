@@ -1,7 +1,7 @@
 {
 	"name": "wp-crontrol",
 	"version": "1.16.2",
-	"description": "WP Crontrol lets you view and control what's happening in the WP-Cron system.",
+	"description": "Take control of the cron events on your WordPress website",
 	"license": "GPL-2.0-or-later",
 	"private": true,
 	"author": "John Blackbourn",

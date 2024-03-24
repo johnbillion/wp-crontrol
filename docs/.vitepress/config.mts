@@ -83,7 +83,7 @@ export default defineConfig({
 						link: '/help/missed-cron-events/',
 					},
 					{
-						text: 'Problems with spawning a call to the WP Cron system',
+						text: 'Problems spawning a call to the WP Cron system',
 						link: '/help/problems-spawning-wp-cron/',
 					},
 					{
