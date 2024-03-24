@@ -149,13 +149,9 @@ class Table extends \WP_List_Table {
 			return ( 'crontrol_cron_job' === $event->hook );
 		} );
 
-		$paused = array_filter( $events, function( $event ) {
+		$filtered['paused'] = array_filter( $events, function( $event ) {
 			return ( is_paused( $event ) );
 		} );
-
-		if ( count( $paused ) > 0 ) {
-			$filtered['paused'] = $paused;
-		}
 
 		/**
 		 * Filters the available filtered events on the cron event listing screen.
@@ -277,6 +273,12 @@ class Table extends \WP_List_Table {
 				continue;
 			}
 
+			$count = count( $filtered[ $key ] );
+
+			if ( ! $count ) {
+				continue;
+			}
+
 			$link = ( 'all' === $key ) ? $url : add_query_arg( 'crontrol_hooks_type', $key, $url );
 
 			$views[ $key ] = sprintf(
@@ -284,7 +286,7 @@ class Table extends \WP_List_Table {
 				esc_url( $link ),
 				$hooks_type === $key ? ' class="current"' : '',
 				esc_html( $type ),
-				number_format_i18n( count( $filtered[ $key ] ) )
+				number_format_i18n( $count )
 			);
 		}
 
