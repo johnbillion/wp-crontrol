@@ -21,7 +21,7 @@ The WP Crontrol plugin does _not_ alter the way that WordPress core runs or stor
 There's no single solution to this problem. Your best approach is to:
 
 1. **Reload the page a few times** to determine if the problem is persistent. If the issue only appears occasionally then it could be that low levels of traffic to your site is the cause. Continue reading for more info.
-2. Read the [Problems spawning a call to the WP-Cron system](/help/problems-spawning-wp-cron) page.
+2. Read the [Problems spawning a call to the WP-Cron system](/help/problems-spawning-wp-cron/) page.
 3. **Deactivate other plugins on your site one by one** to see if any of them are causing things to break. Start with ones that you've recently updated or recently installed.
 4. **Contact your web hosting provider** as they commonly have experience dealing with problems with WP-Cron. They'll often recommend setting up a server-level cron job to trigger the WP-Cron event runner.
 5. Read the sections below on how to **set up a server-level cron job** or **reliably run WP-Cron events at a large scale**.

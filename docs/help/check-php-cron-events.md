@@ -1,6 +1,6 @@
 # Checking PHP cron events
 
-In WP Crontrol version 1.16.2 a security hardening feature was added which prevents the code in a PHP cron event from being tampered with. [You can read about the feature here](/docs/php-cron-events).
+In WP Crontrol version 1.16.2 a security hardening feature was added which prevents the code in a PHP cron event from being tampered with. [You can read about the feature here](/docs/php-cron-events/).
 
 If you have PHP cron events in place prior to upgrading to this version then *you will need to re-save your PHP cron events* so the required security hash can be generated and stored alongside the PHP code and the events can continue functioning.
 
@@ -24,7 +24,7 @@ You can delete an unwanted event by clicking the "Delete" link below the event.
 
 ## What if I don't have permission to edit a PHP cron event?
 
-[See here for full information about PHP cron events](/docs/php-cron-events). You'll need to temporarily enable the ability to edit PHP cron events in order to save the affected events.
+[See here for full information about PHP cron events](/docs/php-cron-events/). You'll need to temporarily enable the ability to edit PHP cron events in order to save the affected events.
 
 ## What if the "Needs checking" message appears again?
 
