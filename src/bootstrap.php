@@ -2302,7 +2302,7 @@ function action_php_cron_event( $args ) {
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
 		trigger_error(
 			sprintf(
-				'The stored hash is missing for a PHP cron event. For more information see %s.',
+				'The stored hash is missing for a PHP cron event; for more information see %s',
 				esc_url_raw( admin_url( 'tools.php?page=crontrol_admin_manage_page&crontrol_hooks_type=php' ) ),
 			),
 			E_USER_WARNING
@@ -2315,7 +2315,7 @@ function action_php_cron_event( $args ) {
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
 		trigger_error(
 			sprintf(
-				'The stored hash for a PHP cron event is not valid. For more information see %s.',
+				'The stored hash for a PHP cron event is not valid; for more information see %s',
 				esc_url_raw( admin_url( 'tools.php?page=crontrol_admin_manage_page&crontrol_hooks_type=php' ) ),
 			),
 			E_USER_WARNING
