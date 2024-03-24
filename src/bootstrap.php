@@ -786,7 +786,7 @@ function action_handle_posts() {
 				}
 
 				if ( 'crontrol_cron_job' === $event->hook ) {
-					$action = __( 'WP Crontrol', 'wp-crontrol' );
+					$action = 'WP Crontrol';
 				} else {
 					$callbacks = array();
 

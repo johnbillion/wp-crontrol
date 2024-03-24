@@ -629,7 +629,7 @@ class Table extends \WP_List_Table {
 		$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
 
 		if ( 'crontrol_cron_job' === $event->hook ) {
-			return esc_html__( 'WP Crontrol', 'wp-crontrol' );
+			return 'WP Crontrol';
 		} elseif ( ! empty( $hook_callbacks ) ) {
 			$callbacks = array();
 
