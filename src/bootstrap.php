@@ -864,27 +864,48 @@ function admin_help_tab() {
 		return;
 	}
 
-	$content = '<p>' . __( 'There are several places to get help with issues relating to WP-Cron:', 'wp-crontrol' ) . '</p>';
+	$content = '<p>' . esc_html__( 'There are several places to get help with issues relating to WP-Cron:', 'wp-crontrol' ) . '</p>';
 	$content .= '<ul>';
 	$content .= '<li>';
-	$content .= sprintf(
-		/* translators: %s: URL to the documentation */
-		__( '<a href="%s">Read the WP Crontrol website</a> which contains information about events that have missed their schedule, problems with spawning a call to the WP-Cron system, and much more.', 'wp-crontrol' ),
-		'https://wp-crontrol.com'
+	$content .= wp_kses(
+		sprintf(
+			/* translators: %s: URL to the documentation */
+			__( '<a href="%s">Read the WP Crontrol website</a> which contains information about events that have missed their schedule, problems with spawning a call to the WP-Cron system, and much more.', 'wp-crontrol' ),
+			'https://wp-crontrol.com'
+		),
+		array(
+			'a' => array(
+				'href' => array(),
+			),
+		)
 	);
 	$content .= '</li>';
 	$content .= '<li>';
-	$content .= sprintf(
-		/* translators: %s: URL to the documentation */
-		__( '<a href="%s">Read the Frequently Asked Questions (FAQ)</a> which cover many common questions and answers.', 'wp-crontrol' ),
-		'https://wordpress.org/plugins/wp-crontrol/faq/'
+	$content .= wp_kses(
+		sprintf(
+			/* translators: %s: URL to the documentation */
+			__( '<a href="%s">Read the Frequently Asked Questions (FAQ)</a> which cover many common questions and answers.', 'wp-crontrol' ),
+			'https://wordpress.org/plugins/wp-crontrol/faq/'
+		),
+		array(
+			'a' => array(
+				'href' => array(),
+			),
+		)
 	);
 	$content .= '</li>';
 	$content .= '<li>';
-	$content .= sprintf(
-		/* translators: %s: URL to the documentation */
-		__( '<a href="%s">Read the WordPress.org documentation on WP-Cron</a> for more technical details about the WP-Cron system for developers.', 'wp-crontrol' ),
-		'https://developer.wordpress.org/plugins/cron/'
+	$content .= wp_kses(
+		sprintf(
+			/* translators: %s: URL to the documentation */
+			__( '<a href="%s">Read the WordPress.org documentation on WP-Cron</a> for more technical details about the WP-Cron system for developers.', 'wp-crontrol' ),
+			'https://developer.wordpress.org/plugins/cron/'
+		),
+		array(
+			'a' => array(
+				'href' => array(),
+			),
+		)
 	);
 	$content .= '</ul>';
 
@@ -1743,7 +1764,7 @@ function admin_manage_page() {
 
 				<form id="posts-filter" method="get" action="tools.php">
 					<input type="hidden" name="page" value="crontrol_admin_manage_page" />
-					<?php $table->search_box( __( 'Search Hook Names', 'wp-crontrol' ), 'cron-event' ); ?>
+					<?php $table->search_box( esc_html__( 'Search Hook Names', 'wp-crontrol' ), 'cron-event' ); ?>
 				</form>
 
 				<form method="post" action="tools.php?page=crontrol_admin_manage_page">

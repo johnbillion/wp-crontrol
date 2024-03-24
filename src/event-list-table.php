@@ -176,15 +176,17 @@ class Table extends \WP_List_Table {
 	public function get_columns() {
 		return array(
 			'cb'                  => '<input type="checkbox" />',
-			'crontrol_hook'       => __( 'Hook', 'wp-crontrol' ),
-			'crontrol_args'       => __( 'Arguments', 'wp-crontrol' ),
-			'crontrol_next'       => sprintf(
-				/* translators: %s: UTC offset */
-				__( 'Next Run (%s)', 'wp-crontrol' ),
-				\Crontrol\get_utc_offset()
+			'crontrol_hook'       => esc_html__( 'Hook', 'wp-crontrol' ),
+			'crontrol_args'       => esc_html__( 'Arguments', 'wp-crontrol' ),
+			'crontrol_next'       => esc_html(
+				sprintf(
+					/* translators: %s: UTC offset */
+					__( 'Next Run (%s)', 'wp-crontrol' ),
+					\Crontrol\get_utc_offset()
+				),
 			),
-			'crontrol_actions'    => __( 'Action', 'wp-crontrol' ),
-			'crontrol_recurrence' => __( 'Recurrence', 'wp-crontrol' ),
+			'crontrol_actions'    => esc_html__( 'Action', 'wp-crontrol' ),
+			'crontrol_recurrence' => esc_html__( 'Recurrence', 'wp-crontrol' ),
 		);
 	}
 
@@ -286,7 +288,7 @@ class Table extends \WP_List_Table {
 				esc_url( $link ),
 				$hooks_type === $key ? ' class="current"' : '',
 				esc_html( $type ),
-				number_format_i18n( $count )
+				esc_html( number_format_i18n( $count ) )
 			);
 		}
 

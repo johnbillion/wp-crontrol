@@ -76,9 +76,9 @@ class Schedule_List_Table extends \WP_List_Table {
 	public function get_columns() {
 		return array(
 			'crontrol_icon'     => '',
-			'crontrol_name'     => __( 'Internal Name', 'wp-crontrol' ),
-			'crontrol_interval' => __( 'Interval', 'wp-crontrol' ),
-			'crontrol_display'  => __( 'Display Name', 'wp-crontrol' ),
+			'crontrol_name'     => esc_html__( 'Internal Name', 'wp-crontrol' ),
+			'crontrol_interval' => esc_html__( 'Interval', 'wp-crontrol' ),
+			'crontrol_display'  => esc_html__( 'Display Name', 'wp-crontrol' ),
 		);
 	}
 
