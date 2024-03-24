@@ -1422,7 +1422,7 @@ function show_cron_form( $editing ) {
 				} elseif ( $can_add_php ) {
 					?>
 					<tr class="hide-if-no-js">
-						<th valign="top" scope="row">
+						<th scope="row">
 							<?php esc_html_e( 'Event Type', 'wp-crontrol' ); ?>
 						</th>
 						<td>
@@ -1450,7 +1450,7 @@ function show_cron_form( $editing ) {
 				if ( $is_editing_php || $can_add_php ) {
 					?>
 					<tr class="crontrol-event-php">
-						<th valign="top" scope="row">
+						<th scope="row">
 							<label for="crontrol_hookcode">
 								<?php esc_html_e( 'PHP Code', 'wp-crontrol' ); ?>
 							</label>
@@ -1480,7 +1480,7 @@ function show_cron_form( $editing ) {
 						</td>
 					</tr>
 					<tr class="crontrol-event-php">
-						<th valign="top" scope="row">
+						<th scope="row">
 							<label for="crontrol_eventname">
 								<?php esc_html_e( 'Event Name (optional)', 'wp-crontrol' ); ?>
 							</label>
@@ -1496,7 +1496,7 @@ function show_cron_form( $editing ) {
 				if ( ! $is_editing_php ) {
 					?>
 					<tr class="crontrol-event-standard">
-						<th valign="top" scope="row">
+						<th scope="row">
 							<label for="crontrol_hookname">
 								<?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?>
 							</label>
@@ -1507,7 +1507,7 @@ function show_cron_form( $editing ) {
 						</td>
 					</tr>
 					<tr class="crontrol-event-standard">
-						<th valign="top" scope="row">
+						<th scope="row">
 							<label for="crontrol_args">
 								<?php esc_html_e( 'Arguments (optional)', 'wp-crontrol' ); ?>
 							</label>
@@ -1532,7 +1532,7 @@ function show_cron_form( $editing ) {
 				}
 				?>
 				<tr>
-					<th valign="top" scope="row">
+					<th scope="row">
 						<label for="crontrol_next_run_date_local">
 							<?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?>
 						</label>
@@ -1585,7 +1585,7 @@ function show_cron_form( $editing ) {
 					</td>
 				</tr>
 				<tr>
-					<th valign="top" scope="row">
+					<th scope="row">
 						<label for="crontrol_schedule">
 							<?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?>
 						</label>
