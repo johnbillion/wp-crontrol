@@ -4,13 +4,20 @@ In WP Crontrol version 1.16.2 a security hardening feature was added which preve
 
 If you have PHP cron events in place prior to upgrading to this version then *you will need to re-save your PHP cron events* so the required security hash can be generated and stored alongside the PHP code and the events can continue functioning.
 
+If you don't have any PHP cron events in place on your site then you don't need to do anything.
+
 ## What do I need to do?
 
 1. Visit the Tools → Cron Events screen in the admin area of your site
 2. Click the "PHP events" filter at the top of the list
-3. Click the "Check and edit" link below each event that shows a "Needs checking" message
-4. Confirm that the PHP code in the event is as expected
-5. Click the "Update Event" button
+
+If you don't have any PHP cron events on your site then this filter won't appear. You don't need to do anything further as your site is unaffected by this change.
+
+If you do have PHP cron events in place on your site:
+
+4. Click the "Check and edit" link below each event that shows a "Needs checking" message
+5. Confirm that the PHP code in the event is as expected
+6. Click the "Update Event" button
 
 Repeat this for any further PHP cron events that show a "Needs checking" message.
 
