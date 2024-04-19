@@ -869,9 +869,10 @@ function admin_help_tab() {
 	$content .= '<li>';
 	$content .= wp_kses(
 		sprintf(
-			/* translators: %s: URL to the documentation */
-			__( '<a href="%s">Read the WP Crontrol website</a> which contains information about events that have missed their schedule, problems with spawning a call to the WP-Cron system, and much more.', 'wp-crontrol' ),
-			'https://wp-crontrol.com'
+			/* translators: 1: URL to the documentation, 2: WP Crontrol */
+			__( '<a href="%1$s">Read the %2$s website</a> which contains information about events that have missed their schedule, problems with spawning a call to the WP-Cron system, and much more.', 'wp-crontrol' ),
+			'https://wp-crontrol.com',
+			'WP Crontrol'
 		),
 		array(
 			'a' => array(
