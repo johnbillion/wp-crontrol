@@ -1,7 +1,7 @@
 # WP Crontrol
 
 Contributors: johnbillion, scompt  
-Tags: cron, wp-cron, crontrol, debug  
+Tags: cron, wp-cron, crontrol, debug, woocommerce  
 Tested up to: 6.5  
 Stable tag: 1.16.2  
 Donate link: https://github.com/sponsors/johnbillion
