@@ -69,6 +69,7 @@ table.wp-list-table {
 	color: #d63638;
 }
 
+.status-crontrol-check .dashicons,
 .status-crontrol-paused .dashicons {
 	background: #646970;
 	border-radius: 50%;

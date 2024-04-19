@@ -1,22 +1,27 @@
 {
 	"name": "wp-crontrol",
-	"version": "1.16.1",
-	"description": "WP Crontrol lets you view and control what's happening in the WP-Cron system.",
+	"version": "1.16.3",
+	"description": "Take control of the cron events on your WordPress website",
 	"license": "GPL-2.0-or-later",
 	"private": true,
 	"author": "John Blackbourn",
 	"repository": "johnbillion/wp-crontrol",
-	"homepage": "https://github.com/johnbillion/wp-crontrol",
+	"homepage": "https://wp-crontrol.com",
 	"engines": {
 		"node": ">=18"
 	},
 	"devDependencies": {
 		"plugin-infrastructure": "file:vendor/johnbillion/plugin-infrastructure",
-		"version-bump-prompt": "^6.1.0"
+		"version-bump-prompt": "^6.1.0",
+		"vitepress-plugin-rss": "^0.2.0",
+		"vitepress": "1.0.0-rc.45"
 	},
 	"scripts": {
 		"bump:patch": "bump patch --commit 'Version %s.' wp-crontrol.php package.json readme.md",
 		"bump:minor": "bump minor --commit 'Version %s.' wp-crontrol.php package.json readme.md",
-		"bump:major": "bump major --commit 'Version %s.' wp-crontrol.php package.json readme.md"
+		"bump:major": "bump major --commit 'Version %s.' wp-crontrol.php package.json readme.md",
+		"docs:dev": "vitepress dev docs",
+		"docs:build": "vitepress build docs",
+		"docs:preview": "vitepress preview docs"
 	}
 }

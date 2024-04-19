@@ -1,16 +1,16 @@
 # WP Crontrol
 
 Contributors: johnbillion, scompt  
-Tags: cron, wp-cron, crontrol, debug  
-Tested up to: 6.4  
-Stable tag: 1.16.1  
+Tags: cron, wp-cron, crontrol, debug, woocommerce  
+Tested up to: 6.5  
+Stable tag: 1.16.3  
 Donate link: https://github.com/sponsors/johnbillion
 
-WP Crontrol enables you to view and control what's happening in the WP-Cron system.
+WP Crontrol enables you to take control of the cron events on your WordPress website.
 
 ## Description
 
-WP Crontrol enables you to view and control what's happening in the WP-Cron system. From the admin screens you can:
+WP Crontrol enables you to take control of the cron events on your WordPress website. From the admin screens you can:
 
  * View all cron events along with their arguments, recurrence, callback functions, and when they are next due.
  * Edit, delete, pause, resume, and immediately run cron events.
@@ -35,29 +35,25 @@ I maintain several other plugins for developers. Check them out:
 
 ### Privacy Statement
 
-WP Crontrol is private by default and always will be. It does not send data to any third party, nor does it include any third party resources.
-
-[WP Crontrol's full privacy statement can be found here](https://github.com/johnbillion/wp-crontrol/wiki/Privacy-statement).
+WP Crontrol is private by default and always will be. It does not send data to any third party, nor does it include any third party resources. [WP Crontrol's full privacy statement can be found here](https://wp-crontrol.com/privacy/).
 
 ### Accessibility Statement
 
-WP Crontrol aims to be fully accessible to all of its users. It implements best practices for web accessibility, outputs semantic and structured markup, adheres to the default styles and accessibility guidelines of WordPress, uses the accessibility APIs provided by WordPress and web browsers where appropriate, and is fully accessible via keyboard and via mobile devices.
-
-WP Crontrol should adhere to Web Content Accessibility Guidelines (WCAG) 2.0 at level AA when used with a recent version of WordPress where its admin area itself adheres to these guidelines. If you've experienced or identified an accessibility issue in WP Crontrol, please open a thread in [the WP Crontrol plugin support forum](https://wordpress.org/support/plugin/wp-crontrol/) and I'll address it swiftly.
+WP Crontrol aims to be fully accessible to all of its users. [WP Crontrol's full accessibility statement can be found here](https://wp-crontrol.com/accessibility/).
 
 ## Frequently Asked Questions
 
 ### Does this plugin work with PHP 8?
 
-Yes, it's actively tested and working up to PHP 8.2.
+Yes, it's actively tested and working up to PHP 8.3.
 
 ### I get the error "There was a problem spawning a call to the WP-Cron system on your site". How do I fix this?
 
-[You can read all about problems spawning WP-Cron on the WP Crontrol wiki](https://github.com/johnbillion/wp-crontrol/wiki/Problems-with-spawning-a-call-to-the-WP-Cron-system).
+[You can read all about problems spawning WP-Cron on the WP Crontrol website](https://wp-crontrol.com/help/problems-spawning-wp-cron/).
 
 ### Why do some cron events miss their schedule?
 
-[You can read all about cron events that miss their schedule on the WP Crontrol wiki](https://github.com/johnbillion/wp-crontrol/wiki/Cron-events-that-have-missed-their-schedule).
+[You can read all about cron events that miss their schedule on the WP Crontrol website](https://wp-crontrol.com/help/missed-cron-events/).
 
 ### Why do some cron events reappear shortly after I delete them?
 
@@ -99,13 +95,15 @@ You can change the time and recurrence of a cron event by clicking the "Edit" li
 
 From the Tools → Cron Events → Add New screen, create a PHP cron event that includes PHP that fetches the URL using the WordPress HTTP API. For example:
 
-	wp_remote_get( 'http://example.com' );
+~~~php
+wp_remote_get( 'http://example.com' );
+~~~
 
-[You can read all about the features and security of PHP cron events on the WP Crontrol wiki](https://github.com/johnbillion/wp-crontrol/wiki/PHP-cron-events).
+[You can read all about the features and security of PHP cron events on the WP Crontrol website](https://wp-crontrol.com/docs/php-cron-events/).
 
 ### Why do changes that I make to some cron events not get saved?
 
-[You can read all about problems with editing cron events on the WP Crontrol wiki](https://github.com/johnbillion/wp-crontrol/wiki/Problems-adding-or-editing-WP-Cron-events).
+[You can read all about problems with editing cron events on the WP Crontrol website](https://wp-crontrol.com/help/problems-managing-events/).
 
 ### Can I export a list of cron events?
 
@@ -135,19 +133,23 @@ In the Tools → Cron Events admin panel, click on "Add New" and enter the detai
 
 This part takes place in PHP code (for example, in the `functions.php` file from your theme). To execute your hook, WordPress runs an action. For this reason, we need to tell WordPress which function to execute when this action is run. The following line accomplishes that:
 
-	add_action( 'my_hookname', 'my_function' );
+~~~php
+add_action( 'my_hookname', 'my_function' );
+~~~
 
 The next step is to write your function. Here's a simple example:
 
-	function my_function() {
-		wp_mail( 'hello@example.com', 'WP Crontrol', 'WP Crontrol rocks!' );
-	}
+~~~php
+function my_function() {
+	wp_mail( 'hello@example.com', 'WP Crontrol', 'WP Crontrol rocks!' );
+}
+~~~
 
 ### How do I create a new PHP cron event?
 
-In the Tools → Cron Events admin panel, click on "Add New". In the form that appears, select "PHP Cron Event" and enter the schedule and next run time. The event schedule is how often your event will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel. In the "Hook code" area, enter the PHP code that should be run when your cron event is executed. You don't need to provide the PHP opening tag (`<?php`).
+In the Tools → Cron Events admin panel, click on "Add New". In the form that appears, select "PHP Cron Event" and enter the schedule and next run time. The event schedule is how often your event will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel. In the "PHP Code" area, enter the PHP code that should be run when your cron event is executed. You don't need to provide the PHP opening tag (`<?php`).
 
-[You can read all about the features and security of PHP cron events on the WP Crontrol wiki](https://github.com/johnbillion/wp-crontrol/wiki/PHP-cron-events).
+Creating, editing, and running PHP cron events is subject to restrictive security permissions. [You can read all about the features and security of PHP cron events on the WP Crontrol website](https://wp-crontrol.com/docs/php-cron-events/).
 
 ### Which users can manage cron events and schedules?
 
@@ -161,7 +163,7 @@ If file editing has been disabled via the `DISALLOW_FILE_MODS` or `DISALLOW_FILE
 
 Therefore, the user access level required to execute arbitrary PHP code does not change with WP Crontrol activated.
 
-[You can read all about the features and security of PHP cron events on the WP Crontrol wiki](https://github.com/johnbillion/wp-crontrol/wiki/PHP-cron-events).
+[You can read all about the features and security of PHP cron events on the WP Crontrol website](https://wp-crontrol.com/docs/php-cron-events/).
 
 ### Are any WP-CLI commands available?
 
@@ -169,7 +171,11 @@ The cron commands which were previously included in WP Crontrol are now part of 
 
 ### What happens when I deactivate the WP Crontrol plugin?
 
-[You can read all about what happens when you deactivate the plugin on the WP Crontrol wiki](https://github.com/johnbillion/wp-crontrol/wiki/What-happens-when-I-deactivate-the-WP-Crontrol-plugin%3F).
+[You can read all about what happens when you deactivate the plugin on the WP Crontrol website](https://wp-crontrol.com/docs/deactivation/).
+
+### How can I report a security bug?
+
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage, and handle any security vulnerabilities. [Report a security vulnerability here](https://patchstack.com/database/vdp/wp-crontrol).
 
 ### Who took the photo in the plugin header image?
 

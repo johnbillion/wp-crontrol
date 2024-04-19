@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name:  WP Crontrol
- * Plugin URI:   https://wordpress.org/plugins/wp-crontrol/
- * Description:  WP Crontrol enables you to view and control what's happening in the WP-Cron system.
- * Author:       John Blackbourn & crontributors
- * Author URI:   https://github.com/johnbillion/wp-crontrol/graphs/contributors
- * Version:      1.16.1
+ * Plugin URI:   https://wp-crontrol.com
+ * Description:  Take control of the cron events on your WordPress website.
+ * Author:       John Blackbourn
+ * Author URI:   https://wp-crontrol.com
+ * Version:      1.16.3
  * Text Domain:  wp-crontrol
  * Domain Path:  /languages/
  * Requires at least: 5.6
@@ -36,7 +36,7 @@
 namespace Crontrol;
 
 const PLUGIN_FILE = __FILE__;
-const WP_CRONTROL_VERSION = '1.16.1';
+const WP_CRONTROL_VERSION = '1.16.3';
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
