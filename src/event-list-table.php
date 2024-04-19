@@ -536,9 +536,9 @@ class Table extends \WP_List_Table {
 	 */
 	protected function column_crontrol_hook( $event ) {
 		if ( 'crontrol_cron_job' === $event->hook ) {
-			if ( ! empty( $event->args['name'] ) ) {
+			if ( ! empty( $event->args[0]['name'] ) ) {
 				/* translators: %s: The name of the PHP cron event. */
-				$output = esc_html( sprintf( __( 'PHP Cron (%s)', 'wp-crontrol' ), $event->args['name'] ) );
+				$output = esc_html( sprintf( __( 'PHP Cron (%s)', 'wp-crontrol' ), $event->args[0]['name'] ) );
 			} else {
 				$output = esc_html__( 'PHP Cron', 'wp-crontrol' );
 			}
