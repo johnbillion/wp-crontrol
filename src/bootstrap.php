@@ -289,7 +289,7 @@ function action_handle_posts() {
 			exit;
 		}
 
-		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
+		$next_run_local = $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time;
 
 		/**
 		 * Modifies an event before it is scheduled.
@@ -379,7 +379,7 @@ function action_handle_posts() {
 			exit;
 		}
 
-		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
+		$next_run_local = $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time;
 
 		/**
 		 * Modifies an event before it is scheduled.
@@ -1562,41 +1562,53 @@ function show_cron_form( $editing ) {
 						</label>
 					</th>
 					<td>
-						<fieldset>
-							<legend class="screen-reader-text">
-								<?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?>
-							</legend>
-							<p>
-								<label>
-									<input type="radio" name="crontrol_next_run_date_local" value="now" checked>
-									<?php esc_html_e( 'Now', 'wp-crontrol' ); ?>
-								</label>
-							</p>
-							<p>
-								<label>
-									<input type="radio" name="crontrol_next_run_date_local" value="+1 day">
-									<?php esc_html_e( 'Tomorrow', 'wp-crontrol' ); ?>
-								</label>
-							</p>
-							<p>
-								<label>
-									<input type="radio" name="crontrol_next_run_date_local" value="custom" id="crontrol_next_run_date_local_custom" <?php checked( $editing ); ?>>
-									<?php
-									printf(
-										/* translators: %s: An input field for specifying a date and time */
-										esc_html__( 'At this time: %s', 'wp-crontrol' ),
-										sprintf(
-											'<br><br>
-											<input type="date" autocorrect="off" autocapitalize="off" spellcheck="false" name="crontrol_next_run_date_local_custom_date" id="crontrol_next_run_date_local_custom_date" value="%1$s" placeholder="yyyy-mm-dd" pattern="\d{4}-\d{2}-\d{2}" />
-											<input type="time" autocorrect="off" autocapitalize="off" spellcheck="false" name="crontrol_next_run_date_local_custom_time" id="crontrol_next_run_date_local_custom_time" value="%2$s" step="1" placeholder="hh:mm:ss" pattern="\d{2}:\d{2}:\d{2}" />',
-											esc_attr( $next_run_date_local ),
-											esc_attr( $next_run_time_local )
-										)
-									);
-									?>
-								</label>
-							</p>
-						</fieldset>
+						<?php if ( $editing ) { ?>
+							<input type="hidden" name="crontrol_next_run_date_local" value="custom">
+							<?php
+							printf(
+								'<input type="date" autocorrect="off" autocapitalize="off" spellcheck="false" name="crontrol_next_run_date_local_custom_date" id="crontrol_next_run_date_local_custom_date" value="%1$s" placeholder="yyyy-mm-dd" pattern="\d{4}-\d{2}-\d{2}" />
+								<input type="time" autocorrect="off" autocapitalize="off" spellcheck="false" name="crontrol_next_run_date_local_custom_time" id="crontrol_next_run_date_local_custom_time" value="%2$s" step="1" placeholder="hh:mm:ss" pattern="\d{2}:\d{2}:\d{2}" />',
+								esc_attr( $next_run_date_local ),
+								esc_attr( $next_run_time_local )
+							);
+							?>
+						<?php } else { ?>
+							<fieldset>
+								<legend class="screen-reader-text">
+									<?php esc_html_e( 'Next Run', 'wp-crontrol' ); ?>
+								</legend>
+								<p>
+									<label>
+										<input type="radio" name="crontrol_next_run_date_local" value="now" checked>
+										<?php esc_html_e( 'Now', 'wp-crontrol' ); ?>
+									</label>
+								</p>
+								<p>
+									<label>
+										<input type="radio" name="crontrol_next_run_date_local" value="+1 day">
+										<?php esc_html_e( 'Tomorrow', 'wp-crontrol' ); ?>
+									</label>
+								</p>
+								<p>
+									<label>
+										<input type="radio" name="crontrol_next_run_date_local" value="custom" id="crontrol_next_run_date_local_custom" <?php checked( $editing ); ?>>
+										<?php
+										printf(
+											/* translators: %s: An input field for specifying a date and time */
+											esc_html__( 'At this time: %s', 'wp-crontrol' ),
+											sprintf(
+												'<br><br>
+												<input type="date" autocorrect="off" autocapitalize="off" spellcheck="false" name="crontrol_next_run_date_local_custom_date" id="crontrol_next_run_date_local_custom_date" value="%1$s" placeholder="yyyy-mm-dd" pattern="\d{4}-\d{2}-\d{2}" />
+												<input type="time" autocorrect="off" autocapitalize="off" spellcheck="false" name="crontrol_next_run_date_local_custom_time" id="crontrol_next_run_date_local_custom_time" value="%2$s" step="1" placeholder="hh:mm:ss" pattern="\d{2}:\d{2}:\d{2}" />',
+												esc_attr( $next_run_date_local ),
+												esc_attr( $next_run_time_local )
+											)
+										);
+										?>
+									</label>
+								</p>
+							</fieldset>
+						<?php } ?>
 
 						<?php do_action( 'crontrol/manage/next_run', $existing ); ?>
 
