@@ -29,7 +29,7 @@ There are two steps to creating a functioning cron event that executes regularly
 
 ### Step one: Adding the hook
 
-In the Tools → Cron Events admin panel, click on "Add New" and enter the details of the hook. You're best off using a hook name that conforms to normal PHP variable naming conventions. The event schedule is how often your hook will be executed. If you don't see a good interval, then add one first in the Settings → Cron Schedules admin panel.
+In the Tools → Cron Events admin panel, click on "Add New Cron Event" and enter the details of the hook. You're best off using a hook name that conforms to normal PHP variable naming conventions. The event schedule is how often your hook will be executed. If you don't see a good interval, then add one first in the Settings → Cron Schedules admin panel.
 
 ### Step two: Writing the function
 

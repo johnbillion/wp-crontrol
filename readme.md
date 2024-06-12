@@ -93,7 +93,7 @@ You can change the time and recurrence of a cron event by clicking the "Edit" li
 
 ### How can I create a cron event that requests a URL?
 
-From the Tools → Cron Events → Add New screen, select the "Request a URL" option under the "Event Type" list. Fill out the rest of the details as required and press the "Add Event" button.
+From the Tools → Cron Events → Add New Cron Event screen, select the "Request a URL" option under the "Event Type" list. Fill out the rest of the details as required and press the "Add Event" button.
 
 ### Why do changes that I make to some cron events not get saved?
 
@@ -121,7 +121,7 @@ There are two steps to getting a functioning cron event that executes regularly.
 
 *Step One: Adding the hook*
 
-In the Tools → Cron Events admin panel, click on "Add New" and enter the details of the hook. You're best off using a hook name that conforms to normal PHP variable naming conventions. The event schedule is how often your hook will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel.
+In the Tools → Cron Events admin panel, click on "Add New Cron Event" and enter the details of the hook. You're best off using a hook name that conforms to normal PHP variable naming conventions. The event schedule is how often your hook will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel.
 
 *Step Two: Writing the function*
 
@@ -141,7 +141,7 @@ function my_function() {
 
 ### How do I create a new PHP cron event?
 
-In the Tools → Cron Events admin panel, click on "Add New". In the form that appears, select "PHP Cron Event" and enter the schedule and next run time. The event schedule is how often your event will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel. In the "PHP Code" area, enter the PHP code that should be run when your cron event is executed. You don't need to provide the PHP opening tag (`<?php`).
+In the Tools → Cron Events admin panel, click on "Add New Cron Event". In the form that appears, select "PHP Cron Event" and enter the schedule and next run time. The event schedule is how often your event will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules admin panel. In the "PHP Code" area, enter the PHP code that should be run when your cron event is executed. You don't need to provide the PHP opening tag (`<?php`).
 
 Creating, editing, and running PHP cron events is subject to restrictive security permissions. [You can read all about the features and security of PHP cron events on the WP Crontrol website](https://wp-crontrol.com/docs/php-cron-events/).
 

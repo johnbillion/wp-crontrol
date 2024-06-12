@@ -29,7 +29,7 @@ class AddEventCest {
 
 	public function AddingANewURLEvent( AcceptanceTester $I ) {
 		$I->amOnCronEventListingPage();
-		$I->click( 'Add New', '#wpbody' );
+		$I->click( 'Add New Cron Event', '#wpbody' );
 		$I->dontSee( 'PHP Code' );
 		$I->dontSee( 'URL' );
 		$I->dontSee( 'HTTP Method' );
