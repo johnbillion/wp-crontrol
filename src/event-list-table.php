@@ -461,7 +461,7 @@ class Table extends \WP_List_Table {
 			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
 		}
 
-		if ( function_exists( 'wp_unschedule_hook' ) && ( 'crontrol_cron_job' !== $event->hook ) ) {
+		if ( 'crontrol_cron_job' !== $event->hook ) {
 			if ( self::$count_by_hook[ $event->hook ] > 1 ) {
 				$link = array(
 					'page'            => 'crontrol_admin_manage_page',

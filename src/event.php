@@ -145,7 +145,7 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 
 	$next_run_utc = (int) get_gmt_from_date( gmdate( 'Y-m-d H:i:s', $next_run_local ), 'U' );
 
-	if ( 'crontrol_cron_job' === $hook && ! empty( $args[0]['code'] ) && class_exists( '\ParseError' ) ) {
+	if ( 'crontrol_cron_job' === $hook && ! empty( $args[0]['code'] ) ) {
 		try {
 			/**
 			 * The call to `eval()` below checks the syntax of the PHP code provided in the cron event. This is done to
@@ -160,7 +160,6 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 				'return true; %s',
 				$args[0]['code']
 			) );
-		// phpcs:ignore PHPCompatibility.Classes.NewClasses.parseerrorFound
 		} catch ( \ParseError $e ) {
 			$args[0]['syntax_error_message'] = $e->getMessage();
 			$args[0]['syntax_error_line'] = $e->getLine();

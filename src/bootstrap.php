@@ -568,10 +568,7 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 
-		if ( function_exists( 'wp_unschedule_hook' ) ) {
-			/** @var int|false */
-			$deleted = wp_unschedule_hook( $hook );
-		}
+		$deleted = wp_unschedule_hook( $hook );
 
 		if ( 0 === $deleted ) {
 			$redirect = array(
@@ -2140,7 +2137,7 @@ function enqueue_assets( $hook_suffix ) {
 	$vars = array();
 
 	if ( ! empty( $tab['add-event'] ) || ! empty( $tab['edit-event'] ) ) {
-		if ( function_exists( 'wp_enqueue_code_editor' ) && current_user_can( 'edit_files' ) ) {
+		if ( current_user_can( 'edit_files' ) ) {
 			$settings = wp_enqueue_code_editor( array(
 				'type' => 'text/x-php',
 			) );
