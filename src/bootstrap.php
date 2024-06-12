@@ -1646,7 +1646,7 @@ function show_cron_form( $editing ) {
 						</label>
 					</th>
 					<td>
-						<input type="url" class="regular-text code" id="crontrol_url" name="crontrol_url" value="<?php echo esc_url( $editing ? $existing['args'][0]['url'] : '' ); ?>" required />
+						<input type="url" class="regular-text code" id="crontrol_url" name="crontrol_url" value="<?php echo esc_url( $editing ? $existing['args'][0]['url'] : '' ); ?>" />
 						<?php do_action( 'crontrol/manage/url', $existing ); ?>
 					</td>
 				</tr>

@@ -14,22 +14,25 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	const newPHPCronElement = document.querySelector( 'input[value="new_php_cron"]' );
 	const hookCodeElement = document.getElementById( 'crontrol_hookcode' );
 	const hookNameElement = document.getElementById( 'crontrol_hookname' );
+	const hookURLElement = document.getElementById( 'crontrol_url' );
 	const editEventElement = document.querySelector( '.crontrol-edit-event' );
 
 	customDateElement && customDateElement.addEventListener( 'change', checkCustom );
 	customTimeElement && customTimeElement.addEventListener( 'change', checkCustom );
 
-	newCronElement.addEventListener( 'click', () => {
+	newCronElement && newCronElement.addEventListener( 'click', () => {
 		editEventElement.classList.remove( 'crontrol-edit-event-url' );
 		editEventElement.classList.remove( 'crontrol-edit-event-php' );
 		editEventElement.classList.add( 'crontrol-edit-event-standard' );
 		hookNameElement.setAttribute( 'required', true );
+		hookURLElement.removeAttribute( 'required' );
 	} );
 
-	newURLCronElement.addEventListener( 'click', () => {
+	newURLCronElement && newURLCronElement.addEventListener( 'click', () => {
 		editEventElement.classList.remove( 'crontrol-edit-event-standard' );
 		editEventElement.classList.remove( 'crontrol-edit-event-php' );
 		editEventElement.classList.add( 'crontrol-edit-event-url' );
+		hookURLElement.setAttribute( 'required', true );
 		hookNameElement.removeAttribute( 'required' );
 	} );
 
@@ -39,6 +42,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			editEventElement.classList.remove( 'crontrol-edit-event-url' );
 			editEventElement.classList.add( 'crontrol-edit-event-php' );
 			hookNameElement.removeAttribute( 'required' );
+			hookURLElement.removeAttribute( 'required' );
 			if ( ! hookCodeElement.classList.contains( 'crontrol-editor-initialized' ) ) {
 				wp.codeEditor.initialize( 'crontrol_hookcode', window.wpCrontrol.codeEditor );
 			}
