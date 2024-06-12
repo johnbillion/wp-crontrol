@@ -433,7 +433,7 @@ class Table extends \WP_List_Table {
 
 			/* translators: Resume is a verb */
 			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Resume this hook', 'wp-crontrol' ) . '</a>';
-		} elseif ( 'crontrol_cron_job' !== $event->hook ) {
+		} elseif ( 'crontrol_cron_job' !== $event->hook && 'crontrol_url_cron_job' !== $event->hook ) {
 			$link = array(
 				'page'            => 'crontrol_admin_manage_page',
 				'crontrol_action' => 'pause-hook',
@@ -460,7 +460,7 @@ class Table extends \WP_List_Table {
 			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
 		}
 
-		if ( 'crontrol_cron_job' !== $event->hook ) {
+		if ( 'crontrol_cron_job' !== $event->hook && 'crontrol_url_cron_job' !== $event->hook ) {
 			if ( self::$count_by_hook[ $event->hook ] > 1 ) {
 				$link = array(
 					'page'            => 'crontrol_admin_manage_page',
@@ -575,6 +575,25 @@ class Table extends \WP_List_Table {
 			return $output;
 		}
 
+		if ( 'crontrol_url_cron_job' === $event->hook ) {
+			if ( ! empty( $event->args[0]['name'] ) ) {
+				/* translators: %s: Details about the URL cron event. */
+				$output = esc_html( sprintf( __( 'URL cron event (%s)', 'wp-crontrol' ), $event->args[0]['name'] ) );
+			} elseif ( ! empty( $event->args[0]['url'] ) ) {
+				$url = sprintf(
+					'<code>%s</code>',
+					esc_html( $event->args[0]['url'] )
+				);
+
+				/* translators: %s: Details about the URL cron event. */
+				$output = sprintf( esc_html__( 'URL cron event (%s)', 'wp-crontrol' ), $url );
+			} else {
+				$output = esc_html__( 'URL cron event', 'wp-crontrol' );
+			}
+
+			return $output;
+		}
+
 		$output = esc_html( $event->hook );
 
 		if ( is_paused( $event ) ) {
@@ -604,7 +623,7 @@ class Table extends \WP_List_Table {
 	protected function column_crontrol_actions( $event ) {
 		$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
 
-		if ( 'crontrol_cron_job' === $event->hook ) {
+		if ( 'crontrol_cron_job' === $event->hook || 'crontrol_url_cron_job' === $event->hook ) {
 			return 'WP Crontrol';
 		} elseif ( ! empty( $hook_callbacks ) ) {
 			$callbacks = array();
