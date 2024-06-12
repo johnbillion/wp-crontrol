@@ -21,6 +21,9 @@ class AddEventCest {
 	public function AddingANewEvent( AcceptanceTester $I ) {
 		$I->amOnCronEventListingPage();
 		$I->click( 'Add New Cron Event', '#wpbody' );
+		$I->dontSee( 'PHP Code', '#crontrol_form' );
+		$I->dontSee( 'URL', '#crontrol_form' );
+		$I->dontSee( 'HTTP Method', '#crontrol_form' );
 		$I->fillField( 'Hook Name', 'my_hookname' );
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );
@@ -30,13 +33,13 @@ class AddEventCest {
 	public function AddingANewURLEvent( AcceptanceTester $I ) {
 		$I->amOnCronEventListingPage();
 		$I->click( 'Add New Cron Event', '#wpbody' );
-		$I->dontSee( 'PHP Code' );
-		$I->dontSee( 'URL' );
-		$I->dontSee( 'HTTP Method' );
+		$I->dontSee( 'PHP Code', '#crontrol_form' );
+		$I->dontSee( 'URL', '#crontrol_form' );
+		$I->dontSee( 'HTTP Method', '#crontrol_form' );
 		$I->selectOption( 'input[name="crontrol_action"]', 'Request a URL' );
-		$I->dontSee( 'PHP Code' );
-		$I->see( 'URL' );
-		$I->see( 'HTTP Method' );
+		$I->dontSee( 'PHP Code', '#crontrol_form' );
+		$I->see( 'URL', '#crontrol_form' );
+		$I->see( 'HTTP Method', '#crontrol_form' );
 		$I->fillField( 'URL', 'https://example.org/' );
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );
@@ -47,13 +50,13 @@ class AddEventCest {
 	public function AddingANewPHPEvent( AcceptanceTester $I ) {
 		$I->amOnCronEventListingPage();
 		$I->click( 'Add New Cron Event', '#wpbody' );
-		$I->dontSee( 'PHP Code' );
-		$I->dontSee( 'URL' );
-		$I->dontSee( 'HTTP Method' );
+		$I->dontSee( 'PHP Code', '#crontrol_form' );
+		$I->dontSee( 'URL', '#crontrol_form' );
+		$I->dontSee( 'HTTP Method', '#crontrol_form' );
 		$I->selectOption( 'input[name="crontrol_action"]', 'PHP cron event' );
-		$I->see( 'PHP Code' );
-		$I->dontSee( 'URL' );
-		$I->dontSee( 'HTTP Method' );
+		$I->see( 'PHP Code', '#crontrol_form' );
+		$I->dontSee( 'URL', '#crontrol_form' );
+		$I->dontSee( 'HTTP Method', '#crontrol_form' );
 		$I->fillPHPEditorField( 'amazing();' );
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );
