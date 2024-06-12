@@ -177,7 +177,6 @@ class Table extends \WP_List_Table {
 		return array(
 			'cb'                  => '<input type="checkbox" />',
 			'crontrol_hook'       => esc_html__( 'Hook', 'wp-crontrol' ),
-			'crontrol_args'       => esc_html__( 'Arguments', 'wp-crontrol' ),
 			'crontrol_next'       => esc_html(
 				sprintf(
 					/* translators: %s: UTC offset */
@@ -537,8 +536,20 @@ class Table extends \WP_List_Table {
 	protected function column_crontrol_hook( $event ) {
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			if ( ! empty( $event->args[0]['name'] ) ) {
-				/* translators: %s: The name of the PHP cron event. */
+				/* translators: %s: Details about the PHP cron event. */
 				$output = esc_html( sprintf( __( 'PHP Cron (%s)', 'wp-crontrol' ), $event->args[0]['name'] ) );
+			} elseif ( ! empty( $event->args[0]['code'] ) ) {
+				$lines = explode( "\n", trim( $event->args[0]['code'] ) );
+				$code  = reset( $lines );
+				$code  = substr( $code, 0, 50 );
+
+				$php = sprintf(
+					'<code>%s</code>&hellip;',
+					esc_html( $code )
+				);
+
+				/* translators: %s: Details about the PHP cron event. */
+				$output = sprintf( esc_html__( 'PHP Cron (%s)', 'wp-crontrol' ), $php );
 			} else {
 				$output = esc_html__( 'PHP Cron', 'wp-crontrol' );
 			}
@@ -548,6 +559,17 @@ class Table extends \WP_List_Table {
 					' &mdash; <strong class="status-crontrol-check post-state"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</strong>',
 					esc_html__( 'Needs checking', 'wp-crontrol' )
 				);
+			}
+
+			if ( isset( $event->args[0]['syntax_error_message'], $event->args[0]['syntax_error_line'] ) ) {
+				$output .= '<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
+				$output .= sprintf(
+					/* translators: 1: Line number, 2: Error message text */
+					esc_html__( 'Line %1$s: %2$s', 'wp-crontrol' ),
+					esc_html( number_format_i18n( $event->args[0]['syntax_error_line'] ) ),
+					esc_html( $event->args[0]['syntax_error_message'] )
+				);
+				$output .= '</span>';
 			}
 
 			return $output;
@@ -563,62 +585,14 @@ class Table extends \WP_List_Table {
 			);
 		}
 
-		return $output;
-	}
-
-	/**
-	 * Returns the output for the arguments cell of a table row.
-	 *
-	 * @param stdClass $event The cron event for the current row.
-	 * @return string The cell output.
-	 */
-	protected function column_crontrol_args( $event ) {
-		if ( 'crontrol_cron_job' === $event->hook ) {
-			$return = '<em>' . esc_html__( 'PHP Code', 'wp-crontrol' ) . '</em>';
-
-			if ( isset( $event->args['code'] ) ) {
-				$args = $event->args;
-			} else {
-				$args = $event->args[0];
-			}
-
-			if ( isset( $args['syntax_error_message'], $args['syntax_error_line'] ) ) {
-				$return .= '<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
-				$return .= sprintf(
-					/* translators: 1: Line number, 2: Error message text */
-					esc_html__( 'Line %1$s: %2$s', 'wp-crontrol' ),
-					esc_html( number_format_i18n( $args['syntax_error_line'] ) ),
-					esc_html( $args['syntax_error_message'] )
-				);
-				$return .= '</span>';
-			}
-
-			if ( ! empty( $args['code'] ) ) {
-				$lines = explode( "\n", trim( $args['code'] ) );
-				$code  = reset( $lines );
-				$code  = substr( $code, 0, 50 );
-
-				$return .= '<br>';
-				$return .= sprintf(
-					'<code>%s</code>&hellip;',
-					esc_html( $code )
-				);
-			}
-
-			return $return;
-		} else {
-			if ( empty( $event->args ) ) {
-				return sprintf(
-					'<em>%s</em>',
-					esc_html__( 'None', 'wp-crontrol' )
-				);
-			} else {
-				return sprintf(
-					'<pre>%s</pre>',
-					esc_html( \Crontrol\json_output( $event->args ) )
-				);
-			}
+		if ( ! empty( $event->args ) ) {
+			$output .= sprintf(
+				'<br><br><pre>%s</pre>',
+				esc_html( \Crontrol\json_output( $event->args ) )
+			);
 		}
+
+		return $output;
 	}
 
 	/**
