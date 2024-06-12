@@ -199,9 +199,12 @@ function action_handle_posts() {
 		$cr = $request->init( wp_unslash( $_POST ) );
 
 		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
-		$args           = array(
-			'url' => $cr->url,
-			'method' => $cr->method,
+		$args = array(
+			array(
+				'url' => $cr->url,
+				'method' => $cr->method,
+				'name' => $cr->eventname,
+			),
 		);
 
 		add_filter( 'schedule_event', function( $event ) {
@@ -404,8 +407,11 @@ function action_handle_posts() {
 		check_admin_referer( "crontrol-edit-cron_{$cr->original_hookname}_{$cr->original_sig}_{$cr->original_next_run_utc}" );
 
 		$args = array(
-			'url' => $cr->url,
-			'method' => $cr->method,
+			array(
+				'url' => $cr->url,
+				'method' => $cr->method,
+				'name' => $cr->eventname,
+			),
 		);
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'URL Cron', 'wp-crontrol' );
 		$redirect = array(
@@ -1640,7 +1646,7 @@ function show_cron_form( $editing ) {
 						</label>
 					</th>
 					<td>
-						<input type="url" class="regular-text code" id="crontrol_url" name="crontrol_url" value="<?php echo esc_url( $editing ? $existing['args']['url'] : '' ); ?>" required />
+						<input type="url" class="regular-text code" id="crontrol_url" name="crontrol_url" value="<?php echo esc_url( $editing ? $existing['args'][0]['url'] : '' ); ?>" required />
 						<?php do_action( 'crontrol/manage/url', $existing ); ?>
 					</td>
 				</tr>
@@ -1657,7 +1663,7 @@ function show_cron_form( $editing ) {
 						</p>
 						<p>
 							<label>
-								<input type="radio" name="crontrol_method" value="POST" <?php checked( $is_editing_url && 'POST' === $existing['args']['method'] ); ?>>
+								<input type="radio" name="crontrol_method" value="POST" <?php checked( $is_editing_url && 'POST' === $existing['args'][0]['method'] ); ?>>
 								POST
 							</label>
 						</p>
@@ -1670,7 +1676,7 @@ function show_cron_form( $editing ) {
 						</label>
 					</th>
 					<td>
-						<input type="text" class="regular-text" id="crontrol_eventname" name="crontrol_eventname" value="<?php echo esc_attr( $editing ? $existing['args']['name'] : '' ); ?>"/>
+						<input type="text" class="regular-text" id="crontrol_eventname" name="crontrol_eventname" value="<?php echo esc_attr( $editing ? $existing['args'][0]['name'] : '' ); ?>"/>
 						<?php do_action( 'crontrol/manage/eventname', $existing ); ?>
 					</td>
 				</tr>
