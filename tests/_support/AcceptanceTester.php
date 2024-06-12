@@ -101,7 +101,7 @@ class AcceptanceTester extends \Codeception\Actor {
 	 */
 	public function amWorkingWithACronEvent( string $hook_name, string $args = '' ) {
 		$this->amOnCronEventListingPage();
-		$this->click( 'Add New', '#wpbody' );
+		$this->click( 'Add New Cron Event', '#wpbody' );
 		$this->fillField( 'Hook Name', $hook_name );
 		$this->fillField( 'Arguments (optional)', $args );
 		$this->selectOption( 'input[name="crontrol_next_run_date_local"]', 'Tomorrow' );
