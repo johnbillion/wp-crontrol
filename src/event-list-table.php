@@ -537,7 +537,7 @@ class Table extends \WP_List_Table {
 		if ( 'crontrol_cron_job' === $event->hook ) {
 			if ( ! empty( $event->args[0]['name'] ) ) {
 				/* translators: %s: Details about the PHP cron event. */
-				$output = esc_html( sprintf( __( 'PHP Cron (%s)', 'wp-crontrol' ), $event->args[0]['name'] ) );
+				$output = esc_html( sprintf( __( 'PHP cron event (%s)', 'wp-crontrol' ), $event->args[0]['name'] ) );
 			} elseif ( ! empty( $event->args[0]['code'] ) ) {
 				$lines = explode( "\n", trim( $event->args[0]['code'] ) );
 				$code  = reset( $lines );
@@ -549,9 +549,9 @@ class Table extends \WP_List_Table {
 				);
 
 				/* translators: %s: Details about the PHP cron event. */
-				$output = sprintf( esc_html__( 'PHP Cron (%s)', 'wp-crontrol' ), $php );
+				$output = sprintf( esc_html__( 'PHP cron event (%s)', 'wp-crontrol' ), $php );
 			} else {
-				$output = esc_html__( 'PHP Cron', 'wp-crontrol' );
+				$output = esc_html__( 'PHP cron event', 'wp-crontrol' );
 			}
 
 			if ( integrity_failed( $event ) ) {
