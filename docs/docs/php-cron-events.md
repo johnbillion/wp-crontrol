@@ -18,7 +18,7 @@ If you wish to prevent PHP cron events from being added or edited on your site t
 
 ## How do I create a new PHP cron event?
 
-In the Tools → Cron Events admin panel, click on "Add New". In the form that appears, select the "Execute PHP" option under the "Event Type" list and enter the schedule and next run time. In the "Hook code" area, enter the PHP code that should be run when your cron event is executed. Don't include the PHP opening tag (`<?php`).
+In the Tools → Cron Events admin panel, click on "Add New". In the form that appears, select the "PHP cron event" option under the "Event Type" list and enter the schedule and next run time. In the "Hook code" area, enter the PHP code that should be run when your cron event is executed. Don't include the PHP opening tag (`<?php`).
 
 ## Can I "lock" PHP cron events so that other users cannot edit them?
 
