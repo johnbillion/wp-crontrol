@@ -544,8 +544,8 @@ function get_list_table() {
  * @return int
  */
 function uasort_order_events( $a, $b ) {
-	$orderby = ( ! empty( $_GET['orderby'] ) ) ? sanitize_text_field( $_GET['orderby'] ) : 'crontrol_next';
-	$order   = ( ! empty( $_GET['order'] ) ) ? sanitize_text_field( $_GET['order'] ) : 'asc';
+	$orderby = ( ! empty( $_GET['orderby'] ) && is_string( $_GET['orderby'] ) ) ? sanitize_text_field( $_GET['orderby'] ) : 'crontrol_next';
+	$order   = ( ! empty( $_GET['order'] ) && is_string( $_GET['order'] ) ) ? sanitize_text_field( $_GET['order'] ) : 'asc';
 	$compare = 0;
 
 	switch ( $orderby ) {

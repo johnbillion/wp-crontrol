@@ -67,7 +67,7 @@ class Table extends \WP_List_Table {
 		$events = get();
 		$this->all_events = $events;
 
-		if ( ! empty( $_GET['s'] ) ) {
+		if ( ! empty( $_GET['s'] ) && is_string( $_GET['s'] ) ) {
 			$s = sanitize_text_field( wp_unslash( $_GET['s'] ) );
 
 			$events = array_filter( $events, function( $event ) use ( $s ) {
@@ -75,8 +75,8 @@ class Table extends \WP_List_Table {
 			} );
 		}
 
-		if ( ! empty( $_GET['crontrol_hooks_type'] ) ) {
-			$hooks_type = sanitize_text_field( $_GET['crontrol_hooks_type'] );
+		if ( ! empty( $_GET['crontrol_hooks_type'] ) && is_string( $_GET['crontrol_hooks_type'] ) ) {
+			$hooks_type = sanitize_text_field( wp_unslash( $_GET['crontrol_hooks_type'] ) );
 			$filtered = self::get_filtered_events( $events );
 
 			if ( isset( $filtered[ $hooks_type ] ) ) {

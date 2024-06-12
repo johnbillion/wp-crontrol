@@ -433,9 +433,9 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to add new cron schedules.', 'wp-crontrol' ), 401 );
 		}
 		check_admin_referer( 'crontrol-new-schedule' );
-		$name     = wp_unslash( $_POST['crontrol_schedule_internal_name'] );
+		$name     = sanitize_text_field( wp_unslash( $_POST['crontrol_schedule_internal_name'] ) );
 		$interval = absint( $_POST['crontrol_schedule_interval'] );
-		$display  = wp_unslash( $_POST['crontrol_schedule_display_name'] );
+		$display  = sanitize_text_field( wp_unslash( $_POST['crontrol_schedule_display_name'] ) );
 
 		Schedule\add( $name, $interval, $display );
 		$redirect = array(
@@ -735,7 +735,7 @@ function action_handle_posts() {
 	} elseif ( isset( $_POST['crontrol_action'] ) && 'export-event-csv' === $_POST['crontrol_action'] ) {
 		check_admin_referer( 'crontrol-export-event-csv', 'crontrol_nonce' );
 
-		$type = isset( $_POST['crontrol_hooks_type'] ) ? $_POST['crontrol_hooks_type'] : 'all';
+		$type = isset( $_POST['crontrol_hooks_type'] ) ? wp_unslash( $_POST['crontrol_hooks_type'] ) : 'all';
 		$headers = array(
 			'hook',
 			'arguments',
@@ -745,11 +745,11 @@ function action_handle_posts() {
 			'recurrence',
 			'interval',
 		);
-		$filename = sprintf(
+		$filename = sanitize_file_name( sprintf(
 			'cron-events-%s-%s.csv',
 			$type,
 			gmdate( 'Y-m-d-H.i.s' )
-		);
+		) );
 		$csv = fopen( 'php://output', 'w' );
 
 		if ( false === $csv ) {
