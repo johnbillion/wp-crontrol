@@ -2205,7 +2205,7 @@ function get_all_core_hooks() {
 			'wp_maybe_auto_update', // 3.7.0
 			'wp_split_shared_term_batch', // 4.3.0
 			'wp_update_comment_type_batch', // 5.5.0
-			'wp_delete_temp_updater_backups', // 5.9.0
+			'wp_delete_temp_updater_backups', // 6.3.0
 		)
 	);
 }
