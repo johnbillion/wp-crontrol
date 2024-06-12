@@ -12,8 +12,8 @@
 	},
 	"devDependencies": {
 		"version-bump-prompt": "^6.1.0",
-		"vitepress-plugin-rss": "^0.2.0",
-		"vitepress": "1.0.0-rc.45"
+		"vitepress-plugin-rss": "0.2.6",
+		"vitepress": "1.2.3"
 	},
 	"scripts": {
 		"bump:patch": "bump patch --commit 'Version %s.' wp-crontrol.php package.json readme.md",
