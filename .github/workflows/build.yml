@@ -17,3 +17,4 @@ jobs:
     with:
       tag: ${{ github.event_name != 'workflow_dispatch' }}
       node: false
+      vendor: true
