@@ -2461,19 +2461,27 @@ function json_output( $input, $pretty = true ) {
 }
 
 /**
- * Fetches the URL in a cron event using the HTTP API.
+ * Fetches the URL in a URL cron event using the HTTP API.
  *
  * @throws Exception If the request fails.
  *
- * @param string $url    The URL to fetch.
- * @param string $method The HTTP method to use.
+ * @param array<string,string> $args The event args array.
+ * @phpstan-param array{
+ *   url: string,
+ *   name: string,
+ *   method: 'GET'|'POST',
+ * } $args
  */
-function action_url_cron_event( $url, $method ): void {
-	$args = array(
+function action_url_cron_event( array $args ): void {
+	list(
+		'url' => $url,
+		'method' => $method,
+	) = $args;
+	$request_args = array(
 		'timeout' => 30,
 		'method'  => $method,
 	);
-	$response = wp_remote_request( $url, $args );
+	$response = wp_remote_request( $url, $request_args );
 
 	if ( is_wp_error( $response ) ) {
 		throw new Exception( sprintf(
