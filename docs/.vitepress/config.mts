@@ -69,6 +69,10 @@ export default defineConfig({
 						link: '/docs/php-cron-events/',
 					},
 					{
+						text: 'URL cron events',
+						link: '/docs/url-cron-events/',
+					},
+					{
 						text: 'What happens if I deactivate WP Crontrol?',
 						link: '/docs/deactivation/',
 					},
