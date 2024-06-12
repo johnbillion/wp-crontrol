@@ -1,54 +1,19 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow
 
-name: Build Release
+name: Build
 on:
   push:
     branches:
       - 'release'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  wordpress:
-    name: Release
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    timeout-minutes: 10
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Install PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: 8.0
-        coverage: none
-        ini-file: development
-      env:
-        fail-fast: true
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Debugging
-      run: |
-        php --version
-        composer --version
-
-    - name: Generate autoload file
-      run: ./bin/build.sh
-
-    - name: Setup
-      run: >
-        echo VERSION=$(node -p "require('./package.json').version") >> $GITHUB_ENV
-
-    - name: Tag
-      run: |
-        echo "Releasing version $VERSION ..."
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        git checkout -b "release-$VERSION"
-        git add -f vendor/autoload.php
-        git add -f vendor/composer/*
-        git commit -m "Release $VERSION"
-        git tag "$VERSION"
-        git push --tags
-      env:
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build:
+    name: Build
+    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-build.yml@trunk
+    with:
+      tag: ${{ github.event_name != 'workflow_dispatch' }}
+      node: false

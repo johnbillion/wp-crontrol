@@ -6,39 +6,16 @@ on:
     branches:
       - deploy
 
+permissions:
+  contents: read
+
 jobs:
   wordpress:
     name: WordPress.org
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    timeout-minutes: 10
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # @TODO need to cache the npm dependencies
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Generate autoload file
-        run: ./bin/build.sh
-
-      - name: Populate Changelog
-        run: |
-          node .github/workflows/changelog.js readme.md
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add readme.md
-          git add -f vendor/autoload.php
-          git add -f vendor/composer/*
-          git commit -m "Readme"
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: WordPress Plugin Deploy
-        uses: 10up/action-wordpress-plugin-asset-update@2.1.2
-        env:
-          SVN_USERNAME: ${{ secrets.WPORG_SVN_USERNAME }}
-          SVN_PASSWORD: ${{ secrets.WPORG_SVN_PASSWORD }}
-          README_NAME: readme.md
+    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-deploy-assets.yml@trunk
+    with:
+      plugin: wp-crontrol
+      readme: readme.md
+    secrets:
+      WPORG_SVN_USERNAME: ${{ secrets.WPORG_SVN_USERNAME }}
+      WPORG_SVN_PASSWORD: ${{ secrets.WPORG_SVN_PASSWORD }}
