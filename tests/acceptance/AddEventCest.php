@@ -21,9 +21,9 @@ class AddEventCest {
 	public function AddingANewEvent( AcceptanceTester $I ) {
 		$I->amOnCronEventListingPage();
 		$I->click( 'Add New Cron Event', '#wpbody' );
-		$I->dontSee( 'PHP Code', '#crontrol_form' );
-		$I->dontSee( 'URL', '#crontrol_form' );
-		$I->dontSee( 'HTTP Method', '#crontrol_form' );
+		$I->dontSee( 'PHP Code', '#crontrol_form th' );
+		$I->dontSee( 'URL', '#crontrol_form th' );
+		$I->dontSee( 'HTTP Method', '#crontrol_form th' );
 		$I->fillField( 'Hook Name', 'my_hookname' );
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );
@@ -33,14 +33,14 @@ class AddEventCest {
 	public function AddingANewURLEvent( AcceptanceTester $I ) {
 		$I->amOnCronEventListingPage();
 		$I->click( 'Add New Cron Event', '#wpbody' );
-		$I->dontSee( 'PHP Code', '#crontrol_form' );
-		$I->dontSee( 'URL', '#crontrol_form' );
-		$I->dontSee( 'HTTP Method', '#crontrol_form' );
+		$I->dontSee( 'PHP Code', '#crontrol_form th' );
+		$I->dontSee( 'URL', '#crontrol_form th' );
+		$I->dontSee( 'HTTP Method', '#crontrol_form th' );
 		$I->selectOption( 'input[name="crontrol_action"]', 'Request a URL' );
-		$I->dontSee( 'PHP Code', '#crontrol_form' );
-		$I->see( 'URL', '#crontrol_form' );
-		$I->see( 'HTTP Method', '#crontrol_form' );
-		$I->fillField( 'URL', 'https://example.org/' );
+		$I->dontSee( 'PHP Code', '#crontrol_form th' );
+		$I->see( 'URL', '#crontrol_form th' );
+		$I->see( 'HTTP Method', '#crontrol_form th' );
+		$I->fillField( '#crontrol_url', 'https://example.org/' );
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );
 		$I->seeAdminSuccessNotice( 'Created the cron event URL Cron.' );
@@ -50,13 +50,13 @@ class AddEventCest {
 	public function AddingANewPHPEvent( AcceptanceTester $I ) {
 		$I->amOnCronEventListingPage();
 		$I->click( 'Add New Cron Event', '#wpbody' );
-		$I->dontSee( 'PHP Code', '#crontrol_form' );
-		$I->dontSee( 'URL', '#crontrol_form' );
-		$I->dontSee( 'HTTP Method', '#crontrol_form' );
+		$I->dontSee( 'PHP Code', '#crontrol_form th' );
+		$I->dontSee( 'URL', '#crontrol_form th' );
+		$I->dontSee( 'HTTP Method', '#crontrol_form th' );
 		$I->selectOption( 'input[name="crontrol_action"]', 'PHP cron event' );
-		$I->see( 'PHP Code', '#crontrol_form' );
-		$I->dontSee( 'URL', '#crontrol_form' );
-		$I->dontSee( 'HTTP Method', '#crontrol_form' );
+		$I->see( 'PHP Code', '#crontrol_form th' );
+		$I->dontSee( 'URL', '#crontrol_form th' );
+		$I->dontSee( 'HTTP Method', '#crontrol_form th' );
 		$I->fillPHPEditorField( 'amazing();' );
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );
