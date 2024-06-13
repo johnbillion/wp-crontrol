@@ -1262,9 +1262,11 @@ function get_timezone_name() {
 		return get_utc_offset();
 	}
 
+	$parts = explode( '/', $timezone_string );
+
 	return sprintf(
-		'%s, %s',
-		str_replace( '_', ' ', $timezone_string ),
+		'%s (%s)',
+		str_replace( '_', ' ', end( $parts ) ),
 		get_utc_offset()
 	);
 }
@@ -1642,8 +1644,8 @@ function show_cron_form( $editing ) {
 				<?php
 					echo esc_html( sprintf(
 						/* translators: 1: Date and time, 2: Timezone */
-						__( 'Site time when page loaded: %1$s (%2$s)', 'wp-crontrol' ),
-						date_i18n( 'Y-m-d H:i:s' ),
+						__( 'Site time when page loaded: %1$s, %2$s', 'wp-crontrol' ),
+						date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
 						get_timezone_name()
 					) );
 				?>
@@ -1787,8 +1789,8 @@ function admin_manage_page() {
 					<?php
 						echo esc_html( sprintf(
 							/* translators: 1: Date and time, 2: Timezone */
-							__( 'Site time when page loaded: %1$s (%2$s)', 'wp-crontrol' ),
-							date_i18n( 'Y-m-d H:i:s' ),
+							__( 'Site time when page loaded: %1$s, %2$s', 'wp-crontrol' ),
+							date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
 							get_timezone_name()
 						) );
 					?>

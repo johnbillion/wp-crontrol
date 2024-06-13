@@ -629,12 +629,13 @@ class Table extends \WP_List_Table {
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_next( $event ) {
-		$date_local_format = 'Y-m-d H:i:s';
+		$date_local_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 		$offset_site = get_date_from_gmt( 'now', 'P' );
 		$offset_event = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->timestamp ), 'P' );
 
+		// If the timezone of the date of the event is different from the site timezone, add a marker.
 		if ( $offset_site !== $offset_event ) {
-			$date_local_format .= ' P';
+			$date_local_format .= ' (P)';
 		}
 
 		$date_utc   = gmdate( 'c', $event->timestamp );
