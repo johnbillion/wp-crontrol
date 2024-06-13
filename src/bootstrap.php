@@ -36,7 +36,7 @@ function init_hooks() {
 
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
-	add_action( 'crontrol_url_cron_job', __NAMESPACE__ . '\action_url_cron_event', 10, 2 );
+	add_action( 'crontrol_url_cron_job', __NAMESPACE__ . '\action_url_cron_event' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_assets' );
 	add_action( 'crontrol/tab-header',   __NAMESPACE__ . '\show_cron_status', 20 );
 	add_action( 'activated_plugin',      __NAMESPACE__ . '\flush_status_cache', 10, 0 );
