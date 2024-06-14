@@ -1640,49 +1640,48 @@ function show_cron_form( $editing ) {
 					<?php
 				}
 
-				?>
-				<tr class="crontrol-event-url">
-					<th valign="top" scope="row">
-						<label for="crontrol_url">
-							<?php esc_html_e( 'URL', 'wp-crontrol' ); ?>
-						</label>
-					</th>
-					<td>
-						<input type="url" class="regular-text code" id="crontrol_url" name="crontrol_url" value="<?php echo esc_url( $editing ? $existing['args'][0]['url'] : '' ); ?>" />
-						<?php do_action( 'crontrol/manage/url', $existing ); ?>
-					</td>
-				</tr>
-				<tr class="crontrol-event-url">
-					<th valign="top" scope="row">
-						<?php esc_html_e( 'HTTP Method', 'wp-crontrol' ); ?>
-					</th>
-					<td>
-						<p>
-							<label>
-								<input type="radio" name="crontrol_method" value="GET" checked>
-								GET
+				if ( $is_editing_url || ! $editing ) {
+					?>
+					<tr class="crontrol-event-url">
+						<th valign="top" scope="row">
+							<label for="crontrol_url">
+								<?php esc_html_e( 'URL', 'wp-crontrol' ); ?>
 							</label>
-						</p>
-						<p>
-							<label>
-								<input type="radio" name="crontrol_method" value="POST" <?php checked( $is_editing_url && 'POST' === $existing['args'][0]['method'] ); ?>>
-								POST
+						</th>
+						<td>
+							<input type="url" class="regular-text code" id="crontrol_url" name="crontrol_url" value="<?php echo esc_url( $is_editing_url ? $existing['args'][0]['url'] : '' ); ?>" />
+							<?php do_action( 'crontrol/manage/url', $existing ); ?>
+						</td>
+					</tr>
+					<tr class="crontrol-event-url">
+						<th valign="top" scope="row">
+							<label for="crontrol_method">
+								<?php esc_html_e( 'HTTP Method', 'wp-crontrol' ); ?>
 							</label>
-						</p>
-					</td>
-				</tr>
-				<tr class="crontrol-event-url">
-					<th valign="top" scope="row">
-						<label for="crontrol_eventname">
-							<?php esc_html_e( 'Event Name (optional)', 'wp-crontrol' ); ?>
-						</label>
-					</th>
-					<td>
-						<input type="text" class="regular-text" id="crontrol_eventname" name="crontrol_eventname" value="<?php echo esc_attr( $editing ? $existing['args'][0]['name'] : '' ); ?>"/>
-						<?php do_action( 'crontrol/manage/eventname', $existing ); ?>
-					</td>
-				</tr>
-				<?php
+						</th>
+						<td>
+							<select id="crontrol_method" name="crontrol_method">
+								<option value="GET">GET</option>
+								<option value="POST" <?php selected( $editing ? $existing['args'][0]['method'] === 'POST' : false ); ?>>POST</option>
+								<option value="HEAD" <?php selected( $editing ? $existing['args'][0]['method'] === 'HEAD' : false ); ?>>HEAD</option>
+								<option value="DELETE" <?php selected( $editing ? $existing['args'][0]['method'] === 'DELETE' : false ); ?>>DELETE</option>
+							</select>
+							<?php do_action( 'crontrol/manage/method', $existing ); ?>
+						</td>
+					</tr>
+					<tr class="crontrol-event-url">
+						<th valign="top" scope="row">
+							<label for="crontrol_eventname">
+								<?php esc_html_e( 'Event Name (optional)', 'wp-crontrol' ); ?>
+							</label>
+						</th>
+						<td>
+							<input type="text" class="regular-text" id="crontrol_eventname" name="crontrol_eventname" value="<?php echo esc_attr( $editing ? $existing['args'][0]['name'] : '' ); ?>"/>
+							<?php do_action( 'crontrol/manage/eventname', $existing ); ?>
+						</td>
+					</tr>
+					<?php
+				}
 
 				if ( $is_editing_php || $can_add_php ) {
 					?>
@@ -2483,7 +2482,7 @@ function json_output( $input, $pretty = true ) {
  * @phpstan-param array{
  *   url: string,
  *   name: string,
- *   method: 'GET'|'POST',
+ *   method: string,
  * } $args
  */
 function action_url_cron_event( array $args ): void {
