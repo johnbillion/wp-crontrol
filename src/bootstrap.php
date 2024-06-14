@@ -1628,12 +1628,14 @@ function show_cron_form( $editing ) {
 										<?php esc_html_e( 'Request a URL', 'wp-crontrol' ); ?>
 									</label>
 								</p>
-								<p>
-									<label>
-										<input type="radio" name="crontrol_action" value="new_php_cron">
-										<?php esc_html_e( 'PHP cron event', 'wp-crontrol' ); ?>
-									</label>
-								</p>
+								<?php if ( $can_add_php ) { ?>
+									<p>
+										<label>
+											<input type="radio" name="crontrol_action" value="new_php_cron">
+											<?php esc_html_e( 'PHP cron event', 'wp-crontrol' ); ?>
+										</label>
+									</p>
+								<?php } ?>
 							</fieldset>
 						</td>
 					</tr>
