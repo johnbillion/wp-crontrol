@@ -40,6 +40,9 @@
 
 		<!-- Exclude short description sniff so short `@var` notation can be used -->
 		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
+
+		<!-- Use Yoda condition checks, you may or may not. -->
+		<exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
 	</rule>
 
 	<!-- Ignore some rules for the tests -->
