@@ -32,6 +32,6 @@ jobs:
       fail-fast: false
     uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-acceptance-tests.yml@trunk
     with:
-      wp: 'nightly'
-      php: ${{ matrix.php }}
       node: false
+      php: ${{ matrix.php }}
+      wp: 'nightly'

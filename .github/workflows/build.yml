@@ -15,6 +15,6 @@ jobs:
     name: Build
     uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-build.yml@trunk
     with:
-      tag: ${{ github.event_name != 'workflow_dispatch' }}
       node: false
+      tag: ${{ github.event_name != 'workflow_dispatch' }}
       vendor: true
