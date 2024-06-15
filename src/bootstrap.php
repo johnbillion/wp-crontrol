@@ -1495,16 +1495,6 @@ function show_cron_form( $editing ) {
 	$is_editing_php = ( $existing && 'crontrol_cron_job' === $existing['hookname'] );
 	$is_editing_url = ( $existing && 'crontrol_url_cron_job' === $existing['hookname'] );
 
-	if ( $is_editing_php ) {
-		$helper_text = esc_html__( 'Cron events trigger actions in your code. Enter the schedule of the event, as well as the PHP code to execute when the action is triggered.', 'wp-crontrol' );
-	} else {
-		$helper_text = sprintf(
-			/* translators: %1$s: A file name */
-			esc_html__( 'Cron events trigger actions in your code. A cron event needs a corresponding action hook somewhere in code, e.g. the %1$s file in your theme.', 'wp-crontrol' ),
-			'<code>functions.php</code>'
-		);
-	}
-
 	if ( is_array( $existing ) ) {
 		$other_fields  = wp_nonce_field( "crontrol-edit-cron_{$existing['hookname']}_{$existing['sig']}_{$existing['next_run']}", '_wpnonce', true, false );
 		$other_fields .= sprintf( '<input name="crontrol_original_hookname" type="hidden" value="%s" />',
@@ -1569,12 +1559,6 @@ function show_cron_form( $editing ) {
 			printf(
 				'<h1>%s</h1>',
 				esc_html( $heading )
-			);
-
-			printf(
-				'<p>%s</p>',
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				$helper_text
 			);
 
 			if ( $is_editing_php ) {
