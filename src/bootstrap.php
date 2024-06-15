@@ -1374,7 +1374,7 @@ function show_cron_status( $tab ) {
 			<?php
 		} else {
 			?>
-			<div id="crontrol-status-error" class="error">
+			<div id="crontrol-status-error" class="notice notice-error">
 				<?php
 				printf(
 					'<p>%1$s</p><p><a href="%2$s">%3$s</a></p>',
@@ -2534,9 +2534,8 @@ function action_url_cron_event( array $args ): void {
  *   name?: string,
  *   hash?: string,
  * }|string $args
- * @return void
  */
-function action_php_cron_event( $args ) {
+function action_php_cron_event( $args ): void {
 	if ( is_string( $args ) ) {
 		// Prior to WP Crontrol 1.16.2, PHP cron events were saved with the associative arguments array at the top
 		// level. This means arguments are passed as individual parameters to this function and the first parameter
@@ -2554,7 +2553,7 @@ function action_php_cron_event( $args ) {
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
 		trigger_error(
 			sprintf(
-				'The stored hash is missing for a PHP cron event; for more information see %s',
+				'WP Crontrol: The stored hash is missing for a PHP cron event; for more information see %s',
 				esc_url_raw( admin_url( 'tools.php?page=crontrol_admin_manage_page&crontrol_hooks_type=php' ) ),
 			),
 			E_USER_WARNING
@@ -2567,7 +2566,7 @@ function action_php_cron_event( $args ) {
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
 		trigger_error(
 			sprintf(
-				'The stored hash for a PHP cron event is not valid; for more information see %s',
+				'WP Crontrol: The stored hash for a PHP cron event is not valid; for more information see %s',
 				esc_url_raw( admin_url( 'tools.php?page=crontrol_admin_manage_page&crontrol_hooks_type=php' ) ),
 			),
 			E_USER_WARNING
