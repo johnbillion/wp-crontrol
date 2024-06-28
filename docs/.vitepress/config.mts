@@ -20,8 +20,10 @@ export default defineConfig({
 	rewrites: {
 		'help/:page.md': 'help/:page/index.md',
 		'docs/:page.md': 'docs/:page/index.md',
-		'privacy.md': 'privacy/index.md',
+		'about.md': 'about/index.md',
 		'accessibility.md': 'accessibility/index.md',
+		'privacy.md': 'privacy/index.md',
+		'security.md': 'security/index.md',
 	},
 	head: [
 		[
