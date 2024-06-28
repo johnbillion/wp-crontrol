@@ -1017,7 +1017,7 @@ function admin_help_tab() {
 		sprintf(
 			/* translators: 1: URL to the documentation, 2: WP Crontrol */
 			__( '<a href="%1$s">Read the %2$s website</a> which contains information about events that have missed their schedule, problems with spawning a call to the WP-Cron system, and much more.', 'wp-crontrol' ),
-			'https://wp-crontrol.com',
+			'https://wp-crontrol.com/docs/how-to-use/',
 			'WP Crontrol'
 		),
 		array(
@@ -1088,7 +1088,7 @@ function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
 		),
 		'crontrol-help' => sprintf(
 			'<a href="%s">%s</a>',
-			'https://wp-crontrol.com',
+			'https://wp-crontrol.com/docs/how-to-use/',
 			esc_html__( 'Help', 'wp-crontrol' )
 		),
 	);
@@ -1106,7 +1106,7 @@ function network_plugin_action_links( $actions ) {
 	$new = array(
 		'crontrol-help' => sprintf(
 			'<a href="%s">%s</a>',
-			'https://wp-crontrol.com',
+			'https://wp-crontrol.com/docs/how-to-use/',
 			esc_html__( 'Help', 'wp-crontrol' )
 		),
 	);

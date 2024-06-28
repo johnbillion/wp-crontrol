@@ -51,6 +51,10 @@ function my_function() {
 
 [See here for full information about PHP cron events](/docs/php-cron-events/).
 
+## Add a new URL cron event
+
+[See here for full information about URL cron events](/docs/url-cron-events/).
+
 ## Pause cron events
 
 Pausing a cron event is a way to prevent an event from running. This is more reliable than deleting an event because many plugins will immediately recreate events that are missing.
