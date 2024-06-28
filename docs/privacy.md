@@ -18,7 +18,7 @@ Please note that in a future version of WP Crontrol, an opt-in feature may be in
 ## wp-crontrol.com website privacy statement
 
 * The wp-crontrol.com website makes no use of cookies and collects no data from visitors.
-* The wp-crontrol.com website is operated by [John Blackbourn](https://johnblackbourn.com/about/).
+* The wp-crontrol.com website is operated by [John Blackbourn](/docs/about/).
 * The wp-crontrol.com website is hosted on [Netlify](https://www.netlify.com/).
 
-This privacy statement is subject to change and was last updated on March 24, 2024.
+This privacy statement is subject to change and was last updated on June 28, 2024.

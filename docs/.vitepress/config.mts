@@ -76,6 +76,10 @@ export default defineConfig({
 						text: 'What happens if I deactivate WP Crontrol?',
 						link: '/docs/deactivation/',
 					},
+					{
+						text: 'About the author',
+						link: '/docs/about/',
+					},
 				],
 			},
 			{
@@ -149,7 +153,7 @@ export default defineConfig({
 		},
 
 		footer: {
-			copyright: `© 2012-${year}, <a href="https://johnblackbourn.com">John Blackbourn</a>. WP Crontrol is not associated with WordPress.`,
+			copyright: `© 2012-${year}, <a href="/docs/about/">John Blackbourn</a>. WP Crontrol is not associated with WordPress.`,
 		},
 	},
 	lastUpdated: true,
