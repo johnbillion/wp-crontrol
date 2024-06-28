@@ -128,6 +128,10 @@ export default defineConfig({
 				text: 'Accessibility statement',
 				link: '/accessibility/',
 			},
+			{
+				text: 'Security policy',
+				link: '/security/',
+			},
 		],
 
 		socialLinks: [
