@@ -1954,10 +1954,10 @@ function admin_manage_page() {
 	}
 
 	$tabs  = get_tab_states();
-	$table = Event\get_list_table();
 
 	switch ( true ) {
 		case $tabs['events']:
+			$table = Event\get_list_table();
 			?>
 			<div class="wrap">
 				<?php do_tabs(); ?>
