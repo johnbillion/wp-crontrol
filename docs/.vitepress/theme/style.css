@@ -1,0 +1,5 @@
+/* Always display the site footer */
+footer.VPFooter {
+	display: block !important;
+	border-top: none !important;
+}
