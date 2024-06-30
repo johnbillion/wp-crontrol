@@ -1344,10 +1344,9 @@ function flush_status_cache() {
 /**
  * Shows the status of WP-Cron functionality on the site. Only displays a message when there's a problem.
  *
- * @param string $tab The tab name.
  * @return void
  */
-function show_cron_status( $tab ) {
+function show_cron_status() {
 	if ( 'UTC' !== date_default_timezone_get() ) {
 		?>
 		<div id="crontrol-timezone-warning" class="notice notice-warning">
