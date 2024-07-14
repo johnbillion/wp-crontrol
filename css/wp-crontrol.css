@@ -40,6 +40,8 @@ table.wp-list-table {
 	border-color: #8c8f94;
 }
 
+.wp-list-table tr.crontrol-paused:not(.crontrol-no-action) .column-crontrol_next,
+.wp-list-table tr.crontrol-paused:not(.crontrol-no-action) .column-crontrol_recurrence,
 .wp-list-table tr.crontrol-paused:not(.crontrol-no-action) .column-crontrol_actions {
 	text-decoration: line-through;
 }
