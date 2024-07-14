@@ -167,38 +167,13 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 	}
 
 	if ( '_oneoff' === $schedule || '' === $schedule ) {
-		/**
-		 * @var bool|null|\WP_Error $result
-		 */
 		$result = wp_schedule_single_event( $next_run_utc, $hook, $args, true );
 	} else {
-		/**
-		 * @var bool|null|\WP_Error $result
-		 */
 		$result = wp_schedule_event( $next_run_utc, $schedule, $hook, $args, true );
 	}
 
-	/**
-	 * Possible return values of `wp_schedule_*()` as called above:
-	 *
-	 *   - 5.7+ Success: true, Failure: WP_Error
-	 *   - 5.1+ Success: true, Failure: false
-	 *   - <5.1 Success: null, Failure: false
-	 */
-
 	if ( is_wp_error( $result ) ) {
 		return $result;
-	}
-
-	if ( false === $result ) {
-		return new WP_Error(
-			'could_not_add',
-			sprintf(
-				/* translators: 1: The name of the cron event. */
-				__( 'Failed to schedule the cron event %s.', 'wp-crontrol' ),
-				$hook
-			)
-		);
 	}
 
 	return true;
@@ -219,32 +194,10 @@ function delete( $hook, $sig, $next_run_utc ) {
 		return $event;
 	}
 
-	/**
-	 * @var bool|null|\WP_Error $unscheduled
-	 */
 	$unscheduled = wp_unschedule_event( $event->timestamp, $event->hook, $event->args, true );
-
-	/**
-	 * Possible return values of `wp_unschedule_*()` as called above:
-	 *
-	 *   - 5.7+ Success: true, Failure: WP_Error
-	 *   - 5.1+ Success: true, Failure: false
-	 *   - <5.1 Success: null, Failure: false
-	 */
 
 	if ( is_wp_error( $unscheduled ) ) {
 		return $unscheduled;
-	}
-
-	if ( false === $unscheduled ) {
-		return new WP_Error(
-			'could_not_delete',
-			sprintf(
-				/* translators: %s: The name of the cron event. */
-				__( 'Failed to the delete the cron event %s.', 'wp-crontrol' ),
-				$hook
-			)
-		);
 	}
 
 	return true;
