@@ -1,8 +1,10 @@
-# Checking PHP cron events
+# Checking PHP and URL cron events
 
 In WP Crontrol version 1.16.2 a security hardening feature was added which prevents the code in a PHP cron event from being tampered with. [You can read about the feature here](/docs/php-cron-events/).
 
 If you have PHP cron events in place prior to upgrading to this version then *you will need to re-save your PHP cron events* so the required security hash can be generated and stored alongside the PHP code and the events can continue functioning.
+
+In WP Crontrol version 1.17 the same security feature was added to the new URL. [You can read about the feature here](/docs/php-cron-events/).
 
 If you don't have any PHP cron events in place on your site then you don't need to do anything.
 
@@ -35,7 +37,7 @@ You can delete an unwanted event by clicking the "Delete" link below the event.
 
 ## What if the "Needs checking" message appears again?
 
-If WP Crontrol is showing you a message saying one or more of your PHP cron events need to be checked and you haven't just updated WP Crontrol from a version prior to 1.16.2, then it could either mean there is a real problem caused by tampering of the PHP code in the events, or it could be caused by your security salts having been changed.
+If WP Crontrol is showing you a message saying one or more of your URL or PHP cron events need to be checked and you haven't just updated WP Crontrol from a version prior to 1.16.2, then it could either mean there is a real problem caused by tampering of the events, or it could be caused by your security salts having been changed.
 
 If the PHP code in an event *has* been tampered with externally then WP Crontrol will refuse to execute the PHP code when the event runs in order to keep your site secure. You should carefully and fully check the PHP code in the affected events. [Consult the "My site was hacked" page on the WordPress.org documentation site if you find unexpected code](https://wordpress.org/documentation/article/faq-my-site-was-hacked/).
 

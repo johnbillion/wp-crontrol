@@ -95,6 +95,8 @@ You can change the time and recurrence of a cron event by clicking the "Edit" li
 
 From the Tools → Cron Events → Add New Cron Event screen, select the "Request a URL" option under the "Event Type" list. Fill out the rest of the details as required and press the "Add Event" button.
 
+[You can read all about the features and security of URL cron events on the WP Crontrol website](https://wp-crontrol.com/docs/url-cron-events/).
+
 ### Why do changes that I make to some cron events not get saved?
 
 [You can read all about problems with editing cron events on the WP Crontrol website](https://wp-crontrol.com/help/problems-managing-events/).

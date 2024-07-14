@@ -38,10 +38,12 @@ PHP cron events are secured via an integrity check that makes use of an HMAC to 
 
 If an attacker with database-level access were to modify the PHP code in an event in an attempt to execute arbitrary code, the code would no longer execute.
 
-## Why do I see "Needs checking" next to my PHP cron events?
+The same anti-tampering feature protects [URL cron events](/docs/url-cron-events/) too.
+
+## Why do I see "Needs checking" next to my cron events?
 
 The integrity checking mechanism documented above was introduced in WP Crontrol 1.16.2 in March 2024. If you have PHP cron events stored on your site prior to updating to this version or later then you'll need to check and re-save your PHP cron events so the hash can be generated and saved alongside the PHP code.
 
-Otherwise, if WP Crontrol is showing you a message saying your PHP cron events need to be checked, this could either mean there is a real problem caused by tampering of the PHP code in the events, or it could be caused by your security salts having been changed.
+Otherwise, if WP Crontrol is showing you a message saying your PHP or URL cron events need to be checked, this could either mean there is a real problem caused by tampering of the events, or it could be caused by your security salts having been changed.
 
-[See here for complete information about PHP events which show "Needs checking"](/help/check-php-cron-events/).
+[See here for complete information about cron events which show "Needs checking"](/help/check-cron-events/).

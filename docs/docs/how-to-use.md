@@ -47,13 +47,13 @@ function my_function() {
 }
 ```
 
-## Add a new PHP cron event
-
-[See here for full information about PHP cron events](/docs/php-cron-events/).
-
 ## Add a new URL cron event
 
 [See here for full information about URL cron events](/docs/url-cron-events/).
+
+## Add a new PHP cron event
+
+[See here for full information about PHP cron events](/docs/php-cron-events/).
 
 ## Pause cron events
 

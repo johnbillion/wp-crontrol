@@ -1,3 +1,7 @@
 [build]
   command = "npm run docs:build"
   publish = "docs/.vitepress/dist"
+
+[[redirects]]
+  from = "/help/check-php-cron-events"
+  to = "/help/check-cron-events

@@ -1694,7 +1694,7 @@ function show_cron_form( $editing ) {
 								printf(
 									'<div class="notice notice-error inline"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
 									esc_html__( 'The PHP code in this event needs to be checked for integrity. This event will not run until you re-save it.', 'wp-crontrol' ),
-									'https://wp-crontrol.com/help/check-php-cron-events/',
+									'https://wp-crontrol.com/help/check-cron-events/',
 									esc_html__( 'Read what to do', 'wp-crontrol' )
 								);
 							}

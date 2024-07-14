@@ -67,12 +67,12 @@ export default defineConfig({
 						link: '/docs/how-to-use/',
 					},
 					{
-						text: 'PHP cron events',
-						link: '/docs/php-cron-events/',
-					},
-					{
 						text: 'URL cron events',
 						link: '/docs/url-cron-events/',
+					},
+					{
+						text: 'PHP cron events',
+						link: '/docs/php-cron-events/',
 					},
 					{
 						text: 'What happens if I deactivate WP Crontrol?',
@@ -109,8 +109,8 @@ export default defineConfig({
 						link: '/help/wp-cron-lock-timeout/',
 					},
 					{
-						text: 'PHP cron events that need to be checked',
-						link: '/help/check-php-cron-events/',
+						text: 'URL and PHP cron events that need to be checked',
+						link: '/help/check-cron-events/',
 					},
 				],
 			},
