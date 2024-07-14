@@ -2535,6 +2535,10 @@ function action_url_cron_event( array $args ): void {
 	$request_args = array(
 		'timeout' => 30,
 		'method'  => $method,
+		'user-agent' => sprintf(
+			'WP Crontrol; %s',
+			home_url( '/' )
+		),
 	);
 	$response = wp_remote_request( $url, $request_args );
 
