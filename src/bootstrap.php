@@ -1349,6 +1349,10 @@ function flush_status_cache() {
  * @return void
  */
 function show_cron_status() {
+	if ( ! empty( $_GET['crontrol_action'] ) ) {
+		return;
+	}
+
 	if ( 'UTC' !== date_default_timezone_get() ) {
 		?>
 		<div id="crontrol-timezone-warning" class="notice notice-warning">
