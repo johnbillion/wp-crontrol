@@ -476,25 +476,35 @@ function is_paused( stdClass $event ) {
 }
 
 /**
- * Determines whether the integrity check of a PHP cron event has failed.
+ * Determines whether the integrity check of a URL or PHP cron event has failed.
  *
  * @param stdClass $event The event.
  * @return bool Whether the event integrity check has failed.
  */
 function integrity_failed( stdClass $event ): bool {
-	// Only check PHP cron events.
-	if ( 'crontrol_cron_job' !== $event->hook ) {
-		return false;
-	}
-
-	// This is a PHP cron event saved prior to WP Crontrol 1.16.2.
-	if ( isset( $event->args['code'] ) ) {
-		return true;
-	}
-
 	$args = $event->args[0] ?? array();
+	$failed = false;
 
-	return ! check_integrity( $args['code'] ?? null, $args['hash'] ?? null );
+	switch ( $event->hook ) {
+
+		// PHP cron events:
+		case 'crontrol_cron_job':
+			// This is a PHP cron event saved prior to WP Crontrol 1.16.2.
+			if ( isset( $event->args['code'] ) ) {
+				$failed = true;
+			} else {
+				$failed = ! check_integrity( $args['code'] ?? null, $args['hash'] ?? null );
+			}
+			break;
+
+		// URL cron events:
+		case 'crontrol_url_cron_job':
+			$failed = ! check_integrity( $args['url'] ?? null, $args['hash'] ?? null );
+			break;
+
+	}
+
+	return $failed;
 }
 
 /**

@@ -204,6 +204,7 @@ function action_handle_posts() {
 				'url' => $cr->url,
 				'method' => $cr->method,
 				'name' => $cr->eventname,
+				'hash' => wp_hash( $cr->url ),
 			),
 		);
 
@@ -411,6 +412,7 @@ function action_handle_posts() {
 				'url' => $cr->url,
 				'method' => $cr->method,
 				'name' => $cr->eventname,
+				'hash' => wp_hash( $cr->url ),
 			),
 		);
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'URL Cron', 'wp-crontrol' );
@@ -1634,6 +1636,16 @@ function show_cron_form( $editing ) {
 							</label>
 						</th>
 						<td>
+							<?php
+							if ( $is_editing_url && ! check_integrity( $existing['args'][0]['url'], $existing['args'][0]['hash'] ) ) {
+								printf(
+									'<div class="notice notice-error inline"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
+									esc_html__( 'The URL in this event needs to be checked for integrity. This event will not run until you re-save it.', 'wp-crontrol' ),
+									'https://wp-crontrol.com/help/check-cron-events/',
+									esc_html__( 'Read what to do', 'wp-crontrol' )
+								);
+							}
+							?>
 							<input type="url" class="regular-text code" id="crontrol_url" name="crontrol_url" value="<?php echo esc_url( $is_editing_url ? $existing['args'][0]['url'] : '' ); ?>" />
 							<?php do_action( 'crontrol/manage/url', $existing ); ?>
 						</td>
@@ -2461,6 +2473,19 @@ function json_output( $input, $pretty = true ) {
 /**
  * Fetches the URL in a URL cron event using the HTTP API.
  *
+ * The URL that's saved in a URL cron event is protected with an integrity check which prevents it from being fetched
+ * if the URL is tampered with.
+ *
+ * URL cron events are secured via an integrity check that makes use of an HMAC to store a hash of the URL alongside
+ * the code when the event is saved. When the event runs, the hash is checked to ensure the integrity of the URL and
+ * confirm that it has not been tampered with. WP Crontrol will not fetch the URL if the hashes do not match or if
+ * a stored hash is not present.
+ *
+ * If an attacker with database-level access were to modify the URL in an event in an attempt to fetch an arbitrary
+ * URL (for example to perform an SSRF), the HTTP request would not be performed.
+ *
+ * @link https://wp-crontrol.com/docs/url-cron-events/
+ *
  * @throws Exception If the request fails.
  *
  * @param array<string,string> $args The event args array.
@@ -2468,13 +2493,41 @@ function json_output( $input, $pretty = true ) {
  *   url: string,
  *   name: string,
  *   method: string,
+ *   hash: string,
  * } $args
  */
 function action_url_cron_event( array $args ): void {
 	list(
 		'url' => $url,
 		'method' => $method,
+		'hash' => $hash,
 	) = $args;
+
+	if ( empty( $hash ) ) {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+		trigger_error(
+			sprintf(
+				'WP Crontrol: The stored hash is missing for a URL cron event; for more information see %s',
+				esc_url_raw( admin_url( 'tools.php?page=crontrol_admin_manage_page&crontrol_hooks_type=url' ) ),
+			),
+			E_USER_WARNING
+		);
+		return;
+	}
+
+	// Check the integrity of the URL.
+	if ( ! check_integrity( $url, $hash ) ) {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+		trigger_error(
+			sprintf(
+				'WP Crontrol: The stored hash for a URL cron event is not valid; for more information see %s',
+				esc_url_raw( admin_url( 'tools.php?page=crontrol_admin_manage_page&crontrol_hooks_type=url' ) ),
+			),
+			E_USER_WARNING
+		);
+		return;
+	}
+
 	$request_args = array(
 		'timeout' => 30,
 		'method'  => $method,
