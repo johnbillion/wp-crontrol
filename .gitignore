@@ -1,11 +1,11 @@
-/build
-/docs/.vitepress/cache
-/docs/.vitepress/dist
-/node_modules
-/vendor/*
+/build/
+/docs/.vitepress/cache/
+/docs/.vitepress/dist/
+/node_modules/
+/vendor/
 
 /composer.lock
 /package-lock.json
 /tests/_output/
-/tests/_support/_generated
-/tests/cache
+/tests/_support/_generated/
+/tests/cache/
