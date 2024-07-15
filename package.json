@@ -1,6 +1,6 @@
 {
 	"name": "wp-crontrol",
-	"version": "1.16.3",
+	"version": "1.17.0",
 	"description": "Take control of the cron events on your WordPress website",
 	"license": "GPL-2.0-or-later",
 	"private": true,

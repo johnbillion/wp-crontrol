@@ -3,7 +3,7 @@
 Contributors: johnbillion, scompt  
 Tags: cron, wp-cron, crontrol, debug, woocommerce  
 Tested up to: 6.6  
-Stable tag: 1.16.3  
+Stable tag: 1.17.0  
 Donate link: https://github.com/sponsors/johnbillion
 
 WP Crontrol enables you to take control of the cron events on your WordPress website.
