@@ -5,18 +5,20 @@ const wpURL = 'https://wordpress.org/plugins/wp-crontrol/';
 const ghURL = 'https://github.com/johnbillion/wp-crontrol';
 const siteURL = 'https://wp-crontrol.com';
 const year = new Date().getFullYear();
+const title = 'WP Crontrol';
+const description = 'Take control of the cron events on your WordPress website';
 
 const RSS: RSSOptions = {
-	title: 'WP Crontrol',
+	title,
 	baseUrl: siteURL,
 	copyright: `Copyright (c) 2012-${year}, John Blackbourn`,
-	description: 'Take control of WP-Cron',
+	description,
 	filename: 'feed',
 }
 
 export default defineConfig({
-	title: 'WP Crontrol',
-	description: 'Take control of WP-Cron',
+	title,
+	description,
 	rewrites: {
 		'help/:page.md': 'help/:page/index.md',
 		'docs/:page.md': 'docs/:page/index.md',
@@ -38,7 +40,7 @@ export default defineConfig({
 			{
 				rel: 'alternate',
 				type: 'application/rss+xml',
-				title: 'WP Crontrol',
+				title,
 				href: `${siteURL}/feed`,
 			},
 		]
