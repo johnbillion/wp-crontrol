@@ -4,11 +4,11 @@ If you're seeing an error message saying **there was a problem spawning a call t
 
 ## What should I do?
 
-Firstly, **please do not open a support thread on the WP Crontrol plugin forum** as nobody will be able to assist you there. There are better places and ways to get support for this problem.
+Firstly, **please do not open a support thread on the WP Crontrol plugin forum** as nobody will be able to assist you there. There are better ways to get support for this problem.
 
 1. **Reload the page a few times** to determine if the error is persistent. If the error only appears once then it may have been a temporary network connectivity problem.
 2. If the error persists, make a note of the error message. **Common errors are listed below** with more information about what they mean.
-3. Try **deactivating the other plugins on your site one by one**. It could be that one of them is causing a problem.
+3. Try **deactivating the other plugins on your site one by one**. It could be that one of them is causing a problem. Bear in mind mu-plugins and network-active plugins too.
 4. If your website is hosted on a managed WordPress service, **contact your web host** and send them the error message. They are best positioned to assist you and they've probably seen the same problem before.
 5. If you're not using a managed WordPress hosting service, try **searching for the error message** using your favourite search engine or on the support forums of your web host.
 6. If you cannot diagnose the problem, post the error message in a new thread on **the main wordpress.org support forums** where hopefully a volunteer can assist you.
@@ -21,7 +21,7 @@ This means there is a problem with the DNS configuration of your domain or your 
 
 ### cURL error 7: Failed to connect: Connection refused
 
-This is a bit of a mystery error. It could relate to your HTTPS configuration, or it could be an access restriction problem (see below). This may be a temporary network connectivity problem.
+This is a generic connection error. It could relate to your HTTPS configuration, a firewall configuration, an access restriction problem (see below), or a temporary network connectivity problem.
 
 ### cURL error 28: Operation timed out after 3000 milliseconds with 0 bytes received
 
