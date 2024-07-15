@@ -12,7 +12,7 @@ WP Crontrol enables you to take control of the cron events on your WordPress web
 
 WP Crontrol enables you to take control of the cron events on your WordPress website. From the admin screens you can:
 
- * View all cron events along with their arguments, recurrence, callback functions, and when they are next due.
+ * View all cron events along with their arguments, schedule, callback functions, and when they are next due.
  * Edit, delete, pause, resume, and immediately run cron events.
  * Add new cron events.
  * Bulk delete cron events.
@@ -87,9 +87,9 @@ This means the cron event is scheduled to run at the specified time but there is
 
 This is often caused by plugins that don't clean up their cron events when you deactivate them. You can use your favourite search engine to search for the event name in order to find out which plugin it belongs to, and then decide whether or not to delete it.
 
-### How do I change the next run time or the recurrence of a cron event?
+### How do I change the next run time or the schedule of a cron event?
 
-You can change the time and recurrence of a cron event by clicking the "Edit" link next to the event.
+You can change the time and schedule of a cron event by clicking the "Edit" link next to the event.
 
 ### How can I create a cron event that requests a URL?
 

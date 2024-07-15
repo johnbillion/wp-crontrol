@@ -189,7 +189,7 @@ class Table extends \WP_List_Table {
 				),
 			),
 			'crontrol_actions'    => esc_html__( 'Action', 'wp-crontrol' ),
-			'crontrol_recurrence' => esc_html__( 'Recurrence', 'wp-crontrol' ),
+			'crontrol_schedule' => esc_html_x( 'Schedule', 'noun', 'wp-crontrol' ),
 		);
 	}
 
@@ -209,7 +209,7 @@ class Table extends \WP_List_Table {
 		return array(
 			'crontrol_hook' => array( 'crontrol_hook', false ),
 			'crontrol_next' => array( 'crontrol_next', false, null, null, 'asc' ),
-			'crontrol_recurrence' => array( 'crontrol_recurrence', false ),
+			'crontrol_schedule' => array( 'crontrol_schedule', false ),
 		);
 	}
 
@@ -696,12 +696,12 @@ class Table extends \WP_List_Table {
 	}
 
 	/**
-	 * Returns the output for the recurrence cell of a table row.
+	 * Returns the output for the schedule cell of a table row.
 	 *
 	 * @param stdClass $event The cron event for the current row.
 	 * @return string The cell output.
 	 */
-	protected function column_crontrol_recurrence( $event ) {
+	protected function column_crontrol_schedule( $event ) {
 		if ( $event->schedule ) {
 			$schedule_name = get_schedule_name( $event );
 			if ( is_wp_error( $schedule_name ) ) {

@@ -2,7 +2,7 @@
 
 WP Crontrol enables you to take control of the cron events on your WordPress website. From the admin screens you can:
 
-* View all cron events along with their arguments, recurrence, callback functions, and when they are next due.
+* View all cron events along with their arguments, schedule, callback functions, and when they are next due.
 * Edit, delete, pause, resume, and immediately run cron events.
 * Add new cron events.
 * Bulk delete cron events.
@@ -21,7 +21,7 @@ From here you can see a list of all the currently scheduled cron events. If ther
 
 ## Edit cron events
 
-Click the Edit link next to an event to edit details such as its hook name, arguments, next run date, and recurrence.
+Click the Edit link next to an event to edit details such as its hook name, arguments, next run date, and schedule.
 
 ## Add a new cron event
 
@@ -29,7 +29,7 @@ There are two steps to creating a functioning cron event that executes regularly
 
 ### Step one: Adding the hook
 
-In the Tools → Cron Events admin panel, click on "Add New Cron Event" and enter the details of the hook. You're best off using a hook name that conforms to normal PHP variable naming conventions. The event schedule is how often your hook will be executed. If you don't see a good interval, then add one first in the Settings → Cron Schedules admin panel.
+In the Tools → Cron Events menu, click on "Add New Cron Event" and enter the details of the hook. You're best off using a hook name that conforms to normal PHP variable naming conventions. Select a schedule if this is to be a recurring event. If you don't see a good interval for the schedule, then add a new one from the Settings → Cron Schedules menu.
 
 ### Step two: Writing the function
 

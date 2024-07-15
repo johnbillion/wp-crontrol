@@ -123,7 +123,7 @@ function force_schedule_single_event( $hook, $args = array() ) {
  * Adds a new cron event.
  *
  * @param string  $next_run_local The time that the event should be run at, in the site's timezone.
- * @param string  $schedule       The recurrence of the cron event.
+ * @param string  $schedule       The schedule of the cron event.
  * @param string  $hook           The name of the hook to execute.
  * @param mixed[] $args           Arguments to add to the cron event.
  * @phpstan-param list<mixed> $args
@@ -519,7 +519,7 @@ function uasort_order_events( $a, $b ) {
 				$compare = strcmp( $b->hook, $a->hook );
 			}
 			break;
-		case 'crontrol_recurrence':
+		case 'crontrol_schedule':
 			if ( 'asc' === $order ) {
 				$compare = ( $a->interval ?? 0 ) <=> ( $b->interval ?? 0 );
 			} else {

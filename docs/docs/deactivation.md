@@ -20,4 +20,4 @@ If you reactivate WP Crontrol, your custom schedules will become available for u
 
 ## Edits to events
 
-If you've edited a cron event and changed its arguments, next run time, or recurrence, these changes will persist because this data is stored in the standard WP-Cron system in WordPress.
+If you've edited a cron event and changed its arguments, next run time, or schedule, these changes will persist because this data is stored in the standard WP-Cron system in WordPress.

@@ -893,7 +893,7 @@ function action_handle_posts() {
 			'next_run',
 			'next_run_gmt',
 			'action',
-			'recurrence',
+			'schedule',
 			'interval',
 		);
 		$filename = sanitize_file_name( sprintf(
@@ -946,12 +946,12 @@ function action_handle_posts() {
 				}
 
 				if ( $event->schedule ) {
-					$recurrence = Event\get_schedule_name( $event );
-					if ( is_wp_error( $recurrence ) ) {
-						$recurrence = $recurrence->get_error_message();
+					$schedule_name = Event\get_schedule_name( $event );
+					if ( is_wp_error( $schedule_name ) ) {
+						$schedule_name = $schedule_name->get_error_message();
 					}
 				} else {
-					$recurrence = __( 'Non-repeating', 'wp-crontrol' );
+					$schedule_name = __( 'Non-repeating', 'wp-crontrol' );
 				}
 
 				$row = array(
@@ -960,7 +960,7 @@ function action_handle_posts() {
 					$next_run_local,
 					$next_run_utc,
 					$action,
-					$recurrence,
+					$schedule_name,
 					(int) $event->interval,
 				);
 				fputcsv( $csv, $row );
@@ -1184,7 +1184,7 @@ function admin_options_page() {
 			<div class="col-wrap">
 				<div class="form-wrap">
 					<h2><?php esc_html_e( 'Add Cron Schedule', 'wp-crontrol' ); ?></h2>
-					<p><?php esc_html_e( 'Adding a new cron schedule will allow you to schedule events that re-occur at the given interval.', 'wp-crontrol' ); ?></p>
+					<p><?php esc_html_e( 'Adding a new schedule allows you to schedule recurring events at the given interval.', 'wp-crontrol' ); ?></p>
 					<form method="post" action="options-general.php?page=crontrol_admin_options_page">
 						<div class="form-field form-required">
 							<label for="crontrol_schedule_internal_name">
@@ -1839,7 +1839,7 @@ function show_cron_form( $editing ) {
 				<tr>
 					<th scope="row">
 						<label for="crontrol_schedule">
-							<?php esc_html_e( 'Recurrence', 'wp-crontrol' ); ?>
+							<?php echo esc_html_x( 'Schedule', 'noun', 'wp-crontrol' ); ?>
 						</label>
 					</th>
 					<td>
