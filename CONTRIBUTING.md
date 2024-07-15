@@ -95,12 +95,12 @@ These are the steps to take to release a new version of WP Crontrol (for contrib
          npm run bump:major
 
 1.     git push origin develop
-1. Wait until (and ensure that) [the build passes](https://github.com/johnbillion/wp-crontrol/actions)
+1. Wait until (and ensure that) [the tests pass](https://github.com/johnbillion/wp-crontrol/actions)
 1.     git checkout master
 1.     git merge develop
 1.     git push origin master
 1.     git push origin master:release
-1. Wait for [the Build Release action](https://github.com/johnbillion/wp-crontrol/actions?query=workflow%3A%22Build+Release%22) to complete
+1. Wait for [the Build Release action](https://github.com/johnbillion/wp-crontrol/actions/workflows/build.yml) to complete
 1. Enter the changelog into [the release on GitHub](https://github.com/johnbillion/wp-crontrol/releases) and publish it.
 
 ### Post Release

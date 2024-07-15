@@ -4,7 +4,7 @@ In WP Crontrol version 1.16.2 a security hardening feature was added which preve
 
 If you have PHP cron events in place prior to upgrading to this version then *you will need to re-save your PHP cron events* so the required security hash can be generated and stored alongside the PHP code and the events can continue functioning.
 
-In WP Crontrol version 1.17 the URL cron type was introduced which uses the same security feature. [You can read about URL cron events here](/docs/php-cron-events/).
+In WP Crontrol version 1.17 the URL cron type was introduced which uses the same security feature. [You can read about URL cron events here](/docs/url-cron-events/).
 
 ## What do I need to do?
 
