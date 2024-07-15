@@ -40,7 +40,7 @@ There's no single solution to this problem. Your best approach is to:
 * [**DreamHost**: Disabling WP-Cron to Improve Overall Site Performance](https://help.dreamhost.com/hc/en-us/articles/360048323291-Disabling-WP-CRON-to-Improve-Overall-Site-Performance)
 * [**Rocket.net**: How Do I Disable WP-Cron In WordPress?](https://rocket.net/blog/how-do-i-disable-wp-cron-in-wordpress/)
 * [**Altis**](https://www.altis-dxp.com/): No need to do anything, [cron is handled by Cavalcade](https://www.altis-dxp.com/how-wordpress-and-altis-handle-scheduled-tasks-with-wp-cron/)
-* [**WordPress.com VIP**](https://wpvip.com/): No need to do anything, [cron is handled by Cron Control](https://docs.wpvip.com/technical-references/tools-for-site-management/cron-control/)
+* [**WordPress VIP**](https://wpvip.com/): No need to do anything, [cron is handled by Cron Control](https://docs.wpvip.com/technical-references/tools-for-site-management/cron-control/)
 
 ## Running events via WP-CLI
 

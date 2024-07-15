@@ -24,5 +24,5 @@ You'll need to identify where the call to `date_default_timezone_set` is and rem
 
 ## Further reading
 
-* [Timezone documentation from WordPress.com VIP](https://wpvip.com/documentation/vip-go/use-current_time-not-date_default_timezone_set/)
+* [Timezone documentation from WordPress VIP](https://wpvip.com/documentation/vip-go/use-current_time-not-date_default_timezone_set/)
 * [Date/Time component improvements in WordPress 5.3](https://make.wordpress.org/core/2019/09/23/date-time-improvements-wp-5-3/)
