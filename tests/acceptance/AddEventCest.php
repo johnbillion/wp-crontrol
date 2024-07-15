@@ -37,7 +37,7 @@ class AddEventCest {
 		$I->dontSee( 'PHP Code', '#crontrol_form th' );
 		$I->dontSee( 'URL', '#crontrol_form th' );
 		$I->dontSee( 'HTTP Method', '#crontrol_form th' );
-		$I->selectOption( 'input[name="crontrol_action"]', 'Request a URL' );
+		$I->selectOption( 'input[name="crontrol_action"]', 'URL cron event' );
 		$I->dontSee( 'PHP Code', '#crontrol_form th' );
 		$I->see( 'URL', '#crontrol_form th' );
 		$I->see( 'HTTP Method', '#crontrol_form th' );

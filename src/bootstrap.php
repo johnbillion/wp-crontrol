@@ -1614,7 +1614,7 @@ function show_cron_form( $editing ) {
 								<p>
 									<label>
 										<input type="radio" name="crontrol_action" value="new_url_cron">
-										<?php esc_html_e( 'Request a URL', 'wp-crontrol' ); ?>
+										<?php esc_html_e( 'URL cron event', 'wp-crontrol' ); ?>
 									</label>
 								</p>
 								<?php if ( $can_add_php ) { ?>
