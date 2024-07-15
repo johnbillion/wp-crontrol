@@ -24,6 +24,7 @@ class AddEventCest {
 		$I->dontSee( 'PHP Code', '#crontrol_form th' );
 		$I->dontSee( 'URL', '#crontrol_form th' );
 		$I->dontSee( 'HTTP Method', '#crontrol_form th' );
+		$I->seeOptionIsSelected( 'input[name="crontrol_action"]', 'Standard cron event' );
 		$I->fillField( 'Hook Name', 'my_hookname' );
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );
