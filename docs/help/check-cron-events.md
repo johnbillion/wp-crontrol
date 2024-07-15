@@ -42,6 +42,6 @@ If the security salts in the `wp-config.php` file on your site have been changed
   - Logging out all users and invalidating all security nonces
   - Invalidating hashes used within functionality such as comment moderation, Customizer controls, and widget management
 
-Your security salts may also change if you move your site from one server to another and the salts in the `wp-config.php` file differ, or if you move your site from a staging environment to a production environment (or vice versa) and the salts differ.
+The security salts on your site may also change if you move your site from one server to another and the salts in the `wp-config.php` file differ, or if you move your site from a staging environment to a production environment (or vice versa) and the salts differ.
 
 In all of these cases, you should edit the affected URL and PHP cron events, make absolutely sure that their contents remains as intended, and save it again. This will cause the hash to be regenerated and saved and the event will begin working as expected once again.

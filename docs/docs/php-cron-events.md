@@ -1,6 +1,6 @@
 # PHP cron events
 
-WP Crontrol includes a feature that allows administrative users to create events in the WP-Cron system that execute PHP code, subject to the restrictive security permissions documented below.
+WP Crontrol allows administrative users to create events in the WP-Cron system that execute PHP code, subject to the restrictive security permissions documented below.
 
 ## Which users can manage PHP cron events?
 
@@ -18,17 +18,17 @@ If you wish to prevent PHP cron events from being added or edited on your site t
 
 ## How do I create a new PHP cron event?
 
-In the Tools → Cron Events admin panel, click on "Add New Cron Event". In the form that appears, select the "PHP cron event" option under the "Event Type" list and enter the schedule and next run time. In the "PHP Code" area, enter the PHP code that should be run when your cron event is executed. Don't include the PHP opening tag (`<?php`).
+In the Tools → Cron Events menu, click on "Add New Cron Event". In the form that appears, select the "PHP cron event" option and enter the schedule and next run time. In the "PHP Code" area, enter the PHP code that should be run when your cron event is executed. Don't include the PHP opening tag (`<?php`).
 
 ## Can I "lock" PHP cron events so that other users cannot edit them?
 
-Yes. You can create or edit a PHP cron event, save it, and then define either the `DISALLOW_FILE_MODS` or `DISALLOW_FILE_EDIT` configuration constant as documented above to prevent further changes to the event from the Cron Events admin panel. The event will continue to run at its scheduled interval as expected but it will not be editable.
+Yes. You can create or edit a PHP cron event, save it, and then define either the `DISALLOW_FILE_MODS` or `DISALLOW_FILE_EDIT` configuration constant as documented above to prevent further changes to the event from the Cron Events menu. The event will continue to run at its scheduled interval as expected but it will not be editable.
 
 If you need to edit the event in the future, you can temporarily remove the relevant configuration constant, make your required changes to the event, and then reinstate the constant to re-lock it.
 
 ## How can I create a cron event that requests a URL?
 
-You don't need to use a PHP cron event for this. From the Tools → Cron Events → Add New Cron Event screen, select the "Request a URL" option under the "Event Type" list. Fill out the rest of the details as required and press the "Add Event" button.
+You don't need to use a PHP cron event for this. From the Tools → Cron Events menu, click Add New Cron Event and select the "URL cron event" option. Fill out the details as required and press the "Add Event" button.
 
 ## Can the code in PHP cron events be tampered with?
 
@@ -44,6 +44,6 @@ The same anti-tampering feature protects [URL cron events](/docs/url-cron-events
 
 The integrity checking mechanism documented above was introduced in WP Crontrol 1.16.2 in March 2024. If you have PHP cron events stored on your site prior to updating to this version or later then you'll need to check and re-save your PHP cron events so the hash can be generated and saved alongside the PHP code.
 
-Otherwise, if WP Crontrol is showing you a message saying your PHP or URL cron events need to be checked, this could either mean there is a real problem caused by tampering of the events, or it could be caused by your security salts having been changed.
+Otherwise, if WP Crontrol is showing you a message saying your PHP or URL cron events need to be checked, this could either mean there is a real problem caused by tampering of the events, or it could be caused by the security salts on your site having been changed.
 
 [See here for complete information about cron events which show "Needs checking"](/help/check-cron-events/).
