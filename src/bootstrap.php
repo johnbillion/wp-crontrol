@@ -178,7 +178,7 @@ function action_handle_posts() {
 
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
-			'crontrol_message' => '5',
+			'crontrol_message' => '4',
 			'crontrol_name'    => rawurlencode( $cr->hookname ),
 		);
 
@@ -236,7 +236,7 @@ function action_handle_posts() {
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'URL Cron', 'wp-crontrol' );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
-			'crontrol_message' => '5',
+			'crontrol_message' => '13',
 			'crontrol_name'    => rawurlencode( $hookname ),
 		);
 
@@ -294,7 +294,7 @@ function action_handle_posts() {
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
-			'crontrol_message' => '5',
+			'crontrol_message' => '14',
 			'crontrol_name'    => rawurlencode( $hookname ),
 		);
 
@@ -418,7 +418,7 @@ function action_handle_posts() {
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'URL Cron', 'wp-crontrol' );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
-			'crontrol_message' => '4',
+			'crontrol_message' => '13',
 			'crontrol_name'    => rawurlencode( $hookname ),
 		);
 
@@ -508,7 +508,7 @@ function action_handle_posts() {
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
 			'page'             => 'crontrol_admin_manage_page',
-			'crontrol_message' => '4',
+			'crontrol_message' => '14',
 			'crontrol_name'    => rawurlencode( $hookname ),
 		);
 
@@ -1898,11 +1898,6 @@ function admin_manage_page() {
 			__( 'Saved the cron event %s.', 'wp-crontrol' ),
 			'success',
 		),
-		'5'  => array(
-			/* translators: %s: The name of the cron event. */
-			__( 'Created the cron event %s.', 'wp-crontrol' ),
-			'success',
-		),
 		'6'  => array(
 			/* translators: %s: The name of the cron event. */
 			__( 'Deleted the cron event %s.', 'wp-crontrol' ),
@@ -1935,6 +1930,14 @@ function admin_manage_page() {
 		'12' => array(
 			/* translators: %s: The name of the cron event. */
 			__( 'Resumed the %s hook.', 'wp-crontrol' ),
+			'success',
+		),
+		'13' => array(
+			__( 'URL cron event saved.', 'wp-crontrol' ),
+			'success',
+		),
+		'14' => array(
+			__( 'PHP cron event saved.', 'wp-crontrol' ),
 			'success',
 		),
 		'error' => array(

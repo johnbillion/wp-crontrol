@@ -28,7 +28,7 @@ class AddEventCest {
 		$I->fillField( 'Hook Name', 'my_hookname' );
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );
-		$I->seeAdminSuccessNotice( 'Created the cron event my_hookname.' );
+		$I->seeAdminSuccessNotice( 'Saved the cron event my_hookname.' );
 	}
 
 	public function AddingANewURLEvent( AcceptanceTester $I ) {
@@ -44,7 +44,7 @@ class AddEventCest {
 		$I->fillField( '#crontrol_url', 'https://example.org/' );
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );
-		$I->seeAdminSuccessNotice( 'Created the cron event URL Cron.' );
+		$I->seeAdminSuccessNotice( 'URL cron event saved.' );
 		$I->see( 'https://example.org/' );
 	}
 
@@ -61,7 +61,7 @@ class AddEventCest {
 		$I->fillPHPEditorField( 'amazing();' );
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );
-		$I->seeAdminSuccessNotice( 'Created the cron event PHP Cron.' );
+		$I->seeAdminSuccessNotice( 'PHP cron event saved.' );
 		$I->see( 'amazing();' );
 	}
 }
