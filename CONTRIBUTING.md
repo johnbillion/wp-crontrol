@@ -111,7 +111,8 @@ New milestones are automatically created for the next major, minor, and patch re
 
 1. Close the milestone.
 1. If this is a non-patch release, manually delete any [unused patch and minor milestones on GitHub](https://github.com/johnbillion/wp-crontrol/milestones).
-1. Check the new version has appeared [on the WordPress.org plugin page](https://wordpress.org/plugins/wp-crontrol/) (it'll take a few minutes).
+1. Approve the release on [the WordPress.org release management dashboard](https://wordpress.org/plugins/developers/releases/).
+1. Check the new version has appeared [on the WordPress.org plugin page](https://wordpress.org/plugins/wp-crontrol/).
 1. Resolve relevant threads on [the plugin's support forums](https://wordpress.org/support/plugin/wp-crontrol/).
 1. Consume tea and cake as necessary.
 
