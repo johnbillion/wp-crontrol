@@ -80,7 +80,7 @@ class AcceptanceTester extends \Codeception\Actor {
 	 * @return string The admin page path.
 	 */
 	public function amOnCronEventListingPage() {
-		return $this->amOnAdminPage( 'tools.php?page=crontrol_admin_manage_page' );
+		return $this->amOnAdminPage( 'tools.php?page=wp-crontrol' );
 	}
 
 	/**
@@ -89,7 +89,7 @@ class AcceptanceTester extends \Codeception\Actor {
 	 * @return string The admin page path.
 	 */
 	public function amOnCronScheduleListingPage() {
-		return $this->amOnAdminPage( 'options-general.php?page=crontrol_admin_options_page' );
+		return $this->amOnAdminPage( 'options-general.php?page=wp-crontrol-schedules' );
 	}
 
 	/**

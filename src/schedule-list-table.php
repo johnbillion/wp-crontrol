@@ -122,7 +122,7 @@ class Schedule_List_Table extends \WP_List_Table {
 			$links[] = "<span class='crontrol-in-use'>" . esc_html__( 'This custom schedule is in use and cannot be deleted', 'wp-crontrol' ) . '</span>';
 		} else {
 			$link = add_query_arg( array(
-				'page'            => 'crontrol_admin_options_page',
+				'page'            => 'wp-crontrol-schedules',
 				'crontrol_action' => 'delete-schedule',
 				'crontrol_id'     => rawurlencode( $schedule['name'] ),
 			), admin_url( 'options-general.php' ) );

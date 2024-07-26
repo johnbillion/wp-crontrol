@@ -269,7 +269,7 @@ class Table extends \WP_List_Table {
 		 */
 		$types = apply_filters( 'crontrol/filter-types', $types, $hooks_type );
 
-		$url = admin_url( 'tools.php?page=crontrol_admin_manage_page' );
+		$url = admin_url( 'tools.php?page=wp-crontrol' );
 
 		/**
 		 * @var array<string,string> $types
@@ -392,7 +392,7 @@ class Table extends \WP_List_Table {
 
 		if ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_manage_php_crons ) {
 			$link = array(
-				'page'                  => 'crontrol_admin_manage_page',
+				'page'                  => 'wp-crontrol',
 				'crontrol_action'       => 'edit-cron',
 				'crontrol_id'           => rawurlencode( $event->hook ),
 				'crontrol_sig'          => rawurlencode( $event->sig ),
@@ -415,7 +415,7 @@ class Table extends \WP_List_Table {
 
 		if ( ! is_paused( $event ) && ! integrity_failed( $event ) ) {
 			$link = array(
-				'page'                  => 'crontrol_admin_manage_page',
+				'page'                  => 'wp-crontrol',
 				'crontrol_action'       => 'run-cron',
 				'crontrol_id'           => rawurlencode( $event->hook ),
 				'crontrol_sig'          => rawurlencode( $event->sig ),
@@ -429,7 +429,7 @@ class Table extends \WP_List_Table {
 
 		if ( is_paused( $event ) ) {
 			$link = array(
-				'page'            => 'crontrol_admin_manage_page',
+				'page'            => 'wp-crontrol',
 				'crontrol_action' => 'resume-hook',
 				'crontrol_id'     => rawurlencode( $event->hook ),
 			);
@@ -440,7 +440,7 @@ class Table extends \WP_List_Table {
 			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Resume this hook', 'wp-crontrol' ) . '</a>';
 		} elseif ( 'crontrol_cron_job' !== $event->hook && 'crontrol_url_cron_job' !== $event->hook ) {
 			$link = array(
-				'page'            => 'crontrol_admin_manage_page',
+				'page'            => 'wp-crontrol',
 				'crontrol_action' => 'pause-hook',
 				'crontrol_id'     => rawurlencode( $event->hook ),
 			);
@@ -453,7 +453,7 @@ class Table extends \WP_List_Table {
 
 		if ( ! in_array( $event->hook, self::$persistent_core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_manage_php_crons ) ) {
 			$link = array(
-				'page'                  => 'crontrol_admin_manage_page',
+				'page'                  => 'wp-crontrol',
 				'crontrol_action'       => 'delete-cron',
 				'crontrol_id'           => rawurlencode( $event->hook ),
 				'crontrol_sig'          => rawurlencode( $event->sig ),
@@ -468,7 +468,7 @@ class Table extends \WP_List_Table {
 		if ( 'crontrol_cron_job' !== $event->hook && 'crontrol_url_cron_job' !== $event->hook ) {
 			if ( self::$count_by_hook[ $event->hook ] > 1 ) {
 				$link = array(
-					'page'            => 'crontrol_admin_manage_page',
+					'page'            => 'wp-crontrol',
 					'crontrol_action' => 'delete-hook',
 					'crontrol_id'     => rawurlencode( $event->hook ),
 				);

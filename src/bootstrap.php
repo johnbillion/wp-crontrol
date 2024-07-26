@@ -32,7 +32,7 @@ function init_hooks() {
 	add_filter( 'pre_unschedule_event',               __NAMESPACE__ . '\maybe_clear_doing_cron' );
 	add_filter( 'plugin_row_meta',                    __NAMESPACE__ . '\filter_plugin_row_meta', 10, 2 );
 
-	add_action( 'load-tools_page_crontrol_admin_manage_page', __NAMESPACE__ . '\setup_manage_page' );
+	add_action( 'load-tools_page_wp-crontrol', __NAMESPACE__ . '\setup_manage_page' );
 
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
@@ -177,7 +177,7 @@ function action_handle_posts() {
 		$added = Event\add( $next_run_local, $cr->schedule, $cr->hookname, $args );
 
 		$redirect = array(
-			'page'             => 'crontrol_admin_manage_page',
+			'page'             => 'wp-crontrol',
 			'crontrol_message' => '4',
 			'crontrol_name'    => rawurlencode( $cr->hookname ),
 		);
@@ -235,7 +235,7 @@ function action_handle_posts() {
 
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'URL Cron', 'wp-crontrol' );
 		$redirect = array(
-			'page'             => 'crontrol_admin_manage_page',
+			'page'             => 'wp-crontrol',
 			'crontrol_message' => '13',
 			'crontrol_name'    => rawurlencode( $hookname ),
 		);
@@ -293,7 +293,7 @@ function action_handle_posts() {
 
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
-			'page'             => 'crontrol_admin_manage_page',
+			'page'             => 'wp-crontrol',
 			'crontrol_message' => '14',
 			'crontrol_name'    => rawurlencode( $hookname ),
 		);
@@ -326,7 +326,7 @@ function action_handle_posts() {
 		}
 
 		$redirect = array(
-			'page'             => 'crontrol_admin_manage_page',
+			'page'             => 'wp-crontrol',
 			'crontrol_message' => '4',
 			'crontrol_name'    => rawurlencode( $cr->hookname ),
 		);
@@ -417,7 +417,7 @@ function action_handle_posts() {
 		);
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'URL Cron', 'wp-crontrol' );
 		$redirect = array(
-			'page'             => 'crontrol_admin_manage_page',
+			'page'             => 'wp-crontrol',
 			'crontrol_message' => '13',
 			'crontrol_name'    => rawurlencode( $hookname ),
 		);
@@ -507,7 +507,7 @@ function action_handle_posts() {
 		);
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
-			'page'             => 'crontrol_admin_manage_page',
+			'page'             => 'wp-crontrol',
 			'crontrol_message' => '14',
 			'crontrol_name'    => rawurlencode( $hookname ),
 		);
@@ -590,7 +590,7 @@ function action_handle_posts() {
 
 		Schedule\add( $name, $interval, $display );
 		$redirect = array(
-			'page'             => 'crontrol_admin_options_page',
+			'page'             => 'wp-crontrol-schedules',
 			'crontrol_message' => '3',
 			'crontrol_name'    => rawurlencode( $name ),
 		);
@@ -605,7 +605,7 @@ function action_handle_posts() {
 		check_admin_referer( "crontrol-delete-schedule_{$schedule}" );
 		Schedule\delete( $schedule );
 		$redirect = array(
-			'page'             => 'crontrol_admin_options_page',
+			'page'             => 'wp-crontrol-schedules',
 			'crontrol_message' => '2',
 			'crontrol_name'    => rawurlencode( $schedule ),
 		);
@@ -647,7 +647,7 @@ function action_handle_posts() {
 		}
 
 		$redirect = array(
-			'page'             => 'crontrol_admin_manage_page',
+			'page'             => 'wp-crontrol',
 			'crontrol_name'    => $deleted,
 			'crontrol_message' => '9',
 		);
@@ -668,7 +668,7 @@ function action_handle_posts() {
 		}
 
 		$redirect = array(
-			'page'             => 'crontrol_admin_manage_page',
+			'page'             => 'wp-crontrol',
 			'crontrol_message' => '6',
 			'crontrol_name'    => rawurlencode( $hook ),
 		);
@@ -723,7 +723,7 @@ function action_handle_posts() {
 
 		if ( 0 === $deleted ) {
 			$redirect = array(
-				'page'             => 'crontrol_admin_manage_page',
+				'page'             => 'wp-crontrol',
 				'crontrol_message' => '3',
 				'crontrol_name'    => rawurlencode( $hook ),
 			);
@@ -739,7 +739,7 @@ function action_handle_posts() {
 			do_action( 'crontrol/deleted_all_with_hook', $hook, $deleted );
 
 			$redirect = array(
-				'page'             => 'crontrol_admin_manage_page',
+				'page'             => 'wp-crontrol',
 				'crontrol_message' => '2',
 				'crontrol_name'    => rawurlencode( $hook ),
 			);
@@ -747,7 +747,7 @@ function action_handle_posts() {
 			exit;
 		} else {
 			$redirect = array(
-				'page'             => 'crontrol_admin_manage_page',
+				'page'             => 'wp-crontrol',
 				'crontrol_message' => '7',
 				'crontrol_name'    => rawurlencode( $hook ),
 			);
@@ -765,7 +765,7 @@ function action_handle_posts() {
 		$ran = Event\run( $hook, $sig );
 
 		$redirect = array(
-			'page'             => 'crontrol_admin_manage_page',
+			'page'             => 'wp-crontrol',
 			'crontrol_message' => '1',
 			'crontrol_name'    => rawurlencode( $hook ),
 		);
@@ -805,7 +805,7 @@ function action_handle_posts() {
 		$paused = Event\pause( $hook );
 
 		$redirect = array(
-			'page'             => 'crontrol_admin_manage_page',
+			'page'             => 'wp-crontrol',
 			'crontrol_message' => '11',
 			'crontrol_name'    => rawurlencode( $hook ),
 		);
@@ -852,7 +852,7 @@ function action_handle_posts() {
 		$resumed = Event\resume( $hook );
 
 		$redirect = array(
-			'page'             => 'crontrol_admin_manage_page',
+			'page'             => 'wp-crontrol',
 			'crontrol_message' => '12',
 			'crontrol_name'    => rawurlencode( $hook ),
 		);
@@ -985,14 +985,14 @@ function action_admin_menu() {
 		esc_html__( 'Cron Schedules', 'wp-crontrol' ),
 		esc_html__( 'Cron Schedules', 'wp-crontrol' ),
 		'manage_options',
-		'crontrol_admin_options_page',
+		'wp-crontrol-schedules',
 		__NAMESPACE__ . '\admin_options_page'
 	);
 	$events = add_management_page(
 		esc_html__( 'Cron Events', 'wp-crontrol' ),
 		esc_html__( 'Cron Events', 'wp-crontrol' ),
 		'manage_options',
-		'crontrol_admin_manage_page',
+		'wp-crontrol',
 		__NAMESPACE__ . '\admin_manage_page'
 	);
 
@@ -1080,12 +1080,12 @@ function plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
 	$new = array(
 		'crontrol-events'    => sprintf(
 			'<a href="%s">%s</a>',
-			esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ),
+			esc_url( admin_url( 'tools.php?page=wp-crontrol' ) ),
 			esc_html__( 'Events', 'wp-crontrol' )
 		),
 		'crontrol-schedules' => sprintf(
 			'<a href="%s">%s</a>',
-			esc_url( admin_url( 'options-general.php?page=crontrol_admin_options_page' ) ),
+			esc_url( admin_url( 'options-general.php?page=wp-crontrol-schedules' ) ),
 			esc_html__( 'Schedules', 'wp-crontrol' )
 		),
 		'crontrol-help' => sprintf(
@@ -1185,7 +1185,7 @@ function admin_options_page() {
 				<div class="form-wrap">
 					<h2><?php esc_html_e( 'Add Cron Schedule', 'wp-crontrol' ); ?></h2>
 					<p><?php esc_html_e( 'Adding a new schedule allows you to schedule recurring events at the given interval.', 'wp-crontrol' ); ?></p>
-					<form method="post" action="options-general.php?page=crontrol_admin_options_page">
+					<form method="post" action="options-general.php?page=wp-crontrol-schedules">
 						<div class="form-field form-required">
 							<label for="crontrol_schedule_internal_name">
 								<?php esc_html_e( 'Internal Name', 'wp-crontrol' ); ?>
@@ -1574,7 +1574,7 @@ function show_cron_form( $editing ) {
 				$cron_type = 'standard';
 			}
 			?>
-		<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page' ) ); ?>" class="crontrol-edit-event crontrol-edit-event-<?php echo esc_attr( $cron_type ); ?>">
+		<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=wp-crontrol' ) ); ?>" class="crontrol-edit-event crontrol-edit-event-<?php echo esc_attr( $cron_type ); ?>">
 			<?php
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo $other_fields;
@@ -1982,18 +1982,18 @@ function admin_manage_page() {
 
 				<h1 class="wp-heading-inline"><?php esc_html_e( 'Cron Events', 'wp-crontrol' ); ?></h1>
 
-				<?php echo '<a href="' . esc_url( admin_url( 'tools.php?page=crontrol_admin_manage_page&crontrol_action=new-cron' ) ) . '" class="page-title-action">' . esc_html__( 'Add New Cron Event', 'wp-crontrol' ) . '</a>'; ?>
+				<?php echo '<a href="' . esc_url( admin_url( 'tools.php?page=wp-crontrol&crontrol_action=new-cron' ) ) . '" class="page-title-action">' . esc_html__( 'Add New Cron Event', 'wp-crontrol' ) . '</a>'; ?>
 
 				<hr class="wp-header-end">
 
 				<?php $table->views(); ?>
 
 				<form id="posts-filter" method="get" action="tools.php">
-					<input type="hidden" name="page" value="crontrol_admin_manage_page" />
+					<input type="hidden" name="page" value="wp-crontrol" />
 					<?php $table->search_box( esc_html__( 'Search Hook Names', 'wp-crontrol' ), 'cron-event' ); ?>
 				</form>
 
-				<form method="post" action="tools.php?page=crontrol_admin_manage_page">
+				<form method="post" action="tools.php?page=wp-crontrol">
 					<div class="table-responsive">
 						<?php $table->display(); ?>
 					</div>
@@ -2033,8 +2033,8 @@ function admin_manage_page() {
  */
 function get_tab_states() {
 	$tabs = array(
-		'events'     => ( ! empty( $_GET['page'] ) && 'crontrol_admin_manage_page' === $_GET['page'] && empty( $_GET['crontrol_action'] ) ),
-		'schedules'  => ( ! empty( $_GET['page'] ) && 'crontrol_admin_options_page' === $_GET['page'] ),
+		'events'     => ( ! empty( $_GET['page'] ) && 'wp-crontrol' === $_GET['page'] && empty( $_GET['crontrol_action'] ) ),
+		'schedules'  => ( ! empty( $_GET['page'] ) && 'wp-crontrol-schedules' === $_GET['page'] ),
 		'add-event'  => ( ! empty( $_GET['crontrol_action'] ) && 'new-cron' === $_GET['crontrol_action'] ),
 		'edit-event' => ( ! empty( $_GET['crontrol_action'] ) && 'edit-cron' === $_GET['crontrol_action'] ),
 	);
@@ -2061,11 +2061,11 @@ function do_tabs() {
 	$tab   = reset( $tab );
 	$links = array(
 		'events'    => array(
-			'tools.php?page=crontrol_admin_manage_page',
+			'tools.php?page=wp-crontrol',
 			__( 'Cron Events', 'wp-crontrol' ),
 		),
 		'schedules' => array(
-			'options-general.php?page=crontrol_admin_options_page',
+			'options-general.php?page=wp-crontrol-schedules',
 			__( 'Cron Schedules', 'wp-crontrol' ),
 		),
 	);
@@ -2515,7 +2515,7 @@ function action_url_cron_event( array $args ): void {
 		trigger_error(
 			sprintf(
 				'WP Crontrol: The stored hash is missing for a URL cron event; for more information see %s',
-				esc_url_raw( admin_url( 'tools.php?page=crontrol_admin_manage_page&crontrol_hooks_type=url' ) ),
+				esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=url' ) ),
 			),
 			E_USER_WARNING
 		);
@@ -2528,7 +2528,7 @@ function action_url_cron_event( array $args ): void {
 		trigger_error(
 			sprintf(
 				'WP Crontrol: The stored hash for a URL cron event is not valid; for more information see %s',
-				esc_url_raw( admin_url( 'tools.php?page=crontrol_admin_manage_page&crontrol_hooks_type=url' ) ),
+				esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=url' ) ),
 			),
 			E_USER_WARNING
 		);
@@ -2617,7 +2617,7 @@ function action_php_cron_event( $args ): void {
 		trigger_error(
 			sprintf(
 				'WP Crontrol: The stored hash is missing for a PHP cron event; for more information see %s',
-				esc_url_raw( admin_url( 'tools.php?page=crontrol_admin_manage_page&crontrol_hooks_type=php' ) ),
+				esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=php' ) ),
 			),
 			E_USER_WARNING
 		);
@@ -2630,7 +2630,7 @@ function action_php_cron_event( $args ): void {
 		trigger_error(
 			sprintf(
 				'WP Crontrol: The stored hash for a PHP cron event is not valid; for more information see %s',
-				esc_url_raw( admin_url( 'tools.php?page=crontrol_admin_manage_page&crontrol_hooks_type=php' ) ),
+				esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=php' ) ),
 			),
 			E_USER_WARNING
 		);
