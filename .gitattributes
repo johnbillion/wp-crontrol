@@ -3,7 +3,6 @@
 # Directories
 /.github/ export-ignore
 /.wordpress-org/ export-ignore linguist-documentation
-/bin/ export-ignore
 /docs/ export-ignore
 /tests/ export-ignore
 
@@ -22,4 +21,3 @@
 /phpcs.xml.dist export-ignore
 /phpcs56.xml export-ignore
 /phpstan.neon.dist export-ignore
-/SECURITY.md export-ignore
