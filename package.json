@@ -11,7 +11,7 @@
 		"node": ">=18"
 	},
 	"devDependencies": {
-		"version-bump-prompt": "6.1.0",
+		"@jsdevtools/version-bump-prompt": "6.1.0",
 		"vitepress-plugin-rss": "0.2.6",
 		"vitepress": "1.2.3"
 	},
