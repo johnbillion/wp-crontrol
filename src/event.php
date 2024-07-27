@@ -39,7 +39,7 @@ function run( $hookname, $sig ) {
 				return $scheduled;
 			}
 
-			add_filter( 'cron_request', function( array $cron_request_array ) {
+			add_filter( 'cron_request', function ( array $cron_request_array ) {
 				$cron_request_array['url'] = add_query_arg( 'crontrol-single-event', 1, $cron_request_array['url'] );
 				return $cron_request_array;
 			} );
