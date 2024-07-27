@@ -9,7 +9,6 @@ namespace Crontrol;
  * Class Request
  */
 class Request {
-
 	/**
 	 * Description.
 	 *
@@ -118,5 +117,4 @@ class Request {
 
 		return $this;
 	}
-
 }

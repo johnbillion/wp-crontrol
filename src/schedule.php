@@ -72,14 +72,20 @@ function get() {
 	 * }> $schedules
 	 */
 	$schedules = wp_get_schedules();
-	uasort( $schedules, function( array $a, array $b ) {
-		return ( $a['interval'] - $b['interval'] );
-	} );
+	uasort(
+		$schedules,
+		function ( array $a, array $b ) {
+			return ( $a['interval'] - $b['interval'] );
+		}
+	);
 
-	array_walk( $schedules, function( array &$schedule, $name ) {
-		$schedule['name'] = $name;
-		$schedule['is_too_frequent'] = ( $schedule['interval'] < WP_CRON_LOCK_TIMEOUT );
-	} );
+	array_walk(
+		$schedules,
+		function ( array &$schedule, $name ) {
+			$schedule['name'] = $name;
+			$schedule['is_too_frequent'] = ( $schedule['interval'] < WP_CRON_LOCK_TIMEOUT );
+		}
+	);
 
 	/**
 	 * @phpstan-var array<string,array{

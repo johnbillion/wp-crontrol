@@ -2,6 +2,7 @@
 <ruleset name="WP Crontrol">
 
 	<config name="testVersion" value="7.4-"/>
+	<config name="minimum_wp_version" value="5.8"/>
 	<arg name="extensions" value="php"/>
 
 	<exclude-pattern>/.github/*</exclude-pattern>
@@ -59,12 +60,6 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array" value="wp-crontrol"/>
-		</properties>
-	</rule>
-
-	<rule ref="WordPress.WP.DeprecatedFunctions">
-		<properties>
-			<property name="minimum_supported_version" value="5.8" />
 		</properties>
 	</rule>
 

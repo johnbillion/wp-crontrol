@@ -11,7 +11,6 @@ require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
  * Cron schedule list table class.
  */
 class Schedule_List_Table extends \WP_List_Table {
-
 	/**
 	 * Array of cron event schedules that are added by WordPress core.
 	 *
@@ -233,5 +232,4 @@ class Schedule_List_Table extends \WP_List_Table {
 	public function no_items() {
 		esc_html_e( 'There are no schedules.', 'wp-crontrol' );
 	}
-
 }

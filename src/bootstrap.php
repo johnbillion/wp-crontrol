@@ -151,7 +151,7 @@ function action_handle_posts() {
 
 		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
 
-		add_filter( 'schedule_event', function( $event ) {
+		add_filter( 'schedule_event', function ( $event ) {
 			if ( ! $event ) {
 				return $event;
 			}
@@ -208,7 +208,7 @@ function action_handle_posts() {
 			),
 		);
 
-		add_filter( 'schedule_event', function( $event ) {
+		add_filter( 'schedule_event', function ( $event ) {
 			if ( ! $event ) {
 				return $event;
 			}
@@ -266,7 +266,7 @@ function action_handle_posts() {
 			),
 		);
 
-		add_filter( 'schedule_event', function( $event ) {
+		add_filter( 'schedule_event', function ( $event ) {
 			if ( ! $event ) {
 				return $event;
 			}
@@ -356,7 +356,7 @@ function action_handle_posts() {
 		 *
 		 * @param stdClass|false $event An object containing the new event's data, or boolean false.
 		 */
-		add_filter( 'schedule_event', function( $event ) use ( $original ) {
+		add_filter( 'schedule_event', function ( $event ) use ( $original ) {
 			if ( ! $event ) {
 				return $event;
 			}
@@ -447,7 +447,7 @@ function action_handle_posts() {
 		 *
 		 * @param stdClass|false $event An object containing the new event's data, or boolean false.
 		 */
-		add_filter( 'schedule_event', function( $event ) use ( $original ) {
+		add_filter( 'schedule_event', function ( $event ) use ( $original ) {
 			if ( ! $event ) {
 				return $event;
 			}
@@ -537,7 +537,7 @@ function action_handle_posts() {
 		 *
 		 * @param stdClass|false $event An object containing the new event's data, or boolean false.
 		 */
-		add_filter( 'schedule_event', function( $event ) use ( $original ) {
+		add_filter( 'schedule_event', function ( $event ) use ( $original ) {
 			if ( ! $event ) {
 				return $event;
 			}
@@ -1331,7 +1331,6 @@ function test_cron_spawn( $cache = true ) {
 		set_transient( 'crontrol-cron-test-ok', 1, 3600 );
 		return true;
 	}
-
 }
 
 /**
@@ -2023,7 +2022,6 @@ function admin_manage_page() {
 			break;
 
 	}
-
 }
 
 /**
@@ -2546,23 +2544,31 @@ function action_url_cron_event( array $args ): void {
 	$response = wp_remote_request( $url, $request_args );
 
 	if ( is_wp_error( $response ) ) {
-		throw new Exception( sprintf(
-			'WP Crontrol: Failed to fetch URL %s: %s',
-			$url,
-			$response->get_error_message()
-		) );
+		throw new Exception(
+			esc_html(
+				sprintf(
+					'WP Crontrol: Failed to fetch URL %s: %s',
+					$url,
+					$response->get_error_message()
+				)
+			)
+		);
 	}
 
 	$code = wp_remote_retrieve_response_code( $response );
 	$message = wp_remote_retrieve_response_message( $response );
 
 	if ( $code < 200 || $code >= 300 ) {
-		throw new Exception( sprintf(
-			'WP Crontrol: Unexpected response code for URL %s: HTTP %s %s',
-			$url,
-			$code,
-			$message
-		) );
+		throw new Exception(
+			esc_html(
+				sprintf(
+					'WP Crontrol: Unexpected response code for URL %s: HTTP %s %s',
+					$url,
+					$code,
+					$message
+				)
+			)
+		);
 	}
 }
 
