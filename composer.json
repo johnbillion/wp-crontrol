@@ -34,7 +34,7 @@
 		"johnbillion/plugin-infrastructure": "dev-trunk",
 		"lucatume/wp-browser": "3.2.1",
 		"phpcompatibility/phpcompatibility-wp": "2.1.5",
-		"phpstan/phpstan": "^1.7",
+		"phpstan/phpstan": "1.11.8",
 		"roots/wordpress-core-installer": "1.100.0",
 		"roots/wordpress-full": "*",
 		"szepeviktor/phpstan-wordpress": "1.3.5",
