@@ -69,7 +69,7 @@ class Table extends \WP_List_Table {
 	 */
 	public function prepare_items() {
 		self::$persistent_core_hooks = \Crontrol\get_persistent_core_hooks();
-		self::$can_manage_php_crons     = current_user_can( 'edit_files' );
+		self::$can_manage_php_crons  = current_user_can( 'edit_files' );
 		self::$php_crons_enabled     = php_cron_events_enabled();
 		self::$count_by_hook         = count_by_hook();
 
