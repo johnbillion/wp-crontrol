@@ -22,6 +22,8 @@ jobs:
     permissions:
       contents: read
       issues: write
+      attestations: write
+      id-token: write
     with:
       deploy: ${{ github.event_name != 'workflow_dispatch' }}
       plugin: wp-crontrol
