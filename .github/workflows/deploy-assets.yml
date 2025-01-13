@@ -17,6 +17,6 @@ jobs:
     with:
       plugin: wp-crontrol
       readme: readme.txt
+      username: johnbillion
     secrets:
-      WPORG_SVN_USERNAME: ${{ secrets.WPORG_SVN_USERNAME }}
       WPORG_SVN_PASSWORD: ${{ secrets.WPORG_SVN_PASSWORD }}
