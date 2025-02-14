@@ -698,6 +698,15 @@ class Table extends \WP_List_Table {
 				$callbacks[] = \Crontrol\output_callback( $callback );
 			}
 
+			if ( $event->hook === 'action_scheduler_run_queue' ) {
+				$callbacks[] = '';
+				$callbacks[] = sprintf(
+					'<span class="status-crontrol-info"><span class="dashicons dashicons-info" aria-hidden="true"></span> <a href="%s">%s</a></span>',
+					admin_url( 'tools.php?page=action-scheduler' ),
+					esc_html__( 'View the scheduled actions here &raquo;', 'wp-crontrol' )
+				);
+			}
+
 			return implode( '<br>', $callbacks ); // WPCS:: XSS ok.
 		} else {
 			return sprintf(
