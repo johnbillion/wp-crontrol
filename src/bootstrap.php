@@ -1580,6 +1580,7 @@ function show_cron_form( $editing ) {
 
 	$is_editing_php = ( $existing && 'crontrol_cron_job' === $existing['hookname'] );
 	$is_editing_url = ( $existing && 'crontrol_url_cron_job' === $existing['hookname'] );
+	$is_editing_protected_event = false;
 
 	if ( is_array( $existing ) ) {
 		$other_fields  = wp_nonce_field( "crontrol-edit-cron_{$existing['hookname']}_{$existing['sig']}_{$existing['next_run']}", '_wpnonce', true, false );
@@ -1603,6 +1604,7 @@ function show_cron_form( $editing ) {
 		$next_run_gmt  = gmdate( 'Y-m-d H:i:s', $existing['next_run'] );
 		$next_run_date_local = get_date_from_gmt( $next_run_gmt, 'Y-m-d' );
 		$next_run_time_local = get_date_from_gmt( $next_run_gmt, 'H:i:s' );
+		$is_editing_protected_event = in_array( $existing['hookname'], get_all_core_hooks(), true ) || str_starts_with( $existing['hookname'], 'crontrol' );
 	} else {
 		$other_fields = wp_nonce_field( 'crontrol-new-cron', '_wpnonce', true, false );
 		$existing     = array(
@@ -1816,12 +1818,21 @@ function show_cron_form( $editing ) {
 					?>
 					<tr class="crontrol-event-standard">
 						<th scope="row">
-							<label for="crontrol_hookname">
+							<?php if ( $is_editing_protected_event ) { ?>
 								<?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?>
-							</label>
+							<?php } else { ?>
+								<label for="crontrol_hookname">
+									<?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?>
+								</label>
+							<?php } ?>
 						</th>
 						<td>
-							<input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" class="regular-text" id="crontrol_hookname" name="crontrol_hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>" required />
+							<?php if ( $is_editing_protected_event ) { ?>
+								<input type="hidden" name="crontrol_hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>" />
+								<?php echo esc_html( $existing['hookname'] ); ?>
+							<?php } else { ?>
+								<input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" class="regular-text" id="crontrol_hookname" name="crontrol_hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>" required />
+							<?php } ?>
 							<?php do_action( 'crontrol/manage/hookname', $existing ); ?>
 						</td>
 					</tr>
