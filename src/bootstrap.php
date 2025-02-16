@@ -2310,7 +2310,22 @@ function populate_callback( array $callback ) {
 		$callback['name'] = $class . $access . $callback['function'][1] . '()';
 	} elseif ( is_object( $callback['function'] ) ) {
 		if ( is_a( $callback['function'], 'Closure' ) ) {
-			$callback['name'] = 'Closure';
+			try {
+				$reflection = new \ReflectionFunction( $callback['function'] );
+				$file = str_replace( ABSPATH, '', $reflection->getFileName() ?: '' );
+				$line = $reflection->getStartLine();
+
+				$name = sprintf(
+					/* translators: A Closure is a type of PHP function. 1: File name, 2: Line number */
+					__( 'Closure in %1$s at line %2$d', 'wp-crontrol' ),
+					$file,
+					$line
+				);
+			} catch ( \ReflectionException $e ) {
+				$name = 'Closure';
+			}
+
+			$callback['name'] = $name;
 		} else {
 			$class = get_class( $callback['function'] );
 
