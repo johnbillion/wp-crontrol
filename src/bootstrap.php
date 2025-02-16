@@ -1564,14 +1564,45 @@ function show_cron_form( $editing ) {
 		}
 
 		if ( empty( $existing ) ) {
+			$search_url = add_query_arg(
+				array(
+					'page' => 'wp-crontrol',
+					's'    => rawurlencode( $edit_id ),
+				),
+				admin_url( 'tools.php' )
+			);
 			?>
-			<div id="crontrol-event-not-found" class="notice notice-error">
-				<?php
-				printf(
-					'<p>%1$s</p>',
-					esc_html__( 'The event you are trying to edit does not exist.', 'wp-crontrol' )
-				);
-				?>
+			<div id="crontrol_form" class="wrap narrow">
+				<?php do_tabs(); ?>
+
+				<div id="crontrol-event-not-found" class="notice notice-error">
+					<p>
+						<?php
+						printf(
+							/* translators: %s: The name of the cron event. */
+							esc_html__( 'The %s event you are trying to edit does not exist.', 'wp-crontrol' ),
+							'<b>' . esc_html( $edit_id ) . '</b>'
+						);
+						?>
+					</p>
+					<p>
+						<?php
+						echo wp_kses(
+							sprintf(
+								/* translators: 1: The time since the event was scheduled, 2: The URL to search for the event. */
+								__( 'The event probably ran %1$s ago. <a href="%2$s">Click here to see if it was rescheduled</a>.', 'wp-crontrol' ),
+								human_time_diff( intval( $_GET['crontrol_next_run_utc'] ), time() ),
+								esc_url( $search_url )
+							),
+							array(
+								'a' => array(
+									'href' => array(),
+								),
+							)
+						);
+						?>
+					</p>
+				</div>
 			</div>
 			<?php
 			return;
