@@ -1469,10 +1469,10 @@ function get_timezone_name() {
 		}
 
 		return sprintf(
-			'(%1$s) %2$s - %3$s',
-			$offset_string,
+			'%1$s - %2$s (%3$s)',
 			$name,
 			$location,
+			$offset_string,
 		);
 	} catch ( Exception $e ) {
 		return sprintf(
