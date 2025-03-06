@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 
 import EditEvent from "./EditEvent";
 import Modal from "./Modal";
+import { __ } from "@wordpress/i18n";
 
 export default function App() {
 	const [modalState, setModalState] = useState(false);
@@ -67,7 +68,7 @@ export default function App() {
 	}, []);
 
 	return (
-		<Modal show={modalState} onClose={() => setModalState(false)}>
+		<Modal show={modalState} onClose={() => setModalState(false)} title={ __( 'Edit Cron Event', 'wp-crontrol' ) }>
 			<EditEvent
 				id={editState.id}
 				sig={editState.sig}

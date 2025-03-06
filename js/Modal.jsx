@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
+import { __ } from "@wordpress/i18n";
 
-export default function Modal({ show, children, onClose }) {
+export default function Modal({ show, children, onClose, title }) {
 	const bgStyle = {
 		display: show ? "block" : "none",
 		backgroundColor: "rgba(0, 0, 0, 0.7)",
@@ -12,12 +13,16 @@ export default function Modal({ show, children, onClose }) {
 		zIndex: "9999",
 		padding: "30px",
 	};
-	const contentStyle = {
+	const containerStyle = {
 		backgroundColor: "#f0f0f1",
 		margin: "100px auto 30px",
 		width: "auto",
 		maxWidth: "900px",
-		padding: "20px",
+	};
+	const headerStyle = {
+	};
+	const contentStyle = {
+		margin: "20px",
 	};
 
 	useEffect(() => {
@@ -40,12 +45,24 @@ export default function Modal({ show, children, onClose }) {
 
 	return (
 		<div style={bgStyle}>
-			<div style={contentStyle}>
-				<div>
+			<div style={containerStyle}>
+				<div style={headerStyle}>
+					<div>
+						<h2>
+							{ title }
+						</h2>
+					</div>
+					<button className="modal-close is-large" aria-label="close" onClick={onClose}>
+						<span aria-hidden="true">&times;</span>
+						<span className="screen-reader-text">
+							{ __( 'Close', 'wp-crontrol' ) }
+						</span>
+					</button>
+				</div>
+				<div style={contentStyle}>
 					{children}
 				</div>
 			</div>
-			<button className="modal-close is-large" aria-label="close" onClick={onClose}>CLOSE</button>
 		</div>
 	);
 }
