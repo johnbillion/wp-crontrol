@@ -53,6 +53,7 @@ function init_hooks() {
 	add_filter( 'plugin_row_meta',                    __NAMESPACE__ . '\filter_plugin_row_meta', 10, 2 );
 
 	add_action( 'load-tools_page_wp-crontrol', __NAMESPACE__ . '\setup_manage_page' );
+	add_action( 'admin_footer',                __NAMESPACE__ . '\action_admin_footer' );
 
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
@@ -62,6 +63,10 @@ function init_hooks() {
 	add_action( 'activated_plugin',      __NAMESPACE__ . '\flush_status_cache', 10, 0 );
 	add_action( 'deactivated_plugin',    __NAMESPACE__ . '\flush_status_cache', 10, 0 );
 	add_action( 'switch_theme',          __NAMESPACE__ . '\flush_status_cache', 10, 0 );
+}
+
+function action_admin_footer(): void {
+	printf( '<div id="crontrol-app"></div>' );
 }
 
 /**
@@ -2525,17 +2530,25 @@ function enqueue_assets( $hook_suffix ) {
 		true
 	);
 
+	$asset_file = include plugin_dir_path( PLUGIN_FILE ) . 'build/index.asset.php';
+
+	wp_enqueue_script(
+		'wp-crontrol-app',
+		plugins_url( 'build/index.js', PLUGIN_FILE ),
+		$asset_file['dependencies'],
+		$asset_file['version'],
+		true
+	);
+
 	$vars = array();
 
-	if ( ! empty( $tab['add-event'] ) || ! empty( $tab['edit-event'] ) ) {
-		if ( current_user_can_manage_php_cron_events() ) {
-			$settings = wp_enqueue_code_editor( array(
-				'type' => 'text/x-php',
-			) );
+	if ( current_user_can_manage_php_cron_events() ) {
+		$settings = wp_enqueue_code_editor( array(
+			'type' => 'text/x-php',
+		) );
 
-			if ( false !== $settings ) {
-				$vars['codeEditor'] = $settings;
-			}
+		if ( false !== $settings ) {
+			$vars['codeEditor'] = $settings;
 		}
 	}
 

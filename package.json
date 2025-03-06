@@ -12,11 +12,17 @@
 	},
 	"devDependencies": {
 		"@jsdevtools/version-bump-prompt": "6.1.0",
+		"@wordpress/scripts": "^30.12.0",
 		"sharp-cli": "^4.0.0"
 	},
 	"scripts": {
 		"icons": "sharp -i .wordpress-org/icon.svg -o .wordpress-org/icon-128x128.png -f png --palette resize 128 128 && sharp -i .wordpress-org/icon.svg -o .wordpress-org/icon-256x256.png -f png --palette resize 256 256",
 		"screenshots": "sharp -i .wordpress-org/screenshot-*.png -o .wordpress-org -f png --palette resize 1514 844",
+		"start": "WP_SOURCE_PATH=js wp-scripts start",
+		"build": "WP_SOURCE_PATH=js wp-scripts build",
+		"format": "WP_SOURCE_PATH=js wp-scripts format",
+		"lint:css": "WP_SOURCE_PATH=js wp-scripts lint-style",
+		"lint:js": "WP_SOURCE_PATH=js wp-scripts lint-js",
 		"bump:patch": "bump patch --commit 'Version %s.' wp-crontrol.php package.json readme.txt",
 		"bump:minor": "bump minor --commit 'Version %s.' wp-crontrol.php package.json readme.txt",
 		"bump:major": "bump major --commit 'Version %s.' wp-crontrol.php package.json readme.txt"

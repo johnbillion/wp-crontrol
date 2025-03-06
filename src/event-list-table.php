@@ -450,9 +450,26 @@ class Table extends \WP_List_Table {
 				$label = __( 'Edit', 'wp-crontrol' );
 			}
 
+			$is_editing_php = ( 'crontrol_cron_job' === $event->hook );
+			$is_editing_url = ( 'crontrol_url_cron_job' === $event->hook );
+
+			if ( $is_editing_php ) {
+				$cron_type = 'php';
+			} elseif ( $is_editing_url ) {
+				$cron_type = 'url';
+			} else {
+				$cron_type = 'standard';
+			}
+
+			$nonce = wp_create_nonce( "crontrol-edit-cron_{$event->hook}_{$event->sig}_{$event->timestamp}" );
+
 			$links[] = sprintf(
-				'<a href="%1$s">%2$s</a>',
+				'<a href="%1$s" data-crontrol-edit data-crontrol-type="%2$s" data-crontrol-schedule="%3$s" data-crontrol-nonce="%4$s" data-crontrol-args="%5$s">%6$s</a>',
 				esc_url( $link ),
+				esc_attr( $cron_type ),
+				esc_attr( $event->schedule ),
+				$nonce,
+				esc_attr( $event->args ? ( wp_json_encode( $event->args ) ?: '' ) : '' ),
 				esc_html( $label )
 			);
 		}
