@@ -112,14 +112,16 @@ table.wp-list-table {
 .crontrol-modal {
 	border: none;
 	padding: 0;
+	width: auto;
+	max-width: 650px;
+	background: transparent;
 
 	&::backdrop {
 		background-color: rgba(0, 0, 0, 0.7);
 	}
 
 	.modal-container {
-		width: auto;
-		max-width: 650px;
+		margin: 10px;
 	}
 
 	.modal-header {
