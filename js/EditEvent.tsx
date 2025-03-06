@@ -1,4 +1,5 @@
 import React from "react";
+import { __ } from "@wordpress/i18n";
 
 export default function EditEvent({
 	id,
@@ -12,36 +13,44 @@ export default function EditEvent({
 }) {
 	return (
 		<form method="post" action="tools.php?page=wp-crontrol" className={`crontrol-edit-event crontrol-edit-event-${type}`}>
-			<input type="hidden" id="_wpnonce" name="_wpnonce" value={ nonce } />
-			<input name="crontrol_original_hookname" type="hidden" value={ id } />
-			<input name="crontrol_original_sig" type="hidden" value={ sig } />
-			<input name="crontrol_original_next_run_utc" type="hidden" value={ timestamp } />
-			<input type="hidden" name="crontrol_action" value="edit_cron"/>
+			<input type="hidden" name="_wpnonce" value={ nonce } />
+			<input type="hidden" name="crontrol_original_hookname" value={ id } />
+			<input type="hidden" name="crontrol_original_sig" value={ sig } />
+			<input type="hidden" name="crontrol_original_next_run_utc" value={ timestamp } />
+			<input type="hidden" name="crontrol_action" value="edit_cron" />
 			<table className="form-table">
 				<tbody>
 					<tr className="crontrol-event-standard">
 						<th scope="row">
-							Hook Name
+							{ protectedHook ? (
+								<>
+									{ __( 'Hook Name', 'wp-crontrol' ) }
+								</>
+							) : (
+								<label htmlFor="crontrol_hookname">
+									{ __( 'Hook Name', 'wp-crontrol' ) }
+								</label>
+							) }
 						</th>
 						<td>
 							{ protectedHook ? (
 								<p>
-									<input type="hidden" name="crontrol_hookname" value="wp_privacy_delete_old_export_files"/>
+									<input type="hidden" name="crontrol_hookname" value={ id } />
 									{ id }
 								</p>
 							) : (
-								<input type="text" autoCorrect="off" autoCapitalize="off" spellCheck="false" className="regular-text" id="crontrol_hookname" name="crontrol_hookname" value={ id } required/>
+								<input type="text" autoCorrect="off" autoCapitalize="off" spellCheck="false" className="regular-text" id="crontrol_hookname" name="crontrol_hookname" defaultValue={ id } required />
 							) }
 						</td>
 					</tr>
 					<tr className="crontrol-event-standard">
 						<th scope="row">
 							<label htmlFor="crontrol_args">
-								Arguments (optional)
+								{ __( 'Arguments (optional)', 'wp-crontrol' ) }
 							</label>
 						</th>
 						<td>
-							<input type="text" autoCorrect="off" autoCapitalize="off" spellCheck="false" className="regular-text code" id="crontrol_args" name="crontrol_args" value={ args } aria-describedby="crontrol_args_description"/>
+							<input type="text" autoCorrect="off" autoCapitalize="off" spellCheck="false" className="regular-text code" id="crontrol_args" name="crontrol_args" defaultValue={ args } aria-describedby="crontrol_args_description" />
 								<p className="description" id="crontrol_args_description">
 									Use a JSON encoded array, e.g. <code>[25]</code>, <code>["asdf"]</code>, or <code>["i","want",25,"cakes"]</code>
 								</p>
@@ -49,8 +58,8 @@ export default function EditEvent({
 					</tr>
 					<tr>
 						<th scope="row">
-							<label htmlFor="crontrol_next_run_date_local">
-								Next Run
+							<label htmlFor="crontrol_next_run_date_local_custom_date">
+								{ __( 'Next Run', 'wp-crontrol' ) }
 							</label>
 						</th>
 						<td>
@@ -59,18 +68,18 @@ export default function EditEvent({
 							<input type="time" autoCorrect="off" autoCapitalize="off" spellCheck="false" name="crontrol_next_run_date_local_custom_time" id="crontrol_next_run_date_local_custom_time" value="15:59:03" step="1" placeholder="hh:mm:ss" pattern="\d{2}:\d{2}:\d{2}" />
 
 							<p className="description">
-								Timezone: UTC
+								{ __( 'Timezone: UTC', 'wp-crontrol' ) }
 							</p>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row">
-							<label htmlFor="crontrol_schedule">
-								Schedule
+							<label htmlFor="crontrol_edit_schedule">
+								{ __( 'Schedule', 'wp-crontrol' ) }
 							</label>
 						</th>
 						<td>
-							<select className="postform" name="crontrol_schedule" id="crontrol_schedule" required defaultValue={ schedule }>
+							<select className="postform" name="crontrol_schedule" id="crontrol_edit_schedule" required defaultValue={ schedule }>
 								<option value="_oneoff">Non-repeating</option>
 								<option value="every_minute">
 									Every minute (every_minute)
@@ -93,7 +102,7 @@ export default function EditEvent({
 				</tbody>
 			</table>
 			<p className="submit">
-				<input type="submit" className="button button-primary" value="Update Event"/>
+				<input type="submit" className="button button-primary button-large" value={ __( 'Update Event', 'wp-crontrol' ) } />
 			</p>
 		</form>
 	);
