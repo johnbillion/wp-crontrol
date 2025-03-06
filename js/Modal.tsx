@@ -1,29 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { __ } from "@wordpress/i18n";
 
 export default function Modal({ show, children, onClose, title }) {
-	const bgStyle = show ? "modal-bg-show" : "modal-bg-hide";
+	const ref = useRef();
 
 	useEffect(() => {
-		const handleKeyDown = (event) => {
-			if (event.key === "Escape") {
-				onClose();
-			}
-		};
-
 		if (show) {
-			document.addEventListener("keydown", handleKeyDown);
+			ref.current.showModal();
 		} else {
-			document.removeEventListener("keydown", handleKeyDown);
+			ref.current.close();
 		}
-
-		return () => {
-			document.removeEventListener("keydown", handleKeyDown);
-		};
-	}, [show, onClose]);
+	}, [show]);
 
 	return (
-			<div className={`crontrol-modal ${bgStyle}`}>
+			<dialog className="crontrol-modal" ref={ref} onCancel={onClose}>
 				<div className="modal-container">
 					<div className="modal-header">
 						<h2 className="modal-title">
@@ -40,6 +30,6 @@ export default function Modal({ show, children, onClose, title }) {
 						{children}
 					</div>
 				</div>
-			</div>
+			</dialog>
 	);
 }
