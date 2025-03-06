@@ -13,23 +13,23 @@ export default function Modal({ show, children, onClose, title }) {
 	}, [show]);
 
 	return (
-			<dialog className="crontrol-modal" ref={ref} onCancel={onClose}>
-				<div className="modal-container">
-					<div className="modal-header">
-						<h2 className="modal-title">
-							{ title }
-						</h2>
-						<button aria-label="close" onClick={onClose} className="modal-close-button">
-							<span aria-hidden="true">&times;</span>
-							<span className="screen-reader-text">
-								{ __( 'Close', 'wp-crontrol' ) }
-							</span>
-						</button>
-					</div>
-					<div className="modal-content">
-						{children}
-					</div>
+		<dialog className="crontrol-modal" ref={ref} onCancel={onClose}>
+			<div className="modal-container">
+				<div className="modal-header">
+					<h2 className="modal-title">
+						{ title }
+					</h2>
+					<button aria-label="close" onClick={onClose} className="modal-close-button">
+						<span aria-hidden="true">&times;</span>
+						<span className="screen-reader-text">
+							{ __( 'Close', 'wp-crontrol' ) }
+						</span>
+					</button>
 				</div>
-			</dialog>
+				<div className="modal-content">
+					{children}
+				</div>
+			</div>
+		</dialog>
 	);
 }
