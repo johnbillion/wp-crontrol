@@ -2,28 +2,7 @@ import React, { useEffect } from "react";
 import { __ } from "@wordpress/i18n";
 
 export default function Modal({ show, children, onClose, title }) {
-	const bgStyle = {
-		display: show ? "block" : "none",
-		backgroundColor: "rgba(0, 0, 0, 0.7)",
-		position: "fixed",
-		top: 0,
-		left: 0,
-		width: "100%",
-		height: "100%",
-		zIndex: "9999",
-		padding: "30px",
-	};
-	const containerStyle = {
-		backgroundColor: "#f0f0f1",
-		margin: "100px auto 30px",
-		width: "auto",
-		maxWidth: "900px",
-	};
-	const headerStyle = {
-	};
-	const contentStyle = {
-		margin: "20px",
-	};
+	const bgStyle = show ? "modal-bg-show" : "modal-bg-hide";
 
 	useEffect(() => {
 		const handleKeyDown = (event) => {
@@ -44,25 +23,23 @@ export default function Modal({ show, children, onClose, title }) {
 	}, [show, onClose]);
 
 	return (
-		<div style={bgStyle}>
-			<div style={containerStyle}>
-				<div style={headerStyle}>
-					<div>
-						<h2>
+			<div className={`crontrol-modal ${bgStyle}`}>
+				<div className="modal-container">
+					<div className="modal-header">
+						<h2 className="modal-title">
 							{ title }
 						</h2>
+						<button aria-label="close" onClick={onClose} className="modal-close-button">
+							<span aria-hidden="true">&times;</span>
+							<span className="screen-reader-text">
+								{ __( 'Close', 'wp-crontrol' ) }
+							</span>
+						</button>
 					</div>
-					<button className="modal-close is-large" aria-label="close" onClick={onClose}>
-						<span aria-hidden="true">&times;</span>
-						<span className="screen-reader-text">
-							{ __( 'Close', 'wp-crontrol' ) }
-						</span>
-					</button>
-				</div>
-				<div style={contentStyle}>
-					{children}
+					<div className="modal-content">
+						{children}
+					</div>
 				</div>
 			</div>
-		</div>
 	);
 }

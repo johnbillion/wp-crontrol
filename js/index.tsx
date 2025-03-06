@@ -41,8 +41,6 @@ export default function App() {
 				crontrolArgs: args,
 			} = event.target.dataset;
 
-			console.log(event.target.dataset);
-
 			setModalState(true);
 			setEditState({
 				id,

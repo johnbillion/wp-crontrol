@@ -108,3 +108,64 @@ table.wp-list-table {
 .crontrol-edit-event-php .crontrol-event-standard {
 	display: none;
 }
+
+.crontrol-modal {
+	&.modal-bg-show {
+		display: block;
+		background-color: rgba(0, 0, 0, 0.7);
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 9999;
+		padding: 30px;
+	}
+
+	&.modal-bg-hide {
+		display: none;
+	}
+
+	.modal-container {
+		background-color: #f0f0f1;
+		margin: 100px auto 30px;
+		width: auto;
+		max-width: 650px;
+	}
+
+	.modal-header {
+		background-color: #fff;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		border-bottom: 1px solid #ccc;
+	}
+
+	.modal-title {
+		margin: 15px 20px;
+	}
+
+	.modal-close-button {
+		margin: 0;
+		height: 50px;
+		width: 50px;
+		border: none;
+		border-left: 1px solid #ccc;
+		background-color: #fff;
+		cursor: pointer;
+		font-size: 20px;
+		color: #555;
+
+		&:hover {
+			background-color: #dcdcdc;
+		}
+	}
+
+	.modal-content {
+		margin: 20px;
+	}
+
+	.submit {
+		margin: 50px 0;
+	}
+}
