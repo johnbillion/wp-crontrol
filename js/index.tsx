@@ -12,6 +12,11 @@ export default function App() {
 		id: null,
 		sig: null,
 		timestamp: null,
+		type: null,
+		nonce: null,
+		schedule: null,
+		protectedHook: null,
+		args: null,
 	});
 
 	useEffect(() => {
@@ -37,9 +42,9 @@ export default function App() {
 				crontrolType: type,
 				crontrolSchedule: schedule,
 				crontrolNonce: nonce,
-				crontrolProtectedHook: protectedHook,
 				crontrolArgs: args,
 			} = event.target.dataset;
+			const protectedHook = event.target.dataset.crontrolProtectedHook === 'true';
 
 			setModalState(true);
 			setEditState({

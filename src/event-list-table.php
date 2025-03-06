@@ -7,6 +7,7 @@ namespace Crontrol\Event;
 
 use stdClass;
 
+use function Crontrol\get_all_core_hooks;
 use function Crontrol\php_cron_events_enabled;
 
 require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
@@ -462,14 +463,16 @@ class Table extends \WP_List_Table {
 			}
 
 			$nonce = wp_create_nonce( "crontrol-edit-cron_{$event->hook}_{$event->sig}_{$event->timestamp}" );
+			$protected = in_array( $event->hook, get_all_core_hooks(), true ) || str_starts_with( $event->hook, 'crontrol' );
 
 			$links[] = sprintf(
-				'<a href="%1$s" data-crontrol-edit data-crontrol-type="%2$s" data-crontrol-schedule="%3$s" data-crontrol-nonce="%4$s" data-crontrol-args="%5$s">%6$s</a>',
+				'<a href="%1$s" data-crontrol-edit data-crontrol-type="%2$s" data-crontrol-schedule="%3$s" data-crontrol-nonce="%4$s" data-crontrol-args="%5$s" data-crontrol-protected-hook="%6$s">%7$s</a>',
 				esc_url( $link ),
 				esc_attr( $cron_type ),
 				esc_attr( $event->schedule ),
 				$nonce,
 				esc_attr( $event->args ? ( wp_json_encode( $event->args ) ?: '' ) : '' ),
+				$protected ? 'true' : 'false',
 				esc_html( $label )
 			);
 		}
