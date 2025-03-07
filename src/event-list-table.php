@@ -7,7 +7,6 @@ namespace Crontrol\Event;
 
 use stdClass;
 
-use function Crontrol\get_all_core_hooks;
 use function Crontrol\php_cron_events_enabled;
 
 require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
@@ -463,8 +462,8 @@ class Table extends \WP_List_Table {
 			}
 
 			$nonce = wp_create_nonce( "crontrol-edit-cron_{$event->hook}_{$event->sig}_{$event->timestamp}" );
-			$protected = in_array( $event->hook, get_all_core_hooks(), true ) || str_starts_with( $event->hook, 'crontrol' );
-			$next_run_gmt  = gmdate( 'Y-m-d H:i:s', $event->timestamp );
+			$protected = is_protected( $event ) ? 'true' : 'false';
+			$next_run_gmt = gmdate( 'Y-m-d H:i:s', $event->timestamp );
 			$next_run_date_local = get_date_from_gmt( $next_run_gmt, 'Y-m-d' );
 			$next_run_time_local = get_date_from_gmt( $next_run_gmt, 'H:i:s' );
 
@@ -483,9 +482,9 @@ class Table extends \WP_List_Table {
 				esc_url( $link ),
 				esc_attr( $cron_type ),
 				esc_attr( $event->schedule ? $event->schedule : '_oneoff' ),
-				$nonce,
+				esc_attr( $nonce ),
 				esc_attr( $event->args ? ( wp_json_encode( $event->args ) ?: '' ) : '' ),
-				$protected ? 'true' : 'false',
+				esc_attr( $protected ),
 				esc_attr( $next_run_date_local ),
 				esc_attr( $next_run_time_local ),
 				esc_html( $label )

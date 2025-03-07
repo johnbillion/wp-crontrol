@@ -9,6 +9,8 @@ use stdClass;
 use Crontrol\Schedule;
 use WP_Error;
 
+use function Crontrol\get_all_core_hooks;
+
 use const Crontrol\PAUSED_OPTION;
 
 /**
@@ -426,6 +428,18 @@ function is_paused( stdClass $event ) {
 	}
 
 	return array_key_exists( $event->hook, $paused );
+}
+
+/**
+ * Determines whether an event is protected.
+ *
+ * This only means its hook name shouldn't be changed.
+ *
+ * @param stdClass $event The event.
+ * @return bool Whether the event is protected.
+ */
+function is_protected( stdClass $event ) {
+	return in_array( $event->hook, get_all_core_hooks(), true ) || str_starts_with( $event->hook, 'crontrol' );
 }
 
 /**
