@@ -52,7 +52,6 @@ export default function App() {
 			const protectedHook = event.target.dataset.crontrolProtected === 'true';
 			const integrityCheck = event.target.dataset.crontrolIntegrityCheck === 'true';
 
-			setModalState(true);
 			setEditState({
 				args,
 				date,
@@ -66,6 +65,7 @@ export default function App() {
 				timestamp,
 				type,
 			});
+			setModalState(true);
 		};
 
 		elements.forEach(element => {
