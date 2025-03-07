@@ -13,7 +13,7 @@ export default function URLFields({
 				</label>
 			</th>
 			<td>
-				{ true && (
+				{ integrityCheck && (
 					<div className="notice notice-error inline">
 						<p>
 							{ __(
