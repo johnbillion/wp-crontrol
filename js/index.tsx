@@ -11,7 +11,7 @@ export default function App() {
 	const [editState, setEditState] = useState({
 		args: '',
 		date: '',
-		id: '',
+		name: '',
 		nonce: '',
 		protectedHook: false,
 		schedule: '',
@@ -36,7 +36,7 @@ export default function App() {
 
 			event.preventDefault();
 			const url = new URL(event.target.href);
-			const id = url.searchParams.get("crontrol_id");
+			const name = url.searchParams.get("crontrol_id");
 			const sig = url.searchParams.get("crontrol_sig");
 			const timestamp = url.searchParams.get("crontrol_next_run_utc");
 
@@ -54,7 +54,7 @@ export default function App() {
 			setEditState({
 				args,
 				date,
-				id,
+				name,
 				nonce,
 				protectedHook,
 				schedule,
@@ -81,7 +81,7 @@ export default function App() {
 			<Edit
 				args={editState.args}
 				date={editState.date}
-				id={editState.id}
+				name={editState.name}
 				nonce={editState.nonce}
 				protectedHook={editState.protectedHook}
 				schedule={editState.schedule}

@@ -13,7 +13,6 @@ export default function NextRun({
 				</label>
 			</th>
 			<td>
-				<input type="hidden" name="crontrol_next_run_date_local" value="custom" />
 				<input
 					autoCapitalize="off"
 					autoCorrect="off"

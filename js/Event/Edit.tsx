@@ -4,11 +4,12 @@ import Arguments from "./Arguments";
 import HookName from "./HookName";
 import NextRun from "./NextRun";
 import Schedule from "./Schedule";
+import EventName from "./EventName";
 
 export default function Edit({
 	args,
 	date,
-	id,
+	name,
 	nonce,
 	protectedHook,
 	schedule,
@@ -18,29 +19,38 @@ export default function Edit({
 	type,
 }) {
 	let panels;
+	let action;
+	const argsData = args ? JSON.parse(args) : [];
 
 	switch (type) {
 		case 'php':
+			action = 'edit_php_cron';
 			panels = (
 				<>
 					{/* <PHPCode/> */}
-					{/* <EventName/> */}
+					<EventName
+						name={ argsData[0]?.name ?? '' }
+					/>
 				</>
 			);
 			break;
 		case 'url':
+			action = 'edit_url_cron';
 			panels = (
 				<>
 					{/* <URLFields/> */}
-					{/* <EventName/> */}
+					<EventName
+						name={ name }
+					/>
 				</>
 			);
 			break;
 		default:
+			action = 'edit_cron';
 			panels = (
 				<>
 					<HookName
-						id={ id }
+						name={ name }
 						protectedHook={ protectedHook }
 					/>
 					<Arguments
@@ -54,10 +64,10 @@ export default function Edit({
 	return (
 		<form method="post" action="tools.php?page=wp-crontrol">
 			<input type="hidden" name="_wpnonce" value={ nonce } />
-			<input type="hidden" name="crontrol_original_hookname" value={ id } />
+			<input type="hidden" name="crontrol_original_hookname" value={ name } />
 			<input type="hidden" name="crontrol_original_sig" value={ sig } />
 			<input type="hidden" name="crontrol_original_next_run_utc" value={ timestamp } />
-			<input type="hidden" name="crontrol_action" value="edit_cron" />
+			<input type="hidden" name="crontrol_action" value={ action } />
 			<table className="form-table">
 				<tbody>
 					{ panels }

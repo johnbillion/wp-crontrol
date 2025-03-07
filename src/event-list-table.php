@@ -466,6 +466,18 @@ class Table extends \WP_List_Table {
 			$next_run_gmt = gmdate( 'Y-m-d H:i:s', $event->timestamp );
 			$next_run_date_local = get_date_from_gmt( $next_run_gmt, 'Y-m-d' );
 			$next_run_time_local = get_date_from_gmt( $next_run_gmt, 'H:i:s' );
+			$args = $event->args;
+
+			if ( $is_editing_php && isset( $event->args['code'] ) ) {
+				// Support the args array format used prior to WP Crontrol 1.16.2
+				$args = array(
+					array(
+						'code' => $event->args['code'],
+						'name' => $event->args['name'] ?? '',
+						'hash' => null,
+					),
+				);
+			}
 
 			$links[] = sprintf(
 				'<a
@@ -483,7 +495,7 @@ class Table extends \WP_List_Table {
 				esc_attr( $cron_type ),
 				esc_attr( $event->schedule ? $event->schedule : '_oneoff' ),
 				esc_attr( $nonce ),
-				esc_attr( $event->args ? ( wp_json_encode( $event->args ) ?: '' ) : '' ),
+				esc_attr( $args ? ( wp_json_encode( $args ) ?: '' ) : '' ),
 				esc_attr( $protected ),
 				esc_attr( $next_run_date_local ),
 				esc_attr( $next_run_time_local ),

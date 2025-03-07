@@ -2,7 +2,7 @@ import React from "react";
 import { __ } from "@wordpress/i18n";
 
 export default function HookName({
-	id,
+	name,
 	protectedHook,
 }) {
 	return (
@@ -21,15 +21,15 @@ export default function HookName({
 			<td>
 				{ protectedHook ? (
 					<p>
-						<input type="hidden" name="crontrol_hookname" value={ id } />
-						{ id }
+						<input type="hidden" name="crontrol_hookname" value={ name } />
+						{ name }
 					</p>
 				) : (
 					<input
 						autoCapitalize="off"
 						autoCorrect="off"
 						className="regular-text"
-						defaultValue={ id }
+						defaultValue={ name }
 						id="crontrol_hookname"
 						name="crontrol_hookname"
 						required
