@@ -1,6 +1,11 @@
 import React from "react";
 import { __ } from "@wordpress/i18n";
 
+type Schedules = {
+	name: string;
+	display: string;
+};
+
 export default function Schedule({
 	schedule,
 }) {
@@ -8,6 +13,8 @@ export default function Schedule({
 	const handleScheduleChange = (event) => {
 		setSelectedSchedule(event.target.value);
 	};
+
+	const schedules: Schedules[] = window.wpCrontrol.schedules;
 
 	React.useEffect(() => {
 		setSelectedSchedule(schedule);
@@ -25,21 +32,11 @@ export default function Schedule({
 					<option value="_oneoff">
 						Non-repeating
 					</option>
-					<option value="every_minute">
-						Every minute (every_minute)
-					</option>
-					<option value="hourly">
-						Once Hourly (hourly)
-					</option>
-					<option value="twicedaily">
-						Twice Daily (twicedaily)
-					</option>
-					<option value="daily">
-						Once Daily (daily)
-					</option>
-					<option value="weekly">
-						Once Weekly (weekly)
-					</option>
+					{ Object.keys(schedules).map((key) => (
+						<option key={ schedules[key].name } value={ schedules[key].name }>
+							{ schedules[key].display } ({ schedules[key].name })
+						</option>
+					)) }
 				</select>
 			</td>
 		</tr>
