@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 
-import EditEvent from "./EditEvent";
+import Edit from "./Event/Edit";
 import Modal from "./Modal";
 import { __ } from "@wordpress/i18n";
 
@@ -78,7 +78,7 @@ export default function App() {
 
 	return (
 		<Modal show={modalState} onClose={() => setModalState(false)} title={ __( 'Edit Cron Event', 'wp-crontrol' ) }>
-			<EditEvent
+			<Edit
 				args={editState.args}
 				date={editState.date}
 				id={editState.id}

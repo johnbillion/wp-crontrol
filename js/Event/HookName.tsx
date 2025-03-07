@@ -1,0 +1,43 @@
+import React from "react";
+import { __ } from "@wordpress/i18n";
+
+export default function HookName({
+	id,
+	protectedHook,
+}) {
+	return (
+		<tr>
+			<th scope="row">
+				{ protectedHook ? (
+					<>
+						{ __( 'Hook Name', 'wp-crontrol' ) }
+					</>
+				) : (
+					<label htmlFor="crontrol_hookname">
+						{ __( 'Hook Name', 'wp-crontrol' ) }
+					</label>
+				) }
+			</th>
+			<td>
+				{ protectedHook ? (
+					<p>
+						<input type="hidden" name="crontrol_hookname" value={ id } />
+						{ id }
+					</p>
+				) : (
+					<input
+						autoCapitalize="off"
+						autoCorrect="off"
+						className="regular-text"
+						defaultValue={ id }
+						id="crontrol_hookname"
+						name="crontrol_hookname"
+						required
+						spellCheck="false"
+						type="text"
+					/>
+				) }
+			</td>
+		</tr>
+	);
+}
