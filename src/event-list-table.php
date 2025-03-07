@@ -464,15 +464,20 @@ class Table extends \WP_List_Table {
 
 			$nonce = wp_create_nonce( "crontrol-edit-cron_{$event->hook}_{$event->sig}_{$event->timestamp}" );
 			$protected = in_array( $event->hook, get_all_core_hooks(), true ) || str_starts_with( $event->hook, 'crontrol' );
+			$next_run_gmt  = gmdate( 'Y-m-d H:i:s', $event->timestamp );
+			$next_run_date_local = get_date_from_gmt( $next_run_gmt, 'Y-m-d' );
+			$next_run_time_local = get_date_from_gmt( $next_run_gmt, 'H:i:s' );
 
 			$links[] = sprintf(
-				'<a href="%1$s" data-crontrol-edit data-crontrol-type="%2$s" data-crontrol-schedule="%3$s" data-crontrol-nonce="%4$s" data-crontrol-args="%5$s" data-crontrol-protected-hook="%6$s">%7$s</a>',
+				'<a href="%1$s" data-crontrol-edit data-crontrol-type="%2$s" data-crontrol-schedule="%3$s" data-crontrol-nonce="%4$s" data-crontrol-args="%5$s" data-crontrol-protected-hook="%6$s" data-crontrol-date="%7$s" data-crontrol-time="%8$s">%9$s</a>',
 				esc_url( $link ),
 				esc_attr( $cron_type ),
-				esc_attr( $event->schedule ),
+				esc_attr( $event->schedule ? $event->schedule : '_oneoff' ),
 				$nonce,
 				esc_attr( $event->args ? ( wp_json_encode( $event->args ) ?: '' ) : '' ),
 				$protected ? 'true' : 'false',
+				esc_attr( $next_run_date_local ),
+				esc_attr( $next_run_time_local ),
 				esc_html( $label )
 			);
 		}

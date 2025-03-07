@@ -3,11 +3,13 @@ import { __ } from "@wordpress/i18n";
 
 export default function EditEvent({
 	args,
+	date,
 	id,
 	nonce,
 	protectedHook,
 	schedule,
 	sig,
+	time,
 	timestamp,
 	type,
 }) {
@@ -92,7 +94,7 @@ export default function EditEvent({
 							placeholder="yyyy-mm-dd"
 							spellCheck="false"
 							type="date"
-							value="2025-03-06"
+							value={ date }
 						/>
 						<input
 							autoCapitalize="off"
@@ -104,7 +106,7 @@ export default function EditEvent({
 							spellCheck="false"
 							step="1"
 							type="time"
-							value="15:59:03"
+							value={ time }
 						/>
 						<p className="description">
 							{ __( 'Timezone: UTC', 'wp-crontrol' ) }

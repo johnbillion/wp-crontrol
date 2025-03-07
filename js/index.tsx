@@ -10,11 +10,13 @@ export default function App() {
 	const [modalState, setModalState] = useState(false);
 	const [editState, setEditState] = useState({
 		args: null,
+		date: null,
 		id: null,
 		nonce: null,
 		protectedHook: null,
 		schedule: null,
 		sig: null,
+		time: null,
 		timestamp: null,
 		type: null,
 	});
@@ -40,8 +42,10 @@ export default function App() {
 
 			const {
 				crontrolArgs: args,
+				crontrolDate: date,
 				crontrolNonce: nonce,
 				crontrolSchedule: schedule,
+				crontrolTime: time,
 				crontrolType: type,
 			} = event.target.dataset;
 			const protectedHook = event.target.dataset.crontrolProtectedHook === 'true';
@@ -49,11 +53,13 @@ export default function App() {
 			setModalState(true);
 			setEditState({
 				args,
+				date,
 				id,
 				nonce,
 				protectedHook,
 				schedule,
 				sig,
+				time,
 				timestamp,
 				type,
 			});
@@ -74,11 +80,13 @@ export default function App() {
 		<Modal show={modalState} onClose={() => setModalState(false)} title={ __( 'Edit Cron Event', 'wp-crontrol' ) }>
 			<EditEvent
 				args={editState.args}
+				date={editState.date}
 				id={editState.id}
 				nonce={editState.nonce}
 				protectedHook={editState.protectedHook}
 				schedule={editState.schedule}
 				sig={editState.sig}
+				time={editState.time}
 				timestamp={editState.timestamp}
 				type={editState.type}
 			/>
