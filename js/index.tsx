@@ -9,16 +9,16 @@ import { __ } from "@wordpress/i18n";
 export default function App() {
 	const [modalState, setModalState] = useState(false);
 	const [editState, setEditState] = useState({
-		args: null,
-		date: null,
-		id: null,
-		nonce: null,
-		protectedHook: null,
-		schedule: null,
-		sig: null,
-		time: null,
-		timestamp: null,
-		type: null,
+		args: '',
+		date: '',
+		id: '',
+		nonce: '',
+		protectedHook: false,
+		schedule: '',
+		sig: '',
+		time: '',
+		timestamp: '',
+		type: '',
 	});
 
 	useEffect(() => {
@@ -48,7 +48,7 @@ export default function App() {
 				crontrolTime: time,
 				crontrolType: type,
 			} = event.target.dataset;
-			const protectedHook = event.target.dataset.crontrolProtectedHook === 'true';
+			const protectedHook = event.target.dataset.crontrolProtected === 'true';
 
 			setModalState(true);
 			setEditState({
