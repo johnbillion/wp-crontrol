@@ -9,14 +9,14 @@ import { __ } from "@wordpress/i18n";
 export default function App() {
 	const [modalState, setModalState] = useState(false);
 	const [editState, setEditState] = useState({
+		args: null,
 		id: null,
+		nonce: null,
+		protectedHook: null,
+		schedule: null,
 		sig: null,
 		timestamp: null,
 		type: null,
-		nonce: null,
-		schedule: null,
-		protectedHook: null,
-		args: null,
 	});
 
 	useEffect(() => {
@@ -39,23 +39,23 @@ export default function App() {
 			const timestamp = url.searchParams.get("crontrol_next_run_utc");
 
 			const {
-				crontrolType: type,
-				crontrolSchedule: schedule,
-				crontrolNonce: nonce,
 				crontrolArgs: args,
+				crontrolNonce: nonce,
+				crontrolSchedule: schedule,
+				crontrolType: type,
 			} = event.target.dataset;
 			const protectedHook = event.target.dataset.crontrolProtectedHook === 'true';
 
 			setModalState(true);
 			setEditState({
+				args,
 				id,
+				nonce,
+				protectedHook,
+				schedule,
 				sig,
 				timestamp,
 				type,
-				nonce,
-				schedule,
-				protectedHook,
-				args,
 			});
 		};
 
@@ -73,14 +73,14 @@ export default function App() {
 	return (
 		<Modal show={modalState} onClose={() => setModalState(false)} title={ __( 'Edit Cron Event', 'wp-crontrol' ) }>
 			<EditEvent
+				args={editState.args}
 				id={editState.id}
+				nonce={editState.nonce}
+				protectedHook={editState.protectedHook}
+				schedule={editState.schedule}
 				sig={editState.sig}
 				timestamp={editState.timestamp}
-				schedule={editState.schedule}
-				nonce={editState.nonce}
 				type={editState.type}
-				protectedHook={editState.protectedHook}
-				args={editState.args}
 			/>
 		</Modal>
 	);

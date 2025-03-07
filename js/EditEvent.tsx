@@ -2,14 +2,14 @@ import React from "react";
 import { __ } from "@wordpress/i18n";
 
 export default function EditEvent({
+	args,
 	id,
+	nonce,
+	protectedHook,
+	schedule,
 	sig,
 	timestamp,
-	schedule,
-	nonce,
 	type,
-	protectedHook,
-	args,
 }) {
 	return (
 		<form method="post" action="tools.php?page=wp-crontrol" className={`crontrol-edit-event crontrol-edit-event-${type}`}>
@@ -19,7 +19,7 @@ export default function EditEvent({
 			<input type="hidden" name="crontrol_original_next_run_utc" value={ timestamp } />
 			<input type="hidden" name="crontrol_action" value="edit_cron" />
 			<table className="form-table">
-				<tr className="crontrol-event-standard">
+				<tr className={`crontrol-event-${type}`}>
 					<th scope="row">
 						{ protectedHook ? (
 							<>
@@ -38,21 +38,41 @@ export default function EditEvent({
 								{ id }
 							</p>
 						) : (
-							<input type="text" autoCorrect="off" autoCapitalize="off" spellCheck="false" className="regular-text" id="crontrol_hookname" name="crontrol_hookname" defaultValue={ id } required />
+							<input
+								autoCapitalize="off"
+								autoCorrect="off"
+								className="regular-text"
+								defaultValue={ id }
+								id="crontrol_hookname"
+								name="crontrol_hookname"
+								required
+								spellCheck="false"
+								type="text"
+							/>
 						) }
 					</td>
 				</tr>
-				<tr className="crontrol-event-standard">
+				<tr className={`crontrol-event-${type}`}>
 					<th scope="row">
 						<label htmlFor="crontrol_args">
 							{ __( 'Arguments (optional)', 'wp-crontrol' ) }
 						</label>
 					</th>
 					<td>
-						<input type="text" autoCorrect="off" autoCapitalize="off" spellCheck="false" className="regular-text code" id="crontrol_args" name="crontrol_args" defaultValue={ args } aria-describedby="crontrol_args_description" />
-							<p className="description" id="crontrol_args_description">
-								Use a JSON encoded array, e.g. <code>[25]</code>, <code>["asdf"]</code>, or <code>["i","want",25,"cakes"]</code>
-							</p>
+						<input
+							aria-describedby="crontrol_args_description"
+							autoCapitalize="off"
+							autoCorrect="off"
+							className="regular-text code"
+							defaultValue={ args }
+							id="crontrol_args"
+							name="crontrol_args"
+							spellCheck="false"
+							type="text"
+						/>
+						<p className="description" id="crontrol_args_description">
+							Use a JSON encoded array, e.g. <code>[25]</code>, <code>["asdf"]</code>, or <code>["i","want",25,"cakes"]</code>
+						</p>
 					</td>
 				</tr>
 				<tr>
@@ -63,9 +83,29 @@ export default function EditEvent({
 					</th>
 					<td>
 						<input type="hidden" name="crontrol_next_run_date_local" value="custom" />
-						<input type="date" autoCorrect="off" autoCapitalize="off" spellCheck="false" name="crontrol_next_run_date_local_custom_date" id="crontrol_next_run_date_local_custom_date" value="2025-03-06" placeholder="yyyy-mm-dd" pattern="\d{4}-\d{2}-\d{2}" />
-						<input type="time" autoCorrect="off" autoCapitalize="off" spellCheck="false" name="crontrol_next_run_date_local_custom_time" id="crontrol_next_run_date_local_custom_time" value="15:59:03" step="1" placeholder="hh:mm:ss" pattern="\d{2}:\d{2}:\d{2}" />
-
+						<input
+							autoCapitalize="off"
+							autoCorrect="off"
+							id="crontrol_next_run_date_local_custom_date"
+							name="crontrol_next_run_date_local_custom_date"
+							pattern="\d{4}-\d{2}-\d{2}"
+							placeholder="yyyy-mm-dd"
+							spellCheck="false"
+							type="date"
+							value="2025-03-06"
+						/>
+						<input
+							autoCapitalize="off"
+							autoCorrect="off"
+							id="crontrol_next_run_date_local_custom_time"
+							name="crontrol_next_run_date_local_custom_time"
+							pattern="\d{2}:\d{2}:\d{2}"
+							placeholder="hh:mm:ss"
+							spellCheck="false"
+							step="1"
+							type="time"
+							value="15:59:03"
+						/>
 						<p className="description">
 							{ __( 'Timezone: UTC', 'wp-crontrol' ) }
 						</p>
