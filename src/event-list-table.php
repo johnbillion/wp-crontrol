@@ -455,20 +455,13 @@ class Table extends \WP_List_Table {
 			$is_editing_php = ( 'crontrol_cron_job' === $event->hook );
 			$is_editing_url = ( 'crontrol_url_cron_job' === $event->hook );
 
-			if ( $is_editing_php ) {
-				$cron_type = 'php';
-			} elseif ( $is_editing_url ) {
-				$cron_type = 'url';
-			} else {
-				$cron_type = 'standard';
-			}
-
 			$nonce = wp_create_nonce( "crontrol-edit-cron_{$event->hook}_{$event->sig}_{$event->timestamp}" );
-			$protected = is_protected( $event ) ? 'true' : 'false';
+			$protected = is_protected( $event );
 			$next_run_gmt = gmdate( 'Y-m-d H:i:s', $event->timestamp );
 			$next_run_date_local = get_date_from_gmt( $next_run_gmt, 'Y-m-d' );
 			$next_run_time_local = get_date_from_gmt( $next_run_gmt, 'H:i:s' );
 			$args = $event->args;
+			$integrity_check = false;
 
 			if ( $is_editing_php && isset( $event->args['code'] ) ) {
 				// Support the args array format used prior to WP Crontrol 1.16.2
@@ -479,6 +472,16 @@ class Table extends \WP_List_Table {
 						'hash' => null,
 					),
 				);
+			}
+
+			if ( $is_editing_php ) {
+				$cron_type = 'php';
+				$integrity_check = ! check_integrity( $args[0]['code'], $args[0]['hash'] );
+			} elseif ( $is_editing_url ) {
+				$cron_type = 'url';
+				$integrity_check = ! check_integrity( $args[0]['url'], $args[0]['hash'] );
+			} else {
+				$cron_type = 'standard';
 			}
 
 			$links[] = sprintf(
@@ -492,15 +495,17 @@ class Table extends \WP_List_Table {
 					data-crontrol-protected="%6$s"
 					data-crontrol-date="%7$s"
 					data-crontrol-time="%8$s"
-				>%9$s</a>',
+					data-crontrol-integrity-check="%9$s"
+				>%10$s</a>',
 				esc_url( $link ),
 				esc_attr( $cron_type ),
 				esc_attr( $event->schedule ? $event->schedule : '_oneoff' ),
 				esc_attr( $nonce ),
 				esc_attr( $args ? ( wp_json_encode( $args ) ?: '' ) : '' ),
-				esc_attr( $protected ),
+				esc_attr( $protected ? 'true' : 'false' ),
 				esc_attr( $next_run_date_local ),
 				esc_attr( $next_run_time_local ),
+				esc_attr( $integrity_check ? 'true' : 'false' ),
 				esc_html( $label )
 			);
 		}

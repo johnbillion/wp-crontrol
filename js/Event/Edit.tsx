@@ -5,10 +5,12 @@ import HookName from "./HookName";
 import NextRun from "./NextRun";
 import Schedule from "./Schedule";
 import EventName from "./EventName";
+import URLFields from "./URLFields";
 
 export default function Edit({
 	args,
 	date,
+	integrityCheck,
 	name,
 	nonce,
 	protectedHook,
@@ -38,7 +40,10 @@ export default function Edit({
 			action = 'edit_url_cron';
 			panels = (
 				<>
-					{/* <URLFields/> */}
+					<URLFields
+						args={ argsData[0] ?? [] }
+						integrityCheck={ integrityCheck }
+					/>
 					<EventName
 						name={ name }
 					/>

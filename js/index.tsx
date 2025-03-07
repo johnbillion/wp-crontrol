@@ -11,6 +11,7 @@ export default function App() {
 	const [editState, setEditState] = useState({
 		args: '',
 		date: '',
+		integrityCheck: false,
 		name: '',
 		nonce: '',
 		protectedHook: false,
@@ -49,11 +50,13 @@ export default function App() {
 				crontrolType: type,
 			} = event.target.dataset;
 			const protectedHook = event.target.dataset.crontrolProtected === 'true';
+			const integrityCheck = event.target.dataset.crontrolIntegrityCheck === 'true';
 
 			setModalState(true);
 			setEditState({
 				args,
 				date,
+				integrityCheck,
 				name,
 				nonce,
 				protectedHook,
@@ -81,6 +84,7 @@ export default function App() {
 			<Edit
 				args={editState.args}
 				date={editState.date}
+				integrityCheck={editState.integrityCheck}
 				name={editState.name}
 				nonce={editState.nonce}
 				protectedHook={editState.protectedHook}
