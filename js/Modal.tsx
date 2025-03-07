@@ -12,6 +12,12 @@ export default function Modal({ show, children, onClose, title }) {
 		}
 	}, [show]);
 
+	const onCloseButton = ( event ) => {
+		event.preventDefault();
+
+		onClose();
+	};
+
 	return (
 		<dialog className="crontrol-modal" ref={ref} onCancel={onClose}>
 			<div className="modal-container">
@@ -19,7 +25,7 @@ export default function Modal({ show, children, onClose, title }) {
 					<h2 className="modal-title">
 						{ title }
 					</h2>
-					<button aria-label="close" onClick={onClose} className="modal-close-button">
+					<button aria-label="close" onClick={onCloseButton} className="modal-close-button">
 						<span aria-hidden="true">&times;</span>
 						<span className="screen-reader-text">
 							{ __( 'Close', 'wp-crontrol' ) }
