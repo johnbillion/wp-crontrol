@@ -53,7 +53,6 @@ function init_hooks() {
 	add_filter( 'plugin_row_meta',                    __NAMESPACE__ . '\filter_plugin_row_meta', 10, 2 );
 
 	add_action( 'load-tools_page_wp-crontrol', __NAMESPACE__ . '\setup_manage_page' );
-	add_action( 'admin_footer',                __NAMESPACE__ . '\action_admin_footer' );
 
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
 	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
@@ -63,10 +62,6 @@ function init_hooks() {
 	add_action( 'activated_plugin',      __NAMESPACE__ . '\flush_status_cache', 10, 0 );
 	add_action( 'deactivated_plugin',    __NAMESPACE__ . '\flush_status_cache', 10, 0 );
 	add_action( 'switch_theme',          __NAMESPACE__ . '\flush_status_cache', 10, 0 );
-}
-
-function action_admin_footer(): void {
-	printf( '<div id="crontrol-app"></div>' );
 }
 
 /**

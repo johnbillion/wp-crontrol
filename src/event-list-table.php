@@ -354,6 +354,8 @@ class Table extends \WP_List_Table {
 			'<button class="button" type="submit" name="crontrol_action" value="export-event-csv">%s</button>',
 			esc_html__( 'Export', 'wp-crontrol' )
 		);
+
+		echo '<div id="crontrol-app"></div>';
 	}
 
 	/**
