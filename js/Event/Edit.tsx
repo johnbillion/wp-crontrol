@@ -45,7 +45,7 @@ export default function Edit({
 						integrityCheck={ integrityCheck }
 					/>
 					<EventName
-						name={ name }
+						name={ argsData[0]?.name ?? '' }
 					/>
 				</>
 			);
