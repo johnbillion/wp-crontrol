@@ -460,7 +460,7 @@ function action_handle_posts() {
 			exit;
 		}
 
-		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
+		$next_run_local = $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time;
 
 		/**
 		 * Modifies an event before it is scheduled.
@@ -2535,7 +2535,9 @@ function enqueue_assets( $hook_suffix ) {
 		true
 	);
 
-	$vars = array();
+	$vars = array(
+		'confirmDelete' => __( 'Are you sure you want to delete this cron event?', 'wp-crontrol' ),
+	);
 
 	if ( current_user_can_manage_php_cron_events() ) {
 		$settings = wp_enqueue_code_editor( array(
