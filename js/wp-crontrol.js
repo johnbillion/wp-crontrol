@@ -51,4 +51,15 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	} else if ( hookCodeElement ) {
 		wp.codeEditor.initialize( 'crontrol_hookcode', window.wpCrontrol.codeEditor );
 	}
+
+	const deleteLinks = document.querySelectorAll( '[data-crontrol-delete]' );
+
+	deleteLinks.forEach( ( link ) => {
+		link.addEventListener( 'click', ( event ) => {
+			const result = confirm( window.wpCrontrol.confirmDelete );
+			if ( ! result ) {
+				event.preventDefault();
+			}
+		} );
+	} );
 } );

@@ -512,7 +512,7 @@ class Table extends \WP_List_Table {
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 			$link = wp_nonce_url( $link, "crontrol-delete-cron_{$event->hook}_{$event->sig}_{$event->timestamp}" );
 
-			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
+			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "' data-crontrol-delete>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
 		}
 
 		if ( 'crontrol_cron_job' !== $event->hook && 'crontrol_url_cron_job' !== $event->hook ) {

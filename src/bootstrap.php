@@ -2525,7 +2525,9 @@ function enqueue_assets( $hook_suffix ) {
 		true
 	);
 
-	$vars = array();
+	$vars = array(
+		'confirmDelete' => __( 'Are you sure you want to delete this cron event?', 'wp-crontrol' ),
+	);
 
 	if ( ! empty( $tab['add-event'] ) || ! empty( $tab['edit-event'] ) ) {
 		if ( current_user_can_manage_php_cron_events() ) {
