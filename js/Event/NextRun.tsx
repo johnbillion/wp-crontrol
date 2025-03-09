@@ -1,5 +1,5 @@
 import React from "react";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 
 export default function NextRun({
 	date,
@@ -37,7 +37,11 @@ export default function NextRun({
 					defaultValue={ time }
 				/>
 				<p className="description">
-					{ __( 'Timezone: UTC', 'wp-crontrol' ) }
+					{ sprintf(
+						/* translators: %s Timezone name. */
+						__( 'Timezone: %s', 'wp-crontrol' ),
+						window.wpCrontrol.timezone
+					) }
 				</p>
 			</td>
 		</tr>
