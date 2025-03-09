@@ -8,6 +8,8 @@ import EventName from "./EventName";
 import URLFields from "./URLFields";
 import PHPFields from "./PHPFields";
 
+import type { EventSchedule } from "../index";
+
 interface EditProps {
 	args: string;
 	date: string;
@@ -16,6 +18,7 @@ interface EditProps {
 	nonce: string;
 	protectedHook: boolean;
 	schedule: string;
+	schedules: EventSchedule[];
 	sig: string;
 	time: string;
 	timestamp: string;
@@ -30,6 +33,7 @@ export default function Edit({
 	nonce,
 	protectedHook,
 	schedule,
+	schedules,
 	sig,
 	time,
 	timestamp,
@@ -100,6 +104,7 @@ export default function Edit({
 					/>
 					<Schedule
 						schedule={ schedule }
+						schedules={ schedules }
 					/>
 				</tbody>
 			</table>

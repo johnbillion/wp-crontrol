@@ -18,6 +18,11 @@ interface EditState {
 	type: string;
 }
 
+export type EventSchedule = {
+	name: string;
+	display: string;
+};
+
 export default function App() {
 	const [modalState, setModalState] = useState(false);
 	const [editState, setEditState] = useState<EditState>({
@@ -101,6 +106,7 @@ export default function App() {
 				nonce={editState.nonce}
 				protectedHook={editState.protectedHook}
 				schedule={editState.schedule}
+				schedules={window.wpCrontrol.schedules}
 				sig={editState.sig}
 				time={editState.time}
 				timestamp={editState.timestamp}

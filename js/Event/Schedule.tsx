@@ -1,24 +1,21 @@
 import React from "react";
 import { __ } from "@wordpress/i18n";
 
-type Schedules = {
-	name: string;
-	display: string;
-};
+import type { EventSchedule } from "../index";
 
 interface ScheduleProps {
 	schedule: string;
+	schedules: EventSchedule[];
 }
 
 export default function Schedule({
 	schedule,
+	schedules,
 }: ScheduleProps) {
 	const [selectedSchedule, setSelectedSchedule] = React.useState(schedule);
 	const handleScheduleChange = (event) => {
 		setSelectedSchedule(event.target.value);
 	};
-
-	const schedules: Schedules[] = window.wpCrontrol.schedules;
 
 	React.useEffect(() => {
 		setSelectedSchedule(schedule);
@@ -32,7 +29,7 @@ export default function Schedule({
 				</label>
 			</th>
 			<td>
-				<select className="postform" name="crontrol_schedule" id="crontrol_edit_schedule" required value={ selectedSchedule } onChange={ handleScheduleChange }>
+				<select name="crontrol_schedule" id="crontrol_edit_schedule" required value={ selectedSchedule } onChange={ handleScheduleChange }>
 					<option value="_oneoff">
 						Non-repeating
 					</option>
