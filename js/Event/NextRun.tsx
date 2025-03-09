@@ -4,11 +4,13 @@ import { __, sprintf } from "@wordpress/i18n";
 interface NextRunProps {
 	date: string;
 	time: string;
+	timezone: string;
 }
 
 export default function NextRun({
 	date,
 	time,
+	timezone,
 }: NextRunProps) {
 	return (
 		<tr>
@@ -45,7 +47,7 @@ export default function NextRun({
 					{ sprintf(
 						/* translators: %s Timezone name. */
 						__( 'Timezone: %s', 'wp-crontrol' ),
-						window.wpCrontrol.timezone
+						timezone
 					) }
 				</p>
 			</td>

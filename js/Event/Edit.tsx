@@ -23,6 +23,7 @@ interface EditProps {
 	time: string;
 	timestamp: string;
 	type: string;
+	timezone: string;
 }
 
 export default function Edit({
@@ -38,6 +39,7 @@ export default function Edit({
 	time,
 	timestamp,
 	type,
+	timezone,
 }: EditProps) {
 	let panels;
 	let action;
@@ -101,6 +103,7 @@ export default function Edit({
 					<NextRun
 						date={ date }
 						time={ time }
+						timezone={ timezone }
 					/>
 					<Schedule
 						schedule={ schedule }

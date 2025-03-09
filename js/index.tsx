@@ -111,6 +111,7 @@ export default function App() {
 				time={editState.time}
 				timestamp={editState.timestamp}
 				type={editState.type}
+				timezone={window.wpCrontrol.timezone}
 			/>
 		</Modal>
 	);
