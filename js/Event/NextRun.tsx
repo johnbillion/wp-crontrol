@@ -1,10 +1,15 @@
 import React from "react";
 import { __, sprintf } from "@wordpress/i18n";
 
+interface NextRunProps {
+	date: string;
+	time: string;
+}
+
 export default function NextRun({
 	date,
 	time,
-}) {
+}: NextRunProps) {
 	return (
 		<tr>
 			<th scope="row">

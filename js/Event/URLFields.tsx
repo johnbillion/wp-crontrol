@@ -1,10 +1,18 @@
 import React from "react";
 import { __ } from "@wordpress/i18n";
 
+interface URLFieldsProps {
+	args: {
+		method?: string,
+		url?: string,
+	};
+	integrityCheck: boolean;
+}
+
 export default function URLFields({
 	args,
 	integrityCheck,
-}) {
+}: URLFieldsProps) {
 	return (
 		<>
 			<tr>

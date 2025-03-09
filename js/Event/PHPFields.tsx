@@ -2,10 +2,17 @@ import React from "react";
 import { __, sprintf } from "@wordpress/i18n";
 import { createInterpolateElement } from "@wordpress/element";
 
+interface PHPFieldsProps {
+	args: {
+		code?: string,
+	};
+	integrityCheck: boolean;
+}
+
 export default function PHPFields({
 	args,
 	integrityCheck,
-}) {
+}: PHPFieldsProps) {
 	return (
 		<>
 			<tr>

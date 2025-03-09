@@ -8,6 +8,20 @@ import EventName from "./EventName";
 import URLFields from "./URLFields";
 import PHPFields from "./PHPFields";
 
+interface EditProps {
+	args: string;
+	date: string;
+	integrityCheck: boolean;
+	name: string;
+	nonce: string;
+	protectedHook: boolean;
+	schedule: string;
+	sig: string;
+	time: string;
+	timestamp: string;
+	type: string;
+}
+
 export default function Edit({
 	args,
 	date,
@@ -20,7 +34,7 @@ export default function Edit({
 	time,
 	timestamp,
 	type,
-}) {
+}: EditProps) {
 	let panels;
 	let action;
 	const argsData = args ? JSON.parse(args) : [];

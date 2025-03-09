@@ -6,9 +6,13 @@ type Schedules = {
 	display: string;
 };
 
+interface ScheduleProps {
+	schedule: string;
+}
+
 export default function Schedule({
 	schedule,
-}) {
+}: ScheduleProps) {
 	const [selectedSchedule, setSelectedSchedule] = React.useState(schedule);
 	const handleScheduleChange = (event) => {
 		setSelectedSchedule(event.target.value);

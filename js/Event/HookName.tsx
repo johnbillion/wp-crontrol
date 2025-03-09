@@ -1,10 +1,15 @@
 import React from "react";
 import { __ } from "@wordpress/i18n";
 
+interface HookNameProps {
+	name: string;
+	protectedHook: boolean;
+}
+
 export default function HookName({
 	name,
 	protectedHook,
-}) {
+}: HookNameProps) {
 	return (
 		<tr>
 			<th scope="row">

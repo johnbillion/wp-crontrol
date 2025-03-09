@@ -1,9 +1,13 @@
 import React from "react";
 import { __ } from "@wordpress/i18n";
 
+interface EventNameProps {
+	name: string;
+}
+
 export default function EventName({
 	name,
-}) {
+}: EventNameProps) {
 	return (
 		<tr>
 			<th scope="row">

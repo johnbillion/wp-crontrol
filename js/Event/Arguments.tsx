@@ -2,9 +2,13 @@ import React from "react";
 import { __, sprintf } from "@wordpress/i18n";
 import { createInterpolateElement } from "@wordpress/element";
 
+interface ArgumentsProps {
+	args: string;
+}
+
 export default function Arguments({
 	args,
-}) {
+}: ArgumentsProps) {
 	return (
 		<tr>
 			<th scope="row">

@@ -1,14 +1,26 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-
 import Edit from "./Event/Edit";
 import Modal from "./Modal";
 import { __ } from "@wordpress/i18n";
 
+interface EditState {
+	args: string;
+	date: string;
+	integrityCheck: boolean;
+	name: string;
+	nonce: string;
+	protectedHook: boolean;
+	schedule: string;
+	sig: string;
+	time: string;
+	timestamp: string;
+	type: string;
+}
+
 export default function App() {
 	const [modalState, setModalState] = useState(false);
-	const [editState, setEditState] = useState({
+	const [editState, setEditState] = useState<EditState>({
 		args: '',
 		date: '',
 		integrityCheck: false,
