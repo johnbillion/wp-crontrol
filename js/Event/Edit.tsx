@@ -6,6 +6,7 @@ import NextRun from "./NextRun";
 import Schedule from "./Schedule";
 import EventName from "./EventName";
 import URLFields from "./URLFields";
+import PHPFields from "./PHPFields";
 
 export default function Edit({
 	args,
@@ -29,7 +30,10 @@ export default function Edit({
 			action = 'edit_php_cron';
 			panels = (
 				<>
-					{/* <PHPCode/> */}
+					<PHPFields
+						args={ argsData[0] ?? [] }
+						integrityCheck={ integrityCheck }
+					/>
 					<EventName
 						name={ argsData[0]?.name ?? '' }
 					/>
