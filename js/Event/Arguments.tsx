@@ -1,5 +1,6 @@
 import React from "react";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
+import { createInterpolateElement } from "@wordpress/element";
 
 export default function Arguments({
 	args,
@@ -24,7 +25,18 @@ export default function Arguments({
 					type="text"
 				/>
 				<p className="description" id="crontrol_args_description">
-					Optional. Use a JSON encoded array, e.g. <code>[25]</code>, <code>["asdf"]</code>, or <code>["i","want",25,"cakes"]</code>
+					{ createInterpolateElement(
+						sprintf(
+							/* translators: 1, 2, and 3: Example values for an input field. */
+							__( 'Use a JSON encoded array, e.g. %1$s, %2$s, or %3$s', 'wp-crontrol' ),
+							'<code>[25]</code>',
+							'<code>["asdf"]</code>',
+							'<code>["i","want",25,"cakes"]</code>'
+						),
+						{
+							code: <code/>,
+						}
+					) }
 				</p>
 			</td>
 		</tr>

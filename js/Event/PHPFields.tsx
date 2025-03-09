@@ -1,5 +1,6 @@
 import React from "react";
 import { __, sprintf } from "@wordpress/i18n";
+import { createInterpolateElement } from "@wordpress/element";
 
 export default function PHPFields({
 	args,
@@ -32,10 +33,15 @@ export default function PHPFields({
 						</div>
 					) }
 					<p className="description">
-						{ sprintf(
-							/* translators: The PHP tag name */
-							__( 'The opening %s tag must not be included.', 'wp-crontrol' ),
-							'<code>&lt;?php</code>'
+						{ createInterpolateElement(
+							sprintf(
+								/* translators: The PHP tag name */
+								__( 'The opening %s tag must not be included.', 'wp-crontrol' ),
+								'<code><?php</code>'
+							),
+							{
+								code: <code/>,
+							}
 						) }
 					</p>
 					<p>
