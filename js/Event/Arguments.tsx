@@ -13,7 +13,7 @@ export default function Arguments({
 		<tr>
 			<th scope="row">
 				<label htmlFor="crontrol_args">
-					{ __( 'Arguments', 'wp-crontrol' ) }
+					{ __( 'Arguments (optional)', 'wp-crontrol' ) }
 				</label>
 			</th>
 			<td>

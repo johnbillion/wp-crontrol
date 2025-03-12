@@ -55,12 +55,11 @@ export default function PHPFields({
 						<textarea
 							className="large-text code"
 							cols={50}
+							defaultValue={ args.code ?? '' }
 							id="crontrol_hookcode"
 							name="crontrol_hookcode"
 							rows={10}
-						>
-							{ args.code ?? '' }
-						</textarea>
+						/>
 					</p>
 				</td>
 			</tr>
