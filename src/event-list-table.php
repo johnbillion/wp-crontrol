@@ -117,18 +117,6 @@ class Table extends \WP_List_Table {
 					);
 				}
 			);
-		} elseif ( $has_late && empty( $_GET['crontrol_action'] ) ) {
-			add_action(
-				'admin_notices',
-				function () {
-					printf(
-						'<div id="crontrol-late-message" class="notice notice-warning"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
-						esc_html__( 'One or more cron events have missed their schedule.', 'wp-crontrol' ),
-						'https://wp-crontrol.com/help/missed-cron-events/',
-						esc_html__( 'More information', 'wp-crontrol' )
-					);
-				}
-			);
 		}
 
 		$this->set_pagination_args( array(
@@ -725,22 +713,43 @@ class Table extends \WP_List_Table {
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_next( $event ) {
-		$date_local_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
-		$offset_site = get_date_from_gmt( 'now', 'P' );
-		$offset_event = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->timestamp ), 'P' );
+		$date_format = 'F jS';
+		$time_format = 'g:i a';
 
-		// If the timezone of the date of the event is different from the site timezone, add a marker.
-		if ( $offset_site !== $offset_event ) {
-			$date_local_format .= ' (P)';
+		$event_datetime_utc = gmdate( 'Y-m-d H:i:s', $event->timestamp );
+
+		$event_date_local = get_date_from_gmt( $event_datetime_utc, 'Y-m-d' );
+		$today_local      = get_date_from_gmt( gmdate( 'Y-m-d H:i:s' ), 'Y-m-d' );
+		$tomorrow_local   = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( 'tomorrow' ) ), 'Y-m-d' );
+		$yesterday_local  = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( 'yesterday' ) ), 'Y-m-d' );
+
+		// If the offset of the date of the event is different from the offset of the site, add a marker.
+		if ( get_date_from_gmt( $event_datetime_utc, 'P' ) !== get_date_from_gmt( 'now', 'P' ) ) {
+			$time_format .= ' (P)';
 		}
 
-		$date_utc   = gmdate( 'c', $event->timestamp );
-		$date_local = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->timestamp ), $date_local_format );
+		if ( $event_date_local === $today_local ) {
+			$date_local = __( 'Today', 'wp-crontrol' );
+		} elseif ( $event_date_local === $tomorrow_local ) {
+			$date_local = __( 'Tomorrow', 'wp-crontrol' );
+		} elseif ( $event_date_local === $yesterday_local ) {
+			$date_local = __( 'Yesterday', 'wp-crontrol' );
+		} else {
+			$date_local = get_date_from_gmt( $event_datetime_utc, $date_format );
+		}
 
+		$time_local = get_date_from_gmt( $event_datetime_utc, $time_format );
+
+		$date = sprintf(
+			/* translators: 1: Date, 2: Time */
+			__( '%1$s at %2$s', 'wp-crontrol' ),
+			$date_local,
+			$time_local,
+		);
 		$time = sprintf(
 			'<time datetime="%1$s">%2$s</time>',
-			esc_attr( $date_utc ),
-			esc_html( $date_local )
+			esc_attr( gmdate( 'c', $event->timestamp ) ),
+			esc_html( $date )
 		);
 
 		$until = $event->timestamp - time();
@@ -753,17 +762,29 @@ class Table extends \WP_List_Table {
 				__( '%s ago', 'wp-crontrol' ),
 				\Crontrol\interval( abs( $until ) )
 			);
+			$help = sprintf(
+				'<a href="%s">%s</a>',
+				'https://wp-crontrol.com/help/missed-cron-events/',
+				esc_html__( 'Help', 'wp-crontrol' )
+			);
 			return sprintf(
-				'%s<br><span class="status-crontrol-warning"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
+				'<span class="status-crontrol-warning"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span> (%s)<br>%s',
+				esc_html( $ago ),
+				$help,
 				$time,
-				esc_html( $ago )
 			);
 		}
 
+		$in = sprintf(
+			/* translators: %s: Time period, for example "8 minutes" */
+			__( 'In %s', 'wp-crontrol' ),
+			\Crontrol\interval( $until ),
+		);
+
 		return sprintf(
 			'%s<br>%s',
+			esc_html( $in ),
 			$time,
-			esc_html( \Crontrol\interval( $until ) )
 		);
 	}
 
