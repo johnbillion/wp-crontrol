@@ -16,6 +16,7 @@ interface EditState {
 	time: string;
 	timestamp: string;
 	type: string;
+	wide: boolean;
 }
 
 export type EventSchedule = {
@@ -37,6 +38,7 @@ export default function App() {
 		time: '',
 		timestamp: '',
 		type: '',
+		wide: false,
 	});
 
 	useEffect(() => {
@@ -68,6 +70,7 @@ export default function App() {
 			} = event.target.dataset;
 			const protectedHook = event.target.dataset.crontrolProtected === 'true';
 			const integrityCheck = event.target.dataset.crontrolIntegrityCheck === 'true';
+			const wide = type === 'php';
 
 			setEditState({
 				args,
@@ -81,6 +84,7 @@ export default function App() {
 				time,
 				timestamp,
 				type,
+				wide,
 			});
 			setModalState(true);
 		};
@@ -97,9 +101,10 @@ export default function App() {
 	}, []);
 
 	return (
-		<Modal show={modalState} onClose={() => setModalState(false)} title={ __( 'Edit Cron Event', 'wp-crontrol' ) }>
+		<Modal show={modalState} onClose={() => setModalState(false)} title={ __( 'Edit Cron Event', 'wp-crontrol' ) } wide={editState.wide}>
 			<Edit
 				args={editState.args}
+				codeEditor={window.wpCrontrol.codeEditor}
 				date={editState.date}
 				integrityCheck={editState.integrityCheck}
 				name={editState.name}
@@ -112,6 +117,7 @@ export default function App() {
 				timestamp={editState.timestamp}
 				type={editState.type}
 				timezone={window.wpCrontrol.timezone}
+				key={editState.sig}
 			/>
 		</Modal>
 	);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { __, sprintf } from "@wordpress/i18n";
 import { createInterpolateElement } from "@wordpress/element";
 
@@ -6,13 +6,27 @@ interface PHPFieldsProps {
 	args: {
 		code?: string,
 	};
+	codeEditor: unknown;
 	integrityCheck: boolean;
 }
 
 export default function PHPFields({
 	args,
+	codeEditor,
 	integrityCheck,
 }: PHPFieldsProps) {
+	useEffect(() => {
+		let cm;
+
+		setTimeout(() => {
+			cm = window.wp.codeEditor.initialize('crontrol_hookcode', codeEditor);
+		}, 0);
+
+		return () => {
+			cm.codemirror?.toTextArea();
+		};
+	}, [args, codeEditor]);
+
 	return (
 		<>
 			<tr>

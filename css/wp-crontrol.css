@@ -116,6 +116,10 @@ table.wp-list-table {
 	max-width: 650px;
 	background: transparent;
 
+	&.crontrol-modal-wide {
+		max-width: 1000px;
+	}
+
 	&::backdrop {
 		background-color: rgba(0, 0, 0, 0.7);
 	}

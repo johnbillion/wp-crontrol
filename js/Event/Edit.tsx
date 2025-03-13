@@ -12,6 +12,7 @@ import type { EventSchedule } from "../index";
 
 interface EditProps {
 	args: string;
+	codeEditor: unknown;
 	date: string;
 	integrityCheck: boolean;
 	name: string;
@@ -28,6 +29,7 @@ interface EditProps {
 
 export default function Edit({
 	args,
+	codeEditor,
 	date,
 	integrityCheck,
 	name,
@@ -52,6 +54,7 @@ export default function Edit({
 				<>
 					<PHPFields
 						args={ argsData[0] ?? [] }
+						codeEditor={ codeEditor }
 						integrityCheck={ integrityCheck }
 					/>
 					<EventName
