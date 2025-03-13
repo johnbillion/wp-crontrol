@@ -416,6 +416,24 @@ class Table extends \WP_List_Table {
 
 		$links = array();
 
+		if ( $event->timestamp === 1 ) {
+			// This is an event that is scheduled to run immediately. These only appear when there's a problem with
+			// the event runner, so the only link we need to show is the "Delete" link.
+			$link = array(
+				'page'                  => 'wp-crontrol',
+				'crontrol_action'       => 'delete-cron',
+				'crontrol_id'           => rawurlencode( $event->hook ),
+				'crontrol_sig'          => rawurlencode( $event->sig ),
+				'crontrol_next_run_utc' => '1',
+			);
+			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
+			$link = wp_nonce_url( $link, "crontrol-delete-cron_{$event->hook}_{$event->sig}_{$event->timestamp}" );
+
+			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
+
+			return $this->row_actions( $links );
+		}
+
 		// PHP cron events can be edited as long as they are enabled and the user has permission.
 		$can_edit = ( 'crontrol_cron_job' !== $event->hook ) || ( self::$can_manage_php_crons && self::$php_crons_enabled );
 
@@ -713,6 +731,13 @@ class Table extends \WP_List_Table {
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_next( $event ) {
+		if ( $event->timestamp === 1 ) {
+			return sprintf(
+				'<span class="status-crontrol-warning"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
+				esc_html__( 'Immediately', 'wp-crontrol' ),
+			);
+		}
+
 		$date_format = 'F jS';
 		$time_format = 'g:i a';
 
