@@ -111,7 +111,7 @@ Resuming an event re-enables all actions attached to the event's hook. All event
 
 This means the cron event is scheduled to run at the specified time but there is no corresponding functionality that will be triggered when the event runs, therefore the event is useless.
 
-This is often caused by plugins that don't clean up their cron events when you deactivate them. You can use your favourite search engine to search for the event name in order to find out which plugin it belongs to, and then decide whether or not to delete it.
+[You can read all about events with no action on the WP Crontrol website](https://wp-crontrol.com/help/no-action-cron-events/).
 
 ### How do I change the next run time or the schedule of a cron event?
 

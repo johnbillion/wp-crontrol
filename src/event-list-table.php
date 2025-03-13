@@ -717,9 +717,15 @@ class Table extends \WP_List_Table {
 
 			return implode( '<br>', $callbacks ); // WPCS:: XSS ok.
 		} else {
+			$help = sprintf(
+				'<a href="%s">%s</a>',
+				'https://wp-crontrol.com/help/no-action-cron-events/',
+				esc_html__( 'Help', 'wp-crontrol' )
+			);
 			return sprintf(
-				'<span class="status-crontrol-warning"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
-				esc_html__( 'None', 'wp-crontrol' )
+				'<span class="status-crontrol-warning"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %1$s</span> (%2$s)',
+				esc_html__( 'None', 'wp-crontrol' ),
+				$help,
 			);
 		}
 	}
