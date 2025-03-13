@@ -224,8 +224,8 @@ class Table extends \WP_List_Table {
 					\Crontrol\get_timezone_location()
 				),
 			),
+			'crontrol_schedule'   => esc_html_x( 'Schedule', 'noun', 'wp-crontrol' ),
 			'crontrol_actions'    => esc_html__( 'Action', 'wp-crontrol' ),
-			'crontrol_schedule' => esc_html_x( 'Schedule', 'noun', 'wp-crontrol' ),
 		);
 	}
 
