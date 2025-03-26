@@ -5,6 +5,7 @@
 
 namespace Crontrol\Event;
 
+use DateTimeImmutable;
 use stdClass;
 
 use function Crontrol\php_cron_events_enabled;
@@ -797,39 +798,50 @@ class Table extends \WP_List_Table {
 			);
 		}
 
-		$date_format = 'F jS';
 		$time_format = 'g:i a';
 
 		$event_datetime_utc = gmdate( 'Y-m-d H:i:s', $event->timestamp );
 
-		$event_date_local = get_date_from_gmt( $event_datetime_utc, 'Y-m-d' );
-		$today_local      = get_date_from_gmt( gmdate( 'Y-m-d H:i:s' ), 'Y-m-d' );
-		$tomorrow_local   = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( 'tomorrow' ) ), 'Y-m-d' );
-		$yesterday_local  = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( 'yesterday' ) ), 'Y-m-d' );
+		$timezone_local  = wp_timezone();
+		$event_local     = get_date_from_gmt( $event_datetime_utc, 'Y-m-d' );
+		$today_local     = ( new DateTimeImmutable( 'now', $timezone_local ) )->format( 'Y-m-d' );
+		$tomorrow_local  = ( new DateTimeImmutable( 'tomorrow', $timezone_local ) )->format( 'Y-m-d' );
+		$yesterday_local = ( new DateTimeImmutable( 'yesterday', $timezone_local ) )->format( 'Y-m-d' );
 
 		// If the offset of the date of the event is different from the offset of the site, add a marker.
 		if ( get_date_from_gmt( $event_datetime_utc, 'P' ) !== get_date_from_gmt( 'now', 'P' ) ) {
 			$time_format .= ' (P)';
 		}
 
-		if ( $event_date_local === $today_local ) {
-			$date_local = __( 'Today', 'wp-crontrol' );
-		} elseif ( $event_date_local === $tomorrow_local ) {
-			$date_local = __( 'Tomorrow', 'wp-crontrol' );
-		} elseif ( $event_date_local === $yesterday_local ) {
-			$date_local = __( 'Yesterday', 'wp-crontrol' );
+		$event_time_local = get_date_from_gmt( $event_datetime_utc, $time_format );
+
+		if ( $event_local === $today_local ) {
+			$date = sprintf(
+				/* translators: %s: Time */
+				__( 'Today at %s', 'wp-crontrol' ),
+				$event_time_local,
+			);
+		} elseif ( $event_local === $tomorrow_local ) {
+			$date = sprintf(
+				/* translators: %s: Time */
+				__( 'Tomorrow at %s', 'wp-crontrol' ),
+				$event_time_local,
+			);
+		} elseif ( $event_local === $yesterday_local ) {
+			$date = sprintf(
+				/* translators: %s: Time */
+				__( 'Yesterday at %s', 'wp-crontrol' ),
+				$event_time_local,
+			);
 		} else {
-			$date_local = get_date_from_gmt( $event_datetime_utc, $date_format );
+			$date = sprintf(
+				/* translators: 1: Date, 2: Time */
+				__( '%1$s at %2$s', 'wp-crontrol' ),
+				get_date_from_gmt( $event_datetime_utc, 'F jS' ),
+				$event_time_local,
+			);
 		}
 
-		$time_local = get_date_from_gmt( $event_datetime_utc, $time_format );
-
-		$date = sprintf(
-			/* translators: 1: Date, 2: Time */
-			__( '%1$s at %2$s', 'wp-crontrol' ),
-			$date_local,
-			$time_local,
-		);
 		$time = sprintf(
 			'<time datetime="%1$s">%2$s</time>',
 			esc_attr( gmdate( 'c', $event->timestamp ) ),
@@ -859,11 +871,15 @@ class Table extends \WP_List_Table {
 			);
 		}
 
-		$in = sprintf(
-			/* translators: %s: Time period, for example "8 minutes" */
-			__( 'In %s', 'wp-crontrol' ),
-			\Crontrol\interval( $until ),
-		);
+		if ( $until <= 0 ) {
+			$in = __( 'Now', 'wp-crontrol' );
+		} else {
+			$in = sprintf(
+				/* translators: %s: Time period, for example "8 minutes" */
+				__( 'In %s', 'wp-crontrol' ),
+				\Crontrol\interval( $until ),
+			);
+		}
 
 		return sprintf(
 			'%s<br>%s',

@@ -100,6 +100,11 @@ table.wp-list-table {
 	width: 100px;
 }
 
+input[type="time"][step="1"] {
+	/* https://issues.chromium.org/issues/406424266 */
+	min-width: 8.5em;
+}
+
 .crontrol-edit-event-url .crontrol-event-standard,
 .crontrol-edit-event-url .crontrol-event-php,
 .crontrol-edit-event-standard .crontrol-event-url,
