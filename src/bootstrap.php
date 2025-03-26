@@ -2536,7 +2536,8 @@ function enqueue_assets( $hook_suffix ) {
 	);
 
 	$vars = array(
-		'confirmDelete' => __( 'Are you sure you want to delete this cron event?', 'wp-crontrol' ),
+		'confirmDeleteEvent' => __( 'Are you sure you want to delete this event?', 'wp-crontrol' ),
+		'confirmDeleteHook' => __( 'Are you sure you want to delete all events with this hook?', 'wp-crontrol' ),
 		'schedules' => Schedule\get(),
 		'timezone' => get_timezone_name(),
 	);
