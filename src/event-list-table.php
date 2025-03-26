@@ -5,6 +5,7 @@
 
 namespace Crontrol\Event;
 
+use DateTimeImmutable;
 use stdClass;
 
 use function Crontrol\php_cron_events_enabled;
@@ -748,10 +749,11 @@ class Table extends \WP_List_Table {
 
 		$event_datetime_utc = gmdate( 'Y-m-d H:i:s', $event->timestamp );
 
-		$event_date_local = get_date_from_gmt( $event_datetime_utc, 'Y-m-d' );
-		$today_local      = get_date_from_gmt( gmdate( 'Y-m-d H:i:s' ), 'Y-m-d' );
-		$tomorrow_local   = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( 'tomorrow' ) ), 'Y-m-d' );
-		$yesterday_local  = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( 'yesterday' ) ), 'Y-m-d' );
+		$timezone_local  = wp_timezone();
+		$event_local     = get_date_from_gmt( $event_datetime_utc, 'Y-m-d' );
+		$today_local     = ( new DateTimeImmutable( 'now', $timezone_local ) )->format( 'Y-m-d' );
+		$tomorrow_local  = ( new DateTimeImmutable( 'tomorrow', $timezone_local ) )->format( 'Y-m-d' );
+		$yesterday_local = ( new DateTimeImmutable( 'yesterday', $timezone_local ) )->format( 'Y-m-d' );
 
 		// If the offset of the date of the event is different from the offset of the site, add a marker.
 		if ( get_date_from_gmt( $event_datetime_utc, 'P' ) !== get_date_from_gmt( 'now', 'P' ) ) {
@@ -760,19 +762,19 @@ class Table extends \WP_List_Table {
 
 		$event_time_local = get_date_from_gmt( $event_datetime_utc, $time_format );
 
-		if ( $event_date_local === $today_local ) {
+		if ( $event_local === $today_local ) {
 			$date = sprintf(
 				/* translators: %s: Time */
 				__( 'Today at %s', 'wp-crontrol' ),
 				$event_time_local,
 			);
-		} elseif ( $event_date_local === $tomorrow_local ) {
+		} elseif ( $event_local === $tomorrow_local ) {
 			$date = sprintf(
 				/* translators: %s: Time */
 				__( 'Tomorrow at %s', 'wp-crontrol' ),
 				$event_time_local,
 			);
-		} elseif ( $event_date_local === $yesterday_local ) {
+		} elseif ( $event_local === $yesterday_local ) {
 			$date = sprintf(
 				/* translators: %s: Time */
 				__( 'Yesterday at %s', 'wp-crontrol' ),
