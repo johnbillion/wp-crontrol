@@ -816,11 +816,15 @@ class Table extends \WP_List_Table {
 			);
 		}
 
-		$in = sprintf(
-			/* translators: %s: Time period, for example "8 minutes" */
-			__( 'In %s', 'wp-crontrol' ),
-			\Crontrol\interval( $until ),
-		);
+		if ( $until <= 0 ) {
+			$in = __( 'Now', 'wp-crontrol' );
+		} else {
+			$in = sprintf(
+				/* translators: %s: Time period, for example "8 minutes" */
+				__( 'In %s', 'wp-crontrol' ),
+				\Crontrol\interval( $until ),
+			);
+		}
 
 		return sprintf(
 			'%s<br>%s',
