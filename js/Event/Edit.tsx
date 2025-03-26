@@ -47,6 +47,8 @@ export default function Edit({
 	let action;
 	const argsData = args ? JSON.parse(args) : [];
 
+	const [spinning, setSpinning] = React.useState(false);
+
 	switch (type) {
 		case 'php':
 			action = 'edit_php_cron';
@@ -93,8 +95,14 @@ export default function Edit({
 			break;
 	}
 
+	const onSubmit = ( event ) => {
+		setSpinning(true);
+	};
+
+	const spinnerClass = spinning ? 'is-active' : '';
+
 	return (
-		<form method="post" action="tools.php?page=wp-crontrol">
+		<form method="post" action="tools.php?page=wp-crontrol" onSubmit={onSubmit}>
 			<input type="hidden" name="_wpnonce" value={ nonce } />
 			<input type="hidden" name="crontrol_original_hookname" value={ name } />
 			<input type="hidden" name="crontrol_original_sig" value={ sig } />
@@ -116,6 +124,10 @@ export default function Edit({
 			</table>
 			<p className="submit">
 				<input type="submit" className="button button-primary button-large" value={ __( 'Update Event', 'wp-crontrol' ) } />
+				<span className={`spinner ${spinnerClass}`} style={{
+					float: 'none',
+					display: 'inline-block',
+				}}></span>
 			</p>
 		</form>
 	);
