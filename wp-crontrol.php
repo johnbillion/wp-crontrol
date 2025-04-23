@@ -5,7 +5,7 @@
  * Description:  Take control of the cron events on your WordPress website.
  * Author:       John Blackbourn
  * Author URI:   https://wp-crontrol.com
- * Version:      1.18.0
+ * Version:      1.19.0
  * Text Domain:  wp-crontrol
  * Domain Path:  /languages/
  * Requires at least: 6.3
@@ -36,7 +36,7 @@
 namespace Crontrol;
 
 const PLUGIN_FILE = __FILE__;
-const WP_CRONTROL_VERSION = '1.18.0';
+const WP_CRONTROL_VERSION = '1.19.0';
 
 if ( ! defined( 'ABSPATH' ) ) {
 	header( 'HTTP/1.1 403 Forbidden' );
