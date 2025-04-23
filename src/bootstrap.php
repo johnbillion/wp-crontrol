@@ -1214,12 +1214,6 @@ function admin_options_page() {
 					<p><?php esc_html_e( 'Adding a new schedule allows you to schedule recurring events at the given interval.', 'wp-crontrol' ); ?></p>
 					<form method="post" action="options-general.php?page=wp-crontrol-schedules">
 						<div class="form-field form-required">
-							<label for="crontrol_schedule_internal_name">
-								<?php esc_html_e( 'Internal Name', 'wp-crontrol' ); ?>
-							</label>
-							<input type="text" value="" id="crontrol_schedule_internal_name" name="crontrol_schedule_internal_name" required/>
-						</div>
-						<div class="form-field form-required">
 							<label for="crontrol_schedule_interval">
 								<?php esc_html_e( 'Interval (seconds)', 'wp-crontrol' ); ?>
 							</label>
@@ -1230,6 +1224,12 @@ function admin_options_page() {
 								<?php esc_html_e( 'Display Name', 'wp-crontrol' ); ?>
 							</label>
 							<input type="text" value="" id="crontrol_schedule_display_name" name="crontrol_schedule_display_name" required/>
+						</div>
+						<div class="form-field form-required">
+							<label for="crontrol_schedule_internal_name">
+								<?php esc_html_e( 'Internal Name', 'wp-crontrol' ); ?>
+							</label>
+							<input type="text" value="" id="crontrol_schedule_internal_name" name="crontrol_schedule_internal_name" required/>
 						</div>
 						<p class="submit">
 							<input type="submit" class="button button-primary" value="<?php esc_attr_e( 'Add Cron Schedule', 'wp-crontrol' ); ?>" name="crontrol_new_schedule"/>
