@@ -194,7 +194,7 @@ function action_handle_posts() {
 			return $event;
 		}, 99 );
 
-		$added = Event\add( $next_run_local, $cr->schedule, $cr->hookname, $args );
+		$added = Event\add( $next_run_local, $cr->schedule, $cr->hookname, array_values( $args ) );
 
 		$redirect = array(
 			'page'             => 'wp-crontrol',
@@ -408,7 +408,7 @@ function action_handle_posts() {
 			return $event;
 		}, 99 );
 
-		$added = Event\add( $next_run_local, $cr->schedule, $cr->hookname, $args );
+		$added = Event\add( $next_run_local, $cr->schedule, $cr->hookname, array_values( $args ) );
 
 		if ( is_wp_error( $added ) ) {
 			set_message( $added->get_error_message() );

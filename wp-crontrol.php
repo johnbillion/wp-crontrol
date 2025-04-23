@@ -43,6 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// @phpstan-ignore booleanNot.alwaysFalse
 if ( ! version_compare( PHP_VERSION, '7.4', '>=' ) ) {
 	return;
 }
