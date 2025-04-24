@@ -117,12 +117,6 @@ This means the cron event is scheduled to run at the specified time but there is
 
 You can change the time and schedule of a cron event by clicking the "Edit" link next to the event.
 
-### How can I create a cron event that requests a URL?
-
-From the Tools → Cron Events menu, click on Add New Cron Event. Select the "URL cron event" option, fill out the details, and press the "Add Event" button.
-
-[You can read all about the features and security of URL cron events on the WP Crontrol website](https://wp-crontrol.com/docs/url-cron-events/).
-
 ### Why do changes that I make to some cron events not get saved?
 
 [You can read all about problems with editing cron events on the WP Crontrol website](https://wp-crontrol.com/help/problems-managing-events/).
@@ -167,9 +161,15 @@ function my_function() {
 }
 ~~~
 
+### How can I create a cron event that requests a URL?
+
+From the Tools → Cron Events menu, click on Add New Cron Event. Select the "URL cron event" option, fill out the details, and press the "Add Event" button.
+
+[You can read all about the features and security of URL cron events on the WP Crontrol website](https://wp-crontrol.com/docs/url-cron-events/).
+
 ### How do I create a new PHP cron event?
 
-From the Tools → Cron Events menu, click on "Add New Cron Event". Select the "PHP cron event" option and enter the schedule and next run time. The event schedule is how often your event will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules menu. In the "PHP Code" area, enter the PHP code that should be run when your cron event is executed. You don't need to provide the PHP opening tag (`<?php`).
+From the Tools → Cron Events menu, click on Add New Cron Event. Select the "PHP cron event" option and enter the schedule and next run time. The event schedule is how often your event will be executed. If you don't see a good interval, then add one in the Settings → Cron Schedules menu. In the "PHP Code" area, enter the PHP code that should be run when your cron event is executed. You don't need to provide the PHP opening tag (`<?php`).
 
 Creating, editing, and running PHP cron events is subject to restrictive security permissions. [You can read all about the features and security of PHP cron events on the WP Crontrol website](https://wp-crontrol.com/docs/php-cron-events/).
 
