@@ -438,9 +438,6 @@ class Table extends \WP_List_Table {
 		// PHP cron events can be edited as long as they are enabled and the user has permission.
 		$can_edit = ( 'crontrol_cron_job' !== $event->hook ) || ( self::$can_manage_php_crons && self::$php_crons_enabled );
 
-		// The Action Scheduler runner cannot be edited because there's really no point in trying.
-		$can_edit = $can_edit && ( 'action_scheduler_run_queue' !== $event->hook );
-
 		if ( $can_edit ) {
 			$link = array(
 				'page'                  => 'wp-crontrol',
