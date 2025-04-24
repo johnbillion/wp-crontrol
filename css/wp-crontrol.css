@@ -36,11 +36,6 @@ table.wp-list-table {
 	border-color: #d63638;
 }
 
-.wp-list-table tr.crontrol-inactive th,
-.wp-list-table tr.crontrol-paused th {
-	border-color: #8c8f94;
-}
-
 .wp-list-table tr.crontrol-inactive .column-crontrol_next,
 .wp-list-table tr.crontrol-inactive .column-crontrol_schedule,
 .wp-list-table tr.crontrol-paused .column-crontrol_next,
