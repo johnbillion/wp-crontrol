@@ -2535,15 +2535,16 @@ function enqueue_assets( $hook_suffix ) {
 		true
 	);
 
+	$can_manage_php = current_user_can_manage_php_cron_events();
 	$vars = array(
 		'confirmDeleteEvent' => __( 'Are you sure you want to delete this event?', 'wp-crontrol' ),
 		'confirmDeleteHook' => __( 'Are you sure you want to delete all events with this hook?', 'wp-crontrol' ),
 		'schedules' => Schedule\get(),
 		'timezone' => get_timezone_name(),
-		'canManagePHP' => current_user_can_manage_php_cron_events(),
+		'canManagePHP' => $can_manage_php,
 	);
 
-	if ( current_user_can_manage_php_cron_events() ) {
+	if ( $can_manage_php ) {
 		$settings = wp_enqueue_code_editor( array(
 			'type' => 'text/x-php',
 		) );
