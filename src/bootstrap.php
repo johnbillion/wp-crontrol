@@ -2106,7 +2106,7 @@ function admin_manage_page() {
 
 				<h1 class="wp-heading-inline"><?php esc_html_e( 'Cron Events', 'wp-crontrol' ); ?></h1>
 
-				<?php echo '<a href="' . esc_url( admin_url( 'tools.php?page=wp-crontrol&crontrol_action=new-cron' ) ) . '" class="page-title-action">' . esc_html__( 'Add New Cron Event', 'wp-crontrol' ) . '</a>'; ?>
+				<?php echo '<a href="' . esc_url( admin_url( 'tools.php?page=wp-crontrol&crontrol_action=new-cron' ) ) . '" class="page-title-action" data-crontrol-add-new="true" data-crontrol-nonce="' . esc_attr( wp_create_nonce( 'crontrol-new-cron' ) ) . '">' . esc_html__( 'Add New Cron Event', 'wp-crontrol' ) . '</a>'; ?>
 
 				<hr class="wp-header-end">
 
@@ -2540,6 +2540,7 @@ function enqueue_assets( $hook_suffix ) {
 		'confirmDeleteHook' => __( 'Are you sure you want to delete all events with this hook?', 'wp-crontrol' ),
 		'schedules' => Schedule\get(),
 		'timezone' => get_timezone_name(),
+		'canManagePHP' => current_user_can_manage_php_cron_events(),
 	);
 
 	if ( current_user_can_manage_php_cron_events() ) {

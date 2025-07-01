@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { __ } from "@wordpress/i18n";
 
-export default function Modal({ show, children, onClose, title, wide = false }) {
+export default function Modal({ show, children, onClose, title }) {
 	const ref = useRef();
 
 	useEffect(() => {
@@ -18,10 +18,8 @@ export default function Modal({ show, children, onClose, title, wide = false }) 
 		onClose();
 	};
 
-	const modalClass = wide ? 'crontrol-modal-wide' : '';
-
 	return (
-		<dialog className={`crontrol-modal ${modalClass}`} ref={ref} onCancel={onClose}>
+		<dialog className="crontrol-modal" ref={ref} onCancel={onClose}>
 			<div className="modal-container">
 				<div className="modal-header">
 					<h2 className="modal-title">

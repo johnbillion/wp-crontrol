@@ -7,6 +7,8 @@ import Schedule from "./Schedule";
 import EventName from "./EventName";
 import URLFields from "./URLFields";
 import PHPFields from "./PHPFields";
+import EventType from "./EventType";
+import NextRunOptions from "./NextRunOptions";
 
 import type { EventSchedule } from "../index";
 
@@ -25,6 +27,7 @@ interface EditProps {
 	timestamp: string;
 	type: string;
 	timezone: string;
+	isNew?: boolean;
 }
 
 export default function Edit({
@@ -42,16 +45,33 @@ export default function Edit({
 	timestamp,
 	type,
 	timezone,
+	isNew = false,
 }: EditProps) {
 	let panels;
 	let action;
 	const argsData = args ? JSON.parse(args) : [];
 
 	const [spinning, setSpinning] = React.useState(false);
+	const [eventType, setEventType] = React.useState(isNew ? 'standard' : type);
+	const [nextRunOption, setNextRunOption] = React.useState('now');
+	const [customDate, setCustomDate] = React.useState('');
+	const [customTime, setCustomTime] = React.useState('');
 
-	switch (type) {
+	const handleEventTypeChange = (newType: string) => {
+		setEventType(newType);
+	};
+
+	const handleNextRunChange = (option: string, customDateValue?: string, customTimeValue?: string) => {
+		setNextRunOption(option);
+		if (customDateValue !== undefined) setCustomDate(customDateValue);
+		if (customTimeValue !== undefined) setCustomTime(customTimeValue);
+	};
+
+	const currentType = isNew ? eventType : type;
+
+	switch (currentType) {
 		case 'php':
-			action = 'edit_php_cron';
+			action = isNew ? 'new_php_cron' : 'edit_php_cron';
 			panels = (
 				<>
 					<PHPFields
@@ -66,7 +86,7 @@ export default function Edit({
 			);
 			break;
 		case 'url':
-			action = 'edit_url_cron';
+			action = isNew ? 'new_url_cron' : 'edit_url_cron';
 			panels = (
 				<>
 					<URLFields
@@ -80,7 +100,7 @@ export default function Edit({
 			);
 			break;
 		default:
-			action = 'edit_cron';
+			action = isNew ? 'new_cron' : 'edit_cron';
 			panels = (
 				<>
 					<HookName
@@ -104,18 +124,47 @@ export default function Edit({
 	return (
 		<form method="post" action="tools.php?page=wp-crontrol" onSubmit={onSubmit}>
 			<input type="hidden" name="_wpnonce" value={ nonce } />
-			<input type="hidden" name="crontrol_original_hookname" value={ name } />
-			<input type="hidden" name="crontrol_original_sig" value={ sig } />
-			<input type="hidden" name="crontrol_original_next_run_utc" value={ timestamp } />
+			{!isNew && (
+				<>
+					<input type="hidden" name="crontrol_original_hookname" value={ name } />
+					<input type="hidden" name="crontrol_original_sig" value={ sig } />
+					<input type="hidden" name="crontrol_original_next_run_utc" value={ timestamp } />
+				</>
+			)}
 			<input type="hidden" name="crontrol_action" value={ action } />
+			{isNew && (
+				<>
+					<input type="hidden" name="crontrol_next_run_date_local" value={ nextRunOption } />
+					{nextRunOption === 'custom' && (
+						<>
+							<input type="hidden" name="crontrol_next_run_date_local_custom_date" value={ customDate } />
+							<input type="hidden" name="crontrol_next_run_date_local_custom_time" value={ customTime } />
+						</>
+					)}
+				</>
+			)}
 			<table className="form-table">
 				<tbody>
+					{isNew && (
+						<EventType
+							type={eventType}
+							onChange={handleEventTypeChange}
+							canManagePHP={window.wpCrontrol?.canManagePHP ?? false}
+						/>
+					)}
 					{ panels }
-					<NextRun
-						date={ date }
-						time={ time }
-						timezone={ timezone }
-					/>
+					{isNew ? (
+						<NextRunOptions
+							onChange={handleNextRunChange}
+							timezone={timezone}
+						/>
+					) : (
+						<NextRun
+							date={ date }
+							time={ time }
+							timezone={ timezone }
+						/>
+					)}
 					<Schedule
 						schedule={ schedule }
 						schedules={ schedules }
@@ -123,7 +172,7 @@ export default function Edit({
 				</tbody>
 			</table>
 			<p className="submit">
-				<input type="submit" className="button button-primary button-large" value={ __( 'Update Event', 'wp-crontrol' ) } />
+				<input type="submit" className="button button-primary button-large" value={ isNew ? __( 'Add Event', 'wp-crontrol' ) : __( 'Update Event', 'wp-crontrol' ) } />
 				<span className={`spinner ${spinnerClass}`} style={{
 					float: 'none',
 					display: 'inline-block',

@@ -16,7 +16,7 @@ interface EditState {
 	time: string;
 	timestamp: string;
 	type: string;
-	wide: boolean;
+	isNew: boolean;
 }
 
 export type EventSchedule = {
@@ -38,17 +38,18 @@ export default function App() {
 		time: '',
 		timestamp: '',
 		type: '',
-		wide: false,
+		isNew: false,
 	});
 
 	useEffect(() => {
-		const elements = document.querySelectorAll("[data-crontrol-edit]");
+		const editElements = document.querySelectorAll("[data-crontrol-edit]");
+		const addElements = document.querySelectorAll("[data-crontrol-add-new]");
 
-		if (!elements.length) {
+		if (!editElements.length && !addElements.length) {
 			return; // Ensure there are elements before adding listeners
 		}
 
-		const handleClick = (event) => {
+		const handleEditClick = (event) => {
 			// Ignore if any modifiers are pressed
 			if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
 				return;
@@ -70,7 +71,6 @@ export default function App() {
 			} = event.target.dataset;
 			const protectedHook = event.target.dataset.crontrolProtected === 'true';
 			const integrityCheck = event.target.dataset.crontrolIntegrityCheck === 'true';
-			const wide = type === 'php';
 
 			setEditState({
 				args,
@@ -84,24 +84,57 @@ export default function App() {
 				time,
 				timestamp,
 				type,
-				wide,
+				isNew: false,
 			});
 			setModalState(true);
 		};
 
-		elements.forEach(element => {
-			element.addEventListener("click", handleClick);
+		const handleAddClick = (event) => {
+			// Ignore if any modifiers are pressed
+			if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+				return;
+			}
+
+			event.preventDefault();
+			const { crontrolNonce: nonce } = event.target.dataset;
+
+			setEditState({
+				args: '',
+				date: '',
+				integrityCheck: false,
+				name: '',
+				nonce,
+				protectedHook: false,
+				schedule: '',
+				sig: '',
+				time: '',
+				timestamp: '',
+				type: 'standard',
+				isNew: true,
+			});
+			setModalState(true);
+		};
+
+		editElements.forEach(element => {
+			element.addEventListener("click", handleEditClick);
+		});
+
+		addElements.forEach(element => {
+			element.addEventListener("click", handleAddClick);
 		});
 
 		return () => {
-			elements.forEach(element => {
-				element.removeEventListener("click", handleClick);
+			editElements.forEach(element => {
+				element.removeEventListener("click", handleEditClick);
+			});
+			addElements.forEach(element => {
+				element.removeEventListener("click", handleAddClick);
 			});
 		};
 	}, []);
 
 	return (
-		<Modal show={modalState} onClose={() => setModalState(false)} title={ __( 'Edit Cron Event', 'wp-crontrol' ) } wide={editState.wide}>
+		<Modal show={modalState} onClose={() => setModalState(false)} title={ editState.isNew ? __( 'Add New Cron Event', 'wp-crontrol' ) : __( 'Edit Cron Event', 'wp-crontrol' ) }>
 			<Edit
 				args={editState.args}
 				codeEditor={window.wpCrontrol.codeEditor}
@@ -117,7 +150,8 @@ export default function App() {
 				timestamp={editState.timestamp}
 				type={editState.type}
 				timezone={window.wpCrontrol.timezone}
-				key={editState.sig}
+				isNew={editState.isNew}
+				key={editState.isNew ? 'new' : editState.sig}
 			/>
 		</Modal>
 	);
