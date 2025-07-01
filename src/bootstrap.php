@@ -2564,7 +2564,7 @@ function filter_removable_query_args( array $args ) {
  * @return array<int,string> Array of hook names.
  */
 function get_persistent_core_hooks() {
-	return array(
+	$hooks = array(
 		'wp_update_plugins', // 2.7.0
 		'wp_update_themes', // 2.7.0
 		'wp_version_check', // 2.7.0
@@ -2576,8 +2576,13 @@ function get_persistent_core_hooks() {
 		'recovery_mode_clean_expired_keys', // 5.2.0
 		'wp_site_health_scheduled_check', // 5.4.0
 		'wp_https_detection', // 5.7.0
-		'wp_update_user_counts', // 6.0.0
 	);
+
+	if ( ! is_multisite() ) {
+		$hooks[] = 'wp_update_user_counts'; // 6.0.0
+	}
+
+	return $hooks;
 }
 
 /**
@@ -2586,7 +2591,7 @@ function get_persistent_core_hooks() {
  * @return array<int,string> Array of hook names.
  */
 function get_all_core_hooks() {
-	return array_merge(
+	$hooks = array_merge(
 		get_persistent_core_hooks(),
 		array(
 			'do_pings', // 2.1.0
@@ -2599,6 +2604,12 @@ function get_all_core_hooks() {
 			'wp_delete_temp_updater_backups', // 6.3.0
 		)
 	);
+
+	if ( is_multisite() ) {
+		$hooks[] = 'wp_update_user_counts'; // 6.0.0
+	}
+
+	return $hooks;
 }
 
 /**
