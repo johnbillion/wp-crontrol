@@ -26,6 +26,7 @@
 		}
 	},
 	"require-dev": {
+		"behat/gherkin": "< 4.13.0",
 		"codeception/module-asserts": "^1.0",
 		"codeception/module-db": "^1.0",
 		"codeception/module-webdriver": "^1.0",
