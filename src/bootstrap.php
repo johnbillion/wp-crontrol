@@ -62,6 +62,8 @@ function init_hooks() {
 	add_action( 'activated_plugin',      __NAMESPACE__ . '\flush_status_cache', 10, 0 );
 	add_action( 'deactivated_plugin',    __NAMESPACE__ . '\flush_status_cache', 10, 0 );
 	add_action( 'switch_theme',          __NAMESPACE__ . '\flush_status_cache', 10, 0 );
+	add_filter( 'map_meta_cap',          __NAMESPACE__ . '\filter_map_meta_cap', 10, 4 );
+	add_filter( 'user_has_cap',          __NAMESPACE__ . '\filter_user_has_cap', 10, 4 );
 }
 
 /**
@@ -89,6 +91,92 @@ function get_message() {
 		get_current_user_id()
 	);
 	return get_transient( $key );
+}
+
+// @TODO check requirements:
+// - allow a plugin to grant a cap to a lower level user, eg grant view_cron_events to editors
+//   - either by directly granting the cap, or by filtering `map_meta_cap` (to change required primitive cap) or `user_has_cap` (to grant or deny via its own logic)
+// - allow a plugin to deny a cap to a user, eg deny create_cron_events from admin or deny all cron caps from users who aren't super admins on multisite
+
+/**
+ * Filters the primitive capabilities required based on the requested meta capability.
+ *
+ * @param string[] $required_caps Primitive capabilities required of the user.
+ * @param string   $cap           Capability being checked.
+ * @param int      $user_id       The user ID.
+ * @param mixed[]  $args          Adds context to the capability check, typically starting with an object ID.
+ * @return string[] Primitive capabilities required of the user.
+ */
+function filter_map_meta_cap( array $required_caps, $cap, $user_id, array $args ) {
+	switch ( $cap ) {
+		case 'view_cron_events':
+		case 'create_cron_events':
+		case 'create_url_cron_events':
+		case 'edit_cron_event':
+		case 'delete_cron_event':
+		case 'run_cron_event':
+		case 'pause_cron_event':
+		case 'resume_cron_event':
+		case 'export_cron_events':
+			$required_caps[] = 'manage_options';
+			break;
+		case 'create_php_cron_events':
+			$required_caps[] = 'edit_files';
+			break;
+		// case 'create_php_cron_events':
+		case 'edit_php_cron_event':
+		case 'delete_php_cron_event':
+			// PHP cron events require both edit_files and the meta capability
+			if ( ! php_cron_events_enabled() ) {
+				$required_caps[] = 'do_not_allow';
+			}
+			break;
+	}
+
+	return $required_caps;
+}
+
+/**
+ * Filters a user's capabilities to grant them WP Crontrol's meta capabilities.
+ *
+ * @param bool[]   $user_caps     Array of key/value pairs where keys represent a capability name and boolean values
+ *                                represent whether the user has that capability.
+ * @param string[] $required_caps Required primitive capabilities for the requested capability.
+ * @param mixed[]  $args {
+ *     Arguments that accompany the requested capability check.
+ *
+ *     @type string   $0 Requested capability.
+ *     @type int      $1 Concerned user ID.
+ *     @type mixed ...$2 Optional second and further parameters.
+ * }
+ * @param \WP_User  $user          Concerned user object.
+ * @return bool[] Array of concerned user's capabilities.
+ */
+function filter_user_has_cap( array $user_caps, array $required_caps, array $args, \WP_User $user ) {
+	// Our meta capabilities and their default mappings to primitive capabilities
+	$meta_caps = array(
+		'view_cron_events'       => 'manage_options',
+		'edit_cron_event'        => 'manage_options',
+		'delete_cron_event'      => 'manage_options',
+		'create_cron_event'      => 'manage_options',
+		'create_url_cron_event'  => 'manage_options',
+		'create_php_cron_event'  => 'edit_files',
+		'run_cron_event'         => 'manage_options',
+		'pause_cron_event'       => 'manage_options',
+		'export_cron_events'     => 'manage_options',
+	);
+
+	// Check if the requested capability is one of our meta capabilities
+	if ( isset( $meta_caps[ $args[0] ] ) ) {
+		$required_cap = $meta_caps[ $args[0] ];
+
+		// Grant the meta capability if the user has the required primitive capability
+		if ( user_can( $user, $required_cap ) ) {
+			$user_caps[ $args[0] ] = true;
+		}
+	}
+
+	return $user_caps;
 }
 
 /**
@@ -153,7 +241,7 @@ function action_handle_posts() {
 	$request = new Request();
 
 	if ( isset( $_POST['crontrol_action'] ) && ( 'new_cron' === $_POST['crontrol_action'] ) ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'create_cron_event' ) ) {
 			wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ), 401 );
 		}
 		check_admin_referer( 'crontrol-new-cron' );
@@ -211,7 +299,7 @@ function action_handle_posts() {
 		exit;
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'new_url_cron' === $_POST['crontrol_action'] ) ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'create_url_cron_event' ) ) {
 			wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ), 401 );
 		}
 		check_admin_referer( 'crontrol-new-cron' );
@@ -269,7 +357,7 @@ function action_handle_posts() {
 		exit;
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'new_php_cron' === $_POST['crontrol_action'] ) ) {
-		if ( ! current_user_can_manage_php_cron_events() ) {
+		if ( ! current_user_can( 'create_php_cron_event' ) ) {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 		check_admin_referer( 'crontrol-new-cron' );
@@ -327,7 +415,7 @@ function action_handle_posts() {
 		exit;
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'edit_cron' === $_POST['crontrol_action'] ) ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'edit_cron_event' ) ) {
 			wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ), 401 );
 		}
 
@@ -335,7 +423,7 @@ function action_handle_posts() {
 
 		check_admin_referer( "crontrol-edit-cron_{$cr->original_hookname}_{$cr->original_sig}_{$cr->original_next_run_utc}" );
 
-		if ( 'crontrol_cron_job' === $cr->hookname && ! current_user_can_manage_php_cron_events() ) {
+		if ( 'crontrol_cron_job' === $cr->hookname && ! current_user_can( 'create_php_cron_event' ) ) {
 			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 
@@ -419,7 +507,7 @@ function action_handle_posts() {
 		exit;
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'edit_url_cron' === $_POST['crontrol_action'] ) ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'edit_cron_event' ) ) {
 			wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ), 401 );
 		}
 
@@ -510,7 +598,7 @@ function action_handle_posts() {
 		exit;
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'edit_php_cron' === $_POST['crontrol_action'] ) ) {
-		if ( ! current_user_can_manage_php_cron_events() ) {
+		if ( ! current_user_can( 'create_php_cron_event' ) ) {
 			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 401 );
 		}
 
@@ -633,7 +721,7 @@ function action_handle_posts() {
 		exit;
 
 	} elseif ( ( isset( $_POST['action'] ) && 'crontrol_delete_crons' === $_POST['action'] ) || ( isset( $_POST['action2'] ) && 'crontrol_delete_crons' === $_POST['action2'] ) ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'delete_cron_event' ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
 		}
 		check_admin_referer( 'bulk-crontrol-events' );
@@ -676,7 +764,7 @@ function action_handle_posts() {
 		exit;
 
 	} elseif ( isset( $_GET['crontrol_action'] ) && 'delete-cron' === $_GET['crontrol_action'] ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'delete_cron_event' ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
 		}
 		$hook         = wp_unslash( $_GET['crontrol_id'] );
@@ -730,7 +818,7 @@ function action_handle_posts() {
 		exit;
 
 	} elseif ( isset( $_GET['crontrol_action'] ) && 'delete-hook' === $_GET['crontrol_action'] ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'delete_cron_event' ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
 		}
 		$hook    = wp_unslash( $_GET['crontrol_id'] );
@@ -778,7 +866,7 @@ function action_handle_posts() {
 			exit;
 		}
 	} elseif ( isset( $_GET['crontrol_action'] ) && 'run-cron' === $_GET['crontrol_action'] ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'run_cron_event' ) ) {
 			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 401 );
 		}
 		$hook = wp_unslash( $_GET['crontrol_id'] );
@@ -818,7 +906,7 @@ function action_handle_posts() {
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 	} elseif ( isset( $_GET['crontrol_action'] ) && 'pause-hook' === $_GET['crontrol_action'] ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'pause_cron_event' ) ) {
 			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 401 );
 		}
 
@@ -865,7 +953,7 @@ function action_handle_posts() {
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 	} elseif ( isset( $_GET['crontrol_action'] ) && 'resume-hook' === $_GET['crontrol_action'] ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'pause_cron_event' ) ) {
 			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 401 );
 		}
 
@@ -912,6 +1000,9 @@ function action_handle_posts() {
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 	} elseif ( isset( $_POST['crontrol_action'] ) && 'export-event-csv' === $_POST['crontrol_action'] ) {
+		if ( ! current_user_can( 'export_cron_events' ) ) {
+			wp_die( esc_html__( 'You are not allowed to export cron events.', 'wp-crontrol' ), 401 );
+		}
 		check_admin_referer( 'crontrol-export-event-csv', 'crontrol_nonce' );
 
 		$type = isset( $_POST['crontrol_hooks_type'] ) ? wp_unslash( $_POST['crontrol_hooks_type'] ) : 'all';
@@ -1020,7 +1111,7 @@ function action_admin_menu() {
 	$tabs[] = add_management_page(
 		esc_html__( 'Cron Events', 'wp-crontrol' ),
 		esc_html__( 'Cron Events', 'wp-crontrol' ),
-		'manage_options',
+		'view_cron_events',
 		'wp-crontrol',
 		__NAMESPACE__ . '\admin_manage_page'
 	);
@@ -2853,5 +2944,5 @@ function php_cron_events_enabled(): bool {
  * Returns whether PHP cron events are enabled and can be managed by the current user.
  */
 function current_user_can_manage_php_cron_events(): bool {
-	return ( php_cron_events_enabled() && current_user_can( 'edit_files' ) );
+	return ( php_cron_events_enabled() && current_user_can( 'create_php_cron_event' ) );
 }
