@@ -358,6 +358,10 @@ class Table extends \WP_List_Table {
 			$classes[] = 'crontrol-error';
 		}
 
+		if ( ( 'crontrol_url_cron_job' === $event->hook ) && isset( $event->args[0]['url_error_message'] ) ) {
+			$classes[] = 'crontrol-error';
+		}
+
 		if ( integrity_failed( $event ) ) {
 			$classes[] = 'crontrol-error';
 		}
@@ -654,6 +658,12 @@ class Table extends \WP_List_Table {
 				$output = sprintf( esc_html__( 'URL cron event (%s)', 'wp-crontrol' ), $url );
 			} else {
 				$output = esc_html__( 'URL cron event', 'wp-crontrol' );
+			}
+
+			if ( isset( $event->args[0]['url_error_message'] ) ) {
+				$output .= '<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
+				$output .= esc_html( $event->args[0]['url_error_message'] );
+				$output .= '</span>';
 			}
 
 			return $output;
