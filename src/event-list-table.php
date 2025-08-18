@@ -551,7 +551,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * @param stdClass $event The cron event for the current row.
 	 */
-	private static function row_has_error( $event ) : bool {
+	private static function row_has_error( $event ): bool {
 		if ( 'crontrol_cron_job' === $event->hook && isset( $event->args[0]['syntax_error_message'] ) ) {
 			return true;
 		}

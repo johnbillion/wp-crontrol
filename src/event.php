@@ -191,7 +191,7 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 		'has_error',
 		sprintf(
 			/* translators: %s: The error message. */
-			__( "The cron event was saved but contains an error: %s.", 'wp-crontrol' ),
+			__( 'The cron event was saved but contains an error: %s.', 'wp-crontrol' ),
 			$error->getMessage(),
 		),
 	) : true;
@@ -585,15 +585,17 @@ function get_core_cron_array() {
  *
  * @param string $url The URL to validate.
  */
-function validate_url( string $url ) : void {
+function validate_url( string $url ): void {
 	$valid = wp_http_validate_url( $url );
 
 	if ( $valid === false ) {
 		throw new \InvalidArgumentException(
-			sprintf(
-				/* translators: %s: The URL that failed validation. */
-				__( 'The URL "%s" is not allowed', 'wp-crontrol' ),
-				$url,
+			esc_html(
+				sprintf(
+					/* translators: %s: The URL that failed validation. */
+					__( 'The URL "%s" is not allowed', 'wp-crontrol' ),
+					$url,
+				)
 			)
 		);
 	}
@@ -602,10 +604,12 @@ function validate_url( string $url ) : void {
 
 	if ( $filtered === '' ) {
 		throw new \InvalidArgumentException(
-			sprintf(
-				/* translators: %s: The URL that failed validation. */
-				__( 'The URL "%s" contains an invalid protocol', 'wp-crontrol' ),
-				$url,
+			esc_html(
+				sprintf(
+					/* translators: %s: The URL that failed validation. */
+					__( 'The URL "%s" contains an invalid protocol', 'wp-crontrol' ),
+					$url,
+				)
 			)
 		);
 	}
