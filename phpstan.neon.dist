@@ -14,6 +14,8 @@ parameters:
 		- tests/phpstan/stubs.php
 	dynamicConstantNames:
 		- CRONTROL_DISALLOW_PHP_EVENTS
+	WPCompat:
+		pluginFile: wp-crontrol.php
 	ignoreErrors:
 		-
 			identifier: requireOnce.fileNotFound
