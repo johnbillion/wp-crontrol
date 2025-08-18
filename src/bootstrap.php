@@ -2720,7 +2720,7 @@ function action_url_cron_event( array $args ): void {
 			home_url( '/' )
 		),
 	);
-	$response = wp_remote_request( $url, $request_args );
+	$response = wp_safe_remote_request( $url, $request_args );
 
 	if ( is_wp_error( $response ) ) {
 		throw new Exception(
