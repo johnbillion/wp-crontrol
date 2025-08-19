@@ -479,22 +479,22 @@ function integrity_failed( stdClass $event ): bool {
 }
 
 /**
- * Checks the integrity of a code string compared to its stored hash.
+ * Checks the integrity of a string compared to its stored hash.
  *
- * @param string|null $code        The code string.
+ * @param string|null $value       The string value.
  * @param string|null $stored_hash The stored HMAC of the code.
  * @return bool
  */
-function check_integrity( $code, $stored_hash ): bool {
-	// If there's no code or hash then the integrity check is not ok.
-	if ( empty( $code ) || empty( $stored_hash ) ) {
+function check_integrity( $value, $stored_hash ): bool {
+	// If there's no value or hash then the integrity check is not ok.
+	if ( empty( $value ) || empty( $stored_hash ) ) {
 		return false;
 	}
 
-	$code_hash = wp_hash( $code );
+	$value_hash = wp_hash( $value );
 
 	// If the hashes match then the integrity check is ok.
-	return hash_equals( $stored_hash, $code_hash );
+	return hash_equals( $stored_hash, $value_hash );
 }
 
 /**
