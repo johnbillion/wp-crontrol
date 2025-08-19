@@ -48,6 +48,16 @@ class AddEventCest {
 		$I->see( 'https://example.org/' );
 	}
 
+	public function AddingANewURLEventWithDisallowedURLShowsError( AcceptanceTester $I ) {
+		$I->amOnCronEventListingPage();
+		$I->click( 'Add New Cron Event', '#wpbody' );
+		$I->selectOption( 'input[name="crontrol_action"]', 'URL cron event' );
+		$I->fillField( '#crontrol_url', 'http://localhost:22' );
+		$I->click( 'Add Event' );
+		$I->see( 'Cron Events', 'h1' );
+		$I->seeAdminErrorNotice( 'The cron event was saved but contains an error: The URL "http://localhost:22" is not allowed' );
+	}
+
 	public function AddingANewPHPEvent( AcceptanceTester $I ) {
 		$I->amOnCronEventListingPage();
 		$I->click( 'Add New Cron Event', '#wpbody' );
