@@ -51,6 +51,11 @@
 			"src"
 		]
 	},
+	"autoload-dev": {
+		"psr-4": {
+			"QM\\Tests\\": "tests/integration"
+		}
+	},
 	"extra": {
 		"wordpress-install-dir": "vendor/wordpress/wordpress"
 	},
@@ -63,11 +68,15 @@
 			"@test:phpstan",
 			"@test:phpcs",
 			"tests-start",
+			"@test:integration",
 			"@test:acceptance",
 			"tests-stop"
 		],
 		"test:acceptance": [
 			"acceptance-tests"
+		],
+		"test:integration": [
+			"integration-tests"
 		],
 		"test:phpcs": [
 			"phpcs -nps --colors --report-code --report-summary --report-width=80 --basepath=./ ."

@@ -7,9 +7,14 @@ parameters:
 	paths:
 		- wp-crontrol.php
 		- src/
+		# - tests/acceptance/
+		- tests/integration/
 	scanDirectories:
 		- tests/_support/
 		- vendor/lucatume/wp-browser/src/includes/factory/
+	excludePaths:
+		analyse:
+			- tests/integration/Supports/
 	bootstrapFiles:
 		- tests/phpstan/stubs.php
 	dynamicConstantNames:
