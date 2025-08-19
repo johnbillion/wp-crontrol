@@ -7,18 +7,18 @@
  * Test class.
  */
 class AddEventCest {
-	public function _before( AcceptanceTester $I ) {
+	public function _before( AcceptanceTester $I ): void {
 		$I->loginAsAdmin();
 	}
 
-	public function NavigatingToTheAddCronEventScreen( AcceptanceTester $I ) {
+	public function NavigatingToTheAddCronEventScreen( AcceptanceTester $I ): void {
 		$I->amOnCronEventListingPage();
 		$I->click( 'Add New Cron Event', '#wpbody' );
 		$I->see( 'Add Cron Event', 'h1' );
 		$I->see( 'Add Cron Event', '#crontrol-header' );
 	}
 
-	public function AddingANewEvent( AcceptanceTester $I ) {
+	public function AddingANewEvent( AcceptanceTester $I ): void {
 		$I->amOnCronEventListingPage();
 		$I->click( 'Add New Cron Event', '#wpbody' );
 		$I->dontSee( 'PHP Code', '#crontrol_form th' );
@@ -31,7 +31,7 @@ class AddEventCest {
 		$I->seeAdminSuccessNotice( 'Saved the cron event my_hookname.' );
 	}
 
-	public function AddingANewURLEvent( AcceptanceTester $I ) {
+	public function AddingANewURLEvent( AcceptanceTester $I ): void {
 		$I->amOnCronEventListingPage();
 		$I->click( 'Add New Cron Event', '#wpbody' );
 		$I->dontSee( 'PHP Code', '#crontrol_form th' );
@@ -48,7 +48,7 @@ class AddEventCest {
 		$I->see( 'https://example.org/' );
 	}
 
-	public function AddingANewURLEventWithDisallowedURLShowsError( AcceptanceTester $I ) {
+	public function AddingANewURLEventWithDisallowedURLShowsError( AcceptanceTester $I ): void {
 		$I->amOnCronEventListingPage();
 		$I->click( 'Add New Cron Event', '#wpbody' );
 		$I->selectOption( 'input[name="crontrol_action"]', 'URL cron event' );
@@ -63,7 +63,7 @@ class AddEventCest {
 		$I->dontSee( 'Run now', $row );
 	}
 
-	public function AddingANewPHPEvent( AcceptanceTester $I ) {
+	public function AddingANewPHPEvent( AcceptanceTester $I ): void {
 		$I->amOnCronEventListingPage();
 		$I->click( 'Add New Cron Event', '#wpbody' );
 		$I->dontSee( 'PHP Code', '#crontrol_form th' );

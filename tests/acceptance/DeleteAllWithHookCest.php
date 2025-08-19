@@ -7,11 +7,11 @@
  * Test class.
  */
 class DeleteAllWithHookCest {
-	public function _before( AcceptanceTester $I ) {
+	public function _before( AcceptanceTester $I ): void {
 		$I->loginAsAdmin();
 	}
 
-	public function DeletingAHook( AcceptanceTester $I ) {
+	public function DeletingAHook( AcceptanceTester $I ): void {
 		$I->amWorkingWithANewCronEvent( 'example_hook', '[1]' );
 		$I->amWorkingWithANewCronEvent( 'example_hook', '[2]' );
 		$row = $I->amWorkingWithANewCronEvent( 'example_hook', '[3]' );
@@ -23,7 +23,7 @@ class DeleteAllWithHookCest {
 		$I->dontSee( 'example_hook', '.crontrol-events' );
 	}
 
-	public function DeletingAPersistentWordPressCoreHook( AcceptanceTester $I ) {
+	public function DeletingAPersistentWordPressCoreHook( AcceptanceTester $I ): void {
 		$I->amWorkingWithANewCronEvent( 'wp_scheduled_delete', '[1]' );
 		$I->amWorkingWithANewCronEvent( 'wp_scheduled_delete', '[2]' );
 		$row = $I->amWorkingWithANewCronEvent( 'wp_scheduled_delete', '[3]' );

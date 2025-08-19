@@ -7,11 +7,11 @@
  * Test class.
  */
 class PauseEventCest {
-	public function _before( AcceptanceTester $I ) {
+	public function _before( AcceptanceTester $I ): void {
 		$I->loginAsAdmin();
 	}
 
-	public function PausingAnEvent( AcceptanceTester $I ) {
+	public function PausingAnEvent( AcceptanceTester $I ): void {
 		$row = $I->amWorkingWithANewCronEvent( 'pause_me_soon' );
 
 		$I->click( 'Pause', $row );

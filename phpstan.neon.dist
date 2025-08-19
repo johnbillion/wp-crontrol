@@ -7,7 +7,7 @@ parameters:
 	paths:
 		- wp-crontrol.php
 		- src/
-		# - tests/acceptance/
+		- tests/acceptance/
 		- tests/integration/
 	scanDirectories:
 		- tests/_support/
