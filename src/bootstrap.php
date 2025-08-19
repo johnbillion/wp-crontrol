@@ -2685,18 +2685,16 @@ function json_output( $input, $pretty = true ) {
  *
  * @param array<string,string> $args The event args array.
  * @phpstan-param array{
- *   url: string,
- *   name: string,
- *   method: string,
- *   hash: string,
+ *   url?: string,
+ *   name?: string,
+ *   method?: string,
+ *   hash?: string,
  * } $args
  */
 function action_url_cron_event( array $args ): void {
-	list(
-		'url' => $url,
-		'method' => $method,
-		'hash' => $hash,
-	) = $args;
+	$url = $args['url'] ?? null;
+	$method = $args['method'] ?? 'GET';
+	$hash = $args['hash'] ?? null;
 
 	if ( empty( $url ) ) {
 		throw new MissingURLException(
