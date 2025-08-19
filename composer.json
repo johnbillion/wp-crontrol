@@ -53,7 +53,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"QM\\Tests\\": "tests/integration"
+			"Crontrol\\Tests\\": "tests/integration"
 		}
 	},
 	"extra": {
