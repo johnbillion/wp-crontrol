@@ -56,6 +56,11 @@ class AddEventCest {
 		$I->click( 'Add Event' );
 		$I->see( 'Cron Events', 'h1' );
 		$I->seeAdminErrorNotice( 'The cron event was saved but contains an error: The URL "http://localhost:22" is not allowed' );
+
+		$row = $I->amWorkingWithAnExistingCronEvent( 'http://localhost:22' );
+		$I->see( 'Edit', $row );
+		$I->see( 'Delete', $row );
+		$I->dontSee( 'Run now', $row );
 	}
 
 	public function AddingANewPHPEvent( AcceptanceTester $I ) {

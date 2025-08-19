@@ -12,7 +12,7 @@ class PauseEventCest {
 	}
 
 	public function PausingAnEvent( AcceptanceTester $I ) {
-		$row = $I->amWorkingWithACronEvent( 'pause_me_soon' );
+		$row = $I->amWorkingWithANewCronEvent( 'pause_me_soon' );
 
 		$I->click( 'Pause', $row );
 		$I->seeAdminSuccessNotice( 'Paused the pause_me_soon hook.' );
