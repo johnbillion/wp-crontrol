@@ -67,10 +67,10 @@
 			"@composer validate --strict --no-check-lock",
 			"@test:phpstan",
 			"@test:phpcs",
-			"tests-start",
+			"@test:start",
 			"@test:integration",
 			"@test:acceptance",
-			"tests-stop"
+			"@test:stop"
 		],
 		"test:acceptance": [
 			"acceptance-tests"
@@ -84,6 +84,12 @@
 		"test:phpstan": [
 			"codecept build #",
 			"phpstan analyze -v --memory-limit=1024M"
+		],
+		"test:start": [
+			"tests-start"
+		],
+		"test:stop": [
+			"tests-stop"
 		]
 	},
 	"support": {
