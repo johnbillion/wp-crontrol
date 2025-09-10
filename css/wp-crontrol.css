@@ -12,6 +12,14 @@ table.wp-list-table {
 	margin: 0;
 }
 
+.wp-list-table details summary {
+	cursor: pointer;
+}
+
+.wp-list-table details pre {
+	margin-top: 5px;
+}
+
 .wp-list-table code {
 	background: transparent;
 	padding: 0;

@@ -689,7 +689,8 @@ class Table extends \WP_List_Table {
 
 		if ( ! empty( $event->args ) ) {
 			$output .= sprintf(
-				'<br><br><pre>%s</pre>',
+				'<br><details><summary>%s</summary><pre>%s</pre></details>',
+				esc_html__( 'View arguments', 'wp-crontrol' ),
 				esc_html( \Crontrol\json_output( $event->args ) )
 			);
 		}
