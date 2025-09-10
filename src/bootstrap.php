@@ -1108,12 +1108,12 @@ function plugin_action_links( $actions ) {
 		'crontrol-events'    => sprintf(
 			'<a href="%s">%s</a>',
 			esc_url( admin_url( 'tools.php?page=wp-crontrol' ) ),
-			esc_html__( 'Events', 'wp-crontrol' )
+			esc_html__( 'Cron Events', 'wp-crontrol' )
 		),
 		'crontrol-schedules' => sprintf(
 			'<a href="%s">%s</a>',
 			esc_url( admin_url( 'options-general.php?page=wp-crontrol-schedules' ) ),
-			esc_html__( 'Schedules', 'wp-crontrol' )
+			esc_html__( 'Cron Schedules', 'wp-crontrol' )
 		),
 		'crontrol-help' => sprintf(
 			'<a href="%s">%s</a>',
