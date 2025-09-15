@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
 	mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
 	entry: {
-		index: './js/index.tsx',
+		'wp-crontrol': ['./js/wp-crontrol.js', './js/index.tsx'],
 	},
 	output: {
 		path: path.resolve(__dirname, 'build'),

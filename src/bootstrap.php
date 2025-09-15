@@ -2519,15 +2519,7 @@ function enqueue_assets( $hook_suffix ) {
 	);
 	wp_enqueue_script(
 		'wp-crontrol',
-		plugin_dir_url( PLUGIN_FILE ) . 'js/wp-crontrol.js',
-		array(),
-		WP_CRONTROL_VERSION,
-		true
-	);
-
-	wp_enqueue_script(
-		'wp-crontrol-app',
-		plugins_url( 'build/index.js', PLUGIN_FILE ),
+		plugins_url( 'build/wp-crontrol.js', PLUGIN_FILE ),
 		array( 'react', 'react-dom', 'react-jsx-runtime', 'wp-i18n', 'wp-element' ),
 		WP_CRONTROL_VERSION,
 		true

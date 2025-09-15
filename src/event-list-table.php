@@ -344,7 +344,7 @@ class Table extends \WP_List_Table {
 			esc_html__( 'Export', 'wp-crontrol' )
 		);
 
-		echo '<div id="crontrol-app"></div>';
+		echo '<div id="wp-crontrol-app"></div>';
 	}
 
 	/**

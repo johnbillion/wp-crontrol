@@ -157,7 +157,7 @@ export default function App() {
 	);
 }
 document.addEventListener('DOMContentLoaded', () => {
-	const appElement = document.getElementById('crontrol-app');
+	const appElement = document.getElementById('wp-crontrol-app');
 	if (appElement) {
 		const root = createRoot(appElement);
 		root.render(<App />);
