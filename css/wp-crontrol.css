@@ -12,6 +12,14 @@ table.wp-list-table {
 	margin: 0;
 }
 
+.wp-list-table details summary {
+	cursor: pointer;
+}
+
+.wp-list-table details pre {
+	margin-top: 5px;
+}
+
 .wp-list-table code {
 	background: transparent;
 	padding: 0;
@@ -34,11 +42,6 @@ table.wp-list-table {
 
 .wp-list-table tr.crontrol-error th {
 	border-color: #d63638;
-}
-
-.wp-list-table tr.crontrol-inactive th,
-.wp-list-table tr.crontrol-paused th {
-	border-color: #8c8f94;
 }
 
 .wp-list-table tr.crontrol-inactive .column-crontrol_next,
