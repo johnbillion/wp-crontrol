@@ -2525,13 +2525,11 @@ function enqueue_assets( $hook_suffix ) {
 		true
 	);
 
-	$asset_file = include plugin_dir_path( PLUGIN_FILE ) . 'build/index.asset.php';
-
 	wp_enqueue_script(
 		'wp-crontrol-app',
 		plugins_url( 'build/index.js', PLUGIN_FILE ),
-		$asset_file['dependencies'],
-		$asset_file['version'],
+		array( 'react', 'react-dom', 'react-jsx-runtime', 'wp-i18n', 'wp-element' ),
+		WP_CRONTROL_VERSION,
 		true
 	);
 

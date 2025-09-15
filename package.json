@@ -11,18 +11,26 @@
 		"node": ">=18"
 	},
 	"devDependencies": {
+		"@wordpress/element": "^5.0.0",
+		"@wordpress/i18n": "^4.0.0",
+		"@babel/core": "^7.22.0",
+		"@babel/preset-env": "^7.22.0",
+		"@babel/preset-react": "^7.22.0",
+		"@babel/preset-typescript": "^7.22.0",
 		"@jsdevtools/version-bump-prompt": "6.1.0",
-		"@wordpress/scripts": "^27",
-		"sharp-cli": "^4.0.0"
+		"@types/react": "^18.0.0",
+		"@types/react-dom": "^18.0.0",
+		"babel-loader": "^9.1.0",
+		"sharp-cli": "^4.0.0",
+		"typescript": "^5.0.0",
+		"webpack": "^5.88.0",
+		"webpack-cli": "^5.1.0"
 	},
 	"scripts": {
 		"icons": "sharp -i .wordpress-org/icon.svg -o .wordpress-org/icon-128x128.png -f png --palette resize 128 128 && sharp -i .wordpress-org/icon.svg -o .wordpress-org/icon-256x256.png -f png --palette resize 256 256",
 		"screenshots": "sharp -i .wordpress-org/screenshot-*.png -o .wordpress-org -f png --palette resize 1514 844",
-		"start": "wp-scripts start --webpack-src-dir=js",
-		"build": "wp-scripts build --webpack-src-dir=js",
-		"format": "wp-scripts format --webpack-src-dir=js",
-		"lint:css": "wp-scripts lint-style --webpack-src-dir=js",
-		"lint:js": "wp-scripts lint-js --webpack-src-dir=js",
+		"start": "NODE_ENV=development webpack --watch",
+		"build": "NODE_ENV=production webpack",
 		"bump:patch": "bump patch --commit 'Version %s.' wp-crontrol.php package.json readme.txt",
 		"bump:minor": "bump minor --commit 'Version %s.' wp-crontrol.php package.json readme.txt",
 		"bump:major": "bump major --commit 'Version %s.' wp-crontrol.php package.json readme.txt"
