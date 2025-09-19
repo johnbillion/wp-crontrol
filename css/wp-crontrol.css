@@ -162,11 +162,15 @@ input[type="time"][step="1"] {
 
 	.modal-content {
 		background-color: #f0f0f1;
-		padding: 20px;
+		padding: 0 20px 20px;
+
+		.form-table {
+			margin: 0;
+		}
 	}
 
 	.submit {
-		margin: 50px 0 0;
+		margin: 40px 0 0;
 		padding: 0;
 	}
 }
