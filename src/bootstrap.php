@@ -163,6 +163,9 @@ function action_handle_posts() {
 		if ( 'crontrol_cron_job' === $cr->hookname ) {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
 		}
+		if ( 'crontrol_url_cron_job' === $cr->hookname ) {
+			wp_die( esc_html__( 'You are not allowed to add new URL cron events.', 'wp-crontrol' ), 401 );
+		}
 		$args = json_decode( $cr->args, true );
 
 		if ( empty( $args ) || ! is_array( $args ) ) {
@@ -211,8 +214,8 @@ function action_handle_posts() {
 		exit;
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'new_url_cron' === $_POST['crontrol_action'] ) ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ), 401 );
+		if ( ! current_user_can_manage_url_cron_events() ) {
+			wp_die( esc_html__( 'You are not allowed to add new URL cron events.', 'wp-crontrol' ), 401 );
 		}
 		check_admin_referer( 'crontrol-new-cron' );
 
@@ -337,6 +340,10 @@ function action_handle_posts() {
 
 		if ( 'crontrol_cron_job' === $cr->hookname && ! current_user_can_manage_php_cron_events() ) {
 			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 401 );
+		}
+
+		if ( 'crontrol_url_cron_job' === $cr->hookname && ! current_user_can_manage_url_cron_events() ) {
+			wp_die( esc_html__( 'You are not allowed to edit URL cron events.', 'wp-crontrol' ), 401 );
 		}
 
 		$args = json_decode( $cr->args, true );
@@ -737,9 +744,12 @@ function action_handle_posts() {
 		$deleted = false;
 		check_admin_referer( "crontrol-delete-hook_{$hook}" );
 
-		// Sanity check
+		// Sanity checks
 		if ( 'crontrol_cron_job' === $hook ) {
 			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 401 );
+		}
+		if ( 'crontrol_url_cron_job' === $hook ) {
+			wp_die( esc_html__( 'You are not allowed to delete URL cron events.', 'wp-crontrol' ), 401 );
 		}
 
 		$deleted = wp_unschedule_hook( $hook, true );
@@ -787,6 +797,10 @@ function action_handle_posts() {
 
 		// Don't need an `edit_files` check here because PHP cron events can always be run unless they're disabled.
 		if ( ( 'crontrol_cron_job' === $hook ) && ! php_cron_events_enabled() ) {
+			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 401 );
+		}
+
+		if ( ( 'crontrol_url_cron_job' === $hook ) && ! url_cron_events_enabled() ) {
 			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 401 );
 		}
 
@@ -871,7 +885,7 @@ function action_handle_posts() {
 
 		$hook = wp_unslash( $_GET['crontrol_id'] );
 
-		if ( 'crontrol_cron_job' === $hook ) {
+		if ( ( 'crontrol_cron_job' === $hook ) || ( 'crontrol_url_cron_job' === $hook ) ) {
 			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 401 );
 		}
 
@@ -1663,7 +1677,15 @@ function show_cron_form( $editing ) {
 	}
 
 	$can_manage_php = current_user_can_manage_php_cron_events();
-	$allowed = ( ! $is_editing_php || $can_manage_php );
+	$can_manage_url = current_user_can_manage_url_cron_events();
+
+	if ( $is_editing_php ) {
+		$allowed = $can_manage_php;
+	} elseif ( $is_editing_url ) {
+		$allowed = $can_manage_url;
+	} else {
+		$allowed = true;
+	}
 	?>
 	<div id="crontrol_form" class="wrap narrow">
 		<?php
@@ -1709,6 +1731,8 @@ function show_cron_form( $editing ) {
 						'<input type="hidden" name="crontrol_action" value="%s"/>',
 						esc_attr( $action )
 					);
+				} elseif ( ! $can_manage_php && ! $can_manage_url ) {
+					echo '<input type="hidden" name="crontrol_action" value="new_cron"/>';
 				} else {
 					?>
 					<tr class="hide-if-no-js">
@@ -1726,12 +1750,14 @@ function show_cron_form( $editing ) {
 										<?php esc_html_e( 'Standard cron event', 'wp-crontrol' ); ?>
 									</label>
 								</p>
-								<p>
-									<label>
-										<input type="radio" name="crontrol_action" value="new_url_cron">
-										<?php esc_html_e( 'URL cron event', 'wp-crontrol' ); ?>
-									</label>
-								</p>
+								<?php if ( $can_manage_url ) { ?>
+									<p>
+										<label>
+											<input type="radio" name="crontrol_action" value="new_url_cron">
+											<?php esc_html_e( 'URL cron event', 'wp-crontrol' ); ?>
+										</label>
+									</p>
+								<?php } ?>
 								<?php if ( $can_manage_php ) { ?>
 									<p>
 										<label>
