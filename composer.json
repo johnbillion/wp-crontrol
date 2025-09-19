@@ -90,6 +90,9 @@
 		],
 		"test:stop": [
 			"tests-stop"
+		],
+		"test:destroy": [
+			"tests-destroy"
 		]
 	},
 	"support": {
