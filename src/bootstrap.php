@@ -969,13 +969,15 @@ function action_handle_posts() {
 
 				if ( 'crontrol_cron_job' === $event->hook ) {
 					$args = __( 'PHP Code', 'wp-crontrol' );
+				} elseif ( 'crontrol_url_cron_job' === $event->hook ) {
+					$args = $event->args[0]['method'] . ' ' . $event->args[0]['url'];
 				} elseif ( empty( $event->args ) ) {
 					$args = '';
 				} else {
 					$args = \Crontrol\json_output( $event->args, false );
 				}
 
-				if ( 'crontrol_cron_job' === $event->hook ) {
+				if ( ( 'crontrol_cron_job' === $event->hook ) || ( 'crontrol_url_cron_job' === $event->hook ) ) {
 					$action = 'WP Crontrol';
 				} else {
 					$callbacks = array();
