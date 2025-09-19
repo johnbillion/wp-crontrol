@@ -2657,6 +2657,11 @@ function json_output( $input, $pretty = true ) {
 /**
  * Fetches the URL in a URL cron event using the HTTP API.
  *
+ * If the `CRONTROL_DISALLOW_URL_EVENTS` constant is defined and set to `true` then URL cron events will be disabled
+ * completely. Any existing URL cron events will remain in place but their URL will not be fetched, and no URL cron
+ * events can be added, edited, or manually run. Users with permission to edit URL cron events will still be able to
+ * delete these events.
+ *
  * The URL that's saved in a URL cron event is protected with an integrity check which prevents it from being fetched
  * if the URL is tampered with.
  *
@@ -2681,6 +2686,10 @@ function json_output( $input, $pretty = true ) {
  * } $args
  */
 function action_url_cron_event( array $args ): void {
+	if ( ! url_cron_events_enabled() ) {
+		return;
+	}
+
 	list(
 		'url' => $url,
 		'method' => $method,
@@ -2854,4 +2863,25 @@ function php_cron_events_enabled(): bool {
  */
 function current_user_can_manage_php_cron_events(): bool {
 	return ( php_cron_events_enabled() && current_user_can( 'edit_files' ) );
+}
+
+/**
+ * Returns whether URL cron events are enabled.
+ *
+ * The URL cron event functionality can be disabled by defining the `CRONTROL_DISALLOW_URL_EVENTS` constant and setting
+ * its value to `true`. This constant can be defined in the `wp-config.php` file.
+ */
+function url_cron_events_enabled(): bool {
+	if ( defined( 'CRONTROL_DISALLOW_URL_EVENTS' ) && CRONTROL_DISALLOW_URL_EVENTS ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Returns whether URL cron events are enabled and can be managed by the current user.
+ */
+function current_user_can_manage_url_cron_events(): bool {
+	return ( url_cron_events_enabled() && current_user_can( 'manage_options' ) );
 }
