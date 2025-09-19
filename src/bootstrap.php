@@ -154,14 +154,14 @@ function action_handle_posts() {
 
 	if ( isset( $_POST['crontrol_action'] ) && ( 'new_cron' === $_POST['crontrol_action'] ) ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ), 403 );
 		}
 		check_admin_referer( 'crontrol-new-cron' );
 
 		$cr = $request->init( wp_unslash( $_POST ) );
 
 		if ( 'crontrol_cron_job' === $cr->hookname ) {
-			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 		$args = json_decode( $cr->args, true );
 
@@ -212,7 +212,7 @@ function action_handle_posts() {
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'new_url_cron' === $_POST['crontrol_action'] ) ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ), 403 );
 		}
 		check_admin_referer( 'crontrol-new-cron' );
 
@@ -270,7 +270,7 @@ function action_handle_posts() {
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'new_php_cron' === $_POST['crontrol_action'] ) ) {
 		if ( ! current_user_can_manage_php_cron_events() ) {
-			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 		check_admin_referer( 'crontrol-new-cron' );
 
@@ -328,7 +328,7 @@ function action_handle_posts() {
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'edit_cron' === $_POST['crontrol_action'] ) ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		$cr = $request->init( wp_unslash( $_POST ) );
@@ -336,7 +336,7 @@ function action_handle_posts() {
 		check_admin_referer( "crontrol-edit-cron_{$cr->original_hookname}_{$cr->original_sig}_{$cr->original_next_run_utc}" );
 
 		if ( 'crontrol_cron_job' === $cr->hookname && ! current_user_can_manage_php_cron_events() ) {
-			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		$args = json_decode( $cr->args, true );
@@ -420,7 +420,7 @@ function action_handle_posts() {
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'edit_url_cron' === $_POST['crontrol_action'] ) ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		$cr = $request->init( wp_unslash( $_POST ) );
@@ -511,7 +511,7 @@ function action_handle_posts() {
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'edit_php_cron' === $_POST['crontrol_action'] ) ) {
 		if ( ! current_user_can_manage_php_cron_events() ) {
-			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		$cr = $request->init( wp_unslash( $_POST ) );
@@ -601,7 +601,7 @@ function action_handle_posts() {
 
 	} elseif ( isset( $_POST['crontrol_new_schedule'] ) ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to add new cron schedules.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to add new cron schedules.', 'wp-crontrol' ), 403 );
 		}
 		check_admin_referer( 'crontrol-new-schedule' );
 		$name     = sanitize_text_field( wp_unslash( $_POST['crontrol_schedule_internal_name'] ) );
@@ -619,7 +619,7 @@ function action_handle_posts() {
 
 	} elseif ( isset( $_GET['crontrol_action'] ) && 'delete-schedule' === $_GET['crontrol_action'] ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to delete cron schedules.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to delete cron schedules.', 'wp-crontrol' ), 403 );
 		}
 		$schedule = wp_unslash( $_GET['crontrol_id'] );
 		check_admin_referer( "crontrol-delete-schedule_{$schedule}" );
@@ -634,7 +634,7 @@ function action_handle_posts() {
 
 	} elseif ( ( isset( $_POST['action'] ) && 'crontrol_delete_crons' === $_POST['action'] ) || ( isset( $_POST['action2'] ) && 'crontrol_delete_crons' === $_POST['action2'] ) ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 403 );
 		}
 		check_admin_referer( 'bulk-crontrol-events' );
 
@@ -677,7 +677,7 @@ function action_handle_posts() {
 
 	} elseif ( isset( $_GET['crontrol_action'] ) && 'delete-cron' === $_GET['crontrol_action'] ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 403 );
 		}
 		$hook         = wp_unslash( $_GET['crontrol_id'] );
 		$sig          = wp_unslash( $_GET['crontrol_sig'] );
@@ -686,7 +686,7 @@ function action_handle_posts() {
 
 		// PHP cron events can be deleted even if they're disallowed, as long as the user has permission.
 		if ( 'crontrol_cron_job' === $hook && ! current_user_can( 'edit_files' ) ) {
-			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		$redirect = array(
@@ -731,7 +731,7 @@ function action_handle_posts() {
 
 	} elseif ( isset( $_GET['crontrol_action'] ) && 'delete-hook' === $_GET['crontrol_action'] ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to delete cron events.', 'wp-crontrol' ), 403 );
 		}
 		$hook    = wp_unslash( $_GET['crontrol_id'] );
 		$deleted = false;
@@ -739,7 +739,7 @@ function action_handle_posts() {
 
 		// Sanity check
 		if ( 'crontrol_cron_job' === $hook ) {
-			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		$deleted = wp_unschedule_hook( $hook, true );
@@ -779,7 +779,7 @@ function action_handle_posts() {
 		}
 	} elseif ( isset( $_GET['crontrol_action'] ) && 'run-cron' === $_GET['crontrol_action'] ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 403 );
 		}
 		$hook = wp_unslash( $_GET['crontrol_id'] );
 		$sig = wp_unslash( $_GET['crontrol_sig'] );
@@ -787,7 +787,7 @@ function action_handle_posts() {
 
 		// Don't need an `edit_files` check here because PHP cron events can always be run unless they're disabled.
 		if ( ( 'crontrol_cron_job' === $hook ) && ! php_cron_events_enabled() ) {
-			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		$ran = Event\run( $hook, $sig );
@@ -819,13 +819,13 @@ function action_handle_posts() {
 		exit;
 	} elseif ( isset( $_GET['crontrol_action'] ) && 'pause-hook' === $_GET['crontrol_action'] ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		$hook = wp_unslash( $_GET['crontrol_id'] );
 
 		if ( ( 'crontrol_cron_job' === $hook ) || ( 'crontrol_url_cron_job' === $hook ) ) {
-			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		check_admin_referer( "crontrol-pause-hook_{$hook}" );
@@ -866,13 +866,13 @@ function action_handle_posts() {
 		exit;
 	} elseif ( isset( $_GET['crontrol_action'] ) && 'resume-hook' === $_GET['crontrol_action'] ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		$hook = wp_unslash( $_GET['crontrol_id'] );
 
 		if ( 'crontrol_cron_job' === $hook ) {
-			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 401 );
+			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		check_admin_referer( "crontrol-resume-hook_{$hook}" );
