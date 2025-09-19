@@ -1788,7 +1788,7 @@ function show_cron_form( $editing ) {
 					<tr class="crontrol-event-url">
 						<th valign="top" scope="row">
 							<label for="crontrol_eventname">
-								<?php esc_html_e( 'Event Name (optional)', 'wp-crontrol' ); ?>
+								<?php esc_html_e( 'Display Name (optional)', 'wp-crontrol' ); ?>
 							</label>
 						</th>
 						<td>
@@ -1834,7 +1834,7 @@ function show_cron_form( $editing ) {
 					<tr class="crontrol-event-php">
 						<th scope="row">
 							<label for="crontrol_eventname">
-								<?php esc_html_e( 'Event Name (optional)', 'wp-crontrol' ); ?>
+								<?php esc_html_e( 'Display Name (optional)', 'wp-crontrol' ); ?>
 							</label>
 						</th>
 						<td>
