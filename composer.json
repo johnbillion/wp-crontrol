@@ -66,6 +66,7 @@
 		"test": [
 			"@composer validate --strict --no-check-lock",
 			"@test:phpstan",
+			"@test:phpcbf",
 			"@test:phpcs",
 			"@test:start",
 			"@test:integration",
@@ -80,6 +81,9 @@
 		],
 		"test:phpcs": [
 			"phpcs -nps --colors --report-code --report-summary --report-width=80 --basepath=./ ."
+		],
+		"test:phpcbf": [
+			"phpcbf -nps --colors --report-code --report-summary --report-width=80 --basepath=./ ."
 		],
 		"test:phpstan": [
 			"codecept build #",
