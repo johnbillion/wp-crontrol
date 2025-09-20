@@ -142,7 +142,7 @@ class CSVExportTest extends Test {
 		$test_event_row = $this->getEventRow( $hook, 'all' );
 
 		// Arguments
-		self::assertSame( '[]', $test_event_row[1] );
+		self::assertSame( '', $test_event_row[1] );
 		// Schedule
 		self::assertSame( 'Once Hourly', $test_event_row[5] );
 		// Interval
