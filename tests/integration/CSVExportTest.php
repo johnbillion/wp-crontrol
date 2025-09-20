@@ -9,7 +9,7 @@ class CSVExportTest extends Test {
 	 * Export events to CSV and return all rows
 	 *
 	 * @param string $type Event type to export
-	 * @return array Array of CSV rows
+	 * @return list<list<string|null>> Array of CSV rows
 	 */
 	private function exportEventsToArray( string $type = 'all' ): array {
 		$stream = fopen( 'php://memory', 'w+' );
@@ -34,7 +34,7 @@ class CSVExportTest extends Test {
 	 * Export events to CSV and return only the header row
 	 *
 	 * @param string $type Event type to export
-	 * @return array Header row
+	 * @return list<string|null> Header row
 	 */
 	private function exportEventsHeaders( string $type = 'all' ): array {
 		$rows = $this->exportEventsToArray( $type );
@@ -45,7 +45,7 @@ class CSVExportTest extends Test {
 	 * Export events to CSV and return only the data rows (excluding headers)
 	 *
 	 * @param string $type Event type to export
-	 * @return array Data rows without headers
+	 * @return list<list<string|null>> Data rows without headers
 	 */
 	private function exportEventsDataRows( string $type = 'all' ): array {
 		$rows = $this->exportEventsToArray( $type );
@@ -55,9 +55,9 @@ class CSVExportTest extends Test {
 	/**
 	 * Find a specific event row by hook name
 	 *
-	 * @param array $rows CSV rows to search
+	 * @param list<list<string|null>> $rows CSV rows to search
 	 * @param string $hook Hook name to find
-	 * @return array|null The matching row or null if not found
+	 * @return list<string|null>|null The matching row or null if not found
 	 */
 	private function findEventRow( array $rows, string $hook ): ?array {
 		foreach ( $rows as $row ) {
@@ -74,7 +74,7 @@ class CSVExportTest extends Test {
 	 *
 	 * @param string $hook Hook name to find
 	 * @param string $type Event type to export
-	 * @return array The event row
+	 * @return list<string|null> The event row
 	 */
 	private function getEventRow( string $hook, string $type = 'all' ): array {
 		$data_rows = $this->exportEventsDataRows( $type );
