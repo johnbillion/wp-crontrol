@@ -23,7 +23,9 @@ class CSVExportTest extends Test {
 
 		$rows = array();
 		while ( ( $row = fgetcsv( $stream ) ) !== false ) {
-			$rows[] = $row;
+			if ( $row !== null ) {
+				$rows[] = $row;
+			}
 		}
 
 		fclose( $stream );
