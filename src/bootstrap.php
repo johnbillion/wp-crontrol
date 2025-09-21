@@ -6,6 +6,8 @@
 namespace Crontrol;
 
 use Crontrol\Event\Table;
+use Crontrol\Event\PHPCronEvent;
+use Crontrol\Event\URLCronEvent;
 use DateTimeZone;
 use stdClass;
 use WP_Error;
@@ -393,15 +395,7 @@ function action_handle_posts() {
 			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
 			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
 			 * }
-			 * @param stdClass $original {
-			 *     An object containing the original event's data.
-			 *
-			 *     @type string       $hook      Action hook to execute when the event is run.
-			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
-			 *     @type string|false $schedule  How often the event should subsequently recur.
-			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
-			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
-			 * }
+			 * @param \Crontrol\Event\Event $original The original event's data.
 			 */
 			do_action( 'crontrol/edited_event', $event, $original );
 
@@ -484,15 +478,7 @@ function action_handle_posts() {
 			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
 			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
 			 * }
-			 * @param stdClass $original {
-			 *     An object containing the original event's data.
-			 *
-			 *     @type string       $hook      Action hook to execute when the event is run.
-			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
-			 *     @type string|false $schedule  How often the event should subsequently recur.
-			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
-			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
-			 * }
+			 * @param \Crontrol\Event\Event $original An object containing the original event's data.
 			 */
 			do_action( 'crontrol/edited_url_event', $event, $original );
 
@@ -574,15 +560,7 @@ function action_handle_posts() {
 			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
 			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
 			 * }
-			 * @param stdClass $original {
-			 *     An object containing the original event's data.
-			 *
-			 *     @type string       $hook      Action hook to execute when the event is run.
-			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
-			 *     @type string|false $schedule  How often the event should subsequently recur.
-			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
-			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
-			 * }
+			 * @param \Crontrol\Event\Event $original An object containing the original event's data.
 			 */
 			do_action( 'crontrol/edited_php_event', $event, $original );
 
@@ -713,15 +691,7 @@ function action_handle_posts() {
 			/**
 			 * Fires after a cron event is deleted.
 			 *
-			 * @param stdClass $event {
-			 *     An object containing the event's data.
-			 *
-			 *     @type string       $hook      Action hook to execute when the event is run.
-			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
-			 *     @type string|false $schedule  How often the event should subsequently recur.
-			 *     @type mixed[]      $args      Array containing each separate argument to pass to the hook's callback function.
-			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
-			 * }
+			 * @param \Crontrol\Event\Event $event The event's data.
 			 */
 			do_action( 'crontrol/deleted_event', $event );
 		}
@@ -1552,13 +1522,7 @@ function show_cron_form( $editing ) {
 
 		foreach ( Event\get() as $event ) {
 			if ( $edit_id === $event->hook && intval( $_GET['crontrol_next_run_utc'] ) === $event->timestamp && $event->sig === $_GET['crontrol_sig'] ) {
-				$existing = array(
-					'hookname' => $event->hook,
-					'next_run' => $event->timestamp, // UTC
-					'schedule' => ( $event->schedule ? $event->schedule : '_oneoff' ),
-					'sig'      => $event->sig,
-					'args'     => $event->args,
-				);
+				$existing = $event;
 				break;
 			}
 		}
@@ -1609,54 +1573,48 @@ function show_cron_form( $editing ) {
 		}
 	}
 
-	$is_editing_php = ( $existing && 'crontrol_cron_job' === $existing['hookname'] );
-	$is_editing_url = ( $existing && 'crontrol_url_cron_job' === $existing['hookname'] );
+	$is_editing_php = ( $existing && $existing->is_php_cron() );
+	$is_editing_url = ( $existing && $existing->is_url_cron() );
 	$is_editing_protected_event = false;
 
-	if ( is_array( $existing ) ) {
-		$other_fields  = wp_nonce_field( "crontrol-edit-cron_{$existing['hookname']}_{$existing['sig']}_{$existing['next_run']}", '_wpnonce', true, false );
+	if ( $existing ) {
+		$other_fields  = wp_nonce_field( "crontrol-edit-cron_{$existing->hook}_{$existing->sig}_{$existing->timestamp}", '_wpnonce', true, false );
 		$other_fields .= sprintf( '<input name="crontrol_original_hookname" type="hidden" value="%s" />',
-			esc_attr( $existing['hookname'] )
+			esc_attr( $existing->hook )
 		);
 		$other_fields .= sprintf( '<input name="crontrol_original_sig" type="hidden" value="%s" />',
-			esc_attr( $existing['sig'] )
+			esc_attr( $existing->sig )
 		);
 		$other_fields .= sprintf( '<input name="crontrol_original_next_run_utc" type="hidden" value="%s" />',
-			esc_attr( (string) $existing['next_run'] )
+			esc_attr( (string) $existing->timestamp )
 		);
-		if ( ! empty( $existing['args'] ) ) {
-			$display_args = wp_json_encode( $existing['args'] );
+		if ( ! empty( $existing->args ) ) {
+			$display_args = wp_json_encode( $existing->args );
 
 			if ( false === $display_args ) {
 				$display_args = '';
 			}
 		}
 		$button        = __( 'Update Event', 'wp-crontrol' );
-		$next_run_gmt  = gmdate( 'Y-m-d H:i:s', $existing['next_run'] );
+		$next_run_gmt  = gmdate( 'Y-m-d H:i:s', $existing->timestamp );
 		$next_run_date_local = get_date_from_gmt( $next_run_gmt, 'Y-m-d' );
 		$next_run_time_local = get_date_from_gmt( $next_run_gmt, 'H:i:s' );
-		$is_editing_protected_event = in_array( $existing['hookname'], get_all_core_hooks(), true ) || str_starts_with( $existing['hookname'], 'crontrol' );
+		$is_editing_protected_event = $existing->is_protected();
 	} else {
 		$other_fields = wp_nonce_field( 'crontrol-new-cron', '_wpnonce', true, false );
-		$existing     = array(
-			'hookname' => '',
-			'args'     => array(),
-			'next_run' => 'now', // UTC
-			'schedule' => false,
-		);
-
+		$existing = Event\Event::create_new();
 		$button        = __( 'Add Event', 'wp-crontrol' );
 		$suggestion = strtotime( '+1 hour' );
 		$next_run_date_local = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $suggestion ), 'Y-m-d' );
 		$next_run_time_local = get_date_from_gmt( gmdate( 'Y-m-d H:\0\0:\0\0', $suggestion ), 'H:i:s' );
 	}
 
-	if ( $is_editing_php && isset( $existing['args']['code'] ) ) {
+	if ( $is_editing_php && isset( $existing->args['code'] ) ) {
 		// Support the args array format used prior to WP Crontrol 1.16.2
-		$existing['args'] = array(
+		$existing->args = array(
 			array(
-				'code' => $existing['args']['code'],
-				'name' => $existing['args']['name'] ?? '',
+				'code' => $existing->args['code'],
+				'name' => $existing->args['name'] ?? '',
 				'hash' => null,
 			),
 		);
@@ -1756,7 +1714,7 @@ function show_cron_form( $editing ) {
 						</th>
 						<td>
 							<?php
-							if ( $is_editing_url && ! check_integrity( $existing['args'][0]['url'], $existing['args'][0]['hash'] ) ) {
+							if ( $is_editing_url && ! $existing->integrity_failed() ) {
 								printf(
 									'<div class="notice notice-error inline"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
 									esc_html__( 'The URL in this event needs to be checked for integrity. This event will not run until you re-save it.', 'wp-crontrol' ),
@@ -1765,7 +1723,7 @@ function show_cron_form( $editing ) {
 								);
 							}
 							?>
-							<input type="url" class="regular-text code" id="crontrol_url" name="crontrol_url" value="<?php echo esc_attr( $is_editing_url ? $existing['args'][0]['url'] : '' ); ?>" />
+							<input type="url" class="regular-text code" id="crontrol_url" name="crontrol_url" value="<?php echo esc_attr( $is_editing_url ? $existing->args[0]['url'] : '' ); ?>" />
 							<?php do_action( 'crontrol/manage/url', $existing ); ?>
 						</td>
 					</tr>
@@ -1778,9 +1736,9 @@ function show_cron_form( $editing ) {
 						<td>
 							<select id="crontrol_method" name="crontrol_method">
 								<option value="GET">GET</option>
-								<option value="POST" <?php selected( $editing ? $existing['args'][0]['method'] === 'POST' : false ); ?>>POST</option>
-								<option value="HEAD" <?php selected( $editing ? $existing['args'][0]['method'] === 'HEAD' : false ); ?>>HEAD</option>
-								<option value="DELETE" <?php selected( $editing ? $existing['args'][0]['method'] === 'DELETE' : false ); ?>>DELETE</option>
+								<option value="POST" <?php selected( $editing ? $existing->args[0]['method'] === 'POST' : false ); ?>>POST</option>
+								<option value="HEAD" <?php selected( $editing ? $existing->args[0]['method'] === 'HEAD' : false ); ?>>HEAD</option>
+								<option value="DELETE" <?php selected( $editing ? $existing->args[0]['method'] === 'DELETE' : false ); ?>>DELETE</option>
 							</select>
 							<?php do_action( 'crontrol/manage/method', $existing ); ?>
 						</td>
@@ -1792,7 +1750,7 @@ function show_cron_form( $editing ) {
 							</label>
 						</th>
 						<td>
-							<input type="text" class="regular-text" id="crontrol_eventname" name="crontrol_eventname" value="<?php echo esc_attr( $editing ? $existing['args'][0]['name'] : '' ); ?>"/>
+							<input type="text" class="regular-text" id="crontrol_eventname" name="crontrol_eventname" value="<?php echo esc_attr( $editing ? $existing->args[0]['name'] : '' ); ?>"/>
 							<?php do_action( 'crontrol/manage/eventname', $existing ); ?>
 						</td>
 					</tr>
@@ -1809,7 +1767,7 @@ function show_cron_form( $editing ) {
 						</th>
 						<td>
 							<?php
-							if ( $is_editing_php && ! check_integrity( $existing['args'][0]['code'], $existing['args'][0]['hash'] ) ) {
+							if ( $is_editing_php && ! $existing->integrity_failed() ) {
 								printf(
 									'<div class="notice notice-error inline"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
 									esc_html__( 'The PHP code in this event needs to be checked for integrity. This event will not run until you re-save it.', 'wp-crontrol' ),
@@ -1827,7 +1785,7 @@ function show_cron_form( $editing ) {
 								);
 								?>
 							</p>
-							<p><textarea class="large-text code" rows="10" cols="50" id="crontrol_hookcode" name="crontrol_hookcode"><?php echo esc_textarea( $editing ? $existing['args'][0]['code'] : '' ); ?></textarea></p>
+							<p><textarea class="large-text code" rows="10" cols="50" id="crontrol_hookcode" name="crontrol_hookcode"><?php echo esc_textarea( $editing ? $existing->args[0]['code'] : '' ); ?></textarea></p>
 							<?php do_action( 'crontrol/manage/hookcode', $existing ); ?>
 						</td>
 					</tr>
@@ -1838,7 +1796,7 @@ function show_cron_form( $editing ) {
 							</label>
 						</th>
 						<td>
-							<input type="text" class="regular-text" id="crontrol_eventname" name="crontrol_eventname" value="<?php echo esc_attr( $editing ? $existing['args'][0]['name'] : '' ); ?>"/>
+							<input type="text" class="regular-text" id="crontrol_eventname" name="crontrol_eventname" value="<?php echo esc_attr( $editing ? $existing->args[0]['name'] : '' ); ?>"/>
 							<?php do_action( 'crontrol/manage/eventname', $existing ); ?>
 						</td>
 					</tr>
@@ -1859,10 +1817,10 @@ function show_cron_form( $editing ) {
 						</th>
 						<td>
 							<?php if ( $is_editing_protected_event ) { ?>
-								<input type="hidden" name="crontrol_hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>" />
-								<?php echo esc_html( $existing['hookname'] ); ?>
+								<input type="hidden" name="crontrol_hookname" value="<?php echo esc_attr( $existing->hook ); ?>" />
+								<?php echo esc_html( $existing->hook ); ?>
 							<?php } else { ?>
-								<input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" class="regular-text" id="crontrol_hookname" name="crontrol_hookname" value="<?php echo esc_attr( $existing['hookname'] ); ?>" required />
+								<input type="text" autocorrect="off" autocapitalize="off" spellcheck="false" class="regular-text" id="crontrol_hookname" name="crontrol_hookname" value="<?php echo esc_attr( $existing->hook ); ?>" required />
 							<?php } ?>
 							<?php do_action( 'crontrol/manage/hookname', $existing ); ?>
 						</td>
@@ -1967,7 +1925,7 @@ function show_cron_form( $editing ) {
 						</label>
 					</th>
 					<td>
-						<?php Schedule\dropdown( $existing['schedule'] ); ?>
+						<?php Schedule\dropdown( $existing->schedule ); ?>
 						<?php do_action( 'crontrol/manage/schedule', $existing ); ?>
 					</td>
 				</tr>

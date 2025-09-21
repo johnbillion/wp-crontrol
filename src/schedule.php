@@ -101,10 +101,10 @@ function get() {
 /**
  * Displays a dropdown filled with the possible schedules, including non-repeating.
  *
- * @param string|false $current The currently selected schedule, or false for none.
+ * @param ?string $current The currently selected schedule, or null for none.
  * @return void
  */
-function dropdown( $current = false ) {
+function dropdown( ?string $current = null ) {
 	$schedules = get();
 	?>
 	<select class="postform" name="crontrol_schedule" id="crontrol_schedule" required>

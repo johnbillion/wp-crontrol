@@ -286,7 +286,7 @@ function resume( $hook ) {
 /**
  * Returns a flattened array of cron events.
  *
- * @return array<string,stdClass> An array of cron event objects keyed by unique signature.
+ * @return array<string,Event> An array of cron event objects keyed by unique signature.
  */
 function get() {
 	$crons  = get_core_cron_array();
@@ -299,17 +299,14 @@ function get() {
 	foreach ( $crons as $time => $cron ) {
 		foreach ( $cron as $hook => $dings ) {
 			foreach ( $dings as $sig => $data ) {
-
-				// This is a prime candidate for a Crontrol_Event class but I'm not bothering currently.
-				$events[ "$hook-$sig-$time" ] = (object) array(
-					'hook'     => $hook,
-					'timestamp' => $time, // UTC
-					'sig'      => $sig,
-					'args'     => $data['args'],
-					'schedule' => $data['schedule'],
-					'interval' => isset( $data['interval'] ) ? $data['interval'] : null,
+				$events[ "$hook-$sig-$time" ] = Event::create(
+					$hook,
+					$time,
+					$sig,
+					$data['args'],
+					$data['schedule'] ?: null,
+					$data['interval'] ?? null,
 				);
-
 			}
 		}
 	}
@@ -327,21 +324,23 @@ function get() {
  * @param string     $hook         The hook name of the event.
  * @param string     $sig          The event signature.
  * @param string|int $next_run_utc The UTC time that the event would be run at.
- * @return stdClass|WP_Error A cron event object, or a WP_Error if it's not found.
+ * @return Event|WP_Error A cron event object, or a WP_Error if it's not found.
  */
 function get_single( $hook, $sig, $next_run_utc ) {
 	$crons = get_core_cron_array();
 	$next_run_utc = (int) $next_run_utc;
 
 	if ( isset( $crons[ $next_run_utc ][ $hook ][ $sig ] ) ) {
-		$event = $crons[ $next_run_utc ][ $hook ][ $sig ];
+		$data = $crons[ $next_run_utc ][ $hook ][ $sig ];
 
-		$event['hook'] = $hook;
-		$event['timestamp'] = $next_run_utc;
-
-		$event = (object) $event;
-
-		return $event;
+		return Event::create(
+			$hook,
+			$next_run_utc,
+			$sig,
+			$data['args'],
+			$data['schedule'] ?: null,
+			$data['interval'] ?? null,
+		);
 	}
 
 	return new WP_Error(
@@ -520,11 +519,11 @@ function get_list_table() {
  * The comparison function returns an integer less than, equal to, or greater than zero if the first argument is
  * considered to be respectively less than, equal to, or greater than the second.
  *
- * @param stdClass $a The first event to compare.
- * @param stdClass $b The second event to compare.
+ * @param Event $a The first event to compare.
+ * @param Event $b The second event to compare.
  * @return int
  */
-function uasort_order_events( $a, $b ) {
+function uasort_order_events( Event $a, Event $b ): int {
 	$orderby = ( ! empty( $_GET['orderby'] ) && is_string( $_GET['orderby'] ) ) ? sanitize_text_field( $_GET['orderby'] ) : 'crontrol_next';
 	$order   = ( ! empty( $_GET['order'] ) && is_string( $_GET['order'] ) ) ? sanitize_text_field( $_GET['order'] ) : 'asc';
 	$compare = 0;

@@ -47,7 +47,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Array of all cron events.
 	 *
-	 * @var array<string,stdClass> Array of event objects.
+	 * @var array<string,Event> Array of event objects.
 	 */
 	protected $all_events = array();
 
@@ -130,8 +130,8 @@ class Table extends \WP_List_Table {
 	/**
 	 * Returns events filtered by various parameters
 	 *
-	 * @param array<string,stdClass> $events The list of all events.
-	 * @return array<string,array<string,stdClass>> Array of filtered events keyed by filter name.
+	 * @param array<string,\Crontrol\Event\Event> $events The list of all events.
+	 * @return array<string,array<string,\Crontrol\Event\Event>> Array of filtered events keyed by filter name.
 	 */
 	public static function get_filtered_events( array $events ) {
 		$all_core_hooks = \Crontrol\get_all_core_hooks();
@@ -190,7 +190,7 @@ class Table extends \WP_List_Table {
 		 * @since 1.11.0
 		 *
 		 * @param array[]    $filtered Array of filtered event arrays keyed by filter name.
-		 * @param stdClass[] $events   Array of all events.
+		 * @param \Crontrol\Event\Event[] $events   Array of all events.
 		 */
 		$filtered = apply_filters( 'crontrol/filtered-events', $filtered, $events );
 
@@ -348,7 +348,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Generates content for a single row of the table.
 	 *
-	 * @param stdClass $event The current event.
+	 * @param Event $event The current event.
 	 * @return void
 	 */
 	public function single_row( $event ) {
@@ -401,7 +401,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Generates and displays row action links for the table.
 	 *
-	 * @param stdClass $event       The cron event for the current row.
+	 * @param Event $event       The cron event for the current row.
 	 * @param string   $column_name Current column name.
 	 * @param string   $primary     Primary column name.
 	 * @return string The row actions HTML.
@@ -441,7 +441,7 @@ class Table extends \WP_List_Table {
 				'crontrol_action'       => 'edit-cron',
 				'crontrol_id'           => rawurlencode( $event->hook ),
 				'crontrol_sig'          => rawurlencode( $event->sig ),
-				'crontrol_next_run_utc' => rawurlencode( $event->timestamp ),
+				'crontrol_next_run_utc' => $event->timestamp,
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 
@@ -467,7 +467,7 @@ class Table extends \WP_List_Table {
 				'crontrol_action'       => 'run-cron',
 				'crontrol_id'           => rawurlencode( $event->hook ),
 				'crontrol_sig'          => rawurlencode( $event->sig ),
-				'crontrol_next_run_utc' => rawurlencode( $event->timestamp ),
+				'crontrol_next_run_utc' => $event->timestamp,
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 			$link = wp_nonce_url( $link, "crontrol-run-cron_{$event->hook}_{$event->sig}" );
@@ -508,7 +508,7 @@ class Table extends \WP_List_Table {
 				'crontrol_action'       => 'delete-cron',
 				'crontrol_id'           => rawurlencode( $event->hook ),
 				'crontrol_sig'          => rawurlencode( $event->sig ),
-				'crontrol_next_run_utc' => rawurlencode( $event->timestamp ),
+				'crontrol_next_run_utc' => $event->timestamp,
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 			$link = wp_nonce_url( $link, "crontrol-delete-cron_{$event->hook}_{$event->sig}_{$event->timestamp}" );
@@ -566,12 +566,12 @@ class Table extends \WP_List_Table {
 	/**
 	 * Outputs the checkbox cell of a table row.
 	 *
-	 * @param stdClass $event The cron event for the current row.
+	 * @param Event $event The cron event for the current row.
 	 * @return string The cell output.
 	 */
 	protected function column_cb( $event ) {
 		$id = sprintf(
-			'crontrol-delete-%1$s-%2$s-%3$s',
+			'crontrol-delete-%1$d-%2$s-%3$s',
 			$event->timestamp,
 			rawurlencode( $event->hook ),
 			$event->sig
@@ -586,10 +586,10 @@ class Table extends \WP_List_Table {
 		} elseif ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_manage_php_crons ) {
 			return sprintf(
 				'<label for="%1$s"><span class="screen-reader-text">%2$s</span></label>
-				<input type="checkbox" name="crontrol_delete[%3$s][%4$s]" value="%5$s" id="%1$s">',
+				<input type="checkbox" name="crontrol_delete[%3$d][%4$s]" value="%5$s" id="%1$s">',
 				esc_attr( $id ),
 				esc_html__( 'Select this row', 'wp-crontrol' ),
-				esc_attr( $event->timestamp ),
+				intval( $event->timestamp ),
 				esc_attr( rawurlencode( $event->hook ) ),
 				esc_attr( $event->sig )
 			);
@@ -601,7 +601,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Returns the output for the hook name cell of a table row.
 	 *
-	 * @param stdClass $event The cron event for the current row.
+	 * @param Event $event The cron event for the current row.
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_hook( $event ) {
@@ -701,7 +701,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Returns the output for the actions cell of a table row.
 	 *
-	 * @param stdClass $event The cron event for the current row.
+	 * @param Event $event The cron event for the current row.
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_actions( $event ) {
@@ -750,7 +750,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Returns the output for the next run cell of a table row.
 	 *
-	 * @param stdClass $event The cron event for the current row.
+	 * @param Event $event The cron event for the current row.
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_next( $event ) {
@@ -854,7 +854,7 @@ class Table extends \WP_List_Table {
 	/**
 	 * Returns the output for the schedule cell of a table row.
 	 *
-	 * @param stdClass $event The cron event for the current row.
+	 * @param Event $event The cron event for the current row.
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_schedule( $event ) {
