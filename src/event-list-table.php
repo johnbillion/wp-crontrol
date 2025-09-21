@@ -6,7 +6,6 @@
 namespace Crontrol\Event;
 
 use DateTimeImmutable;
-use stdClass;
 
 use function Crontrol\php_cron_events_enabled;
 
@@ -16,6 +15,13 @@ require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
  * Cron event list table class.
  */
 class Table extends \WP_List_Table {
+	/**
+	 * Array of Event instances for the current page.
+	 *
+	 * @var list<Event>
+	 */
+	public $items;
+
 	/**
 	 * Whether the current user has the capability to create or edit PHP cron events.
 	 *
@@ -93,7 +99,7 @@ class Table extends \WP_List_Table {
 		$per_page = 50;
 		$offset   = ( $this->get_pagenum() - 1 ) * $per_page;
 
-		$this->items = array_slice( $events, $offset, $per_page );
+		$this->items = array_values( array_slice( $events, $offset, $per_page ) );
 
 		$has_integrity_failures = (bool) array_filter( array_map( function ( $event ) {
 			return $event->integrity_failed();
