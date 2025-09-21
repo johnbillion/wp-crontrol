@@ -217,6 +217,10 @@ abstract class Event {
 	 * @return bool True if the event's schedule is too frequent, false otherwise.
 	 */
 	public function is_too_frequent(): bool {
+		if ( ! $this->schedule ) {
+			return false;
+		}
+
 		$schedules = \Crontrol\Schedule\get();
 
 		if ( ! isset( $schedules[ $this->schedule ] ) ) {

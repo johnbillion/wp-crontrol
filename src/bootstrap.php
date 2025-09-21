@@ -919,9 +919,9 @@ function action_handle_posts() {
 
 		if ( isset( $events[ $type ] ) ) {
 			foreach ( $events[ $type ] as $event ) {
-				$next_run_local = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->timestamp ), 'c' );
-				$next_run_utc = gmdate( 'c', $event->timestamp );
-				$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
+				$next_run_local = $event->get_next_run_local();
+				$next_run_utc = $event->get_next_run_utc();
+				$hook_callbacks = $event->get_callbacks();
 
 				if ( $event->is_php_cron() ) {
 					$args = __( 'PHP Code', 'wp-crontrol' );
@@ -943,13 +943,10 @@ function action_handle_posts() {
 					$action = implode( ',', $callbacks );
 				}
 
-				if ( $event->schedule ) {
-					$schedule_name = Event\get_schedule_name( $event );
-					if ( is_wp_error( $schedule_name ) ) {
-						$schedule_name = $schedule_name->get_error_message();
-					}
-				} else {
-					$schedule_name = __( 'Non-repeating', 'wp-crontrol' );
+				try {
+					$schedule_name = $event->get_schedule_name();
+				} catch ( \RuntimeException $e ) {
+					$schedule_name = $e->getMessage();
 				}
 
 				$row = array(
