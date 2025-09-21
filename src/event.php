@@ -146,7 +146,7 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 	$next_run_utc = (int) get_gmt_from_date( gmdate( 'Y-m-d H:i:s', $next_run_local ), 'U' );
 	$error = null;
 
-	if ( 'crontrol_cron_job' === $hook && ! empty( $args[0]['code'] ) ) {
+	if ( PHPCronEvent::HOOK_NAME === $hook && ! empty( $args[0]['code'] ) ) {
 		try {
 			/**
 			 * The call to `eval()` below checks the syntax of the PHP code provided in the cron event. This is done to
@@ -168,7 +168,7 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 		}
 	}
 
-	if ( 'crontrol_url_cron_job' === $hook && ! empty( $args[0]['url'] ) ) {
+	if ( URLCronEvent::HOOK_NAME === $hook && ! empty( $args[0]['url'] ) ) {
 		try {
 			validate_url( $args[0]['url'] );
 		} catch ( \InvalidArgumentException $e ) {

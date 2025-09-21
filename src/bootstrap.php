@@ -57,8 +57,8 @@ function init_hooks() {
 	add_action( 'load-tools_page_wp-crontrol', __NAMESPACE__ . '\setup_manage_page' );
 
 	add_filter( 'cron_schedules',        __NAMESPACE__ . '\filter_cron_schedules' );
-	add_action( 'crontrol_cron_job',     __NAMESPACE__ . '\action_php_cron_event' );
-	add_action( 'crontrol_url_cron_job', __NAMESPACE__ . '\action_url_cron_event' );
+	add_action( PHPCronEvent::HOOK_NAME, __NAMESPACE__ . '\action_php_cron_event' );
+	add_action( URLCronEvent::HOOK_NAME, __NAMESPACE__ . '\action_url_cron_event' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_assets' );
 	add_action( 'crontrol/tab-header',   __NAMESPACE__ . '\show_cron_status', 20 );
 	add_action( 'activated_plugin',      __NAMESPACE__ . '\flush_status_cache', 10, 0 );
@@ -162,7 +162,7 @@ function action_handle_posts() {
 
 		$cr = $request->init( wp_unslash( $_POST ) );
 
-		if ( 'crontrol_cron_job' === $cr->hookname ) {
+		if ( PHPCronEvent::HOOK_NAME === $cr->hookname ) {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 		$args = json_decode( $cr->args, true );
@@ -337,7 +337,7 @@ function action_handle_posts() {
 
 		check_admin_referer( "crontrol-edit-cron_{$cr->original_hookname}_{$cr->original_sig}_{$cr->original_next_run_utc}" );
 
-		if ( 'crontrol_cron_job' === $cr->hookname && ! current_user_can_manage_php_cron_events() ) {
+		if ( PHPCronEvent::HOOK_NAME === $cr->hookname && ! current_user_can_manage_php_cron_events() ) {
 			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 
@@ -629,7 +629,7 @@ function action_handle_posts() {
 		foreach ( $delete as $next_run_utc => $events ) {
 			foreach ( (array) $events as $hook => $sig ) {
 				// PHP cron events can be deleted even if they're disallowed, as long as the user has permission.
-				if ( 'crontrol_cron_job' === $hook && ! current_user_can( 'edit_files' ) ) {
+				if ( PHPCronEvent::HOOK_NAME === $hook && ! current_user_can( 'edit_files' ) ) {
 					continue;
 				}
 
@@ -663,7 +663,7 @@ function action_handle_posts() {
 		check_admin_referer( "crontrol-delete-cron_{$hook}_{$sig}_{$next_run_utc}" );
 
 		// PHP cron events can be deleted even if they're disallowed, as long as the user has permission.
-		if ( 'crontrol_cron_job' === $hook && ! current_user_can( 'edit_files' ) ) {
+		if ( PHPCronEvent::HOOK_NAME === $hook && ! current_user_can( 'edit_files' ) ) {
 			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 
@@ -708,7 +708,7 @@ function action_handle_posts() {
 		check_admin_referer( "crontrol-delete-hook_{$hook}" );
 
 		// Sanity check
-		if ( 'crontrol_cron_job' === $hook ) {
+		if ( PHPCronEvent::HOOK_NAME === $hook ) {
 			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 
@@ -756,7 +756,7 @@ function action_handle_posts() {
 		check_admin_referer( "crontrol-run-cron_{$hook}_{$sig}" );
 
 		// Don't need an `edit_files` check here because PHP cron events can always be run unless they're disabled.
-		if ( ( 'crontrol_cron_job' === $hook ) && ! php_cron_events_enabled() ) {
+		if ( ( PHPCronEvent::HOOK_NAME === $hook ) && ! php_cron_events_enabled() ) {
 			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 403 );
 		}
 
@@ -794,7 +794,7 @@ function action_handle_posts() {
 
 		$hook = wp_unslash( $_GET['crontrol_id'] );
 
-		if ( ( 'crontrol_cron_job' === $hook ) || ( 'crontrol_url_cron_job' === $hook ) ) {
+		if ( ( PHPCronEvent::HOOK_NAME === $hook ) || ( URLCronEvent::HOOK_NAME === $hook ) ) {
 			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 403 );
 		}
 
@@ -841,7 +841,7 @@ function action_handle_posts() {
 
 		$hook = wp_unslash( $_GET['crontrol_id'] );
 
-		if ( 'crontrol_cron_job' === $hook ) {
+		if ( PHPCronEvent::HOOK_NAME === $hook ) {
 			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 403 );
 		}
 
@@ -923,7 +923,7 @@ function action_handle_posts() {
 				$next_run_utc = gmdate( 'c', $event->timestamp );
 				$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
 
-				if ( 'crontrol_cron_job' === $event->hook ) {
+				if ( $event->is_php_cron() ) {
 					$args = __( 'PHP Code', 'wp-crontrol' );
 				} elseif ( empty( $event->args ) ) {
 					$args = '';
@@ -931,7 +931,7 @@ function action_handle_posts() {
 					$args = \Crontrol\json_output( $event->args, false );
 				}
 
-				if ( 'crontrol_cron_job' === $event->hook ) {
+				if ( $event->is_php_cron() ) {
 					$action = 'WP Crontrol';
 				} else {
 					$callbacks = array();
