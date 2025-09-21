@@ -117,6 +117,17 @@ abstract class Event {
 	}
 
 	/**
+	 * Factory method to create an immediate Event instance (timestamp = 1).
+	 *
+	 * @param string  $hook The hook name of the cron event.
+	 * @param mixed[] $args The arguments to pass to the hook's callback function.
+	 * @return self The appropriate Event instance set to run immediately.
+	 */
+	public static function create_immediate( string $hook, array $args = array() ): self {
+		return self::create( $hook, 1, '', $args, null, null );
+	}
+
+	/**
 	 * Check if this is a recurring event.
 	 *
 	 * @return bool True if this is a recurring event, false otherwise.

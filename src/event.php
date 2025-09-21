@@ -5,8 +5,6 @@
 
 namespace Crontrol\Event;
 
-use stdClass;
-use Crontrol\Schedule;
 use WP_Error;
 
 use const Crontrol\PAUSED_OPTION;
@@ -23,14 +21,11 @@ use const Crontrol\PAUSED_OPTION;
 function run( $hookname, $sig ) {
 	$crons = get_core_cron_array();
 
-	foreach ( $crons as $time => $cron ) {
+	foreach ( $crons as $cron ) {
 		if ( isset( $cron[ $hookname ][ $sig ] ) ) {
-			$event = $cron[ $hookname ][ $sig ];
+			$data = $cron[ $hookname ][ $sig ];
 
-			$event['hook'] = $hookname;
-			$event['timestamp'] = $time;
-
-			$event = (object) $event;
+			$event = Event::create_immediate( $hookname, $data['args'] );
 
 			delete_transient( 'doing_cron' );
 			$scheduled = force_schedule_single_event( $hookname, $event->args ); // UTC
@@ -51,15 +46,7 @@ function run( $hookname, $sig ) {
 			/**
 			 * Fires after a cron event is scheduled to run manually.
 			 *
-			 * @param stdClass $event {
-			 *     An object containing the event's data.
-			 *
-			 *     @type string       $hook      Action hook to execute when the event is run.
-			 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
-			 *     @type string|false $schedule  How often the event should subsequently recur.
-			 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
-			 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
-			 * }
+			 * @param Event $event An object containing the event's data.
 			 */
 			do_action( 'crontrol/ran_event', $event );
 
