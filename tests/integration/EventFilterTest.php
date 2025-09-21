@@ -4,6 +4,8 @@ namespace Crontrol\Tests;
 
 use Crontrol;
 use Crontrol\Event\Table;
+use Crontrol\Event\PHPCronEvent;
+use Crontrol\Event\URLCronEvent;
 
 class EventFilterTest extends Test {
 	/**
@@ -77,7 +79,7 @@ class EventFilterTest extends Test {
 	public function testGetFilteredEventsFiltersPhpEvents(): void {
 		// Schedule a PHP cron job
 		$timestamp = time() + 3600;
-		$hook = 'crontrol_cron_job';
+		$hook = PHPCronEvent::HOOK_NAME;
 		$args = array(
 			array(
 				'code' => 'echo "test";',
@@ -91,9 +93,7 @@ class EventFilterTest extends Test {
 		$filtered = Table::get_filtered_events( $all_events );
 
 		// Should only include PHP cron jobs
-		$hook_names = array_column( $filtered['php'], 'hook' );
-		$unique_hooks = array_unique( $hook_names );
-		self::assertSame( array( 'crontrol_cron_job' ), $unique_hooks );
+		self::assertContainsOnlyInstancesOf( PHPCronEvent::class, $filtered['php'] );
 
 		// Should include our test PHP job
 		self::assertGreaterThan( 0, count( $filtered['php'] ), 'No PHP events found in filter' );
@@ -117,7 +117,7 @@ class EventFilterTest extends Test {
 
 		// All events in this filter should have no actions
 		foreach ( $filtered['noaction'] as $event ) {
-			$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
+			$hook_callbacks = $event->get_callbacks();
 			self::assertEmpty( $hook_callbacks );
 		}
 	}
@@ -128,7 +128,7 @@ class EventFilterTest extends Test {
 	public function testGetFilteredEventsFiltersUrlEvents(): void {
 		// Schedule a URL cron job
 		$timestamp = time() + 3600;
-		$hook = 'crontrol_url_cron_job';
+		$hook = URLCronEvent::HOOK_NAME;
 		$url = 'https://example.com/webhook';
 		$args = array(
 			array(
@@ -143,9 +143,7 @@ class EventFilterTest extends Test {
 		$filtered = Table::get_filtered_events( $all_events );
 
 		// Should only include URL cron jobs
-		$hook_names = array_column( $filtered['url'], 'hook' );
-		$unique_hooks = array_unique( $hook_names );
-		self::assertSame( array( 'crontrol_url_cron_job' ), $unique_hooks );
+		self::assertContainsOnlyInstancesOf( URLCronEvent::class, $filtered['url'] );
 
 		// Should include our test URL job
 		self::assertGreaterThan( 0, count( $filtered['url'] ), 'No URL events found in filter' );
@@ -172,7 +170,7 @@ class EventFilterTest extends Test {
 
 		// All events in this filter should be paused
 		foreach ( $filtered['paused'] as $event ) {
-			self::assertTrue( Crontrol\Event\is_paused( $event ) );
+			self::assertTrue( $event->is_paused() );
 		}
 	}
 }
