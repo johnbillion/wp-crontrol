@@ -116,3 +116,7 @@ input[type="time"][step="1"] {
 .crontrol-edit-event-php .crontrol-event-standard {
 	display: none;
 }
+
+#crontrol-event-not-found {
+	margin-top: 2em;
+}
