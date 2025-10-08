@@ -2,8 +2,4 @@
 
 namespace Crontrol\Tests;
 
-abstract class Test extends \Codeception\TestCase\WPTestCase {
-	public function _before(): void {}
-
-	public function _after(): void {}
-}
+abstract class Test extends \WP_UnitTestCase {}
