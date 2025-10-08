@@ -19,3 +19,4 @@
 /phpcs.xml.dist export-ignore
 /phpstan.neon.dist export-ignore
 /readme.md export-ignore
+/tsconfig.json export-ignore
