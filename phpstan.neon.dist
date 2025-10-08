@@ -10,12 +10,15 @@ parameters:
 		- tests/acceptance/
 		- tests/integration/
 	scanDirectories:
-		- tests/_support/
-		- vendor/lucatume/wp-browser/src/includes/factory/
+		- vendor/wp-phpunit/wp-phpunit/includes/
+	excludePaths:
+		analyseAndScan:
+			- vendor/yoast/wp-test-utils/src/BrainMonkey/bootstrap.php
 	bootstrapFiles:
 		- tests/phpstan/stubs.php
 	dynamicConstantNames:
 		- CRONTROL_DISALLOW_PHP_EVENTS
+		- DISABLE_WP_CRON
 	WPCompat:
 		pluginFile: wp-crontrol.php
 	ignoreErrors:
