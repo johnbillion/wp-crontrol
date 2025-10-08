@@ -11,6 +11,9 @@ parameters:
 		- tests/integration/
 	scanDirectories:
 		- vendor/wp-phpunit/wp-phpunit/includes/
+	excludePaths:
+		analyseAndScan:
+			- vendor/yoast/wp-test-utils/src/BrainMonkey/bootstrap.php
 	bootstrapFiles:
 		- tests/phpstan/stubs.php
 	dynamicConstantNames:
