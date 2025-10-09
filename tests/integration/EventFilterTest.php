@@ -8,11 +8,7 @@ use Crontrol\Event\PHPCronEvent;
 use Crontrol\Event\URLCronEvent;
 
 class EventFilterTest extends Test {
-	/**
-	 * Test that get_filtered_events correctly filters 'all' event type
-	 */
 	public function testGetFilteredEventsFiltersAllEvents(): void {
-		// Schedule a test event
 		$timestamp = time() + 3600;
 		$hook = 'test_filter_all_events_hook';
 		wp_schedule_single_event( $timestamp, $hook );
@@ -28,9 +24,6 @@ class EventFilterTest extends Test {
 		self::assertContains( $hook, $hook_names, 'Test event not found in "all" filter' );
 	}
 
-	/**
-	 * Test that get_filtered_events correctly filters 'custom' event type
-	 */
 	public function testGetFilteredEventsFiltersCustomEvents(): void {
 		// Schedule a custom (non-core) event
 		$timestamp = time() + 3600;
@@ -48,9 +41,6 @@ class EventFilterTest extends Test {
 		self::assertNotContains( 'wp_version_check', $hook_names, 'Core event should not be in "custom" filter' );
 	}
 
-	/**
-	 * Test that get_filtered_events correctly filters 'core' event type
-	 */
 	public function testGetFilteredEventsFiltersCoreEvents(): void {
 		// Schedule a core event (if not already scheduled)
 		if ( ! wp_next_scheduled( 'wp_version_check' ) ) {
@@ -73,9 +63,6 @@ class EventFilterTest extends Test {
 		self::assertNotContains( $custom_hook, $hook_names, 'Custom event should not be in "core" filter' );
 	}
 
-	/**
-	 * Test that get_filtered_events correctly filters 'php' event type
-	 */
 	public function testGetFilteredEventsFiltersPhpEvents(): void {
 		// Schedule a PHP cron job
 		$timestamp = time() + 3600;
@@ -99,9 +86,6 @@ class EventFilterTest extends Test {
 		self::assertGreaterThan( 0, count( $filtered['php'] ), 'No PHP events found in filter' );
 	}
 
-	/**
-	 * Test that get_filtered_events correctly filters 'noaction' event type
-	 */
 	public function testGetFilteredEventsFiltersNoActionEvents(): void {
 		// Create an event with no registered callbacks
 		$timestamp = time() + 3600;
@@ -122,9 +106,6 @@ class EventFilterTest extends Test {
 		}
 	}
 
-	/**
-	 * Test that get_filtered_events correctly filters 'url' event type
-	 */
 	public function testGetFilteredEventsFiltersUrlEvents(): void {
 		// Schedule a URL cron job
 		$timestamp = time() + 3600;
@@ -149,9 +130,6 @@ class EventFilterTest extends Test {
 		self::assertGreaterThan( 0, count( $filtered['url'] ), 'No URL events found in filter' );
 	}
 
-	/**
-	 * Test that get_filtered_events correctly filters 'paused' event type
-	 */
 	public function testGetFilteredEventsFiltersPausedEvents(): void {
 		// Schedule an event and then pause it
 		$timestamp = time() + 3600;

@@ -11,10 +11,7 @@ use Crontrol\Event\CoreCronEvent;
 use Crontrol\Event\ActionSchedulerEvent;
 
 class EventTest extends Test {
-	/**
-	 * Test that Event::create() creates StandardEvent for unknown hooks
-	 */
-	public function testCreateReturnsStandardEventForUnknownHooks(): void {
+	public function testCreatesStandardEventForUnknownHooks(): void {
 		$hook = 'custom_test_hook';
 		$timestamp = time() + 3600;
 		$sig = 'test_sig';
@@ -33,10 +30,7 @@ class EventTest extends Test {
 		self::assertNull( $event->interval );
 	}
 
-	/**
-	 * Test that Event::create() creates PHPCronEvent for PHP cron hooks
-	 */
-	public function testCreateReturnsPHPCronEventForPHPHook(): void {
+	public function testCreatesPHPCronEventForPHPHook(): void {
 		$hook = PHPCronEvent::HOOK_NAME;
 		$timestamp = time() + 3600;
 		$sig = 'php_sig';
@@ -58,10 +52,7 @@ class EventTest extends Test {
 		self::assertTrue( $event->is_protected() );
 	}
 
-	/**
-	 * Test that Event::create() creates URLCronEvent for URL cron hooks
-	 */
-	public function testCreateReturnsURLCronEventForURLHook(): void {
+	public function testCreatesURLCronEventForURLHook(): void {
 		$hook = URLCronEvent::HOOK_NAME;
 		$timestamp = time() + 3600;
 		$sig = 'url_sig';
@@ -83,10 +74,7 @@ class EventTest extends Test {
 		self::assertTrue( $event->is_protected() );
 	}
 
-	/**
-	 * Test that Event::create() creates CoreCronEvent for WordPress core hooks
-	 */
-	public function testCreateReturnsCoreCronEventForCoreHook(): void {
+	public function testCreatesCoreCronEventForCoreHook(): void {
 		$hook = 'wp_version_check';
 		$timestamp = time() + 3600;
 		$sig = 'core_sig';
@@ -103,10 +91,7 @@ class EventTest extends Test {
 		self::assertFalse( $event->is_url_cron() );
 	}
 
-	/**
-	 * Test that Event::create() creates ActionSchedulerEvent for Action Scheduler hooks
-	 */
-	public function testCreateReturnsActionSchedulerEventForActionSchedulerHook(): void {
+	public function testCreatesActionSchedulerEventForActionSchedulerHook(): void {
 		$hook = ActionSchedulerEvent::HOOK_NAME;
 		$timestamp = time() + 300;
 		$sig = 'as_sig';
@@ -121,10 +106,7 @@ class EventTest extends Test {
 		self::assertFalse( $event->is_protected() );
 	}
 
-	/**
-	 * Test that Event::create_new() returns a StandardEvent instance with default values
-	 */
-	public function testCreateNewReturnsStandardEventWithDefaults(): void {
+	public function testCreatesNewStandardEventWithDefaults(): void {
 		$before_time = time();
 		$event = Event::create_new();
 		$after_time = time();
@@ -139,10 +121,7 @@ class EventTest extends Test {
 		self::assertNull( $event->interval );
 	}
 
-	/**
-	 * Test that Event::create_immediate() creates an immediate event
-	 */
-	public function testCreateImmediateCreatesImmediateEvent(): void {
+	public function testCreatesImmediateEvent(): void {
 		$hook = 'test_immediate_hook';
 		$args = array( 'key' => 'value', 'number' => 123 );
 
@@ -158,10 +137,7 @@ class EventTest extends Test {
 		self::assertTrue( $event->is_immediate() );
 	}
 
-	/**
-	 * Test that Event::create_immediate() works with empty args
-	 */
-	public function testCreateImmediateWorksWithEmptyArgs(): void {
+	public function testCreatesImmediateEventWithEmptyArgs(): void {
 		$hook = 'test_immediate_no_args';
 
 		$event = Event::create_immediate( $hook );
@@ -174,10 +150,7 @@ class EventTest extends Test {
 		self::assertTrue( $event->is_immediate() );
 	}
 
-	/**
-	 * Test that Event::create_immediate() creates correct subclass for special hooks
-	 */
-	public function testCreateImmediateCreatesCorrectSubclassForSpecialHooks(): void {
+	public function testCreatesImmediateWithCorrectSubclassForSpecialHooks(): void {
 		// Test PHP cron hook
 		$php_event = Event::create_immediate( PHPCronEvent::HOOK_NAME, array( array( 'code' => 'echo "test";' ) ) );
 		self::assertInstanceOf( PHPCronEvent::class, $php_event );
@@ -194,9 +167,6 @@ class EventTest extends Test {
 		self::assertTrue( $core_event->is_immediate() );
 	}
 
-	/**
-	 * Test is_recurring() for one-time vs recurring events
-	 */
 	public function testIsRecurringForOneTimeVsRecurringEvents(): void {
 		// Test recurring event
 		$recurring_event = Event::create( 'test_recurring', time(), 'sig2', array(), 'hourly', 3600 );
@@ -212,9 +182,6 @@ class EventTest extends Test {
 		self::assertFalse( $new_event->is_recurring() );
 	}
 
-	/**
-	 * Test is_late() for events past their scheduled time
-	 */
 	public function testIsLateForEventsPastScheduledTime(): void {
 		// Event scheduled for the future - not late
 		$future_event = Event::create( 'test_future', time() + 3600, 'sig1', array(), null, null );
@@ -233,9 +200,6 @@ class EventTest extends Test {
 		self::assertTrue( $very_late_event->is_late() );
 	}
 
-	/**
-	 * Test is_immediate() for events with timestamp = 1
-	 */
 	public function testIsImmediateForEventsWithTimestampOne(): void {
 		// Normal event - not immediate
 		$normal_event = Event::create( 'test_normal', time() + 3600, 'sig1', array(), null, null );
@@ -254,9 +218,6 @@ class EventTest extends Test {
 		self::assertFalse( $new_event->is_immediate() );
 	}
 
-	/**
-	 * Test is_paused() with paused hooks
-	 */
 	public function testIsPausedWithPausedHooks(): void {
 		$hook = 'test_paused_hook_' . uniqid();
 		$event = Event::create( $hook, time() + 3600, 'sig1', array(), null, null );
