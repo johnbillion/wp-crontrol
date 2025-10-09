@@ -15,6 +15,7 @@ export default defineConfig({
 	use: {
 		baseURL,
 		...devices['Desktop Chrome'],
+		channel: 'chrome',
 		viewport: { width: 1440, height: 900 },
 		trace: 'on-first-retry',
 		screenshot: 'only-on-failure',
