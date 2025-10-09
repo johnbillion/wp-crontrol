@@ -143,8 +143,9 @@ class EventTimeTest extends Test {
 	public function testDSTFallBack(): void {
 		update_option( 'timezone_string', 'America/New_York' );
 
-		// November 3, 2024, 2:00 AM EDT -> 1:00 AM EST (fall back)
-		$dst_fall = strtotime( '2024-11-03 06:00:00 GMT' ); // 2:00 AM EDT
+		// November 3, 2024, 2:00 AM EDT becomes 1:00 AM EST (fall back)
+		// At 7:00 GMT, it's 2:00 AM EST (after the transition)
+		$dst_fall = strtotime( '2024-11-03 07:00:00 GMT' ); // 2:00 AM EST
 		$event_fall = Event::create( 'test_dst_fall', $dst_fall, 'dst_fall_sig', array(), null, null );
 		$local_fall = $event_fall->get_next_run_local( 'Y-m-d H:i:s T' );
 		self::assertSame( '2024-11-03 02:00:00 EST', $local_fall, 'Should show EST after DST fall back' );
