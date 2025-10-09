@@ -9,7 +9,6 @@ use Crontrol\Event\Table;
 use Crontrol\Event\PHPCronEvent;
 use Crontrol\Event\URLCronEvent;
 use DateTimeZone;
-use stdClass;
 use WP_Error;
 use Exception;
 use IntlTimeZone;
@@ -181,7 +180,7 @@ function action_handle_posts() {
 			/**
 			 * Fires after a new cron event is added.
 			 *
-			 * @param stdClass $event {
+			 * @param object $event {
 			 *     An object containing the event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
@@ -238,7 +237,7 @@ function action_handle_posts() {
 			/**
 			 * Fires after a new URL cron event is added.
 			 *
-			 * @param stdClass $event {
+			 * @param object $event {
 			 *     An object containing the event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
@@ -296,7 +295,7 @@ function action_handle_posts() {
 			/**
 			 * Fires after a new PHP cron event is added.
 			 *
-			 * @param stdClass $event {
+			 * @param object $event {
 			 *     An object containing the event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
@@ -376,7 +375,7 @@ function action_handle_posts() {
 		/**
 		 * Modifies an event before it is scheduled.
 		 *
-		 * @param stdClass|false $event An object containing the new event's data, or boolean false.
+		 * @param object|false $event An object containing the new event's data, or boolean false.
 		 */
 		add_filter( 'schedule_event', function ( $event ) use ( $original ) {
 			if ( ! $event ) {
@@ -386,7 +385,7 @@ function action_handle_posts() {
 			/**
 			 * Fires after a cron event is edited.
 			 *
-			 * @param stdClass $event {
+			 * @param object $event {
 			 *     An object containing the new event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
@@ -459,7 +458,7 @@ function action_handle_posts() {
 		/**
 		 * Modifies an event before it is scheduled.
 		 *
-		 * @param stdClass|false $event An object containing the new event's data, or boolean false.
+		 * @param object|false $event An object containing the new event's data, or boolean false.
 		 */
 		add_filter( 'schedule_event', function ( $event ) use ( $original ) {
 			if ( ! $event ) {
@@ -469,7 +468,7 @@ function action_handle_posts() {
 			/**
 			 * Fires after a URL cron event is edited.
 			 *
-			 * @param stdClass $event {
+			 * @param object $event {
 			 *     An object containing the new event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
@@ -541,7 +540,7 @@ function action_handle_posts() {
 		/**
 		 * Modifies an event before it is scheduled.
 		 *
-		 * @param stdClass|false $event An object containing the new event's data, or boolean false.
+		 * @param object|false $event An object containing the new event's data, or boolean false.
 		 */
 		add_filter( 'schedule_event', function ( $event ) use ( $original ) {
 			if ( ! $event ) {
@@ -551,7 +550,7 @@ function action_handle_posts() {
 			/**
 			 * Fires after a PHP cron event is edited.
 			 *
-			 * @param stdClass $event {
+			 * @param object $event {
 			 *     An object containing the new event's data.
 			 *
 			 *     @type string       $hook      Action hook to execute when the event is run.
