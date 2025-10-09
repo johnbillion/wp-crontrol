@@ -86,6 +86,12 @@ abstract class Event {
 	 * @param string|null $schedule The schedule name or null for one-time events.
 	 * @param int|null    $interval The interval time in seconds for the schedule. Only present for recurring events.
 	 * @return self The appropriate Event instance.
+	 * @phpstan-return (
+	 *   $hook is PHPCronEvent::HOOK_NAME ? PHPCronEvent :
+	 *   $hook is URLCronEvent::HOOK_NAME ? URLCronEvent :
+	 *   $hook is ActionSchedulerEvent::HOOK_NAME ? ActionSchedulerEvent :
+	 *   (CoreCronEvent|StandardEvent)
+	 * )
 	 */
 	public static function create( string $hook, int $timestamp, string $sig, array $args, ?string $schedule, ?int $interval ): self {
 		if ( PHPCronEvent::HOOK_NAME === $hook ) {
