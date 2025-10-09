@@ -13,7 +13,7 @@ jobs:
     name: WordPress.org
     permissions:
       contents: read
-    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-deploy-assets.yml@92a2affb0fe5c6f3c1a32eaefda057a326766196 # v2.1.0-beta.1
+    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-deploy-assets.yml@5a327134e8fabebf5fbf0e8e31c46fa4d36b0d23 # v2.1.0-beta.2
     with:
       plugin: wp-crontrol
       readme: readme.txt
