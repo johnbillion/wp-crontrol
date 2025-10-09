@@ -638,6 +638,13 @@ class Table extends \WP_List_Table {
 				$output = esc_html__( 'URL cron event', 'wp-crontrol' );
 			}
 
+			if ( $event->integrity_failed() ) {
+				$output .= sprintf(
+					' &mdash; <strong class="status-crontrol-inactive post-state"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</strong>',
+					esc_html__( 'Needs checking', 'wp-crontrol' )
+				);
+			}
+
 			if ( isset( $event->args[0]['url_error_message'] ) ) {
 				$output .= '<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
 				$output .= esc_html( $event->args[0]['url_error_message'] );
