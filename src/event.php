@@ -306,6 +306,33 @@ function get() {
 }
 
 /**
+ * Finds a single matching cron event by hook, timestamp, and signature.
+ *
+ * @param string     $hook      The hook name of the event.
+ * @param int        $timestamp The UTC timestamp when the event would be run at.
+ * @param string     $sig       The event signature.
+ * @return Event|null A cron event object, or null if it's not found.
+ */
+function find( string $hook, int $timestamp, string $sig ): ?Event {
+	$crons = get_core_cron_array();
+
+	if ( ! isset( $crons[ $timestamp ][ $hook ][ $sig ] ) ) {
+		return null;
+	}
+
+	$data = $crons[ $timestamp ][ $hook ][ $sig ];
+
+	return Event::create(
+		$hook,
+		$timestamp,
+		$sig,
+		$data['args'],
+		$data['schedule'] ?: null,
+		$data['interval'] ?? null,
+	);
+}
+
+/**
  * Gets a single cron event.
  *
  * @param string     $hook         The hook name of the event.

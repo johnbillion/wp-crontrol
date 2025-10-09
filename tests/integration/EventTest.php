@@ -247,4 +247,160 @@ class EventTest extends Test {
 		self::assertFalse( $event->is_paused() );
 		self::assertFalse( $another_event->is_paused() );
 	}
+
+	public function testFindsExistingEventByHookTimestampAndSig(): void {
+		$hook = 'test_find_event_hook_' . uniqid();
+		$timestamp = time() + 3600;
+		$args = array( 'value', 42 );
+
+		// Schedule the event
+		wp_schedule_single_event( $timestamp, $hook, $args );
+
+		// Get the signature from the scheduled event
+		$all_events = Crontrol\Event\get();
+		$scheduled_event = null;
+		foreach ( $all_events as $event ) {
+			if ( $event->hook === $hook && $event->timestamp === $timestamp ) {
+				$scheduled_event = $event;
+				break;
+			}
+		}
+
+		self::assertInstanceOf( StandardEvent::class, $scheduled_event );
+
+		// Find the event using the find() function
+		$found_event = Crontrol\Event\find( $hook, $timestamp, $scheduled_event->sig );
+
+		self::assertInstanceOf( StandardEvent::class, $found_event );
+		self::assertSame( $hook, $found_event->hook );
+		self::assertSame( $timestamp, $found_event->timestamp );
+		self::assertSame( $scheduled_event->sig, $found_event->sig );
+		self::assertSame( $args, $found_event->args );
+	}
+
+	public function testFindReturnsNullWithWrongTimestamp(): void {
+		$hook = 'test_wrong_timestamp_hook_' . uniqid();
+		$timestamp = time() + 3600;
+		$args = array( 'data' );
+
+		// Schedule the event
+		wp_schedule_single_event( $timestamp, $hook, $args );
+
+		// Get the signature
+		$all_events = Crontrol\Event\get();
+		$scheduled_event = null;
+		foreach ( $all_events as $event ) {
+			if ( $event->hook === $hook && $event->timestamp === $timestamp ) {
+				$scheduled_event = $event;
+				break;
+			}
+		}
+
+		self::assertInstanceOf( StandardEvent::class, $scheduled_event );
+
+		// Try to find with wrong timestamp
+		$wrong_timestamp = $timestamp + 1000;
+		$found_event = Crontrol\Event\find( $hook, $wrong_timestamp, $scheduled_event->sig );
+
+		self::assertNull( $found_event, 'Should return null with wrong timestamp' );
+	}
+
+	public function testFindReturnsNullWithWrongSig(): void {
+		$hook = 'test_wrong_sig_hook_' . uniqid();
+		$timestamp = time() + 3600;
+		$args = array( 'data' );
+
+		// Schedule the event
+		wp_schedule_single_event( $timestamp, $hook, $args );
+
+		// Try to find with wrong signature
+		$wrong_sig = 'wrong_signature_12345';
+		$found_event = Crontrol\Event\find( $hook, $timestamp, $wrong_sig );
+
+		self::assertNull( $found_event, 'Should return null with wrong signature' );
+	}
+
+	public function testFindReturnsNullWithWrongHook(): void {
+		$hook = 'test_wrong_hook_original_' . uniqid();
+		$timestamp = time() + 3600;
+		$args = array( 'data' );
+
+		// Schedule the event
+		wp_schedule_single_event( $timestamp, $hook, $args );
+
+		// Get the signature
+		$all_events = Crontrol\Event\get();
+		$scheduled_event = null;
+		foreach ( $all_events as $event ) {
+			if ( $event->hook === $hook && $event->timestamp === $timestamp ) {
+				$scheduled_event = $event;
+				break;
+			}
+		}
+
+		self::assertInstanceOf( StandardEvent::class, $scheduled_event );
+
+		// Try to find with wrong hook name
+		$wrong_hook = 'wrong_hook_name_' . uniqid();
+		$found_event = Crontrol\Event\find( $wrong_hook, $timestamp, $scheduled_event->sig );
+
+		self::assertNull( $found_event, 'Should return null with wrong hook name' );
+	}
+
+	public function testFindsRecurringEvent(): void {
+		$hook = 'test_find_recurring_hook_' . uniqid();
+		$timestamp = time() + 3600;
+		$schedule = 'hourly';
+
+		// Schedule a recurring event
+		wp_schedule_event( $timestamp, $schedule, $hook );
+
+		// Get the signature from the scheduled event
+		$all_events = Crontrol\Event\get();
+		$scheduled_event = null;
+		foreach ( $all_events as $event ) {
+			if ( $event->hook === $hook && $event->timestamp === $timestamp ) {
+				$scheduled_event = $event;
+				break;
+			}
+		}
+
+		self::assertInstanceOf( StandardEvent::class, $scheduled_event );
+		self::assertTrue( $scheduled_event->is_recurring(), 'Event should be recurring' );
+
+		// Find the event
+		$found_event = Crontrol\Event\find( $hook, $timestamp, $scheduled_event->sig );
+
+		self::assertInstanceOf( StandardEvent::class, $found_event );
+		self::assertSame( $hook, $found_event->hook );
+		self::assertSame( $timestamp, $found_event->timestamp );
+		self::assertSame( $schedule, $found_event->schedule );
+		self::assertTrue( $found_event->is_recurring(), 'Found event should be recurring' );
+	}
+
+	public function testFindsEventWithEmptyArgs(): void {
+		$hook = 'test_find_empty_args_hook_' . uniqid();
+		$timestamp = time() + 3600;
+
+		// Schedule event with no args
+		wp_schedule_single_event( $timestamp, $hook );
+
+		// Get the signature
+		$all_events = Crontrol\Event\get();
+		$scheduled_event = null;
+		foreach ( $all_events as $event ) {
+			if ( $event->hook === $hook && $event->timestamp === $timestamp ) {
+				$scheduled_event = $event;
+				break;
+			}
+		}
+
+		self::assertInstanceOf( StandardEvent::class, $scheduled_event );
+
+		// Find the event
+		$found_event = Crontrol\Event\find( $hook, $timestamp, $scheduled_event->sig );
+
+		self::assertInstanceOf( StandardEvent::class, $found_event );
+		self::assertSame( array(), $found_event->args );
+	}
 }

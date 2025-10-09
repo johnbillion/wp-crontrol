@@ -1526,17 +1526,16 @@ function get_utc_offset() {
 function show_cron_form( $editing ) {
 	$display_args = '';
 	$edit_id      = null;
-	$existing     = false;
+	$existing     = null;
 
 	if ( $editing && ! empty( $_GET['crontrol_id'] ) ) {
 		$edit_id = wp_unslash( $_GET['crontrol_id'] );
 
-		foreach ( Event\get() as $event ) {
-			if ( $edit_id === $event->hook && intval( $_GET['crontrol_next_run_utc'] ) === $event->timestamp && $event->sig === $_GET['crontrol_sig'] ) {
-				$existing = $event;
-				break;
-			}
-		}
+		$existing = Event\find(
+			$edit_id,
+			intval( $_GET['crontrol_next_run_utc'] ),
+			$_GET['crontrol_sig']
+		);
 
 		if ( empty( $existing ) ) {
 			$search_url = add_query_arg(
