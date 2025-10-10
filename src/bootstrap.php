@@ -164,8 +164,8 @@ function action_handle_posts() {
 		if ( PHPCronEvent::HOOK_NAME === $cr->hookname ) {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 403 );
 		}
-		if ( 'crontrol_url_cron_job' === $cr->hookname ) {
-			wp_die( esc_html__( 'You are not allowed to add new URL cron events.', 'wp-crontrol' ), 401 );
+		if ( URLCronEvent::HOOK_NAME === $cr->hookname ) {
+			wp_die( esc_html__( 'You are not allowed to add new URL cron events.', 'wp-crontrol' ), 403 );
 		}
 		$args = json_decode( $cr->args, true );
 
@@ -265,7 +265,7 @@ function action_handle_posts() {
 			return $event;
 		}, 99 );
 
-		$added = Event\add( $next_run_local, $cr->schedule, 'crontrol_url_cron_job', $args );
+		$added = Event\add( $next_run_local, $cr->schedule, URLCronEvent::HOOK_NAME, $args );
 
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'URL Cron', 'wp-crontrol' );
 		$redirect = array(
@@ -328,7 +328,7 @@ function action_handle_posts() {
 			return $event;
 		}, 99 );
 
-		$added = Event\add( $next_run_local, $cr->schedule, 'crontrol_cron_job', $args );
+		$added = Event\add( $next_run_local, $cr->schedule, PHPCronEvent::HOOK_NAME, $args );
 
 		$hookname = ( ! empty( $cr->eventname ) ) ? $cr->eventname : __( 'PHP Cron', 'wp-crontrol' );
 		$redirect = array(
@@ -358,8 +358,8 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 
-		if ( 'crontrol_url_cron_job' === $cr->hookname && ! current_user_can_manage_url_cron_events() ) {
-			wp_die( esc_html__( 'You are not allowed to edit URL cron events.', 'wp-crontrol' ), 401 );
+		if ( URLCronEvent::HOOK_NAME === $cr->hookname && ! current_user_can_manage_url_cron_events() ) {
+			wp_die( esc_html__( 'You are not allowed to edit URL cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		$args = json_decode( $cr->args, true );
@@ -506,7 +506,7 @@ function action_handle_posts() {
 			return $event;
 		}, 99 );
 
-		$added = Event\add( $next_run_local, $cr->schedule, 'crontrol_url_cron_job', $args );
+		$added = Event\add( $next_run_local, $cr->schedule, URLCronEvent::HOOK_NAME, $args );
 
 		if ( is_wp_error( $added ) ) {
 			set_message( $added->get_error_message() );
@@ -588,7 +588,7 @@ function action_handle_posts() {
 			return $event;
 		}, 99 );
 
-		$added = Event\add( $next_run_local, $cr->schedule, 'crontrol_cron_job', $args );
+		$added = Event\add( $next_run_local, $cr->schedule, PHPCronEvent::HOOK_NAME, $args );
 
 		if ( is_wp_error( $added ) ) {
 			set_message( $added->get_error_message() );
@@ -732,8 +732,8 @@ function action_handle_posts() {
 		if ( PHPCronEvent::HOOK_NAME === $hook ) {
 			wp_die( esc_html__( 'You are not allowed to delete PHP cron events.', 'wp-crontrol' ), 403 );
 		}
-		if ( 'crontrol_url_cron_job' === $hook ) {
-			wp_die( esc_html__( 'You are not allowed to delete URL cron events.', 'wp-crontrol' ), 401 );
+		if ( URLCronEvent::HOOK_NAME === $hook ) {
+			wp_die( esc_html__( 'You are not allowed to delete URL cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		$deleted = wp_unschedule_hook( $hook, true );
@@ -784,8 +784,8 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 403 );
 		}
 
-		if ( ( 'crontrol_url_cron_job' === $hook ) && ! url_cron_events_enabled() ) {
-			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 401 );
+		if ( ( URLCronEvent::HOOK_NAME === $hook ) && ! url_cron_events_enabled() ) {
+			wp_die( esc_html__( 'You are not allowed to run cron events.', 'wp-crontrol' ), 403 );
 		}
 
 		$ran = Event\run( $hook, $sig );
@@ -869,7 +869,7 @@ function action_handle_posts() {
 
 		$hook = wp_unslash( $_GET['crontrol_id'] );
 
-		if ( ( 'crontrol_cron_job' === $hook ) || ( 'crontrol_url_cron_job' === $hook ) ) {
+		if ( ( PHPCronEvent::HOOK_NAME === $hook ) || ( URLCronEvent::HOOK_NAME === $hook ) ) {
 			wp_die( esc_html__( 'You are not allowed to pause or resume cron events.', 'wp-crontrol' ), 403 );
 		}
 
@@ -953,7 +953,7 @@ function action_handle_posts() {
 
 				if ( $event->is_php_cron() ) {
 					$args = __( 'PHP Code', 'wp-crontrol' );
-				} elseif ( 'crontrol_url_cron_job' === $event->hook ) {
+				} elseif ( $event->is_url_cron() ) {
 					$args = $event->args[0]['method'] . ' ' . $event->args[0]['url'];
 				} elseif ( empty( $event->args ) ) {
 					$args = '';
@@ -961,7 +961,7 @@ function action_handle_posts() {
 					$args = \Crontrol\json_output( $event->args, false );
 				}
 
-				if ( ( 'crontrol_cron_job' === $event->hook ) || ( 'crontrol_url_cron_job' === $event->hook ) ) {
+				if ( ( PHPCronEvent::HOOK_NAME === $event->hook ) || ( URLCronEvent::HOOK_NAME === $event->hook ) ) {
 					$action = 'WP Crontrol';
 				} else {
 					$callbacks = array();
