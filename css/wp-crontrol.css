@@ -12,6 +12,14 @@ table.wp-list-table {
 	margin: 0;
 }
 
+.wp-list-table details summary {
+	cursor: pointer;
+}
+
+.wp-list-table details pre {
+	margin-top: 5px;
+}
+
 .wp-list-table code {
 	background: transparent;
 	padding: 0;
@@ -107,4 +115,8 @@ input[type="time"][step="1"] {
 .crontrol-edit-event-php .crontrol-event-url,
 .crontrol-edit-event-php .crontrol-event-standard {
 	display: none;
+}
+
+#crontrol-event-not-found {
+	margin-top: 2em;
 }
