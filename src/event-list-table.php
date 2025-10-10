@@ -725,7 +725,7 @@ class Table extends \WP_List_Table {
 	 * @param Event $event The cron event for the current row.
 	 * @return string The cell output.
 	 */
-	protected function column_crontrol_actions( $event ) {
+	protected function column_crontrol_actions( Event $event ): string {
 		if ( $event->is_php_cron() && ! self::$php_crons_enabled ) {
 			return sprintf(
 				'<span class="status-crontrol-warning"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
@@ -740,7 +740,7 @@ class Table extends \WP_List_Table {
 			);
 		}
 
-		$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
+		$hook_callbacks = $event->get_callbacks();
 
 		if ( $event->is_crontrol_event() ) {
 			return 'WP Crontrol';
