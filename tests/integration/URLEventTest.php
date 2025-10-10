@@ -7,6 +7,7 @@ use Crontrol\Exception\MissingURLException;
 use Crontrol\Exception\MissingHashException;
 use Crontrol\Exception\InvalidHashException;
 use Crontrol\Exception\HTTPFailedException;
+use Crontrol\Exception\UnexpectedHTTPCodeException;
 
 class URLEventTest extends Test {
 	public function testMissingURLTriggersException(): void {
@@ -58,4 +59,17 @@ class URLEventTest extends Test {
 		);
 	}
 
+	public function test404ResponseTriggersException(): void {
+		$this->expectException( UnexpectedHTTPCodeException::class );
+
+		$url = 'http://httpbin/status/404';
+
+		do_action(
+			URLCronEvent::HOOK_NAME,
+			[
+				'url' => $url,
+				'hash' => wp_hash( $url ),
+			]
+		);
+	}
 }
