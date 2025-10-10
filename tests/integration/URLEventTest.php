@@ -2,6 +2,7 @@
 
 namespace Crontrol\Tests;
 
+use Crontrol\Event\URLCronEvent;
 use Crontrol\Exception\MissingURLException;
 use Crontrol\Exception\MissingHashException;
 use Crontrol\Exception\InvalidHashException;
@@ -12,7 +13,7 @@ class URLEventTest extends Test {
 		$this->expectException( MissingURLException::class );
 
 		do_action(
-			'crontrol_url_cron_job',
+			URLCronEvent::HOOK_NAME,
 			[]
 		);
 	}
@@ -21,7 +22,7 @@ class URLEventTest extends Test {
 		$this->expectException( MissingHashException::class );
 
 		do_action(
-			'crontrol_url_cron_job',
+			URLCronEvent::HOOK_NAME,
 			[
 				'url' => 'http://example.com',
 				'method' => 'GET',
@@ -33,7 +34,7 @@ class URLEventTest extends Test {
 		$this->expectException( InvalidHashException::class );
 
 		do_action(
-			'crontrol_url_cron_job',
+			URLCronEvent::HOOK_NAME,
 			[
 				'url' => 'http://example.com',
 				'method' => 'GET',
@@ -48,7 +49,7 @@ class URLEventTest extends Test {
 		$url = 'http://localhost:22';
 
 		do_action(
-			'crontrol_url_cron_job',
+			URLCronEvent::HOOK_NAME,
 			[
 				'url' => $url,
 				'method' => 'GET',

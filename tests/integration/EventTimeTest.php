@@ -59,8 +59,8 @@ class EventTimeTest extends Test {
 		$utc_time = $event->get_next_run_utc( 'Y-m-d H:i:s' );
 		$local_time = $event->get_next_run_local( 'Y-m-d H:i:s' );
 
-		self::assertEquals( $expected_utc, $utc_time, 'UTC time should be correct' );
-		self::assertEquals( $expected_local, $local_time, 'Local time should be correct' );
+		self::assertSame( $expected_utc, $utc_time, 'UTC time should be correct' );
+		self::assertSame( $expected_local, $local_time, 'Local time should be correct' );
 	}
 
 	/**

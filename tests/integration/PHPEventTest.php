@@ -2,6 +2,7 @@
 
 namespace Crontrol\Tests;
 
+use Crontrol\Event\PHPCronEvent;
 use Crontrol\Exception\MissingHashException;
 use Crontrol\Exception\InvalidHashException;
 
@@ -10,7 +11,7 @@ class PHPEventTest extends Test {
 		$this->expectException( MissingHashException::class );
 
 		do_action(
-			'crontrol_cron_job',
+			PHPCronEvent::HOOK_NAME,
 			[
 				'code' => 'echo "Hello, World!";',
 			]
@@ -21,7 +22,7 @@ class PHPEventTest extends Test {
 		$this->expectException( InvalidHashException::class );
 
 		do_action(
-			'crontrol_cron_job',
+			PHPCronEvent::HOOK_NAME,
 			[
 				'code' => 'echo "Hello, World!";',
 				'hash' => 'invalid_hashinvalidhash',
@@ -35,7 +36,7 @@ class PHPEventTest extends Test {
 		ob_start();
 
 		do_action(
-			'crontrol_cron_job',
+			PHPCronEvent::HOOK_NAME,
 			[
 				'code' => $code,
 				'hash' => wp_hash( $code ),
@@ -44,6 +45,6 @@ class PHPEventTest extends Test {
 
 		$output = ob_get_clean();
 
-		$this->assertEquals( 'Hello, World!', $output );
+		self::assertSame( 'Hello, World!', $output );
 	}
 }
