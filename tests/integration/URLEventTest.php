@@ -72,4 +72,29 @@ class URLEventTest extends Test {
 			]
 		);
 	}
+
+	public function testSuccesfulRequestWorksAsExpected(): void {
+		$url = 'http://httpbin/status/200';
+
+		/**
+		 * @param array|WP_Error $response    HTTP response or WP_Error object.
+		 * @param string         $context     Context under which the hook is fired.
+		 * @param string         $class       HTTP transport used.
+		 * @param array          $parsed_args HTTP request arguments.
+		 * @param string         $url         The request URL.
+		 */
+		add_action( 'http_api_debug', function( $response, $context, $class, $args, $url_called ) use ( $url ) {
+			self::assertSame( $url, $url_called );
+			self::assertNotWPError( $response );
+			self::assertSame( 200, wp_remote_retrieve_response_code( $response ) );
+		}, 10, 5 );
+
+		do_action(
+			URLCronEvent::HOOK_NAME,
+			[
+				'url' => $url,
+				'hash' => wp_hash( $url ),
+			]
+		);
+	}
 }
