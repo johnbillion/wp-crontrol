@@ -8,25 +8,27 @@ on:
       - 'trunk'
     paths:
       - '.github/workflows/acceptance-tests.yml'
-      - 'tests/**'
+      - 'tests/acceptance/**'
       - '**.css'
       - '**.js'
-      - '**.php'
-      - 'codeception.dist.yml'
+      - 'src/**'
+      - 'wp-crontrol.php'
       - 'composer.json'
       - 'docker-compose.yml'
+      - 'tsconfig.json'
   pull_request:
     branches:
       - '**'
     paths:
       - '.github/workflows/acceptance-tests.yml'
-      - 'tests/**'
+      - 'tests/acceptance/**'
       - '**.css'
       - '**.js'
-      - '**.php'
-      - 'codeception.dist.yml'
+      - 'src/**'
+      - 'wp-crontrol.php'
       - 'composer.json'
       - 'docker-compose.yml'
+      - 'tsconfig.json'
   workflow_dispatch:
 
 permissions: {}
@@ -56,7 +58,7 @@ jobs:
           - wp: '6.3'
             php: '7.4'
       fail-fast: false
-    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-acceptance-tests.yml@33705f771525b0d691ee821c90e0c10b18e02871 # v1.2.1
+    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-acceptance-tests.yml@5a327134e8fabebf5fbf0e8e31c46fa4d36b0d23 # v2.1.0-beta.2
     with:
       node: false
       php: ${{ matrix.php }}
