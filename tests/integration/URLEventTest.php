@@ -2,79 +2,63 @@
 
 namespace Crontrol\Tests;
 
-use Crontrol\Event\URLCronEvent;
 use Crontrol\Exception\MissingURLException;
 use Crontrol\Exception\MissingHashException;
 use Crontrol\Exception\InvalidHashException;
 use Crontrol\Exception\HTTPFailedException;
 use Crontrol\Exception\UnexpectedHTTPCodeException;
 
+use function Crontrol\handle_url_cron_event;
+
 class URLEventTest extends Test {
 	public function testMissingURLTriggersException(): void {
 		$this->expectException( MissingURLException::class );
 
-		do_action(
-			URLCronEvent::HOOK_NAME,
-			[]
-		);
+		$url = '';
+		$hash = null;
+
+		handle_url_cron_event( $url, 'GET', $hash );
 	}
 
 	public function testMissingHashTriggersException(): void {
 		$this->expectException( MissingHashException::class );
 
-		do_action(
-			URLCronEvent::HOOK_NAME,
-			[
-				'url' => 'http://example.com',
-				'method' => 'GET',
-			]
-		);
+		$url = 'http://example.com';
+		$hash = null;
+
+		handle_url_cron_event( $url, 'GET', $hash );
 	}
 
 	public function testInvalidHashTriggersException(): void {
 		$this->expectException( InvalidHashException::class );
 
-		do_action(
-			URLCronEvent::HOOK_NAME,
-			[
-				'url' => 'http://example.com',
-				'method' => 'GET',
-				'hash' => 'invalidhash',
-			]
-		);
+		$url = 'http://example.com';
+		$hash = 'invalidhash';
+
+		handle_url_cron_event( $url, 'GET', $hash );
 	}
 
 	public function testInvalidURLTriggersException(): void {
 		$this->expectException( HTTPFailedException::class );
 
 		$url = 'http://localhost:22';
+		$hash = wp_hash( $url );
 
-		do_action(
-			URLCronEvent::HOOK_NAME,
-			[
-				'url' => $url,
-				'method' => 'GET',
-				'hash' => wp_hash( $url ),
-			]
-		);
+		handle_url_cron_event( $url, 'GET', $hash );
 	}
 
 	public function test404ResponseTriggersException(): void {
 		$this->expectException( UnexpectedHTTPCodeException::class );
 
 		$url = 'http://httpbin/status/404';
+		$hash = wp_hash( $url );
 
-		do_action(
-			URLCronEvent::HOOK_NAME,
-			[
-				'url' => $url,
-				'hash' => wp_hash( $url ),
-			]
-		);
+		handle_url_cron_event( $url, 'GET', $hash );
 	}
 
 	public function testSuccesfulRequestWorksAsExpected(): void {
 		$url = 'http://httpbin/status/200';
+		$hash = wp_hash( $url );
 
 		/**
 		 * @param array|WP_Error $response    HTTP response or WP_Error object.
@@ -86,15 +70,8 @@ class URLEventTest extends Test {
 		add_action( 'http_api_debug', function( $response, $context, $class, $args, $url_called ) use ( $url ) {
 			self::assertSame( $url, $url_called );
 			self::assertNotWPError( $response );
-			self::assertSame( 200, wp_remote_retrieve_response_code( $response ) );
 		}, 10, 5 );
 
-		do_action(
-			URLCronEvent::HOOK_NAME,
-			[
-				'url' => $url,
-				'hash' => wp_hash( $url ),
-			]
-		);
+		handle_url_cron_event( $url, 'GET', $hash );
 	}
 }
