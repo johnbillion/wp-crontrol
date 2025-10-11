@@ -516,18 +516,4 @@ function validate_url( string $url ): void {
 			)
 		);
 	}
-
-	$filtered = wp_kses_bad_protocol( $url, array( 'http', 'https', 'ssl' ) );
-
-	if ( $filtered === '' ) {
-		throw new InvalidArgumentException(
-			esc_html(
-				sprintf(
-					/* translators: %s: The URL that failed validation. */
-					__( 'The URL "%s" contains an invalid protocol', 'wp-crontrol' ),
-					$url,
-				)
-			)
-		);
-	}
 }
