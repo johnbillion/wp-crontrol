@@ -5,4 +5,4 @@ namespace Crontrol\Exception;
 /**
  * Exception thrown when a hash is invalid for a cron event.
  */
-class InvalidHashException extends \RuntimeException {}
+class InvalidHashException extends CrontrolRuntimeException {}

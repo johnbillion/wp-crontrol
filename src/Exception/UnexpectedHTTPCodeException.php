@@ -5,4 +5,4 @@ namespace Crontrol\Exception;
 /**
  * Exception thrown when an unexpected HTTP response code is received.
  */
-class UnexpectedHTTPCodeException extends \RuntimeException {}
+class UnexpectedHTTPCodeException extends CrontrolRuntimeException {}
