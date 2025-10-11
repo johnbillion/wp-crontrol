@@ -5,6 +5,7 @@
 
 namespace Crontrol\Event;
 
+use Crontrol\Exception\InvalidURLException;
 use WP_Error;
 use InvalidArgumentException;
 
@@ -497,7 +498,7 @@ function get_core_cron_array() {
  *
  * @see https://github.com/WordPress/wordpress-develop/blob/197f0a71ad27d0688b6380c869aeaf92addd1451/src/wp-includes/class-wp-http.php#L283-L299
  *
- * @throws InvalidArgumentException If the URL is not valid or contains an invalid protocol.
+ * @throws \Crontrol\Exception\InvalidURLException If the URL is invalid or not allowed.
  *
  * @param string $url The URL to validate.
  */
@@ -505,7 +506,7 @@ function validate_url( string $url ): void {
 	$valid = wp_http_validate_url( $url );
 
 	if ( $valid === false ) {
-		throw new InvalidArgumentException(
+		throw new InvalidURLException(
 			esc_html(
 				sprintf(
 					/* translators: %s: The URL that failed validation. */

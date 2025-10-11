@@ -5,7 +5,7 @@ namespace Crontrol\Tests;
 use Crontrol\Exception\MissingURLException;
 use Crontrol\Exception\MissingHashException;
 use Crontrol\Exception\InvalidHashException;
-use Crontrol\Exception\HTTPFailedException;
+use Crontrol\Exception\InvalidURLException;
 use Crontrol\Exception\UnexpectedHTTPCodeException;
 
 use function Crontrol\handle_url_cron_event;
@@ -39,7 +39,7 @@ class URLEventTest extends Test {
 	}
 
 	public function testInvalidURLTriggersException(): void {
-		$this->expectException( HTTPFailedException::class );
+		$this->expectException( InvalidURLException::class );
 
 		$url = 'http://localhost:22';
 		$hash = wp_hash( $url );

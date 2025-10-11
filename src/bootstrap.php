@@ -22,6 +22,7 @@ use ReflectionException;
 use RuntimeException;
 
 use function Crontrol\Event\check_integrity;
+use function Crontrol\Event\validate_url;
 
 const TRANSIENT = 'crontrol-message-%d';
 const PAUSED_OPTION = 'wp_crontrol_paused';
@@ -2679,11 +2680,12 @@ function json_output( $input, $pretty = true ) {
  *
  * @link https://wp-crontrol.com/docs/url-cron-events/
  *
- * @throws MissingURLException
- * @throws MissingHashException
- * @throws InvalidHashException
- * @throws HTTPFailedException
- * @throws UnexpectedHTTPCodeException
+ * @throws \Crontrol\Exception\MissingURLException
+ * @throws \Crontrol\Exception\MissingHashException
+ * @throws \Crontrol\Exception\InvalidHashException
+ * @throws \Crontrol\Exception\InvalidURLException
+ * @throws \Crontrol\Exception\HTTPFailedException
+ * @throws \Crontrol\Exception\UnexpectedHTTPCodeException
  *
  * @param ?string $url    The URL to fetch.
  * @param string  $method The HTTP method to use, defaults to 'GET'.
@@ -2723,6 +2725,9 @@ function handle_url_cron_event( $url, $method, $hash ): void {
 			)
 		);
 	}
+
+	// Ensure the URL is valid before making the request.
+	validate_url( $url );
 
 	$request_args = array(
 		'timeout' => 30,
@@ -2831,8 +2836,8 @@ function action_url_cron_event( array $args ): void {
  *
  * @link https://wp-crontrol.com/docs/php-cron-events/
  *
- * @throws MissingHashException
- * @throws InvalidHashException
+ * @throws \Crontrol\Exception\MissingHashException
+ * @throws \Crontrol\Exception\InvalidHashException
  *
  * @param ?string $code The PHP code to evaluate.
  * @param ?string $hash The stored hash to check the integrity of the PHP code.
