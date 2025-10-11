@@ -2834,6 +2834,43 @@ function action_url_cron_event( array $args ): void {
  * @throws MissingHashException
  * @throws InvalidHashException
  *
+ * @param ?string $code The PHP code to evaluate.
+ * @param ?string $hash The stored hash to check the integrity of the PHP code.
+ */
+function handle_php_cron_event( $code, $hash ): void {
+	if ( empty( $hash ) ) {
+		throw new MissingHashException(
+			esc_html(
+				sprintf(
+					'The stored hash is missing for a PHP cron event; for more information see %s',
+					esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=php' ) ),
+				),
+			)
+		);
+	}
+
+	// Check the integrity of the PHP code.
+	if ( ! check_integrity( $code, $hash ) ) {
+		throw new InvalidHashException(
+			esc_html(
+				sprintf(
+					'The stored hash for a PHP cron event is not valid; for more information see %s',
+					esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=php' ) ),
+				),
+			)
+		);
+	}
+
+	// Please see the function description above for information about the safety of this code.
+	// phpcs:ignore Squiz.PHP.Eval.Discouraged
+	eval( $code );
+}
+
+/**
+ * Action handler for PHP cron events.
+ *
+ * @see \Crontrol\handle_php_cron_event()
+ *
  * @param array<string,string>|string $args The event args array, or a string containing the PHP code to evaluate.
  * @phpstan-param array{
  *   code?: string,
@@ -2859,32 +2896,21 @@ function action_php_cron_event( $args ): void {
 		$hash = $args['hash'] ?? null;
 	}
 
-	if ( empty( $hash ) ) {
-		throw new MissingHashException(
+	try {
+		handle_php_cron_event( $code, $hash );
+	} catch ( CrontrolRuntimeException $e ) {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+		trigger_error(
 			esc_html(
 				sprintf(
-					'WP Crontrol: The stored hash is missing for a PHP cron event; for more information see %s',
-					esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=php' ) ),
+					/* translators: %s: Message text. */
+					__( 'WP Crontrol: %s', 'wp-crontrol' ),
+					$e->getMessage()
 				),
-			)
+			),
+			E_USER_WARNING
 		);
 	}
-
-	// Check the integrity of the PHP code.
-	if ( ! check_integrity( $code, $hash ) ) {
-		throw new InvalidHashException(
-			esc_html(
-				sprintf(
-					'WP Crontrol: The stored hash for a PHP cron event is not valid; for more information see %s',
-					esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=php' ) ),
-				),
-			)
-		);
-	}
-
-	// Please see the function description above for information about the safety of this code.
-	// phpcs:ignore Squiz.PHP.Eval.Discouraged
-	eval( $code );
 }
 
 /**
