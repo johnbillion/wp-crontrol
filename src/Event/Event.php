@@ -10,6 +10,7 @@ use Crontrol\Event\URLCronEvent;
 use Crontrol\Event\CoreCronEvent;
 use Crontrol\Event\ActionSchedulerEvent;
 use Crontrol\Event\StandardEvent;
+use Crontrol\Exception\UnknownScheduleException;
 
 /**
  * Base class for cron events.
@@ -278,7 +279,7 @@ abstract class Event {
 	 * Get the schedule name for this event.
 	 *
 	 * @return string The schedule display name.
-	 * @throws \RuntimeException If schedule is unknown.
+	 * @throws UnknownScheduleException If schedule is unknown.
 	 */
 	public function get_schedule_name(): string {
 		if ( ! $this->is_recurring() ) {
@@ -291,7 +292,7 @@ abstract class Event {
 			return isset( $schedules[ $this->schedule ]['display'] ) ? $schedules[ $this->schedule ]['display'] : $schedules[ $this->schedule ]['name'];
 		}
 
-		throw new \RuntimeException(
+		throw new UnknownScheduleException(
 			esc_html(
 				sprintf(
 					/* translators: %s: Schedule name */

@@ -5,6 +5,7 @@
 
 namespace Crontrol\Event;
 
+use Crontrol\Exception\UnknownScheduleException;
 use DateTimeImmutable;
 
 use function Crontrol\php_cron_events_enabled;
@@ -362,7 +363,7 @@ class Table extends \WP_List_Table {
 
 		try {
 			$schedule_name = $event->get_schedule_name();
-		} catch ( \RuntimeException $e ) {
+		} catch ( UnknownScheduleException $e ) {
 			$classes[] = 'crontrol-error';
 		}
 
@@ -888,7 +889,7 @@ class Table extends \WP_List_Table {
 	protected function column_crontrol_schedule( Event $event ): string {
 		try {
 			$schedule_name = $event->get_schedule_name();
-		} catch ( \RuntimeException $e ) {
+		} catch ( UnknownScheduleException $e ) {
 			return sprintf(
 				'<span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
 				esc_html( $e->getMessage() )

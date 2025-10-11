@@ -3,13 +3,14 @@
 namespace Crontrol\Tests;
 
 use Crontrol\Event\Event;
+use Crontrol\Exception\UnknownScheduleException;
 
 class EventScheduleTest extends Test {
 	/**
 	 * @covers \Crontrol\Event\Event::get_schedule_name
 	 */
 	public function testGetScheduleNameHandlesUnknownSchedule(): void {
-		self::expectException(\RuntimeException::class);
+		self::expectException( UnknownScheduleException::class );
 
 		$timestamp = time() + 3600;
 

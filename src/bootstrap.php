@@ -14,12 +14,12 @@ use Crontrol\Exception\MissingHashException;
 use Crontrol\Exception\InvalidHashException;
 use Crontrol\Exception\UnexpectedHTTPCodeException;
 use Crontrol\Exception\HTTPFailedException;
+use Crontrol\Exception\UnknownScheduleException;
 use DateTimeZone;
 use WP_Error;
 use Exception;
 use IntlTimeZone;
 use ReflectionException;
-use RuntimeException;
 
 use function Crontrol\Event\check_integrity;
 use function Crontrol\Event\validate_url;
@@ -984,7 +984,7 @@ function action_handle_posts() {
 
 				try {
 					$schedule_name = $event->get_schedule_name();
-				} catch ( \RuntimeException $e ) {
+				} catch ( UnknownScheduleException $e ) {
 					$schedule_name = $e->getMessage();
 				}
 
