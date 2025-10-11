@@ -2782,17 +2782,16 @@ function action_url_cron_event( array $args ): void {
 	try {
 		handle_url_cron_event( $url, $method, $hash );
 	} catch ( CrontrolRuntimeException $e ) {
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+		// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_trigger_error,WordPress.Security.EscapeOutput.OutputNotEscaped
 		trigger_error(
-			esc_html(
-				sprintf(
-					/* translators: %s: Message text. */
-					__( 'WP Crontrol: %s', 'wp-crontrol' ),
-					$e->getMessage()
-				),
+			sprintf(
+				/* translators: %s: Message text. */
+				__( 'WP Crontrol: %s', 'wp-crontrol' ),
+				$e->getMessage()
 			),
 			E_USER_WARNING
 		);
+		// phpcs:enable WordPress.PHP.DevelopmentFunctions.error_log_trigger_error,WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
 
@@ -2889,17 +2888,16 @@ function action_php_cron_event( $args ): void {
 	try {
 		handle_php_cron_event( $code, $hash );
 	} catch ( CrontrolRuntimeException $e ) {
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+		// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_trigger_error,WordPress.Security.EscapeOutput.OutputNotEscaped
 		trigger_error(
-			esc_html(
-				sprintf(
-					/* translators: %s: Message text. */
-					__( 'WP Crontrol: %s', 'wp-crontrol' ),
-					$e->getMessage()
-				),
+			sprintf(
+				/* translators: %s: Message text. */
+				__( 'WP Crontrol: %s', 'wp-crontrol' ),
+				$e->getMessage()
 			),
 			E_USER_WARNING
 		);
+		// phpcs:enable WordPress.PHP.DevelopmentFunctions.error_log_trigger_error,WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
 
