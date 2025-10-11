@@ -2683,7 +2683,6 @@ function json_output( $input, $pretty = true ) {
  * @throws \Crontrol\Exception\MissingURLException
  * @throws \Crontrol\Exception\MissingHashException
  * @throws \Crontrol\Exception\InvalidHashException
- * @throws \Crontrol\Exception\InvalidURLException
  * @throws \Crontrol\Exception\HTTPFailedException
  * @throws \Crontrol\Exception\UnexpectedHTTPCodeException
  *

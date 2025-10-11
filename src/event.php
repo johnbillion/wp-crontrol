@@ -160,7 +160,7 @@ function add( $next_run_local, $schedule, $hook, array $args ) {
 	if ( URLCronEvent::HOOK_NAME === $hook && ! empty( $args[0]['url'] ) ) {
 		try {
 			validate_url( $args[0]['url'] );
-		} catch ( InvalidArgumentException $e ) {
+		} catch ( InvalidURLException $e ) {
 			$args[0]['url_error_message'] = $e->getMessage();
 			$error = $e;
 		}
