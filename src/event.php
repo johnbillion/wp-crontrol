@@ -507,12 +507,10 @@ function validate_url( string $url ): void {
 
 	if ( $valid === false ) {
 		throw new InvalidURLException(
-			esc_html(
-				sprintf(
-					/* translators: %s: The URL that failed validation. */
-					__( 'The URL "%s" is not allowed', 'wp-crontrol' ),
-					$url,
-				)
+			sprintf(
+				/* translators: %s: The URL that failed validation. */
+				__( 'The URL "%s" is not allowed', 'wp-crontrol' ),
+				$url,
 			)
 		);
 	}

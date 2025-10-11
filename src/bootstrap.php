@@ -2693,22 +2693,18 @@ function json_output( $input, $pretty = true ) {
 function handle_url_cron_event( $url, $method, $hash ): void {
 	if ( empty( $url ) ) {
 		throw new MissingURLException(
-			esc_html(
-				sprintf(
-					'The URL is missing for a URL cron event; for more information see %s',
-					esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=url' ) ),
-				)
+			sprintf(
+				'The URL is missing for a URL cron event; for more information see %s',
+				esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=url' ) ),
 			)
 		);
 	}
 
 	if ( empty( $hash ) ) {
 		throw new MissingHashException(
-			esc_html(
-				sprintf(
-					'The stored hash is missing for a URL cron event; for more information see %s',
-					esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=url' ) ),
-				)
+			sprintf(
+				'The stored hash is missing for a URL cron event; for more information see %s',
+				esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=url' ) ),
 			)
 		);
 	}
@@ -2716,11 +2712,9 @@ function handle_url_cron_event( $url, $method, $hash ): void {
 	// Check the integrity of the URL.
 	if ( ! check_integrity( $url, $hash ) ) {
 		throw new InvalidHashException(
-			esc_html(
-				sprintf(
-					'The stored hash for a URL cron event is not valid; for more information see %s',
-					esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=url' ) ),
-				)
+			sprintf(
+				'The stored hash for a URL cron event is not valid; for more information see %s',
+				esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=url' ) ),
 			)
 		);
 	}
@@ -2740,12 +2734,10 @@ function handle_url_cron_event( $url, $method, $hash ): void {
 
 	if ( is_wp_error( $response ) ) {
 		throw new HTTPFailedException(
-			esc_html(
-				sprintf(
-					'Failed to fetch URL %s: %s',
-					$url,
-					$response->get_error_message()
-				)
+			sprintf(
+				'Failed to fetch URL %s: %s',
+				$url,
+				$response->get_error_message()
 			)
 		);
 	}
@@ -2755,13 +2747,11 @@ function handle_url_cron_event( $url, $method, $hash ): void {
 
 	if ( $code < 200 || $code >= 300 ) {
 		throw new UnexpectedHTTPCodeException(
-			esc_html(
-				sprintf(
-					'Unexpected response code for URL %s: HTTP %s %s',
-					$url,
-					$code,
-					$message
-				)
+			sprintf(
+				'Unexpected response code for URL %s: HTTP %s %s',
+				$url,
+				$code,
+				$message
 			)
 		);
 	}
@@ -2844,24 +2834,20 @@ function action_url_cron_event( array $args ): void {
 function handle_php_cron_event( $code, $hash ): void {
 	if ( empty( $hash ) ) {
 		throw new MissingHashException(
-			esc_html(
-				sprintf(
-					'The stored hash is missing for a PHP cron event; for more information see %s',
-					esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=php' ) ),
-				),
-			)
+			sprintf(
+				'The stored hash is missing for a PHP cron event; for more information see %s',
+				esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=php' ) ),
+			),
 		);
 	}
 
 	// Check the integrity of the PHP code.
 	if ( ! check_integrity( $code, $hash ) ) {
 		throw new InvalidHashException(
-			esc_html(
-				sprintf(
-					'The stored hash for a PHP cron event is not valid; for more information see %s',
-					esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=php' ) ),
-				),
-			)
+			sprintf(
+				'The stored hash for a PHP cron event is not valid; for more information see %s',
+				esc_url_raw( admin_url( 'tools.php?page=wp-crontrol&crontrol_hooks_type=php' ) ),
+			),
 		);
 	}
 

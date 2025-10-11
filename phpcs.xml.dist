@@ -39,6 +39,9 @@
 		<exclude name="Universal.Arrays.DisallowShortArraySyntax.Found"/>
 		<exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
 		<exclude name="Universal.Operators.DisallowShortTernary.Found"/>
+
+		<!-- Exceptions in WP Crontrol are caught appropriately. -->
+		<exclude name="WordPress.Security.EscapeOutput.ExceptionNotEscaped"/>
 	</rule>
 
 	<!-- Ignore some rules for the tests -->
