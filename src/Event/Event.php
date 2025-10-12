@@ -295,7 +295,7 @@ abstract class Event {
 		throw new UnknownScheduleException(
 			sprintf(
 				/* translators: %s: Schedule name */
-				__( 'Unknown (%s)', 'wp-crontrol' ),
+				__( 'Unknown schedule (%s)', 'wp-crontrol' ),
 				$this->schedule
 			)
 		);

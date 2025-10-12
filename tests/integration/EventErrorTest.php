@@ -110,7 +110,7 @@ class EventErrorTest extends Test {
 
 		// Test URL event with potentially disallowed URL (localhost)
 		$url = 'http://localhost:22';
-		$args_localhost = array(
+		$args = array(
 			array(
 				'url' => $url,
 				'name' => 'Localhost URL Job',
@@ -118,9 +118,9 @@ class EventErrorTest extends Test {
 			),
 		);
 
-		$event_localhost = Event::create( $hook, $timestamp, 'url_localhost_sig', $args_localhost, null, null );
-		self::assertFalse( $event_localhost->has_error(), 'URL event with valid hash should not have error' );
-		self::assertFalse( $event_localhost->integrity_failed(), 'URL event with correct hash should not have integrity failure' );
+		$event = Event::create( $hook, $timestamp, 'url_sig', $args, null, null );
+		self::assertFalse( $event->has_error(), 'URL event with valid hash should not have error' );
+		self::assertFalse( $event->integrity_failed(), 'URL event with correct hash should not have integrity failure' );
 	}
 
 	/**

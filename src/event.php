@@ -7,7 +7,6 @@ namespace Crontrol\Event;
 
 use Crontrol\Exception\InvalidURLException;
 use WP_Error;
-use InvalidArgumentException;
 
 use const Crontrol\PAUSED_OPTION;
 
