@@ -1761,7 +1761,7 @@ function show_cron_form( $editing ) {
 						</th>
 						<td>
 							<?php
-							if ( $is_editing_url && ! $existing->integrity_failed() ) {
+							if ( $is_editing_url && $existing->integrity_failed() ) {
 								printf(
 									'<div class="notice notice-error inline"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
 									esc_html__( 'The URL in this event needs to be checked for integrity. This event will not run until you re-save it.', 'wp-crontrol' ),
@@ -1814,7 +1814,7 @@ function show_cron_form( $editing ) {
 						</th>
 						<td>
 							<?php
-							if ( $is_editing_php && ! $existing->integrity_failed() ) {
+							if ( $is_editing_php && $existing->integrity_failed() ) {
 								printf(
 									'<div class="notice notice-error inline"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
 									esc_html__( 'The PHP code in this event needs to be checked for integrity. This event will not run until you re-save it.', 'wp-crontrol' ),
