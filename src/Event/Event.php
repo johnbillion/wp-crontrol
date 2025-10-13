@@ -245,7 +245,7 @@ abstract class Event {
 			return false;
 		}
 
-		return $schedules[ $this->schedule ]['is_too_frequent'];
+		return $schedules[ $this->schedule ]->is_too_frequent();
 	}
 
 	/**
@@ -289,7 +289,7 @@ abstract class Event {
 		$schedules = \Crontrol\Schedule\get();
 
 		if ( isset( $schedules[ $this->schedule ] ) ) {
-			return isset( $schedules[ $this->schedule ]['display'] ) ? $schedules[ $this->schedule ]['display'] : $schedules[ $this->schedule ]['name'];
+			return $schedules[ $this->schedule ]->display;
 		}
 
 		throw new UnknownScheduleException(
