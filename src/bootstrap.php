@@ -616,6 +616,12 @@ function action_handle_posts() {
 		$interval = absint( $_POST['crontrol_schedule_interval'] );
 		$display  = sanitize_text_field( wp_unslash( $_POST['crontrol_schedule_display_name'] ) );
 
+		// The internal name is used in array keys in WordPress, so it can't be purely numeric
+		// otherwise things go haywire when the schedule arrays pass through `array_merge()`.
+		if ( is_numeric( $name ) ) {
+			$name = 'schedule-' . $name;
+		}
+
 		Schedule\add( $name, $interval, $display );
 		$redirect = array(
 			'page'             => 'wp-crontrol-schedules',
