@@ -8,4 +8,4 @@ namespace Crontrol\Event;
 /**
  * Represents a standard WordPress cron event.
  */
-class StandardEvent extends Event {}
+final class StandardEvent extends Event {}

@@ -8,7 +8,7 @@ namespace Crontrol\Event;
 /**
  * Represents an Action Scheduler cron event.
  */
-class ActionSchedulerEvent extends Event {
+final class ActionSchedulerEvent extends Event {
 	/**
 	 * The hook name for Action Scheduler events.
 	 */
@@ -19,6 +19,7 @@ class ActionSchedulerEvent extends Event {
 	 *
 	 * @return bool True if this is an Action Scheduler cron event, false otherwise.
 	 */
+	#[\Override]
 	public function is_action_scheduler_cron(): bool {
 		return true;
 	}
