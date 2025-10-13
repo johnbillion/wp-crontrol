@@ -99,9 +99,7 @@ class Table extends \WP_List_Table {
 
 			$events = array_filter(
 				$events,
-				function ( $event ) use ( $s ) {
-					return ( false !== strpos( $event->hook, $s ) );
-				}
+				fn( $event ) => false !== strpos( $event->hook, $s )
 			);
 		}
 
@@ -120,9 +118,10 @@ class Table extends \WP_List_Table {
 
 		$this->items = array_values( array_slice( $events, $offset, $per_page ) );
 
-		$has_integrity_failures = (bool) array_filter( array_map( function ( $event ) {
-			return $event->integrity_failed();
-		}, $this->items ) );
+		$has_integrity_failures = (bool) array_filter( array_map(
+			fn( $event ) => $event->integrity_failed(),
+			$this->items
+		) );
 
 		if ( $has_integrity_failures && empty( $_GET['crontrol_action'] ) ) {
 			add_action(

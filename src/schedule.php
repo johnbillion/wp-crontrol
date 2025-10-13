@@ -85,9 +85,7 @@ function get() {
 	$schedules = wp_get_schedules();
 	uasort(
 		$schedules,
-		function ( array $a, array $b ) {
-			return ( $a['interval'] - $b['interval'] );
-		}
+		fn( array $a, array $b ) => $a['interval'] <=> $b['interval']
 	);
 
 	$result = [];
