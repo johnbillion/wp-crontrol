@@ -83,6 +83,7 @@ class Table extends \WP_List_Table {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function prepare_items() {
 		self::$can_manage_php_crons  = current_user_can( 'edit_files' );
 		self::$can_manage_url_crons  = current_user_can( 'manage_options' );
@@ -205,6 +206,7 @@ class Table extends \WP_List_Table {
 	 *
 	 * @return array<string,string> Array of column names keyed by their ID.
 	 */
+	#[\Override]
 	public function get_columns() {
 		return array(
 			'cb'                  => '<input type="checkbox" />',
@@ -233,6 +235,7 @@ class Table extends \WP_List_Table {
 	 *   4?: 'asc'|'desc',
 	 * }>
 	 */
+	#[\Override]
 	public function get_sortable_columns() {
 		return array(
 			'crontrol_hook' => array( 'crontrol_hook', false ),
@@ -246,6 +249,7 @@ class Table extends \WP_List_Table {
 	 *
 	 * @return array<int,string> Array of class names.
 	 */
+	#[\Override]
 	protected function get_table_classes() {
 		return array( 'widefat', 'striped', 'table-view-list', $this->_args['plural'] );
 	}
@@ -256,6 +260,7 @@ class Table extends \WP_List_Table {
 	 *
 	 * @return array<string,string>
 	 */
+	#[\Override]
 	protected function get_bulk_actions() {
 		return array(
 			'crontrol_delete_crons' => esc_html__( 'Delete', 'wp-crontrol' ),
@@ -267,6 +272,7 @@ class Table extends \WP_List_Table {
 	 *
 	 * @return array<string,string>
 	 */
+	#[\Override]
 	public function get_views() {
 		$filtered = self::get_filtered_events( $this->all_events );
 
@@ -332,6 +338,7 @@ class Table extends \WP_List_Table {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	protected function extra_tablenav( $which ) {
 		wp_nonce_field( 'crontrol-export-event-csv', 'crontrol_nonce' );
 		printf(
@@ -354,6 +361,7 @@ class Table extends \WP_List_Table {
 	 * @param Event $event The current event.
 	 * @return void
 	 */
+	#[\Override]
 	public function single_row( $event ) {
 		$classes = array();
 
@@ -413,6 +421,7 @@ class Table extends \WP_List_Table {
 	 * @param string   $primary     Primary column name.
 	 * @return string The row actions HTML.
 	 */
+	#[\Override]
 	protected function handle_row_actions( $event, $column_name, $primary ) {
 		if ( $primary !== $column_name ) {
 			return '';
@@ -578,6 +587,7 @@ class Table extends \WP_List_Table {
 	 * @param Event $event The cron event for the current row.
 	 * @return string The cell output.
 	 */
+	#[\Override]
 	protected function column_cb( $event ) {
 		$id = sprintf(
 			'crontrol-delete-%1$d-%2$s-%3$s',
@@ -917,6 +927,7 @@ class Table extends \WP_List_Table {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function no_items() {
 		if ( empty( $_GET['s'] ) && empty( $_GET['crontrol_hooks_type'] ) ) {
 			esc_html_e( 'There are currently no scheduled cron events.', 'wp-crontrol' );

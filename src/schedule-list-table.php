@@ -37,6 +37,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 *
 	 * @return string The name of the primary column.
 	 */
+	#[\Override]
 	protected function get_primary_column_name() {
 		return 'crontrol_name';
 	}
@@ -46,6 +47,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function prepare_items() {
 		$schedules = \Crontrol\Schedule\get();
 		$count     = count( $schedules );
@@ -64,6 +66,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 *
 	 * @return array<string,string> Array of column names keyed by their ID.
 	 */
+	#[\Override]
 	public function get_columns() {
 		return array(
 			'crontrol_icon'     => '',
@@ -78,6 +81,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 *
 	 * @return array<int,string> Array of class names.
 	 */
+	#[\Override]
 	protected function get_table_classes() {
 		return array( 'widefat', 'fixed', 'striped', 'table-view-list', $this->_args['plural'] );
 	}
@@ -90,6 +94,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 * @param string   $primary     Primary column name.
 	 * @return string The row actions HTML.
 	 */
+	#[\Override]
 	protected function handle_row_actions( $schedule, $column_name, $primary ) {
 		if ( $primary !== $column_name ) {
 			return '';
@@ -188,6 +193,7 @@ class Schedule_List_Table extends \WP_List_Table {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function no_items() {
 		esc_html_e( 'There are no schedules.', 'wp-crontrol' );
 	}

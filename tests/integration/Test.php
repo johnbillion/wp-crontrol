@@ -6,6 +6,7 @@ abstract class Test extends \WP_UnitTestCase {
 	/**
 	 * Runs the routine before each test is executed.
 	 */
+	#[\Override]
 	public function set_up() {
 		parent::set_up();
 
