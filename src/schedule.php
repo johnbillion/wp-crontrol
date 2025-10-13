@@ -5,8 +5,12 @@
 
 namespace Crontrol\Schedule;
 
+use Crontrol\Exception\DuplicateScheduleException;
+
 /**
  * Adds a new custom cron schedule.
+ *
+ * @throws DuplicateScheduleException If the schedule name already exists.
  *
  * @param string $name     The internal name of the schedule.
  * @param int    $interval The interval between executions of the new schedule.
@@ -14,6 +18,18 @@ namespace Crontrol\Schedule;
  * @return void
  */
 function add( $name, $interval, $display ) {
+	$schedules = get();
+
+	if ( array_key_exists( $name, $schedules ) ) {
+		throw new DuplicateScheduleException(
+			sprintf(
+				/* translators: %s: The internal name of the schedule. */
+				__( 'A schedule with the name "%s" already exists.', 'wp-crontrol' ),
+				$name
+			)
+		);
+	}
+
 	/** @var array<string,int|string> */
 	$old_scheds = get_option( 'crontrol_schedules', array() );
 

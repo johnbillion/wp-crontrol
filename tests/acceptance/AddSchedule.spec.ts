@@ -89,4 +89,61 @@ test.describe( 'Adding Cron Schedules', () => {
 		await expect( scheduleRow.locator( '.column-crontrol_interval' ) ).toContainText( '456' );
 		await expect( scheduleRow.locator( '.column-crontrol_display' ) ).toContainText( 'Numeric Schedule' );
 	} );
+
+	test( 'Adding a schedule with a duplicate WordPress core schedule name', {
+		annotation: {
+			type: 'user-story',
+			description: 'As an administrator, I should see an error when trying to add a schedule with a name that already exists in WordPress core'
+		}
+	}, async ( {
+		page,
+		Crontrol,
+	} ) => {
+		await Crontrol.amOnCronScheduleListingPage();
+
+		// Try to add a schedule with the name 'hourly' which already exists
+		await page.getByLabel( 'Internal Name' ).fill( 'hourly' );
+		await page.getByLabel( 'Interval (seconds)' ).fill( '7200' );
+		await page.getByLabel( 'Display Name' ).fill( 'My Custom Hourly' );
+
+		// Submit the form
+		await page.getByRole( 'button', { name: 'Add Cron Schedule' } ).click();
+
+		// Verify error message
+		await expect( page.locator( '#crontrol-header' ) ).toContainText( 'Cron Schedules' );
+		await expect( page.locator( 'h1' ) ).toContainText( 'Cron Schedules' );
+		await Crontrol.seeAdminErrorNotice( 'A schedule with the name hourly already exists.' );
+	} );
+
+	test( 'Adding a schedule with a duplicate custom schedule name', {
+		annotation: {
+			type: 'user-story',
+			description: 'As an administrator, I should see an error when trying to add a schedule with a name that already exists as a custom schedule'
+		}
+	}, async ( {
+		page,
+		Crontrol,
+	} ) => {
+		await Crontrol.amOnCronScheduleListingPage();
+
+		// First, add a custom schedule
+		await page.getByLabel( 'Internal Name' ).fill( 'my_custom_schedule' );
+		await page.getByLabel( 'Interval (seconds)' ).fill( '1800' );
+		await page.getByLabel( 'Display Name' ).fill( 'My Custom Schedule' );
+		await page.getByRole( 'button', { name: 'Add Cron Schedule' } ).click();
+
+		// Verify it was added
+		await Crontrol.seeAdminSuccessNotice( 'Added the cron schedule my_custom_schedule.' );
+
+		// Now try to add another schedule with the same name
+		await page.getByLabel( 'Internal Name' ).fill( 'my_custom_schedule' );
+		await page.getByLabel( 'Interval (seconds)' ).fill( '3600' );
+		await page.getByLabel( 'Display Name' ).fill( 'Another Custom Schedule' );
+		await page.getByRole( 'button', { name: 'Add Cron Schedule' } ).click();
+
+		// Verify error message
+		await expect( page.locator( '#crontrol-header' ) ).toContainText( 'Cron Schedules' );
+		await expect( page.locator( 'h1' ) ).toContainText( 'Cron Schedules' );
+		await Crontrol.seeAdminErrorNotice( 'A schedule with the name my_custom_schedule already exists.' );
+	} );
 } );

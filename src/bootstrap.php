@@ -9,6 +9,7 @@ use Crontrol\Event\Table;
 use Crontrol\Event\PHPCronEvent;
 use Crontrol\Event\URLCronEvent;
 use Crontrol\Exception\CrontrolRuntimeException;
+use Crontrol\Exception\DuplicateScheduleException;
 use Crontrol\Exception\MissingURLException;
 use Crontrol\Exception\MissingHashException;
 use Crontrol\Exception\InvalidHashException;
@@ -44,6 +45,7 @@ const MESSAGE_UNKNOWN_ERROR = 'error';
 
 const MESSAGE_SCHEDULE_DELETED = 2;
 const MESSAGE_SCHEDULE_SAVED = 3;
+const MESSAGE_SCHEDULE_DUPLICATE = 4;
 
 /**
  * Hook onto all of the actions and filters needed by the plugin.
@@ -622,12 +624,20 @@ function action_handle_posts() {
 			$name = 'schedule-' . $name;
 		}
 
-		Schedule\add( $name, $interval, $display );
-		$redirect = array(
-			'page'             => 'wp-crontrol-schedules',
-			'crontrol_message' => MESSAGE_SCHEDULE_SAVED,
-			'crontrol_name'    => rawurlencode( $name ),
-		);
+		try {
+			Schedule\add( $name, $interval, $display );
+			$redirect = array(
+				'page'             => 'wp-crontrol-schedules',
+				'crontrol_message' => MESSAGE_SCHEDULE_SAVED,
+				'crontrol_name'    => rawurlencode( $name ),
+			);
+		} catch ( DuplicateScheduleException $e ) {
+			$redirect = array(
+				'page'             => 'wp-crontrol-schedules',
+				'crontrol_message' => MESSAGE_SCHEDULE_DUPLICATE,
+				'crontrol_name'    => rawurlencode( $name ),
+			);
+		}
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'options-general.php' ) ) );
 		exit;
 
@@ -1189,6 +1199,11 @@ function admin_options_page() {
 			/* translators: %s: The name of the cron schedule. */
 			__( 'Added the cron schedule %s.', 'wp-crontrol' ),
 			'success',
+		),
+		MESSAGE_SCHEDULE_DUPLICATE => array(
+			/* translators: %s: The name of the cron schedule. */
+			__( 'A schedule with the name %s already exists.', 'wp-crontrol' ),
+			'error',
 		),
 	);
 	if ( isset( $_GET['crontrol_message'] ) && isset( $_GET['crontrol_name'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
