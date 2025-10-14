@@ -125,9 +125,8 @@ class Schedule_List_Table extends \WP_List_Table {
 	 * Returns the output for the icon cell of a table row.
 	 *
 	 * @param Schedule $schedule The schedule for the current row.
-	 * @return string The cell output.
 	 */
-	protected function column_crontrol_icon( Schedule $schedule ) {
+	protected function column_crontrol_icon( Schedule $schedule ): string {
 		if ( $schedule instanceof CoreSchedule ) {
 			return sprintf(
 				'<span class="dashicons dashicons-wordpress" aria-hidden="true"></span>
@@ -143,9 +142,8 @@ class Schedule_List_Table extends \WP_List_Table {
 	 * Returns the output for the schedule name cell of a table row.
 	 *
 	 * @param Schedule $schedule The schedule for the current row.
-	 * @return string The cell output.
 	 */
-	protected function column_crontrol_name( Schedule $schedule ) {
+	protected function column_crontrol_name( Schedule $schedule ): string {
 		return esc_html( $schedule->name );
 	}
 
@@ -153,9 +151,8 @@ class Schedule_List_Table extends \WP_List_Table {
 	 * Returns the output for the interval cell of a table row.
 	 *
 	 * @param Schedule $schedule The schedule for the current row.
-	 * @return string The cell output.
 	 */
-	protected function column_crontrol_interval( Schedule $schedule ) {
+	protected function column_crontrol_interval( Schedule $schedule ): string {
 		$interval = sprintf(
 			'%s (%s)',
 			esc_html( "{$schedule->interval}" ),
@@ -181,9 +178,8 @@ class Schedule_List_Table extends \WP_List_Table {
 	 * Returns the output for the display name cell of a table row.
 	 *
 	 * @param Schedule $schedule The schedule for the current row.
-	 * @return string The cell output.
 	 */
-	protected function column_crontrol_display( Schedule $schedule ) {
+	protected function column_crontrol_display( Schedule $schedule ): string {
 		return esc_html( $schedule->display );
 	}
 

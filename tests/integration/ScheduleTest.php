@@ -168,12 +168,14 @@ class ScheduleTest extends Test {
 	 * @return array<string, array{string}>
 	 */
 	public static function dataCoreScheduleNames(): array {
-		return array(
-			'hourly' => array( 'hourly' ),
-			'twicedaily' => array( 'twicedaily' ),
-			'daily' => array( 'daily' ),
-			'weekly' => array( 'weekly' ),
-		);
+		$core_schedules = \Crontrol\get_core_schedules();
+		$data = array();
+
+		foreach ( $core_schedules as $schedule_name ) {
+			$data[ $schedule_name ] = array( $schedule_name );
+		}
+
+		return $data;
 	}
 
 	/**

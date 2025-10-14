@@ -334,7 +334,6 @@ class Table extends \WP_List_Table {
 	 * Extra controls to be displayed between bulk actions and pagination.
 	 *
 	 * @param string $which One of 'top' or 'bottom' to indicate the position on the screen.
-	 *
 	 * @return void
 	 */
 	#[\Override]
@@ -620,7 +619,6 @@ class Table extends \WP_List_Table {
 	 * Returns the output for the hook name cell of a table row.
 	 *
 	 * @param Event $event The cron event for the current row.
-	 * @return string The cell output.
 	 */
 	protected function column_crontrol_hook( Event $event ): string {
 		if ( $event->is_php_cron() ) {
@@ -733,7 +731,6 @@ class Table extends \WP_List_Table {
 	 * Returns the output for the actions cell of a table row.
 	 *
 	 * @param Event $event The cron event for the current row.
-	 * @return string The cell output.
 	 */
 	protected function column_crontrol_actions( Event $event ): string {
 		if ( $event->is_php_cron() && ! self::$php_crons_enabled ) {
@@ -789,7 +786,6 @@ class Table extends \WP_List_Table {
 	 * Returns the output for the next run cell of a table row.
 	 *
 	 * @param Event $event The cron event for the current row.
-	 * @return string The cell output.
 	 */
 	protected function column_crontrol_next( Event $event ): string {
 		if ( $event->is_immediate() ) {
