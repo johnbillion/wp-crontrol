@@ -6,6 +6,7 @@
 namespace Crontrol;
 
 use Crontrol\Schedule\Schedule;
+use Crontrol\Schedule\CoreSchedule;
 
 require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 
@@ -102,12 +103,10 @@ class Schedule_List_Table extends \WP_List_Table {
 
 		$links = array();
 
-		if ( $schedule->is_core_schedule() ) {
-			$links[] = "<span class='crontrol-in-use'>" . esc_html__( 'This is a WordPress core schedule and cannot be deleted', 'wp-crontrol' ) . '</span>';
-		} elseif ( ! $schedule->is_custom_schedule() ) {
-			$links[] = "<span class='crontrol-in-use'>" . esc_html__( 'This schedule is added by another plugin and cannot be deleted', 'wp-crontrol' ) . '</span>';
-		} elseif ( $schedule->is_in_use() ) {
-			$links[] = "<span class='crontrol-in-use'>" . esc_html__( 'This custom schedule is in use and cannot be deleted', 'wp-crontrol' ) . '</span>';
+		$locked_reason = $schedule->get_locked_reason();
+
+		if ( $locked_reason ) {
+			$links[] = "<span class='crontrol-in-use'>" . esc_html( $locked_reason ) . '</span>';
 		} else {
 			$link = add_query_arg( array(
 				'page'            => 'wp-crontrol-schedules',
@@ -129,11 +128,11 @@ class Schedule_List_Table extends \WP_List_Table {
 	 * @return string The cell output.
 	 */
 	protected function column_crontrol_icon( Schedule $schedule ) {
-		if ( $schedule->is_core_schedule() ) {
+		if ( $schedule instanceof CoreSchedule ) {
 			return sprintf(
 				'<span class="dashicons dashicons-wordpress" aria-hidden="true"></span>
 				<span class="screen-reader-text">%s</span>',
-				esc_html__( 'This is a WordPress core schedule and cannot be deleted', 'wp-crontrol' )
+				esc_html( $schedule->get_locked_reason() )
 			);
 		}
 

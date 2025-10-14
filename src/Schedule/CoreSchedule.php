@@ -10,24 +10,20 @@ namespace Crontrol\Schedule;
  */
 final class CoreSchedule extends Schedule {
 	/**
-	 * Check if this is a WordPress core schedule.
+	 * Check if this schedule can be deleted.
 	 *
-	 * @return bool True if this is a WordPress core schedule, false otherwise.
+	 * Core schedules cannot be deleted.
 	 */
 	#[\Override]
-	public function is_core_schedule(): bool {
-		return true;
+	public function deleteable(): bool {
+		return false;
 	}
 
 	/**
-	 * Check if this schedule is protected (cannot be deleted).
-	 *
-	 * Core schedules are always protected.
-	 *
-	 * @return bool True if the schedule is protected, false otherwise.
+	 * Get the reason why this schedule cannot be deleted.
 	 */
 	#[\Override]
-	public function is_protected(): bool {
-		return true;
+	public function get_locked_reason(): string {
+		return __( 'This is a WordPress core schedule and cannot be deleted', 'wp-crontrol' );
 	}
 }

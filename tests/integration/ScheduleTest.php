@@ -6,7 +6,8 @@ use Crontrol\Exception\DuplicateScheduleException;
 use Crontrol\Schedule;
 use Crontrol\Schedule\Schedule as ScheduleClass;
 use Crontrol\Schedule\CoreSchedule;
-use Crontrol\Schedule\CustomSchedule;
+use Crontrol\Schedule\CrontrolSchedule;
+use Crontrol\Schedule\ThirdPartySchedule;
 
 class ScheduleTest extends Test {
 	/**
@@ -22,7 +23,7 @@ class ScheduleTest extends Test {
 	/**
 	 * @covers \Crontrol\Schedule\add
 	 */
-	public function testAddScheduleThrowsExceptionForDuplicateCustomSchedule(): void {
+	public function testAddScheduleThrowsExceptionForDuplicateCrontrolSchedule(): void {
 		$schedule_name = 'test_duplicate_schedule_' . time();
 
 		// First, add a custom schedule
@@ -41,7 +42,7 @@ class ScheduleTest extends Test {
 	/**
 	 * @covers \Crontrol\Schedule\add
 	 */
-	public function testAddScheduleSucceedsForNewSchedule(): void {
+	public function testAddScheduleSucceedsForNewCrontrolSchedule(): void {
 		$schedule_name = 'test_schedule_' . time();
 
 		// This should not throw an exception
@@ -51,7 +52,7 @@ class ScheduleTest extends Test {
 		$schedules = Schedule\get();
 		self::assertArrayHasKey( $schedule_name, $schedules );
 		$schedule = $schedules[ $schedule_name ];
-		self::assertInstanceOf( CustomSchedule::class, $schedule );
+		self::assertInstanceOf( CrontrolSchedule::class, $schedule );
 		self::assertEquals( 7200, $schedule->interval );
 		self::assertEquals( 'Test Schedule', $schedule->display );
 	}
@@ -66,23 +67,19 @@ class ScheduleTest extends Test {
 		self::assertSame( 'hourly', $schedule->name );
 		self::assertSame( 3600, $schedule->interval );
 		self::assertSame( 'Once Hourly', $schedule->display );
-		self::assertTrue( $schedule->is_core_schedule() );
-		self::assertTrue( $schedule->is_protected() );
-		self::assertFalse( $schedule->is_custom_schedule() );
+		self::assertFalse( $schedule->deleteable() );
 	}
 
 	/**
 	 * @covers \Crontrol\Schedule\Schedule::create
 	 */
-	public function testCreatesCustomScheduleForNonCoreSchedules(): void {
-		$schedule = ScheduleClass::create( 'custom_schedule', 7200, 'Every Two Hours' );
+	public function testCreatesThirdPartyScheduleForNonCoreNonCrontrolSchedules(): void {
+		$schedule = ScheduleClass::create( 'third_party_schedule', 7200, 'Every Two Hours' );
 
-		self::assertInstanceOf( CustomSchedule::class, $schedule );
-		self::assertSame( 'custom_schedule', $schedule->name );
+		self::assertInstanceOf( ThirdPartySchedule::class, $schedule );
+		self::assertSame( 'third_party_schedule', $schedule->name );
 		self::assertSame( 7200, $schedule->interval );
 		self::assertSame( 'Every Two Hours', $schedule->display );
-		self::assertFalse( $schedule->is_core_schedule() );
-		self::assertFalse( $schedule->is_custom_schedule() ); // Not a WP Crontrol custom schedule
 	}
 
 	/**
@@ -101,25 +98,24 @@ class ScheduleTest extends Test {
 	}
 
 	/**
-	 * @covers \Crontrol\Schedule\Schedule::is_custom_schedule
+	 * @covers \Crontrol\Schedule\Schedule::create
 	 */
-	public function testDetectsCustomSchedulesManagedByWPCrontrol(): void {
-		// Add a custom schedule via WP Crontrol
+	public function testDetectsCrontrolSchedulesManagedByWPCrontrol(): void {
+		// Add a Crontrol schedule via WP Crontrol
 		Schedule\add( 'wp_crontrol_custom', 1800, 'Custom Schedule' );
 
 		$schedules = Schedule\get();
 		$schedule = $schedules['wp_crontrol_custom'];
 
-		self::assertTrue( $schedule->is_custom_schedule() );
-		self::assertInstanceOf( CustomSchedule::class, $schedule );
+		self::assertInstanceOf( CrontrolSchedule::class, $schedule );
 	}
 
 	/**
 	 * @covers \Crontrol\Schedule\Schedule::is_in_use
-	 * @covers \Crontrol\Schedule\Schedule::is_protected
+	 * @covers \Crontrol\Schedule\Schedule::deleteable
 	 */
 	public function testDetectsSchedulesInUse(): void {
-		// Add a custom schedule
+		// Add a Crontrol schedule
 		Schedule\add( 'test_schedule_in_use', 3600, 'Test Schedule' );
 
 		// Add an event that uses this schedule
@@ -130,28 +126,28 @@ class ScheduleTest extends Test {
 		$schedule = $schedules['test_schedule_in_use'];
 
 		self::assertTrue( $schedule->is_in_use() );
-		self::assertTrue( $schedule->is_protected() ); // Protected because it's in use
+		self::assertFalse( $schedule->deleteable() ); // Cannot be deleted because it's in use
 	}
 
 	/**
 	 * @covers \Crontrol\Schedule\Schedule::is_in_use
-	 * @covers \Crontrol\Schedule\Schedule::is_protected
+	 * @covers \Crontrol\Schedule\Schedule::deleteable
 	 */
 	public function testDetectsSchedulesNotInUse(): void {
-		// Add a custom schedule but don't use it
+		// Add a Crontrol schedule but don't use it
 		Schedule\add( 'test_schedule_not_in_use', 3600, 'Unused Schedule' );
 
 		$schedules = Schedule\get();
 		$schedule = $schedules['test_schedule_not_in_use'];
 
 		self::assertFalse( $schedule->is_in_use() );
-		self::assertFalse( $schedule->is_protected() ); // Not protected since it's not in use
+		self::assertTrue( $schedule->deleteable() ); // Can be deleted since it's not in use
 	}
 
 	/**
-	 * @covers \Crontrol\Schedule\Schedule::is_protected
+	 * @covers \Crontrol\Schedule\Schedule::deleteable
 	 */
-	public function testCustomScheduleIsProtectedWhenNotManagedByWPCrontrol(): void {
+	public function testThirdPartyScheduleCannotBeDeleted(): void {
 		// Simulate a schedule added by another plugin
 		add_filter( 'cron_schedules', function ( $schedules ) {
 			$schedules['external_plugin_schedule'] = array(
@@ -164,9 +160,8 @@ class ScheduleTest extends Test {
 		$schedules = Schedule\get();
 		$schedule = $schedules['external_plugin_schedule'];
 
-		self::assertInstanceOf( CustomSchedule::class, $schedule );
-		self::assertFalse( $schedule->is_custom_schedule() ); // Not a WP Crontrol schedule
-		self::assertTrue( $schedule->is_protected() ); // Protected because it's from another plugin
+		self::assertInstanceOf( ThirdPartySchedule::class, $schedule );
+		self::assertFalse( $schedule->deleteable() ); // Cannot be deleted because it's from another plugin
 	}
 
 	/**
@@ -183,14 +178,13 @@ class ScheduleTest extends Test {
 
 	/**
 	 * @dataProvider dataCoreScheduleNames
-	 * @covers \Crontrol\Schedule\CoreSchedule::is_protected
+	 * @covers \Crontrol\Schedule\CoreSchedule::deleteable
 	 */
-	public function testCoreScheduleIsAlwaysProtected( string $name ): void {
+	public function testCoreScheduleCannotBeDeleted( string $name ): void {
 		$schedules = Schedule\get();
 		$schedule = $schedules[ $name ];
 
-		self::assertTrue( $schedule->is_core_schedule(), "Schedule '{$name}' should be a core schedule" );
-		self::assertTrue( $schedule->is_protected(), "Schedule '{$name}' should be protected" );
-		self::assertInstanceOf( CoreSchedule::class, $schedule );
+		self::assertInstanceOf( CoreSchedule::class, $schedule, "Schedule '{$name}' should be a core schedule" );
+		self::assertFalse( $schedule->deleteable(), "Schedule '{$name}' should not be deleteable" );
 	}
 }
