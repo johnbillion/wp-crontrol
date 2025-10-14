@@ -103,7 +103,7 @@ export class CrontrolUtils {
 	 */
 	async amWorkingWithANewCronEvent( hookName: string, args: string = '' ) {
 		await this.amOnCronEventListingPage();
-		await this.page.getByText( 'Add New Cron Event' ).click();
+		await this.page.getByText( 'Add Cron Event' ).click();
 
 		// Wait for the form to be visible
 		await this.page.waitForSelector( '#crontrol_hookname', { timeout: 5000 } );

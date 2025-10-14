@@ -21,7 +21,7 @@ test.describe( 'Adding Cron Events', () => {
 		admin,
 	} ) => {
 		await admin.visitAdminPage( 'tools.php', 'page=wp-crontrol' );
-		await page.getByText( 'Add New Cron Event' ).click();
+		await page.getByText( 'Add Cron Event' ).click();
 		await expect( page.locator( 'h1' ) ).toContainText( 'Add Cron Event' );
 		await expect( page.locator( '#crontrol-header' ) ).toContainText( 'Add Cron Event' );
 	} );
@@ -37,7 +37,7 @@ test.describe( 'Adding Cron Events', () => {
 		Crontrol,
 	} ) => {
 		await admin.visitAdminPage( 'tools.php', 'page=wp-crontrol' );
-		await page.getByText( 'Add New Cron Event' ).click();
+		await page.getByText( 'Add Cron Event' ).click();
 
 		// Verify default state - PHP Code, URL, and HTTP Method fields should not be visible
 		await expect( page.locator( '#crontrol_form th:has-text("PHP Code")' ) ).not.toBeVisible();
@@ -69,7 +69,7 @@ test.describe( 'Adding Cron Events', () => {
 		Crontrol,
 	} ) => {
 		await admin.visitAdminPage( 'tools.php', 'page=wp-crontrol' );
-		await page.getByText( 'Add New Cron Event' ).click();
+		await page.getByText( 'Add Cron Event' ).click();
 
 		// Initially should not see URL fields
 		await expect( page.locator( '#crontrol_form th:has-text("PHP Code")' ) ).not.toBeVisible();
@@ -107,7 +107,7 @@ test.describe( 'Adding Cron Events', () => {
 		Crontrol,
 	} ) => {
 		await admin.visitAdminPage( 'tools.php', 'page=wp-crontrol' );
-		await page.getByText( 'Add New Cron Event' ).click();
+		await page.getByText( 'Add Cron Event' ).click();
 
 		// Select URL cron event
 		await page.getByRole( 'radio', { name: 'URL cron event' } ).check();
@@ -140,7 +140,7 @@ test.describe( 'Adding Cron Events', () => {
 		Crontrol,
 	} ) => {
 		await admin.visitAdminPage( 'tools.php', 'page=wp-crontrol' );
-		await page.getByText( 'Add New Cron Event' ).click();
+		await page.getByText( 'Add Cron Event' ).click();
 
 		// Initially should not see PHP Code field
 		await expect( page.locator( '#crontrol_form th:has-text("PHP Code")' ) ).not.toBeVisible();
