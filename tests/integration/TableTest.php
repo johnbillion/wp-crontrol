@@ -212,6 +212,61 @@ class TableTest extends Test {
 	}
 
 	/**
+	 * Test paginating events.
+	 */
+	public function test_paginate_events(): void {
+		// Create 10 test events
+		$events = [];
+		for ( $i = 1; $i <= 10; $i++ ) {
+			$events[] = Event::create( "hook_{$i}", time() + 3600, '', [], null, null );
+		}
+
+		// Page 1, 3 per page should return first 3 events
+		$paginated = Table::paginate_events( $events, 1, 3 );
+		$this->assertCount( 3, $paginated );
+
+		// Page 2, 3 per page should return next 3 events
+		$paginated = Table::paginate_events( $events, 2, 3 );
+		$this->assertCount( 3, $paginated );
+
+		// Page 4, 3 per page should return last event
+		$paginated = Table::paginate_events( $events, 4, 3 );
+		$this->assertCount( 1, $paginated );
+
+		// Page beyond range should return empty array
+		$paginated = Table::paginate_events( $events, 10, 3 );
+		$this->assertCount( 0, $paginated );
+
+		// Empty events array should return empty array
+		$paginated = Table::paginate_events( [], 1, 10 );
+		$this->assertCount( 0, $paginated );
+	}
+
+	/**
+	 * Test filtering events by search term.
+	 */
+	public function test_filter_events_by_search(): void {
+		// Create test events
+		$events = [
+			Event::create( 'my_custom_hook', time() + 3600, '', [], null, null ),
+			Event::create( 'another_hook', time() + 3600, '', [], null, null ),
+			Event::create( 'custom_event', time() + 3600, '', [], null, null ),
+		];
+
+		// Filter by 'custom' should return 2 events
+		$filtered = Table::filter_events_by_search( $events, 'custom' );
+		$this->assertCount( 2, $filtered );
+
+		// Filter by 'another' should return 1 event
+		$filtered = Table::filter_events_by_search( $events, 'another' );
+		$this->assertCount( 1, $filtered );
+
+		// Filter by 'nonexistent' should return 0 events
+		$filtered = Table::filter_events_by_search( $events, 'nonexistent' );
+		$this->assertCount( 0, $filtered );
+	}
+
+	/**
 	 * Test checking for integrity failures.
 	 */
 	public function test_has_integrity_failures(): void {

@@ -396,6 +396,65 @@ function count_by_hook() {
 }
 
 /**
+ * Event filtering, pagination, and manipulation functions.
+ */
+
+/**
+ * Filters events to include only those with hook names that appear more than once.
+ *
+ * @param array<string,Event> $events The list of all events.
+ * @return array<string,Event> Array of events with duplicated hook names.
+ */
+function filter_duplicated( array $events ): array {
+	$hook_counts = count_by_hook();
+
+	return array_filter(
+		$events,
+		fn( $event ) => isset( $hook_counts[ $event->hook ] ) && $hook_counts[ $event->hook ] > 1
+	);
+}
+
+/**
+ * Filters events by search term matching the hook name.
+ *
+ * @param array<string,Event> $events The list of all events.
+ * @param string              $search Search term to filter by.
+ * @return array<string,Event> Array of events matching the search term.
+ */
+function filter_by_search( array $events, string $search ): array {
+	return array_filter(
+		$events,
+		fn( $event ) => false !== strpos( $event->hook, $search )
+	);
+}
+
+/**
+ * Paginates events for display.
+ *
+ * @param array<string,Event> $events   Array of events to paginate.
+ * @param int                 $page_num Current page number (1-indexed).
+ * @param int                 $per_page Number of events per page.
+ * @return list<Event> Paginated array of events.
+ */
+function paginate( array $events, int $page_num, int $per_page ): array {
+	$offset = ( $page_num - 1 ) * $per_page;
+	return array_values( array_slice( $events, $offset, $per_page ) );
+}
+
+/**
+ * Checks if any events have integrity failures.
+ *
+ * @param array<string,Event> $events Array of events to check.
+ * @return bool True if any events have integrity failures, false otherwise.
+ */
+function has_integrity_failures( array $events ): bool {
+	return (bool) array_filter( array_map(
+		fn( $event ) => $event->integrity_failed(),
+		$events
+	) );
+}
+
+/**
  * Checks the integrity of a string compared to its stored hash.
  *
  * @param string|null $value       The string value.

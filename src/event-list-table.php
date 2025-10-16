@@ -69,34 +69,25 @@ class Table extends \WP_List_Table {
 		$events = get();
 		$this->all_events = $events;
 
+		// Apply search filter
 		if ( ! empty( $_GET['s'] ) && is_string( $_GET['s'] ) ) {
-			$s = sanitize_text_field( wp_unslash( $_GET['s'] ) );
-
-			$events = array_filter(
-				$events,
-				fn( $event ) => false !== strpos( $event->hook, $s )
-			);
+			$search = sanitize_text_field( wp_unslash( $_GET['s'] ) );
+			$events = self::filter_events_by_search( $events, $search );
 		}
 
+		// Apply hooks type filter
 		if ( ! empty( $_GET['crontrol_hooks_type'] ) && is_string( $_GET['crontrol_hooks_type'] ) ) {
 			$hooks_type = sanitize_text_field( wp_unslash( $_GET['crontrol_hooks_type'] ) );
-			$filtered = self::get_filtered_events( $events );
-
-			if ( isset( $filtered[ $hooks_type ] ) ) {
-				$events = $filtered[ $hooks_type ];
-			}
+			$events = self::filter_events_by_type( $events, $hooks_type );
 		}
 
 		$count    = count( $events );
 		$per_page = 50;
-		$offset   = ( $this->get_pagenum() - 1 ) * $per_page;
+		$page_num = $this->get_pagenum();
 
-		$this->items = array_values( array_slice( $events, $offset, $per_page ) );
+		$this->items = self::paginate_events( $events, $page_num, $per_page );
 
-		$has_integrity_failures = (bool) array_filter( array_map(
-			fn( $event ) => $event->integrity_failed(),
-			$this->items
-		) );
+		$has_integrity_failures = self::has_integrity_failures( $this->items );
 
 		if ( $has_integrity_failures && empty( $_GET['crontrol_action'] ) ) {
 			add_action(
@@ -117,6 +108,56 @@ class Table extends \WP_List_Table {
 			'per_page'    => $per_page,
 			'total_pages' => (int) ceil( $count / $per_page ),
 		) );
+	}
+
+	/**
+	 * Paginates events for display.
+	 *
+	 * @param array<Event> $events   Array of events to paginate.
+	 * @param int          $page_num Current page number (1-indexed).
+	 * @param int          $per_page Number of events per page.
+	 * @return list<Event> Paginated array of events.
+	 */
+	public static function paginate_events( array $events, int $page_num, int $per_page ): array {
+		return paginate( $events, $page_num, $per_page );
+	}
+
+	/**
+	 * Filters events by search term.
+	 *
+	 * @param array<Event> $events Array of events to filter.
+	 * @param string       $search Search term to filter by.
+	 * @return array<Event> Filtered array of events.
+	 */
+	public static function filter_events_by_search( array $events, string $search ): array {
+		return filter_by_search( $events, $search );
+	}
+
+	/**
+	 * Filters events by hooks type.
+	 *
+	 * @param array<Event> $events     Array of events to filter.
+	 * @param string       $hooks_type The hooks type to filter by.
+	 * @return array<Event> Filtered array of events.
+	 */
+	public static function filter_events_by_type( array $events, string $hooks_type ): array {
+		$filtered = self::get_filtered_events( $events );
+
+		if ( isset( $filtered[ $hooks_type ] ) ) {
+			return $filtered[ $hooks_type ];
+		}
+
+		return $events;
+	}
+
+	/**
+	 * Checks if any events have integrity failures.
+	 *
+	 * @param array<Event> $events Array of events to check.
+	 * @return bool True if any events have integrity failures, false otherwise.
+	 */
+	public static function has_integrity_failures( array $events ): bool {
+		return \Crontrol\Event\has_integrity_failures( $events );
 	}
 
 	/**
@@ -369,12 +410,8 @@ class Table extends \WP_List_Table {
 			$classes[] = 'crontrol-paused';
 		}
 
-		if ( $event->is_php_cron() && ! self::$php_crons_enabled ) {
-			$classes[] = 'crontrol-inactive';
-		}
-
-		if ( $event->is_url_cron() && ! self::$url_crons_enabled ) {
-			$classes[] = 'crontrol-inactive';
+		if ( ! $event->is_enabled( $this->context ) ) {
+			$classes[] = 'crontrol-disabled';
 		}
 
 		printf(
@@ -607,13 +644,13 @@ class Table extends \WP_List_Table {
 
 			if ( ! $this->context->php_crons_enabled() ) {
 				$output .= sprintf(
-					' &mdash; <strong class="status-crontrol-inactive post-state"><span class="dashicons dashicons-controls-pause" aria-hidden="true"></span> %s</strong>',
+					' &mdash; <strong class="status-crontrol-disabled post-state"><span class="dashicons dashicons-controls-pause" aria-hidden="true"></span> %s</strong>',
 					/* translators: State of a cron event, adjective */
-					esc_html__( 'Inactive', 'wp-crontrol' )
+					esc_html__( 'Disabled', 'wp-crontrol' )
 				);
 			} elseif ( $event->integrity_failed() ) {
 				$output .= sprintf(
-					' &mdash; <strong class="status-crontrol-inactive post-state"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</strong>',
+					' &mdash; <strong class="status-crontrol-disabled post-state"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</strong>',
 					esc_html__( 'Needs checking', 'wp-crontrol' )
 				);
 			} elseif ( isset( $event->args[0]['syntax_error_message'], $event->args[0]['syntax_error_line'] ) ) {
@@ -648,13 +685,13 @@ class Table extends \WP_List_Table {
 
 			if ( ! $this->context->url_crons_enabled() ) {
 				$output .= sprintf(
-					' &mdash; <strong class="status-crontrol-inactive post-state"><span class="dashicons dashicons-controls-pause" aria-hidden="true"></span> %s</strong>',
+					' &mdash; <strong class="status-crontrol-disabled post-state"><span class="dashicons dashicons-controls-pause" aria-hidden="true"></span> %s</strong>',
 					/* translators: State of a cron event, adjective */
-					esc_html__( 'Inactive', 'wp-crontrol' )
+					esc_html__( 'Disabled', 'wp-crontrol' )
 				);
 			} elseif ( $event->integrity_failed() ) {
 				$output .= sprintf(
-					' &mdash; <strong class="status-crontrol-inactive post-state"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</strong>',
+					' &mdash; <strong class="status-crontrol-disabled post-state"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</strong>',
 					esc_html__( 'Needs checking', 'wp-crontrol' )
 				);
 			} elseif ( isset( $event->args[0]['url_error_message'] ) ) {
@@ -670,7 +707,7 @@ class Table extends \WP_List_Table {
 
 		if ( $event->is_paused() ) {
 			$output .= sprintf(
-				' &mdash; <strong class="status-crontrol-inactive post-state"><span class="dashicons dashicons-controls-pause" aria-hidden="true"></span> %s</strong>',
+				' &mdash; <strong class="status-crontrol-disabled post-state"><span class="dashicons dashicons-controls-pause" aria-hidden="true"></span> %s</strong>',
 				/* translators: State of a cron event, adjective */
 				esc_html__( 'Paused', 'wp-crontrol' )
 			);
