@@ -32,7 +32,7 @@ jobs:
     name: ${{ matrix.label }}
     permissions:
       contents: read
-    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-coding-standards.yml@4b7a0dc7e44884af7b37471142edcdbdb3039c37 # 2.1.1
+    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-coding-standards.yml@18dac24ff0381e751f268bd1b73e42faa8e8cb48
     strategy:
       matrix:
         label:
