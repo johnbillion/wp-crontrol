@@ -5,24 +5,16 @@
 
 namespace Crontrol\Event;
 
+use Crontrol\Context;
+
 /**
  * Represents a PHP cron event.
  */
-final class PHPCronEvent extends Event {
+final class PHPCronEvent extends CrontrolEvent {
 	/**
 	 * The hook name for PHP cron events.
 	 */
 	public const HOOK_NAME = 'crontrol_cron_job';
-
-	#[\Override]
-	public function is_php_cron(): bool {
-		return true;
-	}
-
-	#[\Override]
-	public function is_crontrol_event(): bool {
-		return true;
-	}
 
 	#[\Override]
 	public function integrity_failed(): bool {
@@ -33,7 +25,7 @@ final class PHPCronEvent extends Event {
 			return true;
 		}
 
-		return ! \Crontrol\Event\check_integrity( $args['code'] ?? null, $args['hash'] ?? null );
+		return ! check_integrity( $args['code'] ?? null, $args['hash'] ?? null );
 	}
 
 	#[\Override]
@@ -45,13 +37,13 @@ final class PHPCronEvent extends Event {
 		return $this->integrity_failed();
 	}
 
-	/**
-	 * Check if this event is protected.
-	 *
-	 * @return bool True if the event is protected, false otherwise.
-	 */
 	#[\Override]
-	public function is_protected(): bool {
-		return true;
+	public function get_args_display(): string {
+		return __( 'PHP Code', 'wp-crontrol' );
+	}
+
+	#[\Override]
+	public function is_enabled( Context $context ): bool {
+		return $context->php_crons_enabled();
 	}
 }

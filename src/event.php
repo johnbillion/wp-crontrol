@@ -6,6 +6,7 @@
 namespace Crontrol\Event;
 
 use Crontrol\Exception\InvalidURLException;
+use Crontrol\WordPressContext;
 use WP_Error;
 
 use const Crontrol\PAUSED_OPTION;
@@ -422,9 +423,8 @@ function get_list_table() {
 	static $table = null;
 
 	if ( ! $table ) {
-		$table = new Table();
+		$table = new Table( new WordPressContext() );
 		$table->prepare_items();
-
 	}
 
 	return $table;

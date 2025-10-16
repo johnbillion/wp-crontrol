@@ -5,6 +5,7 @@
 
 namespace Crontrol\Event;
 
+use Crontrol\Context;
 use Crontrol\Event\PHPCronEvent;
 use Crontrol\Event\URLCronEvent;
 use Crontrol\Event\CoreCronEvent;
@@ -137,7 +138,7 @@ abstract class Event {
 	/**
 	 * Check if this is a recurring event.
 	 *
-	 * @return bool True if this is a recurring event, false otherwise.
+	 * @return bool Whether this is a recurring event.
 	 */
 	public function is_recurring(): bool {
 		return is_string( $this->schedule );
@@ -177,36 +178,9 @@ abstract class Event {
 	}
 
 	/**
-	 * Check if this is a PHP cron event.
-	 *
-	 * @return bool True if this is a PHP cron event, false otherwise.
-	 */
-	public function is_php_cron(): bool {
-		return false;
-	}
-
-	/**
-	 * Check if this is a URL cron event.
-	 *
-	 * @return bool True if this is a URL cron event, false otherwise.
-	 */
-	public function is_url_cron(): bool {
-		return false;
-	}
-
-	/**
-	 * Check if this is a WP Crontrol managed event (PHP or URL).
-	 *
-	 * @return bool True if this is a WP Crontrol managed event, false otherwise.
-	 */
-	public function is_crontrol_event(): bool {
-		return false;
-	}
-
-	/**
 	 * Check if this event's hook is paused.
 	 *
-	 * @return bool True if the event's hook is paused, false otherwise.
+	 * @return bool Whether the event's hook is paused.
 	 */
 	public function is_paused(): bool {
 		$paused = get_option( \Crontrol\PAUSED_OPTION );
@@ -221,7 +195,7 @@ abstract class Event {
 	/**
 	 * Check if this event is late (past its scheduled time by more than 10 minutes).
 	 *
-	 * @return bool True if the event is late, false otherwise.
+	 * @return bool Whether the event is late.
 	 */
 	public function is_late(): bool {
 		$until = $this->timestamp - time();
@@ -232,7 +206,7 @@ abstract class Event {
 	/**
 	 * Check if this event's schedule is too frequent (interval less than WP_CRON_LOCK_TIMEOUT).
 	 *
-	 * @return bool True if the event's schedule is too frequent, false otherwise.
+	 * @return bool Whether the event's schedule is too frequent.
 	 */
 	public function is_too_frequent(): bool {
 		if ( ! $this->schedule ) {
@@ -251,7 +225,7 @@ abstract class Event {
 	/**
 	 * Check if this event has integrity failures (corrupted data).
 	 *
-	 * @return bool True if the event has integrity failures, false otherwise.
+	 * @return bool Whether the event has integrity failures.
 	 */
 	public function integrity_failed(): bool {
 		return false;
@@ -260,7 +234,7 @@ abstract class Event {
 	/**
 	 * Check if this event has any errors (syntax errors, URL errors, or integrity failures).
 	 *
-	 * @return bool True if the event has errors, false otherwise.
+	 * @return bool Whether the event has errors.
 	 */
 	public function has_error(): bool {
 		return false;
@@ -269,7 +243,7 @@ abstract class Event {
 	/**
 	 * Check if this event is a persistent WordPress core hook.
 	 *
-	 * @return bool True if this is a persistent core hook, false otherwise.
+	 * @return bool Whether this is a persistent core hook.
 	 */
 	public function is_persistent_core_hook(): bool {
 		return false;
@@ -302,30 +276,12 @@ abstract class Event {
 	}
 
 	/**
-	 * Check if this is a WordPress core cron event.
+	 * Check if this event's hook name can be edited.
 	 *
-	 * @return bool True if this is a WordPress core cron event, false otherwise.
+	 * @return bool Whether the event's hook name can be edited.
 	 */
-	public function is_core_cron(): bool {
-		return false;
-	}
-
-	/**
-	 * Check if this is an Action Scheduler cron event.
-	 *
-	 * @return bool True if this is an Action Scheduler cron event, false otherwise.
-	 */
-	public function is_action_scheduler_cron(): bool {
-		return false;
-	}
-
-	/**
-	 * Check if this event is protected.
-	 *
-	 * @return bool True if the event is protected, false otherwise.
-	 */
-	public function is_protected(): bool {
-		return false;
+	public function hook_name_editable(): bool {
+		return true;
 	}
 
 	/**
@@ -334,9 +290,55 @@ abstract class Event {
 	 * Events with timestamp 1 are scheduled to run immediately and only appear
 	 * in the event list when there's a problem with the event runner.
 	 *
-	 * @return bool True if the event is scheduled to run immediately, false otherwise.
+	 * @return bool Whether the event is scheduled to run immediately.
 	 */
 	public function is_immediate(): bool {
 		return $this->timestamp === 1;
 	}
+
+	/**
+	 * Determines if this event can be edited given the current context.
+	 *
+	 * @param \Crontrol\Context $context The application context containing capabilities and feature flags.
+	 * @return bool Whether the event can be edited.
+	 */
+	abstract public function editable( \Crontrol\Context $context ): bool;
+
+	/**
+	 * Determines if this event can be run given the current context.
+	 *
+	 * @param \Crontrol\Context $context The application context containing capabilities and feature flags.
+	 * @return bool Whether the event can be run.
+	 */
+	abstract public function runnable( \Crontrol\Context $context ): bool;
+
+	/**
+	 * Determines if this event can be deleted given the current context.
+	 *
+	 * @param \Crontrol\Context $context The application context containing capabilities and feature flags.
+	 * @return bool Whether the event can be deleted.
+	 */
+	abstract public function deleteable( \Crontrol\Context $context ): bool;
+
+	/**
+	 * Determines if this event can be paused.
+	 *
+	 * @return bool Whether the event can be paused.
+	 */
+	abstract public function pausable(): bool;
+
+	/**
+	 * Gets the display representation of this event's arguments.
+	 *
+	 * @return string The formatted arguments for display.
+	 */
+	abstract public function get_args_display(): string;
+
+	/**
+	 * Determines if this event type is currently enabled in the context.
+	 *
+	 * @param \Crontrol\Context $context The application context containing feature flags.
+	 * @return bool Whether the event type is enabled.
+	 */
+	abstract public function is_enabled( \Crontrol\Context $context ): bool;
 }
