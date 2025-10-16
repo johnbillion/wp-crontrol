@@ -201,6 +201,8 @@ class Table extends \WP_List_Table {
 			fn( $event ) => $event->is_paused()
 		);
 
+		$filtered['duplicated'] = filter_duplicated( $events );
+
 		/**
 		 * Filters the available filtered events on the cron event listing screen.
 		 *
@@ -295,13 +297,14 @@ class Table extends \WP_List_Table {
 		$hooks_type = ( ! empty( $_GET['crontrol_hooks_type'] ) ? $_GET['crontrol_hooks_type'] : 'all' );
 
 		$types = array(
-			'all'      => __( 'All events', 'wp-crontrol' ),
-			'noaction' => __( 'Events with no action', 'wp-crontrol' ),
-			'core'     => __( 'WordPress core events', 'wp-crontrol' ),
-			'custom'   => __( 'Custom events', 'wp-crontrol' ),
-			'php'      => __( 'PHP events', 'wp-crontrol' ),
-			'url'      => __( 'URL events', 'wp-crontrol' ),
-			'paused'   => __( 'Paused events', 'wp-crontrol' ),
+			'all'        => __( 'All events', 'wp-crontrol' ),
+			'noaction'   => __( 'Events with no action', 'wp-crontrol' ),
+			'core'       => __( 'WordPress core events', 'wp-crontrol' ),
+			'custom'     => __( 'Custom events', 'wp-crontrol' ),
+			'php'        => __( 'PHP events', 'wp-crontrol' ),
+			'url'        => __( 'URL events', 'wp-crontrol' ),
+			'paused'     => __( 'Paused events', 'wp-crontrol' ),
+			'duplicated' => __( 'Duplicated events', 'wp-crontrol' ),
 		);
 
 		/**
