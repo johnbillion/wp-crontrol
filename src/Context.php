@@ -41,13 +41,11 @@ abstract class Context {
 
 	/**
 	 * Get whether PHP cron events are enabled globally on the site.
-	 *
 	 */
 	abstract public function php_crons_enabled(): bool;
 
 	/**
 	 * Get whether URL cron events are enabled globally on the site.
-	 *
 	 */
 	abstract public function url_crons_enabled(): bool;
 }
