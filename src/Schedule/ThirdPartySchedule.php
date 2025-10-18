@@ -12,7 +12,7 @@ final class ThirdPartySchedule extends Schedule {
 	/**
 	 * Third-party schedules are persistent.
 	 *
-	 * @return true Always returns true - this schedule is persistent.
+	 * @return bool Whether the schedule is persistent.
 	 */
 	#[\Override]
 	public function persistent(): bool {
@@ -34,7 +34,7 @@ final class ThirdPartySchedule extends Schedule {
 	 *
 	 * Third-party schedules cannot be deleted.
 	 *
-	 * @return false Always returns false - this schedule cannot be deleted.
+	 * @return bool Whether the schedule can be deleted.
 	 */
 	#[\Override]
 	public function deleteable(): bool {
