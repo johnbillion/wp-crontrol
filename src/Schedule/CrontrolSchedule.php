@@ -10,24 +10,34 @@ namespace Crontrol\Schedule;
  */
 final class CrontrolSchedule extends Schedule {
 	/**
+	 * Crontrol schedules are persistent if they're in use.
+	 *
+	 * @return bool Whether this schedule is persistent (in use).
+	 */
+	#[\Override]
+	public function persistent(): bool {
+		return $this->is_in_use();
+	}
+
+	/**
+	 * Gets the message explaining why this schedule is persistent.
+	 *
+	 * @return string The persistent reason message.
+	 */
+	#[\Override]
+	public function get_persistent_message(): string {
+		return __( 'This custom schedule is in use and cannot be deleted', 'wp-crontrol' );
+	}
+
+	/**
 	 * Check if this schedule can be deleted.
 	 *
-	 * WP Crontrol schedules cannot be deleted if they're currently in use by events.
+	 * WP Crontrol schedules can be deleted if they're not in use.
+	 *
+	 * @return bool Whether the schedule can be deleted (not in use).
 	 */
 	#[\Override]
 	public function deleteable(): bool {
 		return ! $this->is_in_use();
-	}
-
-	/**
-	 * Get the reason why this schedule cannot be deleted, if applicable.
-	 */
-	#[\Override]
-	public function get_locked_reason(): string {
-		if ( $this->is_in_use() ) {
-			return __( 'This custom schedule is in use and cannot be deleted', 'wp-crontrol' );
-		}
-
-		return '';
 	}
 }

@@ -241,15 +241,6 @@ abstract class Event {
 	}
 
 	/**
-	 * Check if this event is a persistent WordPress core hook.
-	 *
-	 * @return bool Whether this is a persistent core hook.
-	 */
-	public function is_persistent_core_hook(): bool {
-		return false;
-	}
-
-	/**
 	 * Get the schedule name for this event.
 	 *
 	 * @return string The schedule display name.
@@ -311,6 +302,26 @@ abstract class Event {
 	 * @return bool Whether the event can be run.
 	 */
 	abstract public function runnable( \Crontrol\Context $context ): bool;
+
+	/**
+	 * Determines if this event is persistent and cannot be deleted regardless of permissions.
+	 *
+	 * @return bool Whether the event is persistent.
+	 */
+	public function persistent(): bool {
+		return false;
+	}
+
+	/**
+	 * Gets the message explaining why this event is persistent.
+	 *
+	 * Only called if persistent() returns true.
+	 *
+	 * @return string The persistent reason message.
+	 */
+	public function get_persistent_message(): string {
+		return '';
+	}
 
 	/**
 	 * Determines if this event can be deleted given the current context.

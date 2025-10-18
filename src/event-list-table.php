@@ -596,12 +596,16 @@ class Table extends \WP_List_Table {
 			$event->sig
 		);
 
-		if ( $event->is_persistent_core_hook() ) {
-			return sprintf(
-				'<span class="dashicons dashicons-wordpress" aria-hidden="true"></span>
-				<span class="screen-reader-text">%s</span>',
-				esc_html__( 'This is a WordPress core event and cannot be deleted', 'wp-crontrol' )
-			);
+		if ( $event->persistent() ) {
+			if ( $event instanceof CoreCronEvent ) {
+				return sprintf(
+					'<span class="dashicons dashicons-wordpress" aria-hidden="true"></span>
+					<span class="screen-reader-text">%s</span>',
+					esc_html( $event->get_persistent_message() )
+				);
+			}
+			// Other persistent events don't show checkbox or logo
+			return '';
 		}
 
 		if ( ! $event->deleteable( $this->context ) ) {

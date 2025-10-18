@@ -103,20 +103,24 @@ class Schedule_List_Table extends \WP_List_Table {
 
 		$links = array();
 
-		$locked_reason = $schedule->get_locked_reason();
-
-		if ( $locked_reason ) {
-			$links[] = "<span class='crontrol-in-use'>" . esc_html( $locked_reason ) . '</span>';
-		} else {
-			$link = add_query_arg( array(
-				'page'            => 'wp-crontrol-schedules',
-				'crontrol_action' => 'delete-schedule',
-				'crontrol_id'     => rawurlencode( $schedule->name ),
-			), admin_url( 'options-general.php' ) );
-			$link = wp_nonce_url( $link, 'crontrol-delete-schedule_' . $schedule->name );
-
-			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
+		if ( $schedule->persistent() ) {
+			$links[] = "<span class='crontrol-in-use'>" . esc_html( $schedule->get_persistent_message() ) . '</span>';
+			return $this->row_actions( $links );
 		}
+
+		if ( ! $schedule->deleteable() ) {
+			// Permission-based: no message shown
+			return $this->row_actions( $links );
+		}
+
+		$link = add_query_arg( array(
+			'page'            => 'wp-crontrol-schedules',
+			'crontrol_action' => 'delete-schedule',
+			'crontrol_id'     => rawurlencode( $schedule->name ),
+		), admin_url( 'options-general.php' ) );
+		$link = wp_nonce_url( $link, 'crontrol-delete-schedule_' . $schedule->name );
+
+		$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
 
 		return $this->row_actions( $links );
 	}
@@ -131,7 +135,7 @@ class Schedule_List_Table extends \WP_List_Table {
 			return sprintf(
 				'<span class="dashicons dashicons-wordpress" aria-hidden="true"></span>
 				<span class="screen-reader-text">%s</span>',
-				esc_html( $schedule->get_locked_reason() )
+				esc_html( $schedule->get_persistent_message() )
 			);
 		}
 

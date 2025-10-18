@@ -72,7 +72,7 @@ class EventTest extends Test {
 	}
 
 	public function testCreatesCoreCronEventForCoreHook(): void {
-		$hook = 'wp_version_check';
+		$hook = 'do_pings'; // A non-persistent core hook
 		$timestamp = time() + 3600;
 		$sig = 'core_sig';
 		$args = array();
@@ -154,8 +154,8 @@ class EventTest extends Test {
 		self::assertInstanceOf( URLCronEvent::class, $url_event );
 		self::assertTrue( $url_event->is_immediate() );
 
-		// Test core hook
-		$core_event = Event::create_immediate( 'wp_version_check' );
+		// Test non-persistent core hook
+		$core_event = Event::create_immediate( 'do_pings' );
 		self::assertInstanceOf( CoreCronEvent::class, $core_event );
 		self::assertTrue( $core_event->is_immediate() );
 	}
