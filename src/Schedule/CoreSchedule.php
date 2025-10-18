@@ -11,8 +11,6 @@ namespace Crontrol\Schedule;
 final class CoreSchedule extends Schedule {
 	/**
 	 * Core schedules are persistent.
-	 *
-	 * @return bool Whether the schedule is persistent.
 	 */
 	#[\Override]
 	public function persistent(): bool {
@@ -33,8 +31,6 @@ final class CoreSchedule extends Schedule {
 	 * Check if this schedule can be deleted.
 	 *
 	 * Core schedules cannot be deleted.
-	 *
-	 * @return bool Whether the schedule can be deleted.
 	 */
 	#[\Override]
 	public function deleteable(): bool {

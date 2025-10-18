@@ -446,7 +446,6 @@ function paginate( array $events, int $page_num, int $per_page ): array {
  * Checks if any events have integrity failures.
  *
  * @param array<string,Event> $events Array of events to check.
- * @return bool True if any events have integrity failures, false otherwise.
  */
 function has_integrity_failures( array $events ): bool {
 	return (bool) array_filter( array_map(

@@ -162,7 +162,6 @@ class Table extends \WP_List_Table {
 	 * Checks if any events have integrity failures.
 	 *
 	 * @param array<Event> $events Array of events to check.
-	 * @return bool True if any events have integrity failures, false otherwise.
 	 */
 	public static function has_integrity_failures( array $events ): bool {
 		return \Crontrol\Event\has_integrity_failures( $events );

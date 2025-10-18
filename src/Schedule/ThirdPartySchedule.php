@@ -11,8 +11,6 @@ namespace Crontrol\Schedule;
 final class ThirdPartySchedule extends Schedule {
 	/**
 	 * Third-party schedules are persistent.
-	 *
-	 * @return bool Whether the schedule is persistent.
 	 */
 	#[\Override]
 	public function persistent(): bool {
@@ -33,8 +31,6 @@ final class ThirdPartySchedule extends Schedule {
 	 * Check if this schedule can be deleted.
 	 *
 	 * Third-party schedules cannot be deleted.
-	 *
-	 * @return bool Whether the schedule can be deleted.
 	 */
 	#[\Override]
 	public function deleteable(): bool {

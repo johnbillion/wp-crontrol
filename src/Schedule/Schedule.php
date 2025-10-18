@@ -75,8 +75,6 @@ abstract class Schedule {
 
 	/**
 	 * Determines if this schedule is persistent and cannot be deleted.
-	 *
-	 * @return bool Whether the schedule is persistent.
 	 */
 	public function persistent(): bool {
 		return false;
@@ -95,8 +93,6 @@ abstract class Schedule {
 
 	/**
 	 * Check if this schedule can be deleted.
-	 *
-	 * @return bool Whether the schedule can be deleted.
 	 */
 	public function deleteable(): bool {
 		return true;

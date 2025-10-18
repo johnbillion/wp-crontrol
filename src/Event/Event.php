@@ -138,8 +138,6 @@ abstract class Event {
 
 	/**
 	 * Check if this is a recurring event.
-	 *
-	 * @return bool Whether this is a recurring event.
 	 */
 	public function is_recurring(): bool {
 		return is_string( $this->schedule );
@@ -180,8 +178,6 @@ abstract class Event {
 
 	/**
 	 * Check if this event's hook is paused.
-	 *
-	 * @return bool Whether the event's hook is paused.
 	 */
 	public function is_paused(): bool {
 		$paused = get_option( \Crontrol\PAUSED_OPTION );
@@ -195,8 +191,6 @@ abstract class Event {
 
 	/**
 	 * Check if this event is late (past its scheduled time by more than 10 minutes).
-	 *
-	 * @return bool Whether the event is late.
 	 */
 	public function is_late(): bool {
 		$until = $this->timestamp - time();
@@ -206,8 +200,6 @@ abstract class Event {
 
 	/**
 	 * Check if this event's schedule is too frequent (interval less than WP_CRON_LOCK_TIMEOUT).
-	 *
-	 * @return bool Whether the event's schedule is too frequent.
 	 */
 	public function is_too_frequent(): bool {
 		if ( ! $this->schedule ) {
@@ -225,8 +217,6 @@ abstract class Event {
 
 	/**
 	 * Check if this event has integrity failures (corrupted data).
-	 *
-	 * @return bool Whether the event has integrity failures.
 	 */
 	public function integrity_failed(): bool {
 		return false;
@@ -234,8 +224,6 @@ abstract class Event {
 
 	/**
 	 * Check if this event has any errors (syntax errors, URL errors, or integrity failures).
-	 *
-	 * @return bool Whether the event has errors.
 	 */
 	public function has_error(): bool {
 		return false;
@@ -269,8 +257,6 @@ abstract class Event {
 
 	/**
 	 * Check if this event's hook name can be edited.
-	 *
-	 * @return bool Whether the event's hook name can be edited.
 	 */
 	public function hook_name_editable(): bool {
 		return true;
@@ -281,8 +267,6 @@ abstract class Event {
 	 *
 	 * Events with timestamp 1 are scheduled to run immediately and only appear
 	 * in the event list when there's a problem with the event runner.
-	 *
-	 * @return bool Whether the event is scheduled to run immediately.
 	 */
 	public function is_immediate(): bool {
 		return $this->timestamp === 1;
@@ -306,8 +290,6 @@ abstract class Event {
 
 	/**
 	 * Determines if this event is persistent and cannot be deleted regardless of permissions.
-	 *
-	 * @return bool Whether the event is persistent.
 	 */
 	public function persistent(): bool {
 		return false;
@@ -334,8 +316,6 @@ abstract class Event {
 
 	/**
 	 * Determines if this event can be paused.
-	 *
-	 * @return bool Whether the event can be paused.
 	 */
 	abstract public function pausable(): bool;
 

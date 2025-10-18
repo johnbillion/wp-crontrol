@@ -16,7 +16,6 @@ abstract class Test extends \WP_UnitTestCase {
 		 * @param bool   $external Whether HTTP request is external.
 		 * @param string $host     Host name of the requested URL.
 		 * @param string $url      Requested URL.
-		 * @return bool Whether HTTP request is external.
 		 */
 		add_filter( 'http_request_host_is_external', static function( bool $external, string $host, string $url ): bool {
 			// Allow httpbin requests.

@@ -11,8 +11,6 @@ namespace Crontrol\Schedule;
 final class CrontrolSchedule extends Schedule {
 	/**
 	 * Crontrol schedules are persistent if they're in use.
-	 *
-	 * @return bool Whether this schedule is persistent (in use).
 	 */
 	#[\Override]
 	public function persistent(): bool {
@@ -33,8 +31,6 @@ final class CrontrolSchedule extends Schedule {
 	 * Check if this schedule can be deleted.
 	 *
 	 * WP Crontrol schedules can be deleted if they're not in use.
-	 *
-	 * @return bool Whether the schedule can be deleted (not in use).
 	 */
 	#[\Override]
 	public function deleteable(): bool {

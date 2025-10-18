@@ -15,11 +15,6 @@ use function Crontrol\json_output;
  * Represents a WordPress core cron event.
  */
 final class CoreCronEvent extends Event {
-	/**
-	 * Check if this event's hook name can be edited.
-	 *
-	 * @return bool Whether the event's hook name can be edited.
-	 */
 	#[\Override]
 	public function hook_name_editable(): bool {
 		return false;
@@ -27,8 +22,6 @@ final class CoreCronEvent extends Event {
 
 	/**
 	 * Core events are persistent if they're in the persistent core hooks list.
-	 *
-	 * @return bool Whether this event is persistent.
 	 */
 	#[\Override]
 	public function persistent(): bool {
