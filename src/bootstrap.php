@@ -1206,7 +1206,7 @@ function admin_options_page() {
 			'error',
 		),
 	);
-	if ( isset( $_GET['crontrol_message'] ) && isset( $_GET['crontrol_name'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
+	if ( isset( $_GET['crontrol_message'], $_GET['crontrol_name'], $messages[ $_GET['crontrol_message'] ] ) ) {
 		$hook    = wp_unslash( $_GET['crontrol_name'] );
 		$message = wp_unslash( $_GET['crontrol_message'] );
 
@@ -2096,7 +2096,7 @@ function admin_manage_page() {
 		),
 	);
 
-	if ( isset( $_GET['crontrol_name'] ) && isset( $_GET['crontrol_message'] ) && isset( $messages[ $_GET['crontrol_message'] ] ) ) {
+	if ( isset( $_GET['crontrol_name'], $_GET['crontrol_message'], $messages[ $_GET['crontrol_message'] ] ) ) {
 		$hook    = wp_unslash( $_GET['crontrol_name'] );
 		$message = wp_unslash( $_GET['crontrol_message'] );
 		$link    = '';
