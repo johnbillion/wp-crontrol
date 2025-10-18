@@ -5,7 +5,8 @@
 
 namespace Crontrol\Event;
 
-use Crontrol\Context;
+use Crontrol\Context\UserContext;
+use Crontrol\Context\FeatureContext;
 
 use function Crontrol\get_persistent_core_hooks;
 use function Crontrol\json_output;
@@ -45,18 +46,33 @@ final class CoreCronEvent extends Event {
 	}
 
 	#[\Override]
-	public function editable( Context $context ): bool {
-		return true;
+	public function editable( UserContext $user, FeatureContext $features ): bool {
+		return $user->can_edit_standard_cron_events();
 	}
 
 	#[\Override]
-	public function runnable( Context $context ): bool {
-		return ! $this->has_error() && ! $this->is_paused();
+	public function runnable( UserContext $user, FeatureContext $features ): bool {
+		return $user->can_run_standard_cron_events()
+			&& ! $this->has_error()
+			&& ! $this->is_paused();
 	}
 
+	/**
+	 * Check if this event can be deleted.
+	 *
+	 * Persistent core events cannot be deleted. Non-persistent core events
+	 * can be deleted if the user has manage_options capability.
+	 *
+	 * @param UserContext $user User capability context.
+	 * @param FeatureContext $features Feature flag context (not used).
+	 */
 	#[\Override]
-	public function deleteable( Context $context ): bool {
-		return ! $this->persistent();
+	public function deleteable( UserContext $user, FeatureContext $features ): bool {
+		if ( $this->persistent() ) {
+			return false;
+		}
+
+		return $user->can_delete_standard_cron_events();
 	}
 
 	#[\Override]
@@ -73,7 +89,7 @@ final class CoreCronEvent extends Event {
 	}
 
 	#[\Override]
-	public function is_enabled( Context $context ): bool {
+	public function is_enabled( FeatureContext $features ): bool {
 		return true;
 	}
 }

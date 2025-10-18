@@ -5,7 +5,8 @@
 
 namespace Crontrol\Event;
 
-use Crontrol\Context;
+use Crontrol\Context\FeatureContext;
+use Crontrol\Context\UserContext;
 use Crontrol\Event\PHPCronEvent;
 use Crontrol\Event\URLCronEvent;
 use Crontrol\Event\CoreCronEvent;
@@ -288,20 +289,20 @@ abstract class Event {
 	}
 
 	/**
-	 * Determines if this event can be edited given the current context.
+	 * Determines if this event can be edited given the current user and feature context.
 	 *
-	 * @param \Crontrol\Context $context The application context containing capabilities and feature flags.
-	 * @return bool Whether the event can be edited.
+	 * @param UserContext $user User capability context.
+	 * @param FeatureContext $features Feature flag context.
 	 */
-	abstract public function editable( \Crontrol\Context $context ): bool;
+	abstract public function editable( UserContext $user, FeatureContext $features ): bool;
 
 	/**
-	 * Determines if this event can be run given the current context.
+	 * Determines if this event can be run given the current user and feature context.
 	 *
-	 * @param \Crontrol\Context $context The application context containing capabilities and feature flags.
-	 * @return bool Whether the event can be run.
+	 * @param UserContext $user User capability context.
+	 * @param FeatureContext $features Feature flag context.
 	 */
-	abstract public function runnable( \Crontrol\Context $context ): bool;
+	abstract public function runnable( UserContext $user, FeatureContext $features ): bool;
 
 	/**
 	 * Determines if this event is persistent and cannot be deleted regardless of permissions.
@@ -324,12 +325,12 @@ abstract class Event {
 	}
 
 	/**
-	 * Determines if this event can be deleted given the current context.
+	 * Determines if this event can be deleted given the current user and feature context.
 	 *
-	 * @param \Crontrol\Context $context The application context containing capabilities and feature flags.
-	 * @return bool Whether the event can be deleted.
+	 * @param UserContext $user User capability context.
+	 * @param FeatureContext $features Feature flag context.
 	 */
-	abstract public function deleteable( \Crontrol\Context $context ): bool;
+	abstract public function deleteable( UserContext $user, FeatureContext $features ): bool;
 
 	/**
 	 * Determines if this event can be paused.
@@ -346,10 +347,9 @@ abstract class Event {
 	abstract public function get_args_display(): string;
 
 	/**
-	 * Determines if this event type is currently enabled in the context.
+	 * Determines if this event type is currently enabled in the feature context.
 	 *
-	 * @param \Crontrol\Context $context The application context containing feature flags.
-	 * @return bool Whether the event type is enabled.
+	 * @param FeatureContext $features Feature flag context.
 	 */
-	abstract public function is_enabled( \Crontrol\Context $context ): bool;
+	abstract public function is_enabled( FeatureContext $features ): bool;
 }

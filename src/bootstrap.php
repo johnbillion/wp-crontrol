@@ -1672,7 +1672,7 @@ function show_cron_form( $editing ) {
 	$can_create_url = current_user_can_edit_url_cron_events();
 
 	if ( $editing ) {
-		$allowed = $existing->editable( new WordPressContext() );
+		$allowed = $existing->editable( new \Crontrol\Context\WordPressUserContext(), new \Crontrol\Context\WordPressFeatureContext() );
 	} else {
 		$allowed = true;
 	}

@@ -9,16 +9,20 @@ use Crontrol\Event\URLCronEvent;
 
 class TableTest extends Test {
 	/**
-	 * Create a testable table instance with a specific context.
+	 * Create a testable table instance with specific contexts.
 	 *
-	 * @param TestContext|null $context The test context to use.
+	 * @param TestUserContext|null $user_context The test user context to use.
+	 * @param TestFeatureContext|null $feature_context The test feature context to use.
 	 * @return Table
 	 */
-	private function create_test_table( ?TestContext $context = null ): Table {
-		if ( null === $context ) {
-			$context = new TestContext();
+	private function create_test_table( ?TestUserContext $user_context = null, ?TestFeatureContext $feature_context = null ): Table {
+		if ( null === $user_context ) {
+			$user_context = new TestUserContext();
 		}
-		return new Table( $context );
+		if ( null === $feature_context ) {
+			$feature_context = new TestFeatureContext();
+		}
+		return new Table( $user_context, $feature_context );
 	}
 
 	/**
@@ -57,7 +61,7 @@ class TableTest extends Test {
 	 * Test that PHP cron events don't show edit link when user cannot manage them.
 	 */
 	public function test_php_cron_no_edit_link_when_user_cannot_manage(): void {
-		$table = $this->create_test_table( new CannotManagePHPCronsContext() );
+		$table = $this->create_test_table( new CannotEditFilesUserContext() );
 
 		// Create a PHP cron event
 		$code = 'echo "test";';
@@ -91,7 +95,7 @@ class TableTest extends Test {
 	 * Test that PHP cron events don't show edit link when they're disabled.
 	 */
 	public function test_php_cron_no_edit_link_when_disabled(): void {
-		$table = $this->create_test_table( new PHPCronsDisabledContext() );
+		$table = $this->create_test_table( null, new PHPCronsDisabledFeatureContext() );
 
 		// Create a PHP cron event
 		$code = 'echo "test";';
@@ -153,7 +157,7 @@ class TableTest extends Test {
 	 * Test that URL cron events don't show edit link when user cannot manage them.
 	 */
 	public function test_url_cron_no_edit_link_when_user_cannot_manage(): void {
-		$table = $this->create_test_table( new CannotManageURLCronsContext() );
+		$table = $this->create_test_table( new NoPermissionsUserContext() );
 
 		// Create a URL cron event
 		$args = [
@@ -185,7 +189,7 @@ class TableTest extends Test {
 	 * Test that URL cron events don't show edit link when they're disabled.
 	 */
 	public function test_url_cron_no_edit_link_when_disabled(): void {
-		$table = $this->create_test_table( new URLCronsDisabledContext() );
+		$table = $this->create_test_table( null, new URLCronsDisabledFeatureContext() );
 
 		// Create a URL cron event
 		$args = [
@@ -298,11 +302,12 @@ class TableTest extends Test {
 			HOUR_IN_SECONDS
 		);
 
-		$table = $this->create_test_table( new NothingEnabledContext() );
+		$table = $this->create_test_table( null, new AllCronsDisabledFeatureContext() );
 
 		$actions = $table->get_row_action_links( $event );
 
-		// Standard events should always be editable
+		// Standard events should be editable when user has manage_options capability,
+		// even when PHP/URL cron features are disabled
 		$this->assertArrayHasKey( 'edit', $actions );
 		$this->assertArrayHasKey( 'run', $actions );
 	}

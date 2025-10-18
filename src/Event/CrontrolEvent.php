@@ -5,7 +5,8 @@
 
 namespace Crontrol\Event;
 
-use Crontrol\Context;
+use Crontrol\Context\UserContext;
+use Crontrol\Context\FeatureContext;
 
 /**
  * Abstract base class for WP Crontrol managed events.
@@ -26,30 +27,33 @@ abstract class CrontrolEvent extends Event {
 	/**
 	 * Check if this event is editable.
 	 *
-	 * @param Context $context The application context.
+	 * Subclasses must implement to check specific capabilities.
+	 *
+	 * @param UserContext $user User capability context.
+	 * @param FeatureContext $features Feature flag context.
 	 */
 	#[\Override]
-	final public function editable( Context $context ): bool {
-		return $context->can_edit_event( $this );
-	}
+	abstract public function editable( UserContext $user, FeatureContext $features ): bool;
 
 	/**
 	 * Check if this event can be run.
 	 *
-	 * @param Context $context The application context.
+	 * Subclasses must implement to check specific capabilities.
+	 *
+	 * @param UserContext $user User capability context.
+	 * @param FeatureContext $features Feature flag context.
 	 */
 	#[\Override]
-	final public function runnable( Context $context ): bool {
-		return $context->can_run_event( $this ) && ! $this->has_error() && ! $this->is_paused();
-	}
+	abstract public function runnable( UserContext $user, FeatureContext $features ): bool;
 
 	/**
 	 * Check if this event can be deleted.
 	 *
-	 * @param Context $context The application context.
+	 * Subclasses must implement to check specific capabilities.
+	 *
+	 * @param UserContext $user User capability context.
+	 * @param FeatureContext $features Feature flag context.
 	 */
 	#[\Override]
-	final public function deleteable( Context $context ): bool {
-		return $context->can_delete_event( $this );
-	}
+	abstract public function deleteable( UserContext $user, FeatureContext $features ): bool;
 }

@@ -5,7 +5,8 @@
 
 namespace Crontrol\Event;
 
-use Crontrol\Context;
+use Crontrol\Context\UserContext;
+use Crontrol\Context\FeatureContext;
 use Crontrol\Exception\UnknownScheduleException;
 use DateTimeImmutable;
 
@@ -23,9 +24,14 @@ class Table extends \WP_List_Table {
 	public $items;
 
 	/**
-	 * The application context.
+	 * The user capability context.
 	 */
-	private Context $context;
+	private UserContext $user_context;
+
+	/**
+	 * The feature flag context.
+	 */
+	private FeatureContext $feature_context;
 
 	/**
 	 * Array of the count of each hook.
@@ -44,10 +50,12 @@ class Table extends \WP_List_Table {
 	/**
 	 * Constructor.
 	 *
-	 * @param Context $context The application context.
+	 * @param UserContext $user_context The user capability context.
+	 * @param FeatureContext $feature_context The feature flag context.
 	 */
-	public function __construct( Context $context ) {
-		$this->context = $context;
+	public function __construct( UserContext $user_context, FeatureContext $feature_context ) {
+		$this->user_context = $user_context;
+		$this->feature_context = $feature_context;
 
 		parent::__construct( array(
 			'singular' => 'crontrol-event',
@@ -413,7 +421,7 @@ class Table extends \WP_List_Table {
 			$classes[] = 'crontrol-paused';
 		}
 
-		if ( ! $event->is_enabled( $this->context ) ) {
+		if ( ! $event->is_enabled( $this->feature_context ) ) {
 			$classes[] = 'crontrol-disabled';
 		}
 
@@ -472,7 +480,7 @@ class Table extends \WP_List_Table {
 			return $links;
 		}
 
-		if ( $event->editable( $this->context ) ) {
+		if ( $event->editable( $this->user_context, $this->feature_context ) ) {
 			$link = array(
 				'page'                  => 'wp-crontrol',
 				'crontrol_action'       => 'edit-cron',
@@ -495,7 +503,7 @@ class Table extends \WP_List_Table {
 			);
 		}
 
-		if ( $event->runnable( $this->context ) ) {
+		if ( $event->runnable( $this->user_context, $this->feature_context ) ) {
 			$link = array(
 				'page'                  => 'wp-crontrol',
 				'crontrol_action'       => 'run-cron',
@@ -535,7 +543,7 @@ class Table extends \WP_List_Table {
 
 		$links = apply_filters( 'crontrol/event-actions', $links, $event );
 
-		if ( $event->deleteable( $this->context ) ) {
+		if ( $event->deleteable( $this->user_context, $this->feature_context ) ) {
 			$link = array(
 				'page'                  => 'wp-crontrol',
 				'crontrol_action'       => 'delete-cron',
@@ -608,7 +616,7 @@ class Table extends \WP_List_Table {
 			return '';
 		}
 
-		if ( ! $event->deleteable( $this->context ) ) {
+		if ( ! $event->deleteable( $this->user_context, $this->feature_context ) ) {
 			return '';
 		}
 
@@ -649,7 +657,7 @@ class Table extends \WP_List_Table {
 				$output = esc_html__( 'PHP cron event', 'wp-crontrol' );
 			}
 
-			if ( ! $this->context->php_crons_enabled() ) {
+			if ( ! $this->feature_context->php_crons_enabled() ) {
 				$output .= sprintf(
 					' &mdash; <strong class="status-crontrol-disabled post-state"><span class="dashicons dashicons-controls-pause" aria-hidden="true"></span> %s</strong>',
 					/* translators: State of a cron event, adjective */
@@ -690,7 +698,7 @@ class Table extends \WP_List_Table {
 				$output = esc_html__( 'URL cron event', 'wp-crontrol' );
 			}
 
-			if ( ! $this->context->url_crons_enabled() ) {
+			if ( ! $this->feature_context->url_crons_enabled() ) {
 				$output .= sprintf(
 					' &mdash; <strong class="status-crontrol-disabled post-state"><span class="dashicons dashicons-controls-pause" aria-hidden="true"></span> %s</strong>',
 					/* translators: State of a cron event, adjective */
@@ -737,7 +745,7 @@ class Table extends \WP_List_Table {
 	 * @param Event $event The cron event for the current row.
 	 */
 	protected function column_crontrol_actions( Event $event ): string {
-		if ( $event instanceof PHPCronEvent && ! $this->context->php_crons_enabled() ) {
+		if ( $event instanceof PHPCronEvent && ! $this->feature_context->php_crons_enabled() ) {
 			$help = sprintf(
 				'<a href="%s">%s</a>',
 				'https://wp-crontrol.com/docs/php-cron-events/',
@@ -750,7 +758,7 @@ class Table extends \WP_List_Table {
 			);
 		}
 
-		if ( $event instanceof URLCronEvent && ! $this->context->url_crons_enabled() ) {
+		if ( $event instanceof URLCronEvent && ! $this->feature_context->url_crons_enabled() ) {
 			$help = sprintf(
 				'<a href="%s">%s</a>',
 				'https://wp-crontrol.com/docs/url-cron-events/',

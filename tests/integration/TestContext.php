@@ -7,69 +7,86 @@
 
 namespace Crontrol\Tests;
 
-use Crontrol\Context;
-use Crontrol\Event\Event;
-use Crontrol\Event\PHPCronEvent;
-use Crontrol\Event\URLCronEvent;
+use Crontrol\Context\UserContext;
+use Crontrol\Context\FeatureContext;
 
 /**
- * Base test context with all permissions and features enabled.
+ * Base test user context with all permissions enabled.
  *
  * This is the default "everything works" context that other test contexts
  * can extend and override specific methods.
  */
-class TestContext extends Context {
-	/**
-	 * Get whether the user can edit a specific cron event.
-	 */
+class TestUserContext implements UserContext {
 	#[\Override]
-	public function can_edit_event( Event $event ): bool {
-		if ( $event instanceof PHPCronEvent ) {
-			return $this->php_crons_enabled();
-		}
-
-		if ( $event instanceof URLCronEvent ) {
-			return $this->url_crons_enabled();
-		}
-
+	public function can_create_php_cron_events(): bool {
 		return true;
 	}
 
-	/**
-	 * Get whether the user can delete a specific cron event.
-	 */
 	#[\Override]
-	public function can_delete_event( Event $event ): bool {
+	public function can_edit_php_cron_events(): bool {
 		return true;
 	}
 
-	/**
-	 * Get whether the user can run a specific cron event.
-	 */
 	#[\Override]
-	public function can_run_event( Event $event ): bool {
-		if ( $event instanceof PHPCronEvent ) {
-			return $this->php_crons_enabled();
-		}
-
-		if ( $event instanceof URLCronEvent ) {
-			return $this->url_crons_enabled();
-		}
-
+	public function can_delete_php_cron_events(): bool {
 		return true;
 	}
 
-	/**
-	 * Get whether PHP cron events are enabled.
-	 */
+	#[\Override]
+	public function can_run_php_cron_events(): bool {
+		return true;
+	}
+
+	#[\Override]
+	public function can_create_url_cron_events(): bool {
+		return true;
+	}
+
+	#[\Override]
+	public function can_edit_url_cron_events(): bool {
+		return true;
+	}
+
+	#[\Override]
+	public function can_delete_url_cron_events(): bool {
+		return true;
+	}
+
+	#[\Override]
+	public function can_run_url_cron_events(): bool {
+		return true;
+	}
+
+	#[\Override]
+	public function can_create_standard_cron_events(): bool {
+		return true;
+	}
+
+	#[\Override]
+	public function can_edit_standard_cron_events(): bool {
+		return true;
+	}
+
+	#[\Override]
+	public function can_delete_standard_cron_events(): bool {
+		return true;
+	}
+
+	#[\Override]
+	public function can_run_standard_cron_events(): bool {
+		return true;
+	}
+}
+
+/**
+ * Base test feature context with all features enabled.
+ */
+class TestFeatureContext implements FeatureContext {
 	#[\Override]
 	public function php_crons_enabled(): bool {
 		return true;
 	}
 
-	/**
-	 * Get whether URL cron events are enabled.
-	 */
 	#[\Override]
 	public function url_crons_enabled(): bool {
 		return true;
@@ -77,55 +94,29 @@ class TestContext extends Context {
 }
 
 /**
- * Context where user cannot edit PHP cron events.
+ * User context where user cannot edit files (no edit_files capability).
  */
-class CannotManagePHPCronsContext extends TestContext {
+class CannotEditFilesUserContext extends TestUserContext {
 	#[\Override]
-	public function can_edit_event( Event $event ): bool {
-		if ( $event instanceof PHPCronEvent ) {
-			return false;
-		}
-
-		return parent::can_edit_event( $event );
+	public function can_create_php_cron_events(): bool {
+		return false;
 	}
 
 	#[\Override]
-	public function can_delete_event( Event $event ): bool {
-		if ( $event instanceof PHPCronEvent ) {
-			return false;
-		}
+	public function can_edit_php_cron_events(): bool {
+		return false;
+	}
 
-		return parent::can_delete_event( $event );
+	#[\Override]
+	public function can_delete_php_cron_events(): bool {
+		return false;
 	}
 }
 
 /**
- * Context where user cannot edit URL cron events.
+ * Feature context where PHP cron events are disabled.
  */
-class CannotManageURLCronsContext extends TestContext {
-	#[\Override]
-	public function can_edit_event( Event $event ): bool {
-		if ( $event instanceof URLCronEvent ) {
-			return false;
-		}
-
-		return parent::can_edit_event( $event );
-	}
-
-	#[\Override]
-	public function can_delete_event( Event $event ): bool {
-		if ( $event instanceof URLCronEvent ) {
-			return false;
-		}
-
-		return parent::can_delete_event( $event );
-	}
-}
-
-/**
- * Context where PHP cron events are disabled.
- */
-class PHPCronsDisabledContext extends TestContext {
+class PHPCronsDisabledFeatureContext extends TestFeatureContext {
 	#[\Override]
 	public function php_crons_enabled(): bool {
 		return false;
@@ -133,9 +124,9 @@ class PHPCronsDisabledContext extends TestContext {
 }
 
 /**
- * Context where URL cron events are disabled.
+ * Feature context where URL cron events are disabled.
  */
-class URLCronsDisabledContext extends TestContext {
+class URLCronsDisabledFeatureContext extends TestFeatureContext {
 	#[\Override]
 	public function url_crons_enabled(): bool {
 		return false;
@@ -143,62 +134,46 @@ class URLCronsDisabledContext extends TestContext {
 }
 
 /**
- * Context where user has no permissions to edit any cron events.
+ * User context where user has no permissions to create/edit/delete PHP/URL cron events.
+ *
+ * Note: User can still RUN events and can create/edit/delete/run standard events.
  */
-class NoPermissionsContext extends TestContext {
+class NoPermissionsUserContext extends TestUserContext {
 	#[\Override]
-	public function can_edit_event( Event $event ): bool {
-		if ( $event instanceof PHPCronEvent || $event instanceof URLCronEvent ) {
-			return false;
-		}
-
-		return parent::can_edit_event( $event );
+	public function can_create_php_cron_events(): bool {
+		return false;
 	}
 
 	#[\Override]
-	public function can_delete_event( Event $event ): bool {
-		if ( $event instanceof PHPCronEvent || $event instanceof URLCronEvent ) {
-			return false;
-		}
+	public function can_edit_php_cron_events(): bool {
+		return false;
+	}
 
-		return parent::can_delete_event( $event );
+	#[\Override]
+	public function can_delete_php_cron_events(): bool {
+		return false;
+	}
+
+	#[\Override]
+	public function can_create_url_cron_events(): bool {
+		return false;
+	}
+
+	#[\Override]
+	public function can_edit_url_cron_events(): bool {
+		return false;
+	}
+
+	#[\Override]
+	public function can_delete_url_cron_events(): bool {
+		return false;
 	}
 }
 
 /**
- * Context where all cron event types are disabled.
+ * Feature context where all cron event types are disabled.
  */
-class AllCronsDisabledContext extends TestContext {
-	#[\Override]
-	public function php_crons_enabled(): bool {
-		return false;
-	}
-
-	#[\Override]
-	public function url_crons_enabled(): bool {
-		return false;
-	}
-}
-
-/**
- * Context where everything is disabled - no permissions and no features enabled.
- */
-class NothingEnabledContext extends TestContext {
-	#[\Override]
-	public function can_edit_event( Event $event ): bool {
-		return false;
-	}
-
-	#[\Override]
-	public function can_delete_event( Event $event ): bool {
-		return false;
-	}
-
-	#[\Override]
-	public function can_run_event( Event $event ): bool {
-		return false;
-	}
-
+class AllCronsDisabledFeatureContext extends TestFeatureContext {
 	#[\Override]
 	public function php_crons_enabled(): bool {
 		return false;

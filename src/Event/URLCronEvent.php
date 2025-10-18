@@ -5,7 +5,8 @@
 
 namespace Crontrol\Event;
 
-use Crontrol\Context;
+use Crontrol\Context\UserContext;
+use Crontrol\Context\FeatureContext;
 
 /**
  * Represents a URL cron event.
@@ -32,12 +33,38 @@ final class URLCronEvent extends CrontrolEvent {
 	}
 
 	#[\Override]
+	public function editable( UserContext $user, FeatureContext $features ): bool {
+		return $features->url_crons_enabled() && $user->can_edit_url_cron_events();
+	}
+
+	#[\Override]
+	public function runnable( UserContext $user, FeatureContext $features ): bool {
+		return $features->url_crons_enabled()
+			&& $user->can_run_url_cron_events()
+			&& ! $this->has_error()
+			&& ! $this->is_paused();
+	}
+
+	/**
+	 * Check if this event can be deleted.
+	 *
+	 * Per caps.md: Feature flag is NOT checked for delete operations.
+	 *
+	 * @param UserContext $user User capability context.
+	 * @param FeatureContext $features Feature flag context (not used for delete).
+	 */
+	#[\Override]
+	public function deleteable( UserContext $user, FeatureContext $features ): bool {
+		return $user->can_delete_url_cron_events();
+	}
+
+	#[\Override]
 	public function get_args_display(): string {
 		return $this->args[0]['method'] . ' ' . $this->args[0]['url'];
 	}
 
 	#[\Override]
-	public function is_enabled( Context $context ): bool {
-		return $context->url_crons_enabled();
+	public function is_enabled( FeatureContext $features ): bool {
+		return $features->url_crons_enabled();
 	}
 }
