@@ -2291,7 +2291,13 @@ function get_hook_callbacks( $name ) {
 function populate_callback( array $callback ) {
 	// If Query Monitor is installed, use its rich callback analysis.
 	if ( method_exists( '\QM_Util', 'populate_callback' ) ) {
-		return \QM_Util::populate_callback( $callback );
+		$qm_callback = \QM_Util::populate_callback( $callback );
+
+		if ( ( ! isset( $qm_callback['name'] ) ) && is_object( $callback['function'] ) && is_a( $callback['function'], 'Closure' ) ) {
+			$qm_callback['name'] = '{closure:/}';
+		}
+
+		return $qm_callback;
 	}
 
 	if ( is_string( $callback['function'] ) && ( false !== strpos( $callback['function'], '::' ) ) ) {
