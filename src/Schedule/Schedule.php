@@ -76,7 +76,7 @@ abstract class Schedule {
 	/**
 	 * Check if this schedule can be deleted.
 	 */
-	public function deleteable(): bool {
+	public function deletable(): bool {
 		return true;
 	}
 

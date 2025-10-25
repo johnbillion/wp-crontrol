@@ -56,7 +56,7 @@ class URLEventTest extends Test {
 		handle_url_cron_event( $url, 'GET', $hash );
 	}
 
-	public function testSuccesfulRequestWorksAsExpected(): void {
+	public function testSuccessfulRequestWorksAsExpected(): void {
 		$url = 'http://httpbin/status/200';
 		$hash = wp_hash( $url );
 

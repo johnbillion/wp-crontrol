@@ -67,7 +67,7 @@ class ScheduleTest extends Test {
 		self::assertSame( 'hourly', $schedule->name );
 		self::assertSame( 3600, $schedule->interval );
 		self::assertSame( 'Once Hourly', $schedule->display );
-		self::assertFalse( $schedule->deleteable() );
+		self::assertFalse( $schedule->deletable() );
 	}
 
 	/**
@@ -112,7 +112,7 @@ class ScheduleTest extends Test {
 
 	/**
 	 * @covers \Crontrol\Schedule\Schedule::is_in_use
-	 * @covers \Crontrol\Schedule\Schedule::deleteable
+	 * @covers \Crontrol\Schedule\Schedule::deletable
 	 */
 	public function testDetectsSchedulesInUse(): void {
 		// Add a Crontrol schedule
@@ -126,12 +126,12 @@ class ScheduleTest extends Test {
 		$schedule = $schedules['test_schedule_in_use'];
 
 		self::assertTrue( $schedule->is_in_use() );
-		self::assertFalse( $schedule->deleteable() ); // Cannot be deleted because it's in use
+		self::assertFalse( $schedule->deletable() ); // Cannot be deleted because it's in use
 	}
 
 	/**
 	 * @covers \Crontrol\Schedule\Schedule::is_in_use
-	 * @covers \Crontrol\Schedule\Schedule::deleteable
+	 * @covers \Crontrol\Schedule\Schedule::deletable
 	 */
 	public function testDetectsSchedulesNotInUse(): void {
 		// Add a Crontrol schedule but don't use it
@@ -141,11 +141,11 @@ class ScheduleTest extends Test {
 		$schedule = $schedules['test_schedule_not_in_use'];
 
 		self::assertFalse( $schedule->is_in_use() );
-		self::assertTrue( $schedule->deleteable() ); // Can be deleted since it's not in use
+		self::assertTrue( $schedule->deletable() ); // Can be deleted since it's not in use
 	}
 
 	/**
-	 * @covers \Crontrol\Schedule\Schedule::deleteable
+	 * @covers \Crontrol\Schedule\Schedule::deletable
 	 */
 	public function testThirdPartyScheduleCannotBeDeleted(): void {
 		// Simulate a schedule added by another plugin
@@ -161,7 +161,7 @@ class ScheduleTest extends Test {
 		$schedule = $schedules['external_plugin_schedule'];
 
 		self::assertInstanceOf( ThirdPartySchedule::class, $schedule );
-		self::assertFalse( $schedule->deleteable() ); // Cannot be deleted because it's from another plugin
+		self::assertFalse( $schedule->deletable() ); // Cannot be deleted because it's from another plugin
 	}
 
 	/**
@@ -180,13 +180,13 @@ class ScheduleTest extends Test {
 
 	/**
 	 * @dataProvider dataCoreScheduleNames
-	 * @covers \Crontrol\Schedule\CoreSchedule::deleteable
+	 * @covers \Crontrol\Schedule\CoreSchedule::deletable
 	 */
 	public function testCoreScheduleCannotBeDeleted( string $name ): void {
 		$schedules = Schedule\get();
 		$schedule = $schedules[ $name ];
 
 		self::assertInstanceOf( CoreSchedule::class, $schedule, "Schedule '{$name}' should be a core schedule" );
-		self::assertFalse( $schedule->deleteable(), "Schedule '{$name}' should not be deleteable" );
+		self::assertFalse( $schedule->deletable(), "Schedule '{$name}' should not be deletable" );
 	}
 }
