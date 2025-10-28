@@ -6,6 +6,13 @@ use Crontrol\Event\Event;
 use Crontrol\Event\PHPCronEvent;
 use Crontrol\Event\Table;
 use Crontrol\Event\URLCronEvent;
+use Crontrol\Tests\Context\AllCronsDisabledFeatureContext;
+use Crontrol\Tests\Context\CannotEditFilesUserContext;
+use Crontrol\Tests\Context\NoPermissionsUserContext;
+use Crontrol\Tests\Context\PHPCronsDisabledFeatureContext;
+use Crontrol\Tests\Context\TestFeatureContext;
+use Crontrol\Tests\Context\TestUserContext;
+use Crontrol\Tests\Context\URLCronsDisabledFeatureContext;
 
 class TableTest extends Test {
 	/**

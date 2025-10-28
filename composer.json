@@ -43,9 +43,9 @@
 		]
 	},
 	"autoload-dev": {
-		"classmap": [
-			"tests/integration"
-		]
+		"psr-4": {
+			"Crontrol\\Tests\\": "tests/integration"
+		}
 	},
 	"extra": {
 		"wordpress-install-dir": "vendor/wordpress/wordpress"
