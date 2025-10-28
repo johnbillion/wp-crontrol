@@ -60,7 +60,7 @@ final class CoreCronEvent extends Event {
 	 * @param FeatureContext $features Feature flag context (not used).
 	 */
 	#[\Override]
-	public function deleteable( UserContext $user, FeatureContext $features ): bool {
+	public function deletable( UserContext $user, FeatureContext $features ): bool {
 		if ( $this->persistent() ) {
 			return false;
 		}

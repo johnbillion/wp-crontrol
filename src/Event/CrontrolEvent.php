@@ -55,5 +55,5 @@ abstract class CrontrolEvent extends Event {
 	 * @param FeatureContext $features Feature flag context.
 	 */
 	#[\Override]
-	abstract public function deleteable( UserContext $user, FeatureContext $features ): bool;
+	abstract public function deletable( UserContext $user, FeatureContext $features ): bool;
 }

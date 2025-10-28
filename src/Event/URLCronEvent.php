@@ -54,7 +54,7 @@ final class URLCronEvent extends CrontrolEvent {
 	 * @param FeatureContext $features Feature flag context (not used for delete).
 	 */
 	#[\Override]
-	public function deleteable( UserContext $user, FeatureContext $features ): bool {
+	public function deletable( UserContext $user, FeatureContext $features ): bool {
 		return $user->can_delete_url_cron_events();
 	}
 

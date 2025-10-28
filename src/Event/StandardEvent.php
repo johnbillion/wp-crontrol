@@ -27,7 +27,7 @@ final class StandardEvent extends Event {
 	}
 
 	#[\Override]
-	public function deleteable( UserContext $user, FeatureContext $features ): bool {
+	public function deletable( UserContext $user, FeatureContext $features ): bool {
 		return $user->can_delete_standard_cron_events();
 	}
 

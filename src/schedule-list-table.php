@@ -108,7 +108,7 @@ class Schedule_List_Table extends \WP_List_Table {
 			return $this->row_actions( $links );
 		}
 
-		if ( ! $schedule->deleteable() ) {
+		if ( ! $schedule->deletable() ) {
 			// Permission-based: no message shown
 			return $this->row_actions( $links );
 		}

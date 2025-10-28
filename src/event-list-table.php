@@ -542,7 +542,7 @@ class Table extends \WP_List_Table {
 
 		$links = apply_filters( 'crontrol/event-actions', $links, $event );
 
-		if ( $event->deleteable( $this->user_context, $this->feature_context ) ) {
+		if ( $event->deletable( $this->user_context, $this->feature_context ) ) {
 			$link = array(
 				'page'                  => 'wp-crontrol',
 				'crontrol_action'       => 'delete-cron',
@@ -615,7 +615,7 @@ class Table extends \WP_List_Table {
 			return '';
 		}
 
-		if ( ! $event->deleteable( $this->user_context, $this->feature_context ) ) {
+		if ( ! $event->deletable( $this->user_context, $this->feature_context ) ) {
 			return '';
 		}
 

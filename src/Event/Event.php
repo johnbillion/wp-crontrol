@@ -312,7 +312,7 @@ abstract class Event {
 	 * @param UserContext $user User capability context.
 	 * @param FeatureContext $features Feature flag context.
 	 */
-	abstract public function deleteable( UserContext $user, FeatureContext $features ): bool;
+	abstract public function deletable( UserContext $user, FeatureContext $features ): bool;
 
 	/**
 	 * Determines if this event can be paused.
