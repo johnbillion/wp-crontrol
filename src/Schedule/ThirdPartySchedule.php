@@ -33,7 +33,7 @@ final class ThirdPartySchedule extends Schedule {
 	 * Third-party schedules cannot be deleted.
 	 */
 	#[\Override]
-	public function deleteable(): bool {
+	public function deletable(): bool {
 		return false;
 	}
 }

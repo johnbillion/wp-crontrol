@@ -33,7 +33,7 @@ final class CrontrolSchedule extends Schedule {
 	 * WP Crontrol schedules can be deleted if they're not in use.
 	 */
 	#[\Override]
-	public function deleteable(): bool {
+	public function deletable(): bool {
 		return ! $this->is_in_use();
 	}
 }

@@ -33,7 +33,7 @@ final class CoreSchedule extends Schedule {
 	 * Core schedules cannot be deleted.
 	 */
 	#[\Override]
-	public function deleteable(): bool {
+	public function deletable(): bool {
 		return false;
 	}
 }
