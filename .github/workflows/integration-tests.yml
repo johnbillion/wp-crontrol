@@ -58,8 +58,10 @@ jobs:
           # Latest WordPress on PHP 8.4
           - wp: '6.9-RC1'
             php: '8.4'
-          # Oldest supported WordPress
-          - wp: '6.3'
+          # Oldest supported WordPress on its newest and oldest supported PHP:
+          - wp: '6.4'
+            php: '8.3'
+          - wp: '6.4'
             php: '7.4'
       fail-fast: false
     with:

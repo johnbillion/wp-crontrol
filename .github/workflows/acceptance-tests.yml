@@ -54,8 +54,10 @@ jobs:
           # Latest stable on PHP 8.4:
           - wp: '6.9-RC1'
             php: '8.4'
-          # Oldest supported on PHP 7.4:
-          - wp: '6.3'
+          # Oldest supported WordPress on its newest and oldest supported PHP:
+          - wp: '6.4'
+            php: '8.3'
+          - wp: '6.4'
             php: '7.4'
       fail-fast: false
     uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-acceptance-tests.yml@9a6405c89f3357947cd8f608bdc72d68fe17f4ae # 2.1.2
