@@ -151,4 +151,99 @@ class EventFilterTest extends Test {
 			self::assertTrue( $event->is_paused() );
 		}
 	}
+
+	public function testGetFilteredEventsFiltersDuplicatedEvents(): void {
+		// Schedule two events with the same hook name (duplicates)
+		$timestamp1 = time() + 3600;
+		$timestamp2 = time() + 7200;
+		$duplicate_hook = 'test_duplicate_filter_hook';
+
+		wp_schedule_single_event( $timestamp1, $duplicate_hook );
+		wp_schedule_single_event( $timestamp2, $duplicate_hook );
+
+		// Schedule a unique event (should not appear in duplicated filter)
+		$unique_timestamp = time() + 5400;
+		$unique_hook = 'test_unique_filter_hook_' . uniqid();
+		wp_schedule_single_event( $unique_timestamp, $unique_hook );
+
+		$all_events = Crontrol\Event\get();
+		$filtered = Table::get_filtered_events( $all_events );
+
+		// Should include our duplicated events
+		$hook_names = array_column( $filtered['duplicated'], 'hook' );
+		self::assertContains( $duplicate_hook, $hook_names, 'Duplicated event not found in "duplicated" filter' );
+
+		// Should not include unique events
+		self::assertNotContains( $unique_hook, $hook_names, 'Unique event should not be in "duplicated" filter' );
+
+		// Count how many instances of the duplicate hook are in the filter
+		$duplicate_count = array_count_values( $hook_names )[$duplicate_hook] ?? 0;
+		self::assertEquals( 2, $duplicate_count, 'Expected exactly 2 instances of the duplicate hook in the filter' );
+
+		// All events in this filter should have hooks that appear more than once
+		$hook_counts = Crontrol\Event\count_by_hook();
+		foreach ( $filtered['duplicated'] as $event ) {
+			self::assertGreaterThan( 1, $hook_counts[ $event->hook ] ?? 0, "Event with hook '{$event->hook}' should appear more than once" );
+		}
+	}
+
+	public function testGetFilteredEventsWithNoDuplicates(): void {
+		// Clear all scheduled events to ensure no duplicates
+		_set_cron_array( array() );
+
+		// Schedule only unique events
+		$timestamp1 = time() + 3600;
+		$timestamp2 = time() + 7200;
+		$timestamp3 = time() + 10800;
+
+		wp_schedule_single_event( $timestamp1, 'test_unique_hook_1_' . uniqid() );
+		wp_schedule_single_event( $timestamp2, 'test_unique_hook_2_' . uniqid() );
+		wp_schedule_single_event( $timestamp3, 'test_unique_hook_3_' . uniqid() );
+
+		$all_events = Crontrol\Event\get();
+		$filtered = Table::get_filtered_events( $all_events );
+
+		// The duplicated filter should be empty when no duplicates exist
+		self::assertEmpty( $filtered['duplicated'], 'Duplicated filter should be empty when no duplicate hooks exist' );
+	}
+
+	public function testGetFilteredEventsWithMultipleDuplicatedHooks(): void {
+		// Schedule duplicates for multiple different hooks
+		$timestamp_base = time();
+
+		// First duplicate pair
+		$hook1 = 'test_duplicate_hook_a';
+		wp_schedule_single_event( $timestamp_base + 3600, $hook1 );
+		wp_schedule_single_event( $timestamp_base + 7200, $hook1 );
+
+		// Second duplicate pair
+		$hook2 = 'test_duplicate_hook_b';
+		wp_schedule_single_event( $timestamp_base + 10800, $hook2 );
+		wp_schedule_single_event( $timestamp_base + 14400, $hook2 );
+
+		// Third hook with three instances
+		$hook3 = 'test_triplicate_hook_c';
+		wp_schedule_single_event( $timestamp_base + 18000, $hook3 );
+		wp_schedule_single_event( $timestamp_base + 21600, $hook3 );
+		wp_schedule_single_event( $timestamp_base + 25200, $hook3 );
+
+		$all_events = Crontrol\Event\get();
+		$filtered = Table::get_filtered_events( $all_events );
+
+		// Count instances of each hook in the duplicated filter
+		$hook_names = array_column( $filtered['duplicated'], 'hook' );
+		$hook_counts_in_filter = array_count_values( $hook_names );
+
+		// Should have 2 instances of hook1
+		self::assertEquals( 2, $hook_counts_in_filter[$hook1] ?? 0, 'Expected 2 instances of first duplicate hook' );
+
+		// Should have 2 instances of hook2
+		self::assertEquals( 2, $hook_counts_in_filter[$hook2] ?? 0, 'Expected 2 instances of second duplicate hook' );
+
+		// Should have 3 instances of hook3
+		self::assertEquals( 3, $hook_counts_in_filter[$hook3] ?? 0, 'Expected 3 instances of triplicate hook' );
+
+		// Total should be 7 events (2 + 2 + 3)
+		self::assertCount( 7, $filtered['duplicated'], 'Expected 7 total duplicated events' );
+	}
 }

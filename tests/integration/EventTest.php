@@ -9,6 +9,7 @@ use Crontrol\Event\PHPCronEvent;
 use Crontrol\Event\URLCronEvent;
 use Crontrol\Event\CoreCronEvent;
 use Crontrol\Event\ActionSchedulerEvent;
+use Crontrol\Event\CrontrolEvent;
 
 class EventTest extends Test {
 	public function testCreatesStandardEventForUnknownHooks(): void {
@@ -47,9 +48,7 @@ class EventTest extends Test {
 		$event = Event::create( $hook, $timestamp, $sig, $args, $schedule, $interval );
 
 		self::assertInstanceOf( PHPCronEvent::class, $event );
-		self::assertTrue( $event->is_php_cron() );
-		self::assertTrue( $event->is_crontrol_event() );
-		self::assertTrue( $event->is_protected() );
+		self::assertFalse( $event->hook_name_editable() );
 	}
 
 	public function testCreatesURLCronEventForURLHook(): void {
@@ -69,13 +68,11 @@ class EventTest extends Test {
 		$event = Event::create( $hook, $timestamp, $sig, $args, $schedule, $interval );
 
 		self::assertInstanceOf( URLCronEvent::class, $event );
-		self::assertTrue( $event->is_url_cron() );
-		self::assertTrue( $event->is_crontrol_event() );
-		self::assertTrue( $event->is_protected() );
+		self::assertFalse( $event->hook_name_editable() );
 	}
 
 	public function testCreatesCoreCronEventForCoreHook(): void {
-		$hook = 'wp_version_check';
+		$hook = 'do_pings'; // A non-persistent core hook
 		$timestamp = time() + 3600;
 		$sig = 'core_sig';
 		$args = array();
@@ -85,10 +82,7 @@ class EventTest extends Test {
 		$event = Event::create( $hook, $timestamp, $sig, $args, $schedule, $interval );
 
 		self::assertInstanceOf( CoreCronEvent::class, $event );
-		self::assertTrue( $event->is_core_cron() );
-		self::assertTrue( $event->is_protected() );
-		self::assertFalse( $event->is_php_cron() );
-		self::assertFalse( $event->is_url_cron() );
+		self::assertFalse( $event->hook_name_editable() );
 	}
 
 	public function testCreatesActionSchedulerEventForActionSchedulerHook(): void {
@@ -102,8 +96,7 @@ class EventTest extends Test {
 		$event = Event::create( $hook, $timestamp, $sig, $args, $schedule, $interval );
 
 		self::assertInstanceOf( ActionSchedulerEvent::class, $event );
-		self::assertTrue( $event->is_action_scheduler_cron() );
-		self::assertFalse( $event->is_protected() );
+		self::assertTrue( $event->hook_name_editable() );
 	}
 
 	public function testCreatesNewStandardEventWithDefaults(): void {
@@ -161,8 +154,8 @@ class EventTest extends Test {
 		self::assertInstanceOf( URLCronEvent::class, $url_event );
 		self::assertTrue( $url_event->is_immediate() );
 
-		// Test core hook
-		$core_event = Event::create_immediate( 'wp_version_check' );
+		// Test non-persistent core hook
+		$core_event = Event::create_immediate( 'do_pings' );
 		self::assertInstanceOf( CoreCronEvent::class, $core_event );
 		self::assertTrue( $core_event->is_immediate() );
 	}

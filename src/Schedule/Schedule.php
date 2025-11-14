@@ -74,17 +74,28 @@ abstract class Schedule {
 	}
 
 	/**
+	 * Determines if this schedule is persistent and cannot be deleted.
+	 */
+	public function persistent(): bool {
+		return false;
+	}
+
+	/**
+	 * Gets the message explaining why this schedule is persistent.
+	 *
+	 * Only called if persistent() returns true.
+	 *
+	 * @return string The persistent reason message.
+	 */
+	public function get_persistent_message(): string {
+		return '';
+	}
+
+	/**
 	 * Check if this schedule can be deleted.
 	 */
 	public function deletable(): bool {
 		return true;
-	}
-
-	/**
-	 * Get the reason why this schedule cannot be deleted, if applicable.
-	 */
-	public function get_locked_reason(): string {
-		return '';
 	}
 
 	/**

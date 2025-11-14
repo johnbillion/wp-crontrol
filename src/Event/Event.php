@@ -5,6 +5,8 @@
 
 namespace Crontrol\Event;
 
+use Crontrol\Context\FeatureContext;
+use Crontrol\Context\UserContext;
 use Crontrol\Event\PHPCronEvent;
 use Crontrol\Event\URLCronEvent;
 use Crontrol\Event\CoreCronEvent;
@@ -136,8 +138,6 @@ abstract class Event {
 
 	/**
 	 * Check if this is a recurring event.
-	 *
-	 * @return bool True if this is a recurring event, false otherwise.
 	 */
 	public function is_recurring(): bool {
 		return is_string( $this->schedule );
@@ -177,36 +177,7 @@ abstract class Event {
 	}
 
 	/**
-	 * Check if this is a PHP cron event.
-	 *
-	 * @return bool True if this is a PHP cron event, false otherwise.
-	 */
-	public function is_php_cron(): bool {
-		return false;
-	}
-
-	/**
-	 * Check if this is a URL cron event.
-	 *
-	 * @return bool True if this is a URL cron event, false otherwise.
-	 */
-	public function is_url_cron(): bool {
-		return false;
-	}
-
-	/**
-	 * Check if this is a WP Crontrol managed event (PHP or URL).
-	 *
-	 * @return bool True if this is a WP Crontrol managed event, false otherwise.
-	 */
-	public function is_crontrol_event(): bool {
-		return false;
-	}
-
-	/**
 	 * Check if this event's hook is paused.
-	 *
-	 * @return bool True if the event's hook is paused, false otherwise.
 	 */
 	public function is_paused(): bool {
 		$paused = get_option( \Crontrol\PAUSED_OPTION );
@@ -220,8 +191,6 @@ abstract class Event {
 
 	/**
 	 * Check if this event is late (past its scheduled time by more than 10 minutes).
-	 *
-	 * @return bool True if the event is late, false otherwise.
 	 */
 	public function is_late(): bool {
 		$until = $this->timestamp - time();
@@ -231,8 +200,6 @@ abstract class Event {
 
 	/**
 	 * Check if this event's schedule is too frequent (interval less than WP_CRON_LOCK_TIMEOUT).
-	 *
-	 * @return bool True if the event's schedule is too frequent, false otherwise.
 	 */
 	public function is_too_frequent(): bool {
 		if ( ! $this->schedule ) {
@@ -250,8 +217,6 @@ abstract class Event {
 
 	/**
 	 * Check if this event has integrity failures (corrupted data).
-	 *
-	 * @return bool True if the event has integrity failures, false otherwise.
 	 */
 	public function integrity_failed(): bool {
 		return false;
@@ -259,19 +224,8 @@ abstract class Event {
 
 	/**
 	 * Check if this event has any errors (syntax errors, URL errors, or integrity failures).
-	 *
-	 * @return bool True if the event has errors, false otherwise.
 	 */
 	public function has_error(): bool {
-		return false;
-	}
-
-	/**
-	 * Check if this event is a persistent WordPress core hook.
-	 *
-	 * @return bool True if this is a persistent core hook, false otherwise.
-	 */
-	public function is_persistent_core_hook(): bool {
 		return false;
 	}
 
@@ -302,30 +256,10 @@ abstract class Event {
 	}
 
 	/**
-	 * Check if this is a WordPress core cron event.
-	 *
-	 * @return bool True if this is a WordPress core cron event, false otherwise.
+	 * Check if this event's hook name can be edited.
 	 */
-	public function is_core_cron(): bool {
-		return false;
-	}
-
-	/**
-	 * Check if this is an Action Scheduler cron event.
-	 *
-	 * @return bool True if this is an Action Scheduler cron event, false otherwise.
-	 */
-	public function is_action_scheduler_cron(): bool {
-		return false;
-	}
-
-	/**
-	 * Check if this event is protected.
-	 *
-	 * @return bool True if the event is protected, false otherwise.
-	 */
-	public function is_protected(): bool {
-		return false;
+	public function hook_name_editable(): bool {
+		return true;
 	}
 
 	/**
@@ -333,10 +267,69 @@ abstract class Event {
 	 *
 	 * Events with timestamp 1 are scheduled to run immediately and only appear
 	 * in the event list when there's a problem with the event runner.
-	 *
-	 * @return bool True if the event is scheduled to run immediately, false otherwise.
 	 */
 	public function is_immediate(): bool {
 		return $this->timestamp === 1;
 	}
+
+	/**
+	 * Determines if this event can be edited given the current user and feature context.
+	 *
+	 * @param UserContext $user User capability context.
+	 * @param FeatureContext $features Feature flag context.
+	 */
+	abstract public function editable( UserContext $user, FeatureContext $features ): bool;
+
+	/**
+	 * Determines if this event can be run given the current user and feature context.
+	 *
+	 * @param UserContext $user User capability context.
+	 * @param FeatureContext $features Feature flag context.
+	 */
+	abstract public function runnable( UserContext $user, FeatureContext $features ): bool;
+
+	/**
+	 * Determines if this event is persistent and cannot be deleted regardless of permissions.
+	 */
+	public function persistent(): bool {
+		return false;
+	}
+
+	/**
+	 * Gets the message explaining why this event is persistent.
+	 *
+	 * Only called if persistent() returns true.
+	 *
+	 * @return string The persistent reason message.
+	 */
+	public function get_persistent_message(): string {
+		return '';
+	}
+
+	/**
+	 * Determines if this event can be deleted given the current user and feature context.
+	 *
+	 * @param UserContext $user User capability context.
+	 * @param FeatureContext $features Feature flag context.
+	 */
+	abstract public function deletable( UserContext $user, FeatureContext $features ): bool;
+
+	/**
+	 * Determines if this event can be paused.
+	 */
+	abstract public function pausable(): bool;
+
+	/**
+	 * Gets the display representation of this event's arguments.
+	 *
+	 * @return string The formatted arguments for display.
+	 */
+	abstract public function get_args_display(): string;
+
+	/**
+	 * Determines if this event type is currently enabled in the feature context.
+	 *
+	 * @param FeatureContext $features Feature flag context.
+	 */
+	abstract public function is_enabled( FeatureContext $features ): bool;
 }

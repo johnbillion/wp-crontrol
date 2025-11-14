@@ -231,7 +231,7 @@ function action_handle_posts() {
 		exit;
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'new_url_cron' === $_POST['crontrol_action'] ) ) {
-		if ( ! current_user_can_manage_url_cron_events() ) {
+		if ( ! current_user_can_edit_url_cron_events() ) {
 			wp_die( esc_html__( 'You are not allowed to add new URL cron events.', 'wp-crontrol' ), 403 );
 		}
 		check_admin_referer( 'crontrol-new-cron' );
@@ -294,7 +294,7 @@ function action_handle_posts() {
 		exit;
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'new_php_cron' === $_POST['crontrol_action'] ) ) {
-		if ( ! current_user_can_manage_php_cron_events() ) {
+		if ( ! current_user_can_edit_php_cron_events() ) {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 		check_admin_referer( 'crontrol-new-cron' );
@@ -365,11 +365,11 @@ function action_handle_posts() {
 
 		check_admin_referer( "crontrol-edit-cron_{$cr->original_hookname}_{$cr->original_sig}_{$cr->original_next_run_utc}" );
 
-		if ( PHPCronEvent::HOOK_NAME === $cr->hookname && ! current_user_can_manage_php_cron_events() ) {
+		if ( PHPCronEvent::HOOK_NAME === $cr->hookname && ! current_user_can_edit_php_cron_events() ) {
 			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 
-		if ( URLCronEvent::HOOK_NAME === $cr->hookname && ! current_user_can_manage_url_cron_events() ) {
+		if ( URLCronEvent::HOOK_NAME === $cr->hookname && ! current_user_can_edit_url_cron_events() ) {
 			wp_die( esc_html__( 'You are not allowed to edit URL cron events.', 'wp-crontrol' ), 403 );
 		}
 
@@ -528,7 +528,7 @@ function action_handle_posts() {
 		exit;
 
 	} elseif ( isset( $_POST['crontrol_action'] ) && ( 'edit_php_cron' === $_POST['crontrol_action'] ) ) {
-		if ( ! current_user_can_manage_php_cron_events() ) {
+		if ( ! current_user_can_edit_php_cron_events() ) {
 			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 
@@ -976,15 +976,7 @@ function action_handle_posts() {
 				$next_run_utc = $event->get_next_run_utc();
 				$hook_callbacks = $event->get_callbacks();
 
-				if ( $event->is_php_cron() ) {
-					$args = __( 'PHP Code', 'wp-crontrol' );
-				} elseif ( $event->is_url_cron() ) {
-					$args = $event->args[0]['method'] . ' ' . $event->args[0]['url'];
-				} elseif ( empty( $event->args ) ) {
-					$args = '';
-				} else {
-					$args = \Crontrol\json_output( $event->args, false );
-				}
+				$args = $event->get_args_display();
 
 				if ( ( PHPCronEvent::HOOK_NAME === $event->hook ) || ( URLCronEvent::HOOK_NAME === $event->hook ) ) {
 					$action = 'WP Crontrol';
@@ -1629,9 +1621,9 @@ function show_cron_form( $editing ) {
 		}
 	}
 
-	$is_editing_php = ( $existing && $existing->is_php_cron() );
-	$is_editing_url = ( $existing && $existing->is_url_cron() );
-	$is_editing_protected_event = false;
+	$is_editing_php = ( $existing instanceof PHPCronEvent );
+	$is_editing_url = ( $existing instanceof URLCronEvent );
+	$hook_name_editable = true;
 
 	if ( $existing ) {
 		$other_fields  = wp_nonce_field( "crontrol-edit-cron_{$existing->hook}_{$existing->sig}_{$existing->timestamp}", '_wpnonce', true, false );
@@ -1655,7 +1647,7 @@ function show_cron_form( $editing ) {
 		$next_run_gmt  = gmdate( 'Y-m-d H:i:s', $existing->timestamp );
 		$next_run_date_local = get_date_from_gmt( $next_run_gmt, 'Y-m-d' );
 		$next_run_time_local = get_date_from_gmt( $next_run_gmt, 'H:i:s' );
-		$is_editing_protected_event = $existing->is_protected();
+		$hook_name_editable = $existing->hook_name_editable();
 	} else {
 		$other_fields = wp_nonce_field( 'crontrol-new-cron', '_wpnonce', true, false );
 		$existing = Event\Event::create_new();
@@ -1676,13 +1668,11 @@ function show_cron_form( $editing ) {
 		);
 	}
 
-	$can_manage_php = current_user_can_manage_php_cron_events();
-	$can_manage_url = current_user_can_manage_url_cron_events();
+	$can_create_php = current_user_can_edit_php_cron_events();
+	$can_create_url = current_user_can_edit_url_cron_events();
 
-	if ( $is_editing_php ) {
-		$allowed = $can_manage_php;
-	} elseif ( $is_editing_url ) {
-		$allowed = $can_manage_url;
+	if ( $editing ) {
+		$allowed = $existing->editable( new \Crontrol\Context\WordPressUserContext(), new \Crontrol\Context\WordPressFeatureContext() );
 	} else {
 		$allowed = true;
 	}
@@ -1731,7 +1721,7 @@ function show_cron_form( $editing ) {
 						'<input type="hidden" name="crontrol_action" value="%s"/>',
 						esc_attr( $action )
 					);
-				} elseif ( ! $can_manage_php && ! $can_manage_url ) {
+				} elseif ( ! $can_create_php && ! $can_create_url ) {
 					echo '<input type="hidden" name="crontrol_action" value="new_cron"/>';
 				} else {
 					?>
@@ -1750,7 +1740,7 @@ function show_cron_form( $editing ) {
 										<?php esc_html_e( 'Standard cron event', 'wp-crontrol' ); ?>
 									</label>
 								</p>
-								<?php if ( $can_manage_url ) { ?>
+								<?php if ( $can_create_url ) { ?>
 									<p>
 										<label>
 											<input type="radio" name="crontrol_action" value="new_url_cron">
@@ -1758,7 +1748,7 @@ function show_cron_form( $editing ) {
 										</label>
 									</p>
 								<?php } ?>
-								<?php if ( $can_manage_php ) { ?>
+								<?php if ( $can_create_php ) { ?>
 									<p>
 										<label>
 											<input type="radio" name="crontrol_action" value="new_php_cron">
@@ -1825,7 +1815,7 @@ function show_cron_form( $editing ) {
 					<?php
 				}
 
-				if ( $is_editing_php || ( ! $editing && $can_manage_php ) ) {
+				if ( $is_editing_php || ( ! $editing && $can_create_php ) ) {
 					?>
 					<tr class="crontrol-event-php">
 						<th scope="row">
@@ -1875,7 +1865,7 @@ function show_cron_form( $editing ) {
 					?>
 					<tr class="crontrol-event-standard">
 						<th scope="row">
-							<?php if ( $is_editing_protected_event ) { ?>
+							<?php if ( ! $hook_name_editable ) { ?>
 								<?php esc_html_e( 'Hook Name', 'wp-crontrol' ); ?>
 							<?php } else { ?>
 								<label for="crontrol_hookname">
@@ -1884,7 +1874,7 @@ function show_cron_form( $editing ) {
 							<?php } ?>
 						</th>
 						<td>
-							<?php if ( $is_editing_protected_event ) { ?>
+							<?php if ( ! $hook_name_editable ) { ?>
 								<input type="hidden" name="crontrol_hookname" value="<?php echo esc_attr( $existing->hook ); ?>" />
 								<?php echo esc_html( $existing->hook ); ?>
 							<?php } else { ?>
@@ -2563,7 +2553,7 @@ function enqueue_assets( $hook_suffix ) {
 	);
 
 	if ( ! empty( $tab['add-event'] ) || ! empty( $tab['edit-event'] ) ) {
-		if ( current_user_can_manage_php_cron_events() ) {
+		if ( current_user_can_edit_php_cron_events() ) {
 			$settings = wp_enqueue_code_editor( array(
 				'type' => 'text/x-php',
 			) );
@@ -2943,9 +2933,9 @@ function php_cron_events_enabled(): bool {
 }
 
 /**
- * Returns whether PHP cron events are enabled and can be managed by the current user.
+ * Returns whether PHP cron events are enabled and can be edited by the current user.
  */
-function current_user_can_manage_php_cron_events(): bool {
+function current_user_can_edit_php_cron_events(): bool {
 	return ( php_cron_events_enabled() && current_user_can( 'edit_files' ) );
 }
 
@@ -2964,8 +2954,8 @@ function url_cron_events_enabled(): bool {
 }
 
 /**
- * Returns whether URL cron events are enabled and can be managed by the current user.
+ * Returns whether URL cron events are enabled and can be edited by the current user.
  */
-function current_user_can_manage_url_cron_events(): bool {
+function current_user_can_edit_url_cron_events(): bool {
 	return ( url_cron_events_enabled() && current_user_can( 'manage_options' ) );
 }

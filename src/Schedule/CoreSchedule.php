@@ -10,6 +10,24 @@ namespace Crontrol\Schedule;
  */
 final class CoreSchedule extends Schedule {
 	/**
+	 * Core schedules are persistent.
+	 */
+	#[\Override]
+	public function persistent(): bool {
+		return true;
+	}
+
+	/**
+	 * Gets the message explaining why this schedule is persistent.
+	 *
+	 * @return string The persistent reason message.
+	 */
+	#[\Override]
+	public function get_persistent_message(): string {
+		return __( 'This is a WordPress core schedule and cannot be deleted', 'wp-crontrol' );
+	}
+
+	/**
 	 * Check if this schedule can be deleted.
 	 *
 	 * Core schedules cannot be deleted.
@@ -17,13 +35,5 @@ final class CoreSchedule extends Schedule {
 	#[\Override]
 	public function deletable(): bool {
 		return false;
-	}
-
-	/**
-	 * Get the reason why this schedule cannot be deleted.
-	 */
-	#[\Override]
-	public function get_locked_reason(): string {
-		return __( 'This is a WordPress core schedule and cannot be deleted', 'wp-crontrol' );
 	}
 }
