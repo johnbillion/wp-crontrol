@@ -25,8 +25,8 @@ You can clone this repo and activate it like a normal WordPress plugin. If you w
 ### Prerequisites
 
 * [Composer](https://getcomposer.org/)
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/) if you want to run the tests
-* [Node](https://nodejs.org/) if you are packaging a release
+* [Node.js](https://nodejs.org/) (version 20 or later)
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or compatible) to run the tests
 
 ### Setup
 
@@ -34,11 +34,22 @@ Install the PHP dependencies:
 
 	composer install
 
+Install the Node.js dependencies:
+
+	npm install
+
 ## Running the Tests
 
-The test suite includes acceptance tests which run in a Docker container. Ensure Docker Desktop is running before running the tests.
+The test suite consists of:
 
-To run the whole test suite which includes integration tests, acceptance tests, linting, and static analysis:
+* Acceptance tests using Playwright
+* Integration tests using PHPUnit
+* Linting using PHPCS
+* Static analysis using PHPStan
+
+The acceptance and integration tests run in a container. Ensure Docker Desktop is running before running the tests.
+
+To run the whole test suite:
 
 	composer test
 
@@ -49,9 +60,9 @@ To run tests individually, run one of:
 	composer test:integration
 	composer test:acceptance
 
-To run individual tests:
+To run a single test:
 
-	composer test:acceptance -- --codecept-args="tests/acceptance/AddEventCest.php"
+	composer test:acceptance -- tests/acceptance/AddEvent.spec.ts
 
 The individual integration and acceptance tests require the Docker containers to be running. To start and stop them, use:
 
