@@ -153,7 +153,11 @@ function action_init() {
  * @return void
  */
 function pauser() {
-	remove_all_actions( current_filter() );
+	$current = current_filter();
+
+	if ( $current ) {
+		remove_all_actions( $current );
+	}
 }
 
 /**
