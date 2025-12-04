@@ -1,0 +1,29 @@
+{
+  "@context": "https://fair.pm/ns/metadata/v1",
+  "id": "did:plc:kjnlj6j6hvasaxc6rchd3pnu",
+  "type": "wp-plugin",
+  "name": "WP Crontrol",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "John Blackbourn",
+      "url": "https://wp-crontrol.com"
+    }
+  ],
+  "security": [
+    {
+      "url": "https://wp-crontrol.com/security/"
+    }
+  ],
+  "releases": [
+  ],
+  "slug": "wp-crontrol",
+  "description": "Take control of the cron events on your WordPress website.",
+  "keywords": [
+    "cron",
+    "wp-cron",
+    "crontrol",
+    "debug",
+    "woocommerce"
+  ]
+}

@@ -2,6 +2,7 @@
 /**
  * Plugin Name:  WP Crontrol
  * Plugin URI:   https://wp-crontrol.com
+ * Plugin ID:    did:plc:kjnlj6j6hvasaxc6rchd3pnu
  * Description:  Take control of the cron events on your WordPress website.
  * Author:       John Blackbourn
  * Author URI:   https://wp-crontrol.com
