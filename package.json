@@ -11,7 +11,7 @@
 		"node": ">=20"
 	},
 	"devDependencies": {
-		"@johnbillion/plugin-infrastructure": "2.1.3",
+		"@johnbillion/plugin-infrastructure": "2.1.5",
 		"@jsdevtools/version-bump-prompt": "6.1.0",
 		"@playwright/test": "^1.55.0",
 		"@types/node": "^24.3.0",
