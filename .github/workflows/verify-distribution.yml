@@ -33,7 +33,7 @@ jobs:
     name: Verify Plugin Distribution
     permissions:
       contents: read
-    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-verify-distribution.yml@2d12bdc0117c39e81f596e33861cb13c9561002f # 2.1.5
+    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-verify-distribution.yml@4b815b0ac2687aa7c46b2296987ba668d65d55a3 # 2.1.6
     with:
       plugin: wp-crontrol
       owner: johnbillion
