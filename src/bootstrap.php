@@ -1299,7 +1299,7 @@ function admin_options_page() {
  * @return mixed The unaltered pre-flight value.
  */
 function maybe_clear_doing_cron( $pre ) {
-	if ( defined( 'DOING_CRON' ) && DOING_CRON && isset( $_GET['crontrol-single-event'] ) ) {
+	if ( wp_doing_cron() && isset( $_GET['crontrol-single-event'] ) ) {
 		delete_transient( 'doing_cron' );
 	}
 
