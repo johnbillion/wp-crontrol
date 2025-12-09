@@ -28,10 +28,11 @@ use function Crontrol\Event\validate_url;
 const TRANSIENT = 'crontrol-message-%d';
 const PAUSED_OPTION = 'wp_crontrol_paused';
 
-const MESSAGE_EVENT_RUN_NOW = 1;
+const MESSAGE_UNKNOWN_ERROR = 1;
 const MESSAGE_HOOK_DELETED_ALL = 2;
 const MESSAGE_EVENT_NONE_TO_DELETE = 3;
 const MESSAGE_EVENT_SAVED = 4;
+const MESSAGE_EVENT_RUN_NOW = 5;
 const MESSAGE_EVENT_DELETED = 6;
 const MESSAGE_EVENT_FAILED_TO_DELETE = 7;
 const MESSAGE_EVENT_FAILED_TO_EXECUTE = 8;
@@ -41,7 +42,6 @@ const MESSAGE_HOOK_PAUSED = 11;
 const MESSAGE_HOOK_RESUMED = 12;
 const MESSAGE_EVENT_URL_EVENT_SAVED = 13;
 const MESSAGE_EVENT_PHP_EVENT_SAVED = 14;
-const MESSAGE_UNKNOWN_ERROR = 'error';
 
 const MESSAGE_SCHEDULE_DELETED = 2;
 const MESSAGE_SCHEDULE_SAVED = 3;
@@ -1202,9 +1202,10 @@ function admin_options_page() {
 			'error',
 		),
 	);
+
 	if ( isset( $_GET['crontrol_message'], $_GET['crontrol_name'], $messages[ $_GET['crontrol_message'] ] ) ) {
 		$hook    = wp_unslash( $_GET['crontrol_name'] );
-		$message = wp_unslash( $_GET['crontrol_message'] );
+		$message = intval( $_GET['crontrol_message'] );
 
 		printf(
 			'<div id="crontrol-message" class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>',
@@ -2092,14 +2093,14 @@ function admin_manage_page() {
 
 	if ( isset( $_GET['crontrol_name'], $_GET['crontrol_message'], $messages[ $_GET['crontrol_message'] ] ) ) {
 		$hook    = wp_unslash( $_GET['crontrol_name'] );
-		$message = wp_unslash( $_GET['crontrol_message'] );
+		$message = intval( $_GET['crontrol_message'] );
 		$link    = '';
 
-		if ( 'error' === $message ) {
+		if ( MESSAGE_UNKNOWN_ERROR === $message ) {
 			$error = get_message();
 
 			if ( $error ) {
-				$messages['error'][0] = $error;
+				$messages[ MESSAGE_UNKNOWN_ERROR ][0] = $error;
 			}
 		}
 
