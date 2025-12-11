@@ -1353,7 +1353,6 @@ function test_cron_spawn( $cache = true ) {
 		return true;
 	}
 
-	$sslverify     = version_compare( $wp_version, '4.0', '<' );
 	$doing_wp_cron = sprintf( '%.22F', microtime( true ) );
 
 	$cron_request = apply_filters( 'cron_request', array(
@@ -1362,7 +1361,7 @@ function test_cron_spawn( $cache = true ) {
 		'args' => array(
 			'timeout'   => 3,
 			'blocking'  => true,
-			'sslverify' => apply_filters( 'https_local_ssl_verify', $sslverify ),
+			'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
 		),
 	), $doing_wp_cron );
 
