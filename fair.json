@@ -17,7 +17,9 @@
   ],
   "releases": [
   ],
+  "sections": {},
   "slug": "wp-crontrol",
+  "filename": "wp-crontrol/wp-crontrol.php",
   "description": "Take control of the cron events on your WordPress website.",
   "keywords": [
     "cron",
