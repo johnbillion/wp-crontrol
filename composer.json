@@ -26,7 +26,7 @@
 		}
 	},
 	"require-dev": {
-		"johnbillion/plugin-infrastructure": "2.1.7",
+		"johnbillion/plugin-infrastructure": "dev-dependabot/github_actions/github-actions-e65e10c335-built",
 		"johnbillion/wp-compat": "1.4.0",
 		"php-stubs/wordpress-stubs": "6.9.0",
 		"phpcompatibility/phpcompatibility-wp": "2.1.8",
