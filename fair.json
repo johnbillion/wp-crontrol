@@ -98,7 +98,7 @@
         ]
       },
       "suggests": {
-        "env:wp": ">=6.9"
+        "env:wp": ">=6.8"
       },
       "requires": {
         "env:wp": ">=6.4",
