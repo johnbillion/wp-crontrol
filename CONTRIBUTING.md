@@ -111,13 +111,13 @@ These are the steps to take to release a new version of WP Crontrol (for contrib
 
 1.     git push origin develop
 1. Wait until (and ensure that) [the tests pass](https://github.com/johnbillion/wp-crontrol/actions)
-1.     git checkout trunk
-1.     git merge develop
-1.     git push origin trunk
-1.     git push origin trunk:release
+1.     git push origin develop:release
 1. Wait for [the Build Release action](https://github.com/johnbillion/wp-crontrol/actions/workflows/build.yml) to complete
 1. Enter the changelog into [the release on GitHub](https://github.com/johnbillion/wp-crontrol/releases) and publish it.
 1. Approve the release on [the WordPress.org release management dashboard](https://wordpress.org/plugins/developers/releases/).
+1.     git checkout trunk
+1.     git merge develop
+1.     git push origin trunk
 
 ### Post Release
 
