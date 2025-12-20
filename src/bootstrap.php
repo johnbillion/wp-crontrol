@@ -166,15 +166,13 @@ function pauser() {
  * @return void
  */
 function action_handle_posts() {
-	$request = new Request();
-
 	if ( isset( $_POST['crontrol_action'] ) && ( 'new_cron' === $_POST['crontrol_action'] ) ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You are not allowed to add new cron events.', 'wp-crontrol' ), 403 );
 		}
 		check_admin_referer( 'crontrol-new-cron' );
 
-		$cr = $request->init( wp_unslash( $_POST ) );
+		$cr = Request::init( wp_unslash( $_POST ) );
 
 		if ( PHPCronEvent::HOOK_NAME === $cr->hookname ) {
 			wp_die( esc_html__( 'You are not allowed to add new PHP cron events.', 'wp-crontrol' ), 403 );
@@ -240,7 +238,7 @@ function action_handle_posts() {
 		}
 		check_admin_referer( 'crontrol-new-cron' );
 
-		$cr = $request->init( wp_unslash( $_POST ) );
+		$cr = Request::init( wp_unslash( $_POST ) );
 
 		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
 		$args = array(
@@ -303,7 +301,7 @@ function action_handle_posts() {
 		}
 		check_admin_referer( 'crontrol-new-cron' );
 
-		$cr = $request->init( wp_unslash( $_POST ) );
+		$cr = Request::init( wp_unslash( $_POST ) );
 
 		$next_run_local = ( 'custom' === $cr->next_run_date_local ) ? $cr->next_run_date_local_custom_date . ' ' . $cr->next_run_date_local_custom_time : $cr->next_run_date_local;
 
@@ -365,7 +363,7 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ), 403 );
 		}
 
-		$cr = $request->init( wp_unslash( $_POST ) );
+		$cr = Request::init( wp_unslash( $_POST ) );
 
 		check_admin_referer( "crontrol-edit-cron_{$cr->original_hookname}_{$cr->original_sig}_{$cr->original_next_run_utc}" );
 
@@ -453,7 +451,7 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to edit cron events.', 'wp-crontrol' ), 403 );
 		}
 
-		$cr = $request->init( wp_unslash( $_POST ) );
+		$cr = Request::init( wp_unslash( $_POST ) );
 
 		check_admin_referer( "crontrol-edit-cron_{$cr->original_hookname}_{$cr->original_sig}_{$cr->original_next_run_utc}" );
 
@@ -536,7 +534,7 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'You are not allowed to edit PHP cron events.', 'wp-crontrol' ), 403 );
 		}
 
-		$cr = $request->init( wp_unslash( $_POST ) );
+		$cr = Request::init( wp_unslash( $_POST ) );
 
 		check_admin_referer( "crontrol-edit-cron_{$cr->original_hookname}_{$cr->original_sig}_{$cr->original_next_run_utc}" );
 
