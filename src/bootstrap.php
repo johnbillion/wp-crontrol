@@ -2658,14 +2658,9 @@ function get_core_schedules() {
  * @return string The JSON-encoded output.
  */
 function json_output( $input, $pretty = true ) {
-	$json_options = 0;
+	$json_options = JSON_UNESCAPED_SLASHES;
 
-	if ( defined( 'JSON_UNESCAPED_SLASHES' ) ) {
-		// phpcs:ignore PHPCompatibility.Constants.NewConstants.json_unescaped_slashesFound
-		$json_options |= JSON_UNESCAPED_SLASHES;
-	}
-
-	if ( $pretty && defined( 'JSON_PRETTY_PRINT' ) ) {
+	if ( $pretty ) {
 		$json_options |= JSON_PRETTY_PRINT;
 	}
 
