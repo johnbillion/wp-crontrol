@@ -31,7 +31,7 @@ jobs:
       version: ${{ github.event_name != 'workflow_dispatch' && github.event.release.tag_name || github.event.inputs.version }}
       username: johnbillion
       did: did:plc:kjnlj6j6hvasaxc6rchd3pnu
-      fair-path: fair.json
+      fair-path: .did/fair.json
     secrets:
       WPORG_SVN_PASSWORD: ${{ secrets.WPORG_SVN_PASSWORD }}
       FAIR_VERIFICATION_KEY: ${{ secrets.FAIR_VERIFICATION_KEY }}
