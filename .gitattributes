@@ -1,6 +1,7 @@
 * text=auto
 
 # Directories
+/.did export-ignore
 /.github/ export-ignore
 /.wordpress-org/ export-ignore linguist-documentation
 /tests/ export-ignore
@@ -15,7 +16,6 @@
 /phpunit.xml.dist export-ignore
 /CONTRIBUTING.md export-ignore
 /docker-compose.yml export-ignore
-/fair.json export-ignore
 /package.json export-ignore
 /package-lock.json export-ignore
 /phpcs.xml.dist export-ignore
