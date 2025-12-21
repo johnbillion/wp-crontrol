@@ -111,5 +111,25 @@
 		"verificationMethods": {
 			"fair": "did:key:z6Mkm1oLUKzvVNy87BWZYnKsauAsQ14LEDeAxLfR5bNFpMMN"
 		}
+	},
+	{
+		"sig": "vjcggkiYjwu1dwhzpFrhRCxBs9IqGfPOIh62Dm6_7nQjjgXbRvGhzXAADNH-XblZQOzAASjNo2IIVRMXyqFhvg",
+		"prev": "bafyreiaolruziipo7r7ybpkun4vqemtjejtvuowpedpgxeg5zvvgc4btne",
+		"type": "plc_operation",
+		"services": {
+			"fairpm_repo": {
+				"type": "FairPackageManagementRepo",
+				"endpoint": "https://raw.githubusercontent.com/johnbillion/wp-crontrol/refs/heads/develop/.did/fair.json"
+			}
+		},
+		"alsoKnownAs": [
+			"fair://wp-crontrol.com"
+		],
+		"rotationKeys": [
+			"did:key:zQ3shTimxo4bzH5ykJAPk4E2mWkVoz3r4uqevAzhaS818Zzdt"
+		],
+		"verificationMethods": {
+			"fair": "did:key:z6Mkm1oLUKzvVNy87BWZYnKsauAsQ14LEDeAxLfR5bNFpMMN"
+		}
 	}
 ]
