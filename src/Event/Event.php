@@ -43,7 +43,7 @@ abstract class Event {
 	 * The arguments to pass to the hook's callback function.
 	 *
 	 * Note: This should normally be an array, but may contain other types if
-	 * the cron data is corrupted or invalid. Check has_invalid_args property.
+	 * the cron data is corrupted or invalid. Check the has_invalid_args() method.
 	 *
 	 * @var mixed[]|mixed
 	 */

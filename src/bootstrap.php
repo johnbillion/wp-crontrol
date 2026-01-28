@@ -1899,8 +1899,7 @@ function show_cron_form( $editing ) {
 						</th>
 						<td>
 							<?php
-							// @phpstan-ignore booleanAnd.rightAlwaysTrue
-							if ( $editing && $existing && $existing->has_invalid_args() ) {
+							if ( $editing && $existing->has_invalid_args() ) {
 								printf(
 									'<div class="notice notice-error inline"><p>%1$s</p><p>%2$s</p></div>',
 									esc_html__( 'This event has invalid arguments and will not run correctly.', 'wp-crontrol' ),
