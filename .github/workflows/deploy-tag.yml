@@ -10,6 +10,11 @@ on:
         required: true
         type: string
         description: The version number of the release
+      deploy:
+        required: false
+        type: boolean
+        description: Whether to actually deploy to WordPress.org
+        default: true
 
 concurrency: WordPress.org
 
@@ -18,7 +23,7 @@ permissions: {}
 jobs:
   deploy:
     name: Deploy Tag
-    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-deploy-tag.yml@9203bb0c5423a9a4b395ff5ffd093ba3714d723f # 2.5.1
+    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-deploy-tag.yml@8d8ccc89b04d85ae8d064774d63d8725799f4224 # 2.7.3
     permissions:
       contents: write
       issues: write
@@ -26,7 +31,7 @@ jobs:
       attestations: write
       id-token: write
     with:
-      deploy: ${{ github.event_name != 'workflow_dispatch' }}
+      deploy: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.deploy }}
       plugin: wp-crontrol
       readme: readme.txt
       version: ${{ github.event_name != 'workflow_dispatch' && github.event.release.tag_name || github.event.inputs.version }}
