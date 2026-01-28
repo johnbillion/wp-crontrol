@@ -3,7 +3,7 @@
 Contributors: johnbillion, scompt
 Tags: cron, wp-cron, crontrol, debug, woocommerce
 Tested up to: 6.9
-Stable tag: 1.20.0
+Stable tag: 1.21.0
 License: GPL v2 or later
 Donate link: https://github.com/sponsors/johnbillion
 
