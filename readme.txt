@@ -7,7 +7,7 @@ Stable tag: 1.21.0
 License: GPL v2 or later
 Donate link: https://github.com/sponsors/johnbillion
 
-WP Crontrol enables you to take control of the cron events on your WordPress website.
+WP Crontrol enables you to take control of the cron events on your WordPress website or WooCommerce store.
 
 ## Description
 

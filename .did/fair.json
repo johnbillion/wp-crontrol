@@ -5,7 +5,7 @@
 	"name": "WP Crontrol",
 	"slug": "wp-crontrol",
 	"filename": "wp-crontrol/wp-crontrol.php",
-	"description": "Take control of the cron events on your WordPress website.",
+	"description": "Take control of the cron events on your WordPress website or WooCommerce store.",
 	"authors": [
 		{
 			"name": "John Blackbourn",

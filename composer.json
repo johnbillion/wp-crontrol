@@ -1,6 +1,6 @@
 {
 	"name": "johnbillion/wp-crontrol",
-	"description": "Take control of the cron events on your WordPress website",
+	"description": "Take control of the cron events on your WordPress website or WooCommerce store",
 	"homepage": "https://wp-crontrol.com",
 	"license": "GPL-2.0-or-later",
 	"type": "wordpress-plugin",
