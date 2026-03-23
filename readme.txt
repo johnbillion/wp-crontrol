@@ -59,6 +59,15 @@ I maintain several other plugins for developers. Check them out:
 * [Query Monitor](https://wordpress.org/plugins/query-monitor/) is the developer tools panel for WordPress.
 * [User Switching](https://wordpress.org/plugins/user-switching/) provides instant switching between user accounts in WordPress.
 
+### Thanks
+
+The time that I spend maintaining this plugin and others is in part sponsored by:
+
+* [Automattic](https://automattic.com/)
+* [ServMask](https://servmask.com/)
+* [WP Staging](https://wp-staging.com/)
+* [All my kind sponsors on GitHub](https://github.com/sponsors/johnbillion)
+
 ### Privacy Statement
 
 WP Crontrol is private by default and always will be. It does not send data to any third party, nor does it include any third party resources. [WP Crontrol's full privacy statement can be found here](https://wp-crontrol.com/privacy/).
