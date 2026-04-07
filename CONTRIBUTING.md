@@ -15,7 +15,7 @@ You can clone this repo and activate it like a normal WordPress plugin. If you w
 ### Prerequisites
 
 * [Composer](https://getcomposer.org/)
-* [Node.js](https://nodejs.org/) (version 20 or later)
+* [Node.js](https://nodejs.org/) version 24
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or compatible) to run the tests
 
 ### Setup

@@ -8,7 +8,7 @@
 	"repository": "johnbillion/wp-crontrol",
 	"homepage": "https://wp-crontrol.com",
 	"engines": {
-		"node": ">=20"
+		"node": ">=24"
 	},
 	"devDependencies": {
 		"@johnbillion/plugin-infrastructure": "2.8.0",
