@@ -11,7 +11,7 @@
 		"node": ">=24"
 	},
 	"devDependencies": {
-		"@johnbillion/plugin-infrastructure": "2.8.0",
+		"@johnbillion/plugin-infrastructure": "github:johnbillion/plugin-infrastructure#dependabot/github_actions/github-actions-c6819f84d5-built",
 		"@jsdevtools/version-bump-prompt": "6.1.0",
 		"@playwright/test": "^1.55.0",
 		"@types/node": "^24.3.0",
