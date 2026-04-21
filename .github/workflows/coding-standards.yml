@@ -8,8 +8,6 @@ on:
       - 'trunk'
     paths:
       - '.github/workflows/coding-standards.yml'
-      - '**.css'
-      - '**.js'
       - '**.php'
       - 'composer.json'
       - 'phpcs.xml.dist'
@@ -18,8 +16,6 @@ on:
       - '**'
     paths:
       - '.github/workflows/coding-standards.yml'
-      - '**.css'
-      - '**.js'
       - '**.php'
       - 'composer.json'
       - 'phpcs.xml.dist'

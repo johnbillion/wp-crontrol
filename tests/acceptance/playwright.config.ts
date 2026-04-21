@@ -7,12 +7,13 @@ if ( ! baseURL ) {
 
 export default defineConfig({
 	testDir: '.',
-	outputDir: '../_output',
+	outputDir: '../test-results',
 	fullyParallel: false,
 	forbidOnly: !!process.env.CI,
 	workers: 1,
 	reporter: 'list',
 	use: {
+		actionTimeout: 3_000,
 		baseURL,
 		...devices['Desktop Chrome'],
 		/* This avoids the need to run `npx playwright install` in CI. */
