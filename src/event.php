@@ -31,10 +31,13 @@ function run( $hookname, $sig ) {
 			$event = Event::create_immediate( $hookname, $data['args'] );
 
 			delete_transient( 'doing_cron' );
-			$scheduled = force_schedule_single_event( $hookname, $event->args ); // UTC
+			$scheduled = wp_schedule_single_event( 1, $hookname, $event->args, true ); // UTC
 
 			if ( is_wp_error( $scheduled ) ) {
-				return $scheduled;
+				// A duplicate at timestamp 1 means it's already queued to run immediately — treat as success.
+				if ( 'duplicate_event' !== $scheduled->get_error_code() ) {
+					return $scheduled;
+				}
 			}
 
 			add_filter( 'cron_request', function ( array $cron_request_array ) {
@@ -65,48 +68,6 @@ function run( $hookname, $sig ) {
 			$hookname
 		)
 	);
-}
-
-/**
- * Forcibly schedules a single event for the purpose of manually running it.
- *
- * This is used instead of `wp_schedule_single_event()` to avoid the duplicate check that's otherwise performed.
- *
- * @param string  $hook Action hook to execute when the event is run.
- * @param mixed[] $args Optional. Array containing each separate argument to pass to the hook's callback function.
- * @return true|WP_Error True if event successfully scheduled. WP_Error on failure.
- */
-function force_schedule_single_event( $hook, $args = array() ) {
-	$event = (object) array(
-		'hook'      => $hook,
-		'timestamp' => 1,
-		'schedule'  => false,
-		'args'      => $args,
-	);
-	$crons = get_core_cron_array();
-	$key   = md5( serialize( $event->args ) );
-
-	$crons[ $event->timestamp ][ $event->hook ][ $key ] = array(
-		'schedule' => $event->schedule,
-		'args'     => $event->args,
-	);
-	ksort( $crons );
-
-	$result = _set_cron_array( $crons );
-
-	// Not using the WP_Error from `_set_cron_array()` here so we can provide a more specific error message.
-	if ( false === $result ) {
-		return new WP_Error(
-			'could_not_add',
-			sprintf(
-				/* translators: %s: The name of the cron event. */
-				__( 'Failed to schedule the cron event %s.', 'wp-crontrol' ),
-				$hook
-			)
-		);
-	}
-
-	return true;
 }
 
 /**
