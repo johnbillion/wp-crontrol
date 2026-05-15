@@ -11,8 +11,8 @@ namespace Crontrol\Context;
  * UserContext implementation that checks WordPress user capabilities.
  *
  * This is the production implementation that maps to WordPress capabilities.
- * Currently uses edit_files for PHP cron events and manage_options for
- * URL and standard cron events. More granular capabilities can be added later.
+ * Currently uses edit_files for PHP cron events and the filterable manage cap
+ * (default: manage_options) for URL and standard cron events.
  */
 class WordPressUserContext implements UserContext {
 	#[\Override]
@@ -32,46 +32,46 @@ class WordPressUserContext implements UserContext {
 
 	#[\Override]
 	public function can_run_php_cron_events(): bool {
-		return current_user_can( 'manage_options' );
+		return current_user_can( \Crontrol\get_manage_cap() );
 	}
 
 	#[\Override]
 	public function can_create_url_cron_events(): bool {
-		return current_user_can( 'manage_options' );
+		return current_user_can( \Crontrol\get_manage_cap() );
 	}
 
 	#[\Override]
 	public function can_edit_url_cron_events(): bool {
-		return current_user_can( 'manage_options' );
+		return current_user_can( \Crontrol\get_manage_cap() );
 	}
 
 	#[\Override]
 	public function can_delete_url_cron_events(): bool {
-		return current_user_can( 'manage_options' );
+		return current_user_can( \Crontrol\get_manage_cap() );
 	}
 
 	#[\Override]
 	public function can_run_url_cron_events(): bool {
-		return current_user_can( 'manage_options' );
+		return current_user_can( \Crontrol\get_manage_cap() );
 	}
 
 	#[\Override]
 	public function can_create_standard_cron_events(): bool {
-		return current_user_can( 'manage_options' );
+		return current_user_can( \Crontrol\get_manage_cap() );
 	}
 
 	#[\Override]
 	public function can_edit_standard_cron_events(): bool {
-		return current_user_can( 'manage_options' );
+		return current_user_can( \Crontrol\get_manage_cap() );
 	}
 
 	#[\Override]
 	public function can_delete_standard_cron_events(): bool {
-		return current_user_can( 'manage_options' );
+		return current_user_can( \Crontrol\get_manage_cap() );
 	}
 
 	#[\Override]
 	public function can_run_standard_cron_events(): bool {
-		return current_user_can( 'manage_options' );
+		return current_user_can( \Crontrol\get_manage_cap() );
 	}
 }
