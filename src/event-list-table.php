@@ -784,13 +784,17 @@ class Table extends \WP_List_Table {
 		if ( $event instanceof CrontrolEvent ) {
 			return 'WP Crontrol';
 		} elseif ( ! empty( $hook_callbacks ) ) {
+			if ( count( $hook_callbacks ) === 1 ) {
+				return \Crontrol\output_callback( $hook_callbacks[0] );
+			}
+
 			$callbacks = array();
 
 			foreach ( $hook_callbacks as $callback ) {
 				$callbacks[] = \Crontrol\output_callback( $callback );
 			}
 
-			return implode( '<br>', $callbacks ); // WPCS:: XSS ok.
+			return '<ol><li>' . implode( '</li><li>', $callbacks ) . '</li>'; // WPCS:: XSS ok.
 		} else {
 			$help = sprintf(
 				'<a href="%s">%s</a>',
