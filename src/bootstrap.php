@@ -1312,8 +1312,6 @@ function maybe_clear_doing_cron( $pre ) {
  * @return true|WP_Error Boolean true if the cron spawner is working as expected, or a `WP_Error` object if not.
  */
 function test_cron_spawn( $cache = true ) {
-	global $wp_version;
-
 	$cron_runner_plugins = array(
 		'\HM\Cavalcade\Plugin\Job'         => 'Cavalcade',
 		'\Automattic\WP\Cron_Control\Main' => 'Cron Control',
