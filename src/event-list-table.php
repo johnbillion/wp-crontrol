@@ -101,11 +101,17 @@ class Table extends \WP_List_Table {
 			add_action(
 				'admin_notices',
 				function () {
-					printf(
-						'<div id="crontrol-integrity-failures-message" class="notice notice-error"><p>%1$s</p><p><a href="%2$s">%3$s</a></p></div>',
-						esc_html__( 'One or more of your cron events needs to be checked for integrity. These events will not run until you check and re-save them.', 'wp-crontrol' ),
-						'https://wp-crontrol.com/help/check-cron-events/',
-						esc_html__( 'Read what to do', 'wp-crontrol' )
+					wp_admin_notice(
+						sprintf(
+							'%1$s<br><br><a href="%2$s">%3$s</a>',
+							esc_html__( 'One or more of your cron events needs to be checked for integrity. These events will not run until you check and re-save them.', 'wp-crontrol' ),
+							'https://wp-crontrol.com/help/check-cron-events/',
+							esc_html__( 'Read what to do', 'wp-crontrol' )
+						),
+						array(
+							'id'   => 'crontrol-integrity-failures-message',
+							'type' => 'error',
+						)
 					);
 				}
 			);
