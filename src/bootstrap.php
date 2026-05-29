@@ -664,14 +664,14 @@ function action_handle_posts() {
 		}
 		check_admin_referer( 'bulk-crontrol-events' );
 
-		if ( empty( $_POST['crontrol_delete'] ) ) {
+		if ( empty( $_POST['crontrol_bulk'] ) ) {
 			return;
 		}
 
 		/**
 		 * @var array<string,array<string,string>>
 		 */
-		$delete  = (array) wp_unslash( $_POST['crontrol_delete'] );
+		$delete  = (array) wp_unslash( $_POST['crontrol_bulk'] );
 		$deleted = 0;
 
 		foreach ( $delete as $next_run_utc => $events ) {
