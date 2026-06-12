@@ -34,10 +34,23 @@ function run( $hookname, $sig ) {
 			$scheduled = wp_schedule_single_event( 1, $hookname, $event->args, true ); // UTC
 
 			if ( is_wp_error( $scheduled ) ) {
-				// A duplicate at timestamp 1 means it's already queued to run immediately — treat as success.
 				if ( 'duplicate_event' !== $scheduled->get_error_code() ) {
 					return $scheduled;
 				}
+
+				// A duplicate_event error can be a false positive: Cavalcade's pre_schedule_event
+				// uses a 10-minute window centred on timestamp=1, so it flags the original near-future
+				// event as a duplicate without actually scheduling anything at timestamp=1.
+				// If no job exists at timestamp=1, unschedule the future one and retry.
+				$next = wp_next_scheduled( $hookname, $event->args );
+				if ( false !== $next && 1 !== $next ) {
+					wp_unschedule_event( $next, $hookname, $event->args );
+					$scheduled = wp_schedule_single_event( 1, $hookname, $event->args, true );
+					if ( is_wp_error( $scheduled ) ) {
+						return $scheduled;
+					}
+				}
+				// else: a job at timestamp=1 already exists, already queued to run immediately.
 			}
 
 			add_filter( 'cron_request', function ( array $cron_request_array ) {
