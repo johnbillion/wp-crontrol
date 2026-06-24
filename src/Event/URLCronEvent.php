@@ -59,6 +59,38 @@ final class URLCronEvent extends CrontrolEvent {
 	}
 
 	#[\Override]
+	public function get_hook_name_label(): string {
+		if ( ! empty( $this->args[0]['name'] ) ) {
+			/* translators: %s: Details about the URL cron event. */
+			return esc_html( sprintf( __( 'URL cron event (%s)', 'wp-crontrol' ), $this->args[0]['name'] ) );
+		}
+
+		if ( ! empty( $this->args[0]['url'] ) ) {
+			$url = sprintf(
+				'<code>%s</code>',
+				esc_html( $this->args[0]['url'] )
+			);
+
+			/* translators: %s: Details about the URL cron event. */
+			return sprintf( esc_html__( 'URL cron event (%s)', 'wp-crontrol' ), $url );
+		}
+
+		return esc_html__( 'URL cron event', 'wp-crontrol' );
+	}
+
+	#[\Override]
+	public function get_error_status_html(): string {
+		if ( ! isset( $this->args[0]['url_error_message'] ) ) {
+			return '';
+		}
+
+		return sprintf(
+			'<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
+			esc_html( $this->args[0]['url_error_message'] )
+		);
+	}
+
+	#[\Override]
 	public function get_args_display(): string {
 		return $this->args[0]['method'] . ' ' . $this->args[0]['url'];
 	}

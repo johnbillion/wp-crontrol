@@ -281,6 +281,24 @@ abstract class Event {
 	}
 
 	/**
+	 * Returns the descriptive label for this event's hook name.
+	 *
+	 * @return string The HTML for the hook name label.
+	 */
+	public function get_hook_name_label(): string {
+		return esc_html( $this->hook );
+	}
+
+	/**
+	 * Returns the HTML for any error status to show alongside this event's hook name.
+	 *
+	 * @return string The HTML for the error status, or an empty string if there is no error.
+	 */
+	public function get_error_status_html(): string {
+		return '';
+	}
+
+	/**
 	 * Check if this event is scheduled to run immediately via "Run now".
 	 *
 	 * Events with timestamp 1 are scheduled to run immediately and only appear

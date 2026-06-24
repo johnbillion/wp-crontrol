@@ -65,6 +65,55 @@ final class PHPCronEvent extends CrontrolEvent {
 	}
 
 	#[\Override]
+	public function get_hook_name_label(): string {
+		if ( ! empty( $this->args[0]['name'] ) ) {
+			return esc_html(
+				sprintf(
+					/* translators: %s: Details about the PHP cron event. */
+					__( 'PHP cron event (%s)', 'wp-crontrol' ),
+					$this->args[0]['name']
+				)
+			);
+		}
+
+		if ( ! empty( $this->args[0]['code'] ) ) {
+			$lines = explode( "\n", trim( $this->args[0]['code'] ) );
+			$code  = reset( $lines );
+			$code  = substr( $code, 0, 50 );
+
+			$php = sprintf(
+				'<code>%s</code>&hellip;',
+				esc_html( $code )
+			);
+
+			return sprintf(
+				/* translators: %s: Details about the PHP cron event. */
+				esc_html__( 'PHP cron event (%s)', 'wp-crontrol' ),
+				$php
+			);
+		}
+
+		return esc_html__( 'PHP cron event', 'wp-crontrol' );
+	}
+
+	#[\Override]
+	public function get_error_status_html(): string {
+		if ( ! isset( $this->args[0]['syntax_error_message'], $this->args[0]['syntax_error_line'] ) ) {
+			return '';
+		}
+
+		return sprintf(
+			'<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</span>',
+			sprintf(
+				/* translators: 1: Line number, 2: Error message text */
+				esc_html__( 'Line %1$s: %2$s', 'wp-crontrol' ),
+				esc_html( number_format_i18n( $this->args[0]['syntax_error_line'] ) ),
+				esc_html( $this->args[0]['syntax_error_message'] )
+			)
+		);
+	}
+
+	#[\Override]
 	public function get_args_display(): string {
 		return __( 'PHP Code', 'wp-crontrol' );
 	}

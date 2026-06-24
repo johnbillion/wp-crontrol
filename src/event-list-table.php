@@ -644,27 +644,10 @@ class Table extends \WP_List_Table {
 	 * @param Event $event The cron event for the current row.
 	 */
 	protected function column_crontrol_hook( Event $event ): string {
-		if ( $event instanceof PHPCronEvent ) {
-			if ( ! empty( $event->args[0]['name'] ) ) {
-				/* translators: %s: Details about the PHP cron event. */
-				$output = esc_html( sprintf( __( 'PHP cron event (%s)', 'wp-crontrol' ), $event->args[0]['name'] ) );
-			} elseif ( ! empty( $event->args[0]['code'] ) ) {
-				$lines = explode( "\n", trim( $event->args[0]['code'] ) );
-				$code  = reset( $lines );
-				$code  = substr( $code, 0, 50 );
+		$output = $event->get_hook_name_label();
 
-				$php = sprintf(
-					'<code>%s</code>&hellip;',
-					esc_html( $code )
-				);
-
-				/* translators: %s: Details about the PHP cron event. */
-				$output = sprintf( esc_html__( 'PHP cron event (%s)', 'wp-crontrol' ), $php );
-			} else {
-				$output = esc_html__( 'PHP cron event', 'wp-crontrol' );
-			}
-
-			if ( ! $this->feature_context->php_crons_enabled() ) {
+		if ( ( $event instanceof PHPCronEvent ) || ( $event instanceof URLCronEvent ) ) {
+			if ( ! $event->is_enabled( $this->feature_context ) ) {
 				$output .= sprintf(
 					' &mdash; <strong class="status-crontrol-disabled post-state"><span class="dashicons dashicons-controls-pause" aria-hidden="true"></span> %s</strong>',
 					/* translators: State of a cron event, adjective */
@@ -675,57 +658,12 @@ class Table extends \WP_List_Table {
 					' &mdash; <strong class="status-crontrol-disabled post-state"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</strong>',
 					esc_html__( 'Needs checking', 'wp-crontrol' )
 				);
-			} elseif ( isset( $event->args[0]['syntax_error_message'], $event->args[0]['syntax_error_line'] ) ) {
-				$output .= '<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
-				$output .= sprintf(
-					/* translators: 1: Line number, 2: Error message text */
-					esc_html__( 'Line %1$s: %2$s', 'wp-crontrol' ),
-					esc_html( number_format_i18n( $event->args[0]['syntax_error_line'] ) ),
-					esc_html( $event->args[0]['syntax_error_message'] )
-				);
-				$output .= '</span>';
+			} elseif ( $event->has_error() ) {
+				$output .= $event->get_error_status_html();
 			}
 
 			return $output;
 		}
-
-		if ( $event instanceof URLCronEvent ) {
-			if ( ! empty( $event->args[0]['name'] ) ) {
-				/* translators: %s: Details about the URL cron event. */
-				$output = esc_html( sprintf( __( 'URL cron event (%s)', 'wp-crontrol' ), $event->args[0]['name'] ) );
-			} elseif ( ! empty( $event->args[0]['url'] ) ) {
-				$url = sprintf(
-					'<code>%s</code>',
-					esc_html( $event->args[0]['url'] )
-				);
-
-				/* translators: %s: Details about the URL cron event. */
-				$output = sprintf( esc_html__( 'URL cron event (%s)', 'wp-crontrol' ), $url );
-			} else {
-				$output = esc_html__( 'URL cron event', 'wp-crontrol' );
-			}
-
-			if ( ! $this->feature_context->url_crons_enabled() ) {
-				$output .= sprintf(
-					' &mdash; <strong class="status-crontrol-disabled post-state"><span class="dashicons dashicons-controls-pause" aria-hidden="true"></span> %s</strong>',
-					/* translators: State of a cron event, adjective */
-					esc_html__( 'Disabled', 'wp-crontrol' )
-				);
-			} elseif ( $event->integrity_failed() ) {
-				$output .= sprintf(
-					' &mdash; <strong class="status-crontrol-disabled post-state"><span class="dashicons dashicons-warning" aria-hidden="true"></span> %s</strong>',
-					esc_html__( 'Needs checking', 'wp-crontrol' )
-				);
-			} elseif ( isset( $event->args[0]['url_error_message'] ) ) {
-				$output .= '<br><span class="status-crontrol-error"><span class="dashicons dashicons-warning" aria-hidden="true"></span> ';
-				$output .= esc_html( $event->args[0]['url_error_message'] );
-				$output .= '</span>';
-			}
-
-			return $output;
-		}
-
-		$output = esc_html( $event->hook );
 
 		if ( $event->is_paused() ) {
 			$output .= sprintf(
