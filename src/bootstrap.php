@@ -19,6 +19,8 @@ use Crontrol\Exception\UnknownScheduleException;
 use DateTimeZone;
 use WP_Error;
 use Exception;
+use InvalidArgumentException;
+use RuntimeException;
 use IntlTimeZone;
 use ReflectionException;
 
@@ -157,6 +159,79 @@ function pauser() {
 
 	if ( $current ) {
 		remove_all_actions( $current );
+	}
+}
+
+/**
+ * Export cron events to CSV format
+ *
+ * @param string $type The type of events to export ('all', 'scheduled', 'paused', etc.)
+ * @param resource $output Output stream to write CSV to.
+ */
+function export_events_csv( string $type, $output ): void {
+	$headers = array(
+		'hook',
+		'arguments',
+		'next_run',
+		'next_run_gmt',
+		'action',
+		'schedule',
+		'interval',
+	);
+
+	$events = Table::get_filtered_events( Event\get() );
+
+	fputcsv( $output, $headers );
+
+	if ( ! isset( $events[ $type ] ) ) {
+		return;
+	}
+
+	foreach ( $events[ $type ] as $event ) {
+		$next_run_local = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->timestamp ), 'c' );
+		$next_run_utc = gmdate( 'c', $event->timestamp );
+		$hook_callbacks = \Crontrol\get_hook_callbacks( $event->hook );
+
+		if ( 'crontrol_cron_job' === $event->hook ) {
+			$args = __( 'PHP Code', 'wp-crontrol' );
+		} elseif ( empty( $event->args ) ) {
+			$args = '';
+		} else {
+			$args = \Crontrol\json_output( $event->args, false );
+		}
+
+		if ( 'crontrol_cron_job' === $event->hook ) {
+			$action = 'WP Crontrol';
+		} else {
+			$callbacks = array();
+
+			foreach ( $hook_callbacks as $callback ) {
+				$callbacks[] = $callback['callback']['name'];
+			}
+
+			$action = implode( ',', $callbacks );
+		}
+
+		if ( $event->schedule ) {
+			$schedule_name = Event\get_schedule_name( $event );
+			if ( is_wp_error( $schedule_name ) ) {
+				$schedule_name = $schedule_name->get_error_message();
+			}
+		} else {
+			$schedule_name = __( 'Non-repeating', 'wp-crontrol' );
+		}
+
+		$row = array(
+			$event->hook,
+			$args,
+			$next_run_local,
+			$next_run_utc,
+			$action,
+			$schedule_name,
+			(int) $event->interval,
+		);
+
+		fputcsv( $output, $row );
 	}
 }
 
@@ -937,18 +1012,13 @@ function action_handle_posts() {
 		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
 		exit;
 	} elseif ( isset( $_POST['crontrol_action'] ) && 'export-event-csv' === $_POST['crontrol_action'] ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to export cron events.', 'wp-crontrol' ), 403 );
+		}
+
 		check_admin_referer( 'crontrol-export-event-csv', 'crontrol_nonce' );
 
 		$type = isset( $_POST['crontrol_hooks_type'] ) ? wp_unslash( $_POST['crontrol_hooks_type'] ) : 'all';
-		$headers = array(
-			'hook',
-			'arguments',
-			'next_run',
-			'next_run_gmt',
-			'action',
-			'schedule',
-			'interval',
-		);
 		$filename = sanitize_file_name( sprintf(
 			'cron-events-%s-%s.csv',
 			$type,
@@ -960,8 +1030,6 @@ function action_handle_posts() {
 			wp_die( esc_html__( 'Could not save CSV file.', 'wp-crontrol' ) );
 		}
 
-		$events = Table::get_filtered_events( Event\get() );
-
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header(
 			sprintf(
@@ -970,46 +1038,7 @@ function action_handle_posts() {
 			)
 		);
 
-		fputcsv( $csv, $headers );
-
-		if ( isset( $events[ $type ] ) ) {
-			foreach ( $events[ $type ] as $event ) {
-				$next_run_local = $event->get_next_run_local();
-				$next_run_utc = $event->get_next_run_utc();
-				$hook_callbacks = $event->get_callbacks();
-
-				$args = $event->get_args_display();
-
-				if ( ( PHPCronEvent::HOOK_NAME === $event->hook ) || ( URLCronEvent::HOOK_NAME === $event->hook ) ) {
-					$action = 'WP Crontrol';
-				} else {
-					$callbacks = array();
-
-					foreach ( $hook_callbacks as $callback ) {
-						$callbacks[] = $callback['callback']['name'];
-					}
-
-					$action = implode( ',', $callbacks );
-				}
-
-				try {
-					$schedule_name = $event->get_schedule_name();
-				} catch ( UnknownScheduleException $e ) {
-					$schedule_name = $e->getMessage();
-				}
-
-				$row = array(
-					$event->hook,
-					$args,
-					$next_run_local,
-					$next_run_utc,
-					$action,
-					$schedule_name,
-					(int) $event->interval,
-				);
-				fputcsv( $csv, $row );
-			}
-		}
+		export_events_csv( $type, $csv );
 
 		fclose( $csv );
 
