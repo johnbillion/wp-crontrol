@@ -970,7 +970,8 @@ function action_handle_posts() {
 			)
 		);
 
-		fputcsv( $csv, $headers );
+		// https://php.watch/versions/8.4/csv-functions-escape-parameter
+		fputcsv( $csv, $headers, ',', '"', '\\' );
 
 		if ( isset( $events[ $type ] ) ) {
 			foreach ( $events[ $type ] as $event ) {
@@ -1007,7 +1008,8 @@ function action_handle_posts() {
 					$schedule_name,
 					(int) $event->interval,
 				);
-				fputcsv( $csv, $row );
+				// https://php.watch/versions/8.4/csv-functions-escape-parameter
+				fputcsv( $csv, $row, ',', '"', '\\' );
 			}
 		}
 
