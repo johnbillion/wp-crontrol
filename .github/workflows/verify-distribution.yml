@@ -34,7 +34,7 @@ jobs:
     permissions:
       contents: write      # Needed to push commits
       pull-requests: write # Needed to create a PR
-    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-verify-distribution.yml@421ec23e794b78219ce254911ba95410df855fc9 # 2.9.5
+    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-verify-distribution.yml@d9a465cfe7c3e582d8712658ff653cc9e259f1ba # 2.9.6
     with:
       plugin: wp-crontrol
       owner: johnbillion

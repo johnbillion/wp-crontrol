@@ -40,7 +40,7 @@ jobs:
     name: WP ${{ matrix.wp }}
     permissions:
       contents: read
-    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-integration-tests.yml@421ec23e794b78219ce254911ba95410df855fc9 # 2.9.5
+    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-integration-tests.yml@d9a465cfe7c3e582d8712658ff653cc9e259f1ba # 2.9.6
     strategy:
       # See the following for PHP compatibility of WordPress versions:
       # https://make.wordpress.org/core/handbook/references/php-compatibility-and-wordpress-versions/
