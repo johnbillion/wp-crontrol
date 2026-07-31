@@ -23,6 +23,16 @@ type CrontrolFixtures = {
 };
 
 export const test = base.extend<CrontrolFixtures>( {
+	page: async ( { page }, use ) => {
+		/*
+		 * WordPress 7.0 enables cross-document view transitions in the admin area, which
+		 * suspend rendering of the incoming document. Under a headless browser that never
+		 * resolves, so no frames get produced and Playwright's element stability check can
+		 * never settle. Core gates that CSS behind `prefers-reduced-motion: no-preference`.
+		 */
+		await page.emulateMedia( { reducedMotion: 'reduce' } );
+		await use( page );
+	},
 	admin: async ( { page }, use ) => {
 		const admin = new Admin( page );
 		await use( admin );
