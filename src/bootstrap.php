@@ -693,12 +693,21 @@ function action_handle_posts() {
 			}
 		}
 
-		$redirect = array(
-			'page'             => 'wp-crontrol',
-			'crontrol_name'    => $deleted,
-			'crontrol_message' => MESSAGE_EVENT_DELETED_SELECTED,
+		$redirect_url = wp_get_referer();
+
+		if ( ! $redirect_url ) {
+			$redirect_url = admin_url( 'tools.php?page=wp-crontrol' );
+		}
+
+		$redirect_url = remove_query_arg( array( 'crontrol_message', 'crontrol_name' ), $redirect_url );
+		$redirect_url = add_query_arg(
+			array(
+				'crontrol_name'    => $deleted,
+				'crontrol_message' => MESSAGE_EVENT_DELETED_SELECTED,
+			),
+			$redirect_url
 		);
-		wp_safe_redirect( add_query_arg( $redirect, admin_url( 'tools.php' ) ) );
+		wp_safe_redirect( $redirect_url );
 		exit;
 
 	} elseif ( isset( $_GET['crontrol_action'] ) && 'delete-cron' === $_GET['crontrol_action'] ) {
