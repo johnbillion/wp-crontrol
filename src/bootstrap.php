@@ -2643,6 +2643,7 @@ function get_persistent_core_hooks() {
 		'recovery_mode_clean_expired_keys', // 5.2.0
 		'wp_site_health_scheduled_check', // 5.4.0
 		'wp_https_detection', // 5.7.0
+		'wp_privacy_personal_data_cleanup_requests', // 7.1.0
 	);
 
 	if ( ! is_multisite() ) {
