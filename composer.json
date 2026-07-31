@@ -32,7 +32,7 @@
 		"phpcompatibility/phpcompatibility-wp": "2.1.8",
 		"phpstan/phpstan": "2.1.33",
 		"szepeviktor/phpstan-wordpress": "2.0.3",
-		"wp-coding-standards/wpcs": "3.3.0"
+		"wp-coding-standards/wpcs": "3.4.1"
 	},
 	"require": {
 		"php": ">=7.4",
