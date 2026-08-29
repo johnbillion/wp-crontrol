@@ -54,9 +54,3 @@ New milestones are automatically created for the next major, minor, and patch re
 
 1. If this is a non-patch release, manually delete any [unused patch and minor milestones on GitHub](https://github.com/johnbillion/wp-crontrol/milestones).
 1. Resolve relevant threads on [the plugin's support forums](https://wordpress.org/support/plugin/wp-crontrol/).
-
-## Asset Updates
-
-Assets such as screenshots and banners are stored in the `.wordpress-org` directory. These get deployed as part of the automated release process too.
-
-In order to deploy only changes to assets and the readme file, push the change to the `deploy` branch. This allows for the "Tested up to" value to be bumped as well as assets to be updated in between releases. Changes to files other than assets and the readme file will be ignored.
