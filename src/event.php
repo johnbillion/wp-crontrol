@@ -563,7 +563,7 @@ function uasort_order_events( Event $a, Event $b ): int {
  * @phpstan-return array<int,array<string,array<string,array{
  *     args: mixed[],
  *     schedule: string|false,
- *     interval?: int,
+ *     interval?: non-negative-int,
  * }>>>
  */
 function get_core_cron_array() {
